@@ -19,6 +19,7 @@
 		copyColorFromProfile: true,
 		moveSubscribeButtons: true,
 		autoLikeOnSubscribe: true,
+		hideLikeCount: false,
 		username: {
 			enabled: true,
 			enabledForReplies: true,
@@ -117,6 +118,14 @@
 
             .has-label[label="Unsubscribe"] {
             color: rgba(var(--color-green),.8);
+            }
+            `;
+		}
+
+		if (verified.hideLikeCount) {
+			otherStyles += `
+                .like-wrap .count {
+                    display: none;
             }
             `;
 		}
