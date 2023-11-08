@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         VoidVerified
+// @name         VoidVerified-Prerelease
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.0-Prerelease
 // @description  Display a verified sign next to user's name in AniList.
 // @author       voidnyan
 // @match        https://anilist.co/*
@@ -11,7 +11,7 @@
 
 (function () {
 	"use strict";
-	const version = "1.0.0";
+	const version = "1.0.0-Prerelease";
 	const evaluationIntervalInSeconds = 1;
 	const localStorageColors = "void-verified-colors";
 	const localStorageSettings = "void-verified-settings";
@@ -41,16 +41,15 @@
 		},
 		defaultSign: {
 			defaultValue: "✔",
-			description: "this should not render",
+			description: "The default sign displayed next to a username",
 		},
-
 		highlightEnabled: {
 			defaultValue: true,
-			description: "Highlight user activity with a border color.",
+			description: "Highlight user activity with a border.",
 		},
 		highlightEnabledForReplies: {
 			defaultValue: true,
-			description: "Highligh replies with a border color.",
+			description: "Highligh replies with a border.",
 		},
 		highlightSize: {
 			defaultValue: "5px",
@@ -63,6 +62,9 @@
 	);
 
 	for (const [key, value] of Object.entries(settingsInLocalStorage)) {
+		if (!voidVerifiedSettings[key]) {
+			continue;
+		}
 		voidVerifiedSettings[key].value = value.value;
 	}
 
@@ -70,12 +72,8 @@
 		getOptionValue(voidVerifiedSettings.enabledForProfileName) ||
 		getOptionValue(voidVerifiedSettings.highlightEnabled);
 
-	let verifiedUsers = [
-		{
-			username: "voidnyan",
-			sign: "💻",
-		},
-	].map((u) => (typeof u === "string" ? { username: u } : u));
+	let verifiedUsers =
+		JSON.parse(localStorage.getItem(localStorageUsers)) ?? [];
 
 	const colorsInLocalStorage = JSON.parse(
 		localStorage.getItem(localStorageColors)
@@ -98,11 +96,20 @@
 	let highlightStyles = "";
 	let otherStyles = "";
 
-	createStyles();
+	refreshStyles();
+
+	function refreshStyles() {
+		createStyles();
+		createStyleLink(usernameStyles, "username");
+		createStyleLink(highlightStyles, "highlight");
+		createStyleLink(otherStyles, "other");
+	}
 
 	function createStyles() {
 		usernameStyles = "";
 		highlightStyles = "";
+		otherStyles = "";
+
 		for (const user of verifiedUsers) {
 			if (getOptionValue(voidVerifiedSettings.enabledForUsername)) {
 				createUsernameCSS(user);
@@ -213,21 +220,14 @@
             `;
 	}
 
-	const usernameLink = createStyleLink(usernameStyles, "username");
-	const highlightLink = createStyleLink(highlightStyles, "highlight");
 	const profileLink = createStyleLink("", "profile");
-	const otherLink = createStyleLink(otherStyles, "other");
 
 	function refreshHomePage() {
 		if (!getOptionValue(voidVerifiedSettings.highlightEnabled)) {
 			return;
 		}
 
-		const oldHighlightLink = document.getElementById(
-			"void-verified-highlight-styles"
-		);
 		createStyleLink(highlightStyles, "highlight");
-		oldHighlightLink.remove();
 	}
 
 	function verifyProfile() {
@@ -336,6 +336,8 @@
 			renderBoolSetting(setting, settingsContainer, key);
 		}
 
+		renderUserTable(settingsContainer);
+
 		container.append(settingsContainer);
 	}
 
@@ -350,6 +352,115 @@
 		settingsContainer.append(header);
 	}
 
+	function renderUserTable(settingsContainer) {
+		const oldTableContainer = document.querySelector(
+			"#void-verified-user-table"
+		);
+		const tableContainer = document.createElement("div");
+		tableContainer.setAttribute("id", "void-verified-user-table");
+
+		const table = document.createElement("table");
+		const head = document.createElement("thead");
+		const headrow = document.createElement("tr");
+		headrow.append(createCell("Username", "th"));
+		headrow.append(createCell("Sign", "th"));
+
+		head.append(headrow);
+
+		const body = document.createElement("tbody");
+
+		for (const user of verifiedUsers) {
+			body.append(createUserRow(user));
+		}
+
+		table.append(head);
+		table.append(body);
+		tableContainer.append(table);
+
+		const inputForm = document.createElement("form");
+		inputForm.addEventListener("submit", handleVerifyUserForm);
+		const label = document.createElement("label");
+		label.innerText = "Add user";
+		inputForm.append(label);
+		const textInput = document.createElement("input");
+		textInput.setAttribute("id", "voidverified-add-user");
+
+		inputForm.append(textInput);
+		tableContainer.append(inputForm);
+
+		settingsContainer.append(tableContainer);
+		oldTableContainer?.remove();
+	}
+
+	function createUserRow(user) {
+		const row = document.createElement("tr");
+		row.append(createCell(user.username));
+		const input = document.createElement("input");
+		input.value = user.sign ?? "";
+		input.addEventListener("change", (event) =>
+			updateSign(user.username, event.target.value)
+		);
+		row.append(createCell(input));
+
+		const deleteButton = document.createElement("button");
+		deleteButton.innerText = "x";
+		deleteButton.addEventListener("click", () => removeUser(user.username));
+		row.append(createCell(deleteButton));
+		return row;
+	}
+
+	function handleVerifyUserForm(event) {
+		event.preventDefault();
+
+		const usernameInput = document.getElementById("voidverified-add-user");
+		const username = usernameInput.value;
+		verifyUser(username);
+		usernameInput.value = "";
+		refreshUserTable();
+	}
+
+	function refreshUserTable() {
+		const container = document.querySelector(
+			".settings.container > .content"
+		);
+		renderUserTable(container);
+	}
+
+	function verifyUser(username) {
+		if (verifiedUsers.find((user) => user.username === username)) {
+			return;
+		}
+
+		verifiedUsers.push({ username });
+		localStorage.setItem(localStorageUsers, JSON.stringify(verifiedUsers));
+		refreshStyles();
+	}
+
+	function updateSign(username, sign) {
+		const user = { username, sign };
+
+		verifiedUsers = verifiedUsers.map((u) =>
+			u.username === user.username ? user : u
+		);
+		localStorage.setItem(localStorageUsers, JSON.stringify(verifiedUsers));
+		refreshStyles();
+	}
+
+	function removeUser(username) {
+		verifiedUsers = verifiedUsers.filter(
+			(user) => user.username !== username
+		);
+		localStorage.setItem(localStorageUsers, JSON.stringify(verifiedUsers));
+		refreshUserTable();
+		refreshStyles();
+	}
+
+	function createCell(content, elementType = "td") {
+		const cell = document.createElement(elementType);
+		cell.append(content);
+		return cell;
+	}
+
 	function renderBoolSetting(setting, settingsContainer, settingKey) {
 		const value = getOptionValue(setting);
 		if (typeof value !== "boolean") {
@@ -359,6 +470,7 @@
 		const container = document.createElement("div");
 		const checkbox = document.createElement("input");
 		checkbox.setAttribute("type", "checkbox");
+		checkbox.setAttribute("id", settingKey);
 		checkbox.addEventListener("change", (event) =>
 			handleCheckbox(event, settingKey)
 		);
@@ -367,23 +479,27 @@
 			checkbox.setAttribute("checked", true);
 		}
 
-		container.appendChild(checkbox);
+		container.append(checkbox);
 
 		const label = document.createElement("label");
+		label.setAttribute("for", settingKey);
 		label.innerText = setting.description;
-		container.appendChild(label);
+		container.append(label);
 		settingsContainer.append(container);
 	}
 
 	function handleCheckbox(event, settingKey) {
 		const value = event.target.checked;
 		saveSettingToLocalStorage(settingKey, value);
+		refreshStyles();
 	}
 
 	function saveSettingToLocalStorage(key, value) {
 		let localSettings = JSON.parse(
 			localStorage.getItem(localStorageSettings)
 		);
+
+		voidVerifiedSettings[key].value = value;
 
 		if (localSettings === null) {
 			const settings = {
@@ -404,6 +520,7 @@
 	}
 
 	function createStyleLink(styles, id) {
+		const oldLink = document.getElementById(`void-verified-${id}-styles`);
 		const link = document.createElement("link");
 		link.setAttribute("id", `void-verified-${id}-styles`);
 		link.setAttribute("rel", "stylesheet");
@@ -413,6 +530,7 @@
 			"data:text/css;charset=UTF-8," + encodeURIComponent(styles)
 		);
 		document.head?.append(link);
+		oldLink?.remove();
 		return link;
 	}
 
