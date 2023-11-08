@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         VoidVerified
 // @namespace    http://tampermonkey.net/
-// @version      0.4.1
+// @version      1.0.0
 // @description  Display a verified sign next to user's name in AniList.
 // @author       voidnyan
 // @match        https://anilist.co/*
@@ -11,34 +11,64 @@
 
 (function () {
 	"use strict";
-	const version = "0.4.1";
+	const version = "1.0.0";
 	const evaluationIntervalInSeconds = 1;
 	const localStorageColors = "void-verified-colors";
+	const localStorageSettings = "void-verified-settings";
+	const localStorageUsers = "void-verified-users";
 
-	const verified = {
-		copyColorFromProfile: true,
-		moveSubscribeButtons: true,
-		autoLikeOnSubscribe: true,
-		loadCustomCssInActivity: false,
-		hideLikeCount: false,
-		username: {
-			enabled: true,
-			enabledForReplies: true,
-			enabledForProfileName: true,
-			color: "white",
-			sign: "✔",
+	let voidVerifiedSettings = {
+		copyColorFromProfile: {
+			defaultValue: true,
+			description: "Copy user color from their profile when visited.",
 		},
-		highlight: {
-			enabled: true,
-			enabledForReplies: true,
-			enabledForSmallCards: false,
-			color: undefined,
-			size: "5px",
+		moveSubscribeButtons: {
+			defaultValue: false,
+			description:
+				"Move activity subscribe button next to comments and likes.",
+		},
+		hideLikeCount: {
+			defaultValue: false,
+			description: "Hide activity and reply like counts.",
+		},
+		enabledForUsername: {
+			defaultValue: true,
+			description: "Display a verified sign next to usernames.",
+		},
+		enabledForProfileName: {
+			defaultValue: false,
+			description: "Display a verified sign next to a profile name.",
+		},
+		defaultSign: {
+			defaultValue: "✔",
+			description: "this should not render",
+		},
+
+		highlightEnabled: {
+			defaultValue: true,
+			description: "Highlight user activity with a border color.",
+		},
+		highlightEnabledForReplies: {
+			defaultValue: true,
+			description: "Highligh replies with a border color.",
+		},
+		highlightSize: {
+			defaultValue: "5px",
+			description: "Width of the highlight border.",
 		},
 	};
 
+	const settingsInLocalStorage = JSON.parse(
+		localStorage.getItem(localStorageSettings)
+	);
+
+	for (const [key, value] of Object.entries(settingsInLocalStorage)) {
+		voidVerifiedSettings[key].value = value.value;
+	}
+
 	const shouldIntervalBeUsed =
-		verified.username.enabledForProfileName || verified.highlight.enabled;
+		getOptionValue(voidVerifiedSettings.enabledForProfileName) ||
+		getOptionValue(voidVerifiedSettings.highlightEnabled);
 
 	let verifiedUsers = [
 		{
@@ -74,11 +104,11 @@
 		usernameStyles = "";
 		highlightStyles = "";
 		for (const user of verifiedUsers) {
-			if (verified.username.enabled) {
+			if (getOptionValue(voidVerifiedSettings.enabledForUsername)) {
 				createUsernameCSS(user);
 			}
 
-			if (verified.highlight.enabled) {
+			if (getOptionValue(voidVerifiedSettings.highlightEnabled)) {
 				createHighlightCSS(
 					user,
 					`div.wrap:has( div.header > a.name[href*="${user.username}"] )`
@@ -89,7 +119,9 @@
 				);
 			}
 
-			if (verified.highlight.enabledForReplies) {
+			if (
+				getOptionValue(voidVerifiedSettings.highlightEnabledForReplies)
+			) {
 				createHighlightCSS(
 					user,
 					`div.reply:has( a.name[href*="${user.username}"] )`
@@ -97,14 +129,9 @@
 			}
 		}
 
-		if (
-			verified.highlight.enabled &&
-			!verified.highlight.enabledForSmallCards
-		) {
-			disableHighlightOnSmallCards();
-		}
+		disableHighlightOnSmallCards();
 
-		if (verified.moveSubscribeButtons) {
+		if (getOptionValue(voidVerifiedSettings.moveSubscribeButtons)) {
 			otherStyles += `
             .has-label::before {
             top: -30px !important;
@@ -123,7 +150,7 @@
             `;
 		}
 
-		if (verified.hideLikeCount) {
+		if (getOptionValue(voidVerifiedSettings.hideLikeCount)) {
 			otherStyles += `
                 .like-wrap .count {
                     display: none;
@@ -135,12 +162,11 @@
 	function createUsernameCSS(user) {
 		usernameStyles += `
             a.name[href*="${user.username}"]::after {
-                content: "${user.sign ?? verified.username.sign}";
-                color: ${
-					user.color ??
-					verified.username.color ??
-					"rgb(var(--color-blue))"
-				}
+                content: "${
+					user.sign ??
+					getOptionValue(voidVerifiedSettings.defaultSign)
+				}";
+                color: ${user.color ?? "rgb(var(--color-blue))"}
             }
             `;
 	}
@@ -148,17 +174,19 @@
 	function createHighlightCSS(user, selector) {
 		highlightStyles += `
             ${selector} {
-                margin-right: -${verified.highlight.size};
-                border-right: ${verified.highlight.size} solid ${
-			user.color ?? verified.highlight.color ?? "rgb(var(--color-blue))"
-		};
+                margin-right: -${getOptionValue(
+					voidVerifiedSettings.highlightSize
+				)};
+                border-right: ${getOptionValue(
+					voidVerifiedSettings.highlightSize
+				)} solid ${user.color ?? "rgb(var(--color-blue))"};
                 border-radius: 5px;
             }
             `;
 	}
 
 	function moveAndDisplaySubscribeButton() {
-		if (!verified.moveSubscribeButtons) {
+		if (!getOptionValue(voidVerifiedSettings.moveSubscribeButtons)) {
 			return;
 		}
 
@@ -191,19 +219,19 @@
 	const otherLink = createStyleLink(otherStyles, "other");
 
 	function refreshHomePage() {
-		if (!verified.highlight.enabled) {
+		if (!getOptionValue(voidVerifiedSettings.highlightEnabled)) {
 			return;
 		}
 
 		const oldHighlightLink = document.getElementById(
 			"void-verified-highlight-styles"
 		);
-		const newHighlightLink = createStyleLink(highlightStyles, "highlight");
+		createStyleLink(highlightStyles, "highlight");
 		oldHighlightLink.remove();
 	}
 
 	function verifyProfile() {
-		if (!verified.username.enabledForProfileName) {
+		if (!getOptionValue(voidVerifiedSettings.enabledForProfileName)) {
 			return;
 		}
 
@@ -219,7 +247,10 @@
 
 		const profileStyle = `
                 h1.name::after {
-                content: "${user.sign ?? verified.username.sign}"
+                content: "${
+					user.sign ??
+					getOptionValue(voidVerifiedSettings.defaultSign)
+				}"
                 }
             `;
 		profileLink.href =
@@ -233,7 +264,8 @@
 
 		if (
 			user.copyColorFromProfile === false ||
-			(!user.copyColorFromProfile && !verified.copyColorFromProfile)
+			(!user.copyColorFromProfile &&
+				!getOptionValue(voidVerifiedSettings.copyColorFromProfile))
 		) {
 			return;
 		}
@@ -250,13 +282,13 @@
 		const oldHighlightLink = document.getElementById(
 			"void-verified-highlight-styles"
 		);
-		const newHighlightLink = createStyleLink(highlightStyles, "highlight");
+		createStyleLink(highlightStyles, "highlight");
 		oldHighlightLink.remove();
 
 		const oldUsernameLink = document.getElementById(
 			"void-verified-username-styles"
 		);
-		const newUsernameLink = createStyleLink(usernameStyles, "username");
+		createStyleLink(usernameStyles, "username");
 		oldUsernameLink.remove();
 
 		addOrUpdateColorToLocalStorage(user);
@@ -286,6 +318,89 @@
 		}
 
 		localStorage.setItem(localStorageColors, JSON.stringify(localColors));
+	}
+
+	function getOptionValue(object) {
+		return object.value ?? object.defaultValue;
+	}
+
+	function renderSettingsUi() {
+		const container = document.querySelector(
+			".settings.container > .content"
+		);
+		const settingsContainer = document.createElement("div");
+		settingsContainer.setAttribute("id", "voidverified-settings");
+		renderSettingsHeader(settingsContainer);
+
+		for (const [key, setting] of Object.entries(voidVerifiedSettings)) {
+			renderBoolSetting(setting, settingsContainer, key);
+		}
+
+		container.append(settingsContainer);
+	}
+
+	function removeSettingsUi() {
+		const settings = document.querySelector("#voidverified-settings");
+		settings?.remove();
+	}
+
+	function renderSettingsHeader(settingsContainer) {
+		const header = document.createElement("h1");
+		header.innerText = "VoidVerified Settings";
+		settingsContainer.append(header);
+	}
+
+	function renderBoolSetting(setting, settingsContainer, settingKey) {
+		const value = getOptionValue(setting);
+		if (typeof value !== "boolean") {
+			return;
+		}
+
+		const container = document.createElement("div");
+		const checkbox = document.createElement("input");
+		checkbox.setAttribute("type", "checkbox");
+		checkbox.addEventListener("change", (event) =>
+			handleCheckbox(event, settingKey)
+		);
+
+		if (value) {
+			checkbox.setAttribute("checked", true);
+		}
+
+		container.appendChild(checkbox);
+
+		const label = document.createElement("label");
+		label.innerText = setting.description;
+		container.appendChild(label);
+		settingsContainer.append(container);
+	}
+
+	function handleCheckbox(event, settingKey) {
+		const value = event.target.checked;
+		saveSettingToLocalStorage(settingKey, value);
+	}
+
+	function saveSettingToLocalStorage(key, value) {
+		let localSettings = JSON.parse(
+			localStorage.getItem(localStorageSettings)
+		);
+
+		if (localSettings === null) {
+			const settings = {
+				[key]: value,
+			};
+			localStorage.setItem(
+				localStorageSettings,
+				JSON.stringify(settings)
+			);
+			return;
+		}
+
+		localSettings[key] = { value };
+		localStorage.setItem(
+			localStorageSettings,
+			JSON.stringify(localSettings)
+		);
 	}
 
 	function createStyleLink(styles, id) {
@@ -320,6 +435,10 @@
 			return;
 		}
 
+		if (!path.startsWith("/settings/developer")) {
+			removeSettingsUi();
+		}
+
 		if (!hasPathChanged(path)) {
 			return;
 		}
@@ -327,6 +446,12 @@
 		if (path.startsWith("/user/")) {
 			verifyProfile();
 			copyUserColor();
+			return;
+		}
+
+		if (path.startsWith("/settings/developer")) {
+			renderSettingsUi();
+			return;
 		}
 	}
 
