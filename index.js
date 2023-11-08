@@ -19,6 +19,7 @@
 		copyColorFromProfile: true,
 		moveSubscribeButtons: true,
 		autoLikeOnSubscribe: true,
+		loadCustomCssInActivity: false,
 		hideLikeCount: false,
 		username: {
 			enabled: true,
@@ -126,7 +127,7 @@
 			otherStyles += `
                 .like-wrap .count {
                     display: none;
-            }
+                }
             `;
 		}
 	}
@@ -169,24 +170,10 @@
 				continue;
 			}
 
-			if (verified.autoLikeOnSubscribe) {
-				subscribeButton.addEventListener("click", likeActivity);
-			}
-
 			const container = subscribeButton.parentNode.parentNode;
 			const actions = container.querySelector(".actions");
 			actions.append(subscribeButton);
 		}
-	}
-
-	function likeActivity() {
-		// const container = this.parentNode;
-		// const likeButton = container.querySelector(".like-wrap .button");
-		// if (likeButton.classList.contains("liked")) {
-		//     return;
-		//
-		// // likeButton.click();
-		// likeButton.dispatchEvent(new Event("click"));
 	}
 
 	function disableHighlightOnSmallCards() {
