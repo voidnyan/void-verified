@@ -61,11 +61,13 @@
 		localStorage.getItem(localStorageSettings)
 	);
 
-	for (const [key, value] of Object.entries(settingsInLocalStorage)) {
-		if (!voidVerifiedSettings[key]) {
-			continue;
+	if (settingsInLocalStorage) {
+		for (const [key, value] of Object.entries(settingsInLocalStorage)) {
+			if (!voidVerifiedSettings[key]) {
+				continue;
+			}
+			voidVerifiedSettings[key].value = value.value;
 		}
-		voidVerifiedSettings[key].value = value.value;
 	}
 
 	const shouldIntervalBeUsed =
