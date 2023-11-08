@@ -13,7 +13,6 @@
 	"use strict";
 	const version = "1.0.0-Prerelease";
 	const evaluationIntervalInSeconds = 1;
-	const localStorageColors = "void-verified-colors";
 	const localStorageSettings = "void-verified-settings";
 	const localStorageUsers = "void-verified-users";
 
@@ -57,17 +56,14 @@
 		},
 	};
 
-	const settingsInLocalStorage = JSON.parse(
-		localStorage.getItem(localStorageSettings)
-	);
+	const settingsInLocalStorage =
+		JSON.parse(localStorage.getItem(localStorageSettings)) ?? {};
 
-	if (settingsInLocalStorage) {
-		for (const [key, value] of Object.entries(settingsInLocalStorage)) {
-			if (!voidVerifiedSettings[key]) {
-				continue;
-			}
-			voidVerifiedSettings[key].value = value.value;
+	for (const [key, value] of Object.entries(settingsInLocalStorage)) {
+		if (!voidVerifiedSettings[key]) {
+			continue;
 		}
+		voidVerifiedSettings[key].value = value.value;
 	}
 
 	const shouldIntervalBeUsed =
@@ -76,23 +72,6 @@
 
 	let verifiedUsers =
 		JSON.parse(localStorage.getItem(localStorageUsers)) ?? [];
-
-	const colorsInLocalStorage = JSON.parse(
-		localStorage.getItem(localStorageColors)
-	);
-
-	if (colorsInLocalStorage !== null) {
-		verifiedUsers = verifiedUsers.map((u) =>
-			colorsInLocalStorage !== null && u.color
-				? u
-				: {
-						...u,
-						color: colorsInLocalStorage.find(
-							(c) => c.username === u.username
-						)?.color,
-				  }
-		);
-	}
 
 	let usernameStyles = "";
 	let highlightStyles = "";
@@ -172,10 +151,10 @@
 		usernameStyles += `
             a.name[href*="${user.username}"]::after {
                 content: "${
-					user.sign ??
+					stringIsEmpty(user.sign) ??
 					getOptionValue(voidVerifiedSettings.defaultSign)
 				}";
-                color: ${user.color ?? "rgb(var(--color-blue))"}
+                color: ${getUserColor(user) ?? "rgb(var(--color-blue))"}
             }
             `;
 	}
@@ -188,7 +167,7 @@
 				)};
                 border-right: ${getOptionValue(
 					voidVerifiedSettings.highlightSize
-				)} solid ${user.color ?? "rgb(var(--color-blue))"};
+				)} solid ${getUserColor(user) ?? "rgb(var(--color-blue))"};
                 border-radius: 5px;
             }
             `;
@@ -250,7 +229,7 @@
 		const profileStyle = `
                 h1.name::after {
                 content: "${
-					user.sign ??
+					stringIsEmpty(user.sign) ??
 					getOptionValue(voidVerifiedSettings.defaultSign)
 				}"
                 }
@@ -274,55 +253,14 @@
 
 		const color =
 			getComputedStyle(usernameHeader).getPropertyValue("--color-blue");
-		user.color = `rgb(${color})`;
-		verifiedUsers = verifiedUsers.map((u) =>
-			u.username !== user.username ? u : user
-		);
 
-		createStyles();
-
-		const oldHighlightLink = document.getElementById(
-			"void-verified-highlight-styles"
-		);
-		createStyleLink(highlightStyles, "highlight");
-		oldHighlightLink.remove();
-
-		const oldUsernameLink = document.getElementById(
-			"void-verified-username-styles"
-		);
-		createStyleLink(usernameStyles, "username");
-		oldUsernameLink.remove();
-
-		addOrUpdateColorToLocalStorage(user);
-	}
-
-	function addOrUpdateColorToLocalStorage(user) {
-		let localColors = JSON.parse(localStorage.getItem(localStorageColors));
-
-		if (localColors === null) {
-			localStorage.setItem(
-				localStorageColors,
-				JSON.stringify([{ username: user.username, color: user.color }])
-			);
-			return;
-		}
-
-		let localStorageUser = localColors.find(
-			(u) => u.username === user.username
-		);
-		if (localStorageUser) {
-			localStorageUser.color = user.color;
-			localColors = localColors.map((u) =>
-				u.username === localStorageUser.username ? localStorageUser : u
-			);
-		} else {
-			localColors.push({ username: user.username, color: user.color });
-		}
-
-		localStorage.setItem(localStorageColors, JSON.stringify(localColors));
+		updateUserOption(user.username, "color", color);
 	}
 
 	function getOptionValue(object) {
+		if (object.value === "") {
+			return object.defaultValue;
+		}
 		return object.value ?? object.defaultValue;
 	}
 
@@ -335,7 +273,7 @@
 		renderSettingsHeader(settingsContainer);
 
 		for (const [key, setting] of Object.entries(voidVerifiedSettings)) {
-			renderBoolSetting(setting, settingsContainer, key);
+			renderSetting(setting, settingsContainer, key);
 		}
 
 		renderUserTable(settingsContainer);
@@ -366,6 +304,7 @@
 		const headrow = document.createElement("tr");
 		headrow.append(createCell("Username", "th"));
 		headrow.append(createCell("Sign", "th"));
+		headrow.append(createCell("Color", "th"));
 
 		head.append(headrow);
 
@@ -399,16 +338,46 @@
 		row.append(createCell(user.username));
 		const input = document.createElement("input");
 		input.value = user.sign ?? "";
-		input.addEventListener("change", (event) =>
-			updateSign(user.username, event.target.value)
+		input.addEventListener("input", (event) =>
+			updateUserOption(user.username, "sign", event.target.value)
 		);
 		row.append(createCell(input));
+
+		const colorInput = document.createElement("input");
+		colorInput.setAttribute("type", "color");
+		colorInput.value =
+			user.colorOverride ?? (user.color ? rgbToHex(user.color) : "");
+		colorInput.addEventListener(
+			"change",
+			(event) => handleUserColorChange(event, user.username),
+			false
+		);
+
+		const colorCell = createCell(colorInput);
+		const resetColorBtn = document.createElement("button");
+		resetColorBtn.innerText = "🔄";
+		resetColorBtn.addEventListener("click", () =>
+			handleUserColorReset(user.username)
+		);
+
+		colorCell.append(resetColorBtn);
+		row.append(colorCell);
 
 		const deleteButton = document.createElement("button");
 		deleteButton.innerText = "x";
 		deleteButton.addEventListener("click", () => removeUser(user.username));
 		row.append(createCell(deleteButton));
 		return row;
+	}
+
+	function handleUserColorReset(username) {
+		updateUserOption(username, "colorOverride", undefined);
+		refreshUserTable();
+	}
+
+	function handleUserColorChange(event, username) {
+		const color = event.target.value;
+		updateUserOption(username, "colorOverride", color);
 	}
 
 	function handleVerifyUserForm(event) {
@@ -438,11 +407,14 @@
 		refreshStyles();
 	}
 
-	function updateSign(username, sign) {
-		const user = { username, sign };
-
+	function updateUserOption(username, key, value) {
 		verifiedUsers = verifiedUsers.map((u) =>
-			u.username === user.username ? user : u
+			u.username === username
+				? {
+						...u,
+						[key]: value,
+				  }
+				: u
 		);
 		localStorage.setItem(localStorageUsers, JSON.stringify(verifiedUsers));
 		refreshStyles();
@@ -463,25 +435,25 @@
 		return cell;
 	}
 
-	function renderBoolSetting(setting, settingsContainer, settingKey) {
+	function renderSetting(setting, settingsContainer, settingKey) {
 		const value = getOptionValue(setting);
-		if (typeof value !== "boolean") {
-			return;
-		}
+		const type = typeof value;
 
 		const container = document.createElement("div");
-		const checkbox = document.createElement("input");
-		checkbox.setAttribute("type", "checkbox");
-		checkbox.setAttribute("id", settingKey);
-		checkbox.addEventListener("change", (event) =>
-			handleCheckbox(event, settingKey)
+		const input = document.createElement("input");
+		input.setAttribute("type", type === "boolean" ? "checkbox" : "text");
+		input.setAttribute("id", settingKey);
+		input.addEventListener("change", (event) =>
+			handleOption(event, settingKey, type)
 		);
 
-		if (value) {
-			checkbox.setAttribute("checked", true);
+		if (type === "boolean" && value) {
+			input.setAttribute("checked", true);
+		} else if (type === "string") {
+			input.value = value;
 		}
 
-		container.append(checkbox);
+		container.append(input);
 
 		const label = document.createElement("label");
 		label.setAttribute("for", settingKey);
@@ -490,10 +462,33 @@
 		settingsContainer.append(container);
 	}
 
-	function handleCheckbox(event, settingKey) {
-		const value = event.target.checked;
+	function handleOption(event, settingKey, type) {
+		const value =
+			type === "boolean" ? event.target.checked : event.target.value;
 		saveSettingToLocalStorage(settingKey, value);
 		refreshStyles();
+	}
+
+	function getUserColor(user) {
+		return user.colorOverride ?? `rgb(${user.color})`;
+	}
+
+	function rgbToHex(rgb) {
+		const [r, g, b] = rgb.split(", ");
+		const hex = generateHex(r, g, b);
+		return hex;
+	}
+
+	function generateHex(r, g, b) {
+		return (
+			"#" +
+			[r, g, b]
+				.map((x) => {
+					const hex = Number(x).toString(16);
+					return hex.length === 1 ? "0" + hex : hex;
+				})
+				.join("")
+		);
 	}
 
 	function saveSettingToLocalStorage(key, value) {
@@ -543,6 +538,13 @@
 		}
 		currentPath = path;
 		return true;
+	}
+
+	function stringIsEmpty(string) {
+		if (!string || string.length === 0) {
+			return undefined;
+		}
+		return string;
 	}
 
 	function handleIntervalScripts() {
