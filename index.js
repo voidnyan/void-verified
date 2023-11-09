@@ -95,7 +95,7 @@
 	function createStyles() {
 		usernameStyles = "";
 		highlightStyles = "";
-		otherStyles = "";
+		otherStyles = `a[href="/settings/developer"]::after{content: " & Void"}`;
 
 		for (const user of verifiedUsers) {
 			if (
@@ -292,9 +292,15 @@
 		settingsContainer.setAttribute("id", "voidverified-settings");
 		renderSettingsHeader(settingsContainer);
 
+		const settingsListContainer = document.createElement("div");
+		settingsListContainer.style.display = "flex";
+		settingsListContainer.style.flexDirection = "column";
+		settingsListContainer.style.gap = "5px";
 		for (const [key, setting] of Object.entries(voidVerifiedSettings)) {
-			renderSetting(setting, settingsContainer, key);
+			renderSetting(setting, settingsListContainer, key);
 		}
+
+		settingsContainer.append(settingsListContainer);
 
 		renderUserTable(settingsContainer);
 
@@ -307,9 +313,22 @@
 	}
 
 	function renderSettingsHeader(settingsContainer) {
+		const headerContainer = document.createElement("div");
 		const header = document.createElement("h1");
+		header.style.marginTop = "30px";
 		header.innerText = "VoidVerified Settings";
-		settingsContainer.append(header);
+
+		const versionInfo = document.createElement("p");
+		versionInfo.append("Version: ");
+		const versionNumber = document.createElement("span");
+		versionNumber.style.color = `rgb(${anilistBlue})`;
+		versionNumber.append(version);
+
+		versionInfo.append(versionNumber);
+
+		headerContainer.append(header);
+		headerContainer.append(versionInfo);
+		settingsContainer.append(headerContainer);
 	}
 
 	function renderUserTable(settingsContainer) {
@@ -362,10 +381,11 @@
 			`https://anilist.co/user/${user.username}/`
 		);
 		userLink.setAttribute("target", "_blank");
-		row.append(userLink);
+		row.append(createCell(userLink));
 
 		const signInput = document.createElement("input");
 		signInput.value = user.sign ?? "";
+		signInput.style.width = "100px";
 		signInput.addEventListener("input", (event) =>
 			updateUserOption(user.username, "sign", event.target.value)
 		);
@@ -383,6 +403,11 @@
 
 		const colorInput = document.createElement("input");
 		colorInput.setAttribute("type", "color");
+		colorInput.style.border = "0";
+		colorInput.style.height = "24px";
+		colorInput.style.width = "40px";
+		colorInput.style.padding = "0";
+		colorInput.style.backgroundColor = "unset";
 		colorInput.value = getUserColorPickerColor(user);
 		colorInput.addEventListener(
 			"change",
@@ -390,9 +415,12 @@
 			false
 		);
 
+		const colorInputContainer = document.createElement("span");
+		// colorInputContainer.append(colorInput);
+
 		const colorCell = createCell(colorInput);
 
-		colorCell.append(
+		colorInputContainer.append(
 			createUserCheckbox(
 				user.copyColorFromProfile,
 				user.username,
@@ -401,7 +429,7 @@
 			)
 		);
 
-		colorCell.append(
+		colorInputContainer.append(
 			createUserCheckbox(
 				user.highlightEnabled,
 				user.username,
@@ -410,7 +438,7 @@
 			)
 		);
 
-		colorCell.append(
+		colorInputContainer.append(
 			createUserCheckbox(
 				user.highlightEnabledForReplies,
 				user.username,
@@ -418,6 +446,8 @@
 				getOptionValue(voidVerifiedSettings.highlightEnabledForReplies)
 			)
 		);
+
+		colorCell.append(colorInputContainer);
 
 		const resetColorBtn = document.createElement("button");
 		resetColorBtn.innerText = "🔄";
@@ -429,7 +459,7 @@
 		row.append(colorCell);
 
 		const deleteButton = document.createElement("button");
-		deleteButton.innerText = "x";
+		deleteButton.innerText = "❌";
 		deleteButton.addEventListener("click", () => removeUser(user.username));
 		row.append(createCell(deleteButton));
 		return row;
@@ -463,9 +493,12 @@
 
 		checkbox.setAttribute("type", "checkbox");
 		checkbox.checked = isChecked;
-		checkbox.addEventListener("change", (event) =>
-			updateUserOption(username, settingKey, event.target.checked)
-		);
+		checkbox.addEventListener("change", (event) => {
+			updateUserOption(username, settingKey, event.target.checked);
+			refreshUserTable();
+		});
+
+		checkbox.style.marginLeft = "5px";
 
 		checkbox.title = voidVerifiedSettings[settingKey].description;
 		return checkbox;
@@ -519,7 +552,6 @@
 		);
 		localStorage.setItem(localStorageUsers, JSON.stringify(verifiedUsers));
 		refreshStyles();
-		refreshUserTable();
 	}
 
 	function removeUser(username) {
@@ -553,8 +585,14 @@
 			input.setAttribute("type", "checkbox");
 		} else if (settingKey == "defaultHighlightColor") {
 			input.setAttribute("type", "color");
+			input.style.border = "0";
+			input.style.height = "15px";
+			input.style.width = "25px";
+			input.style.padding = "0";
+			input.style.backgroundColor = "unset";
 		} else if (type === "string") {
 			input.setAttribute("type", "text");
+			input.style.width = "50px";
 		}
 
 		if (disabled) {
@@ -577,6 +615,7 @@
 		const label = document.createElement("label");
 		label.setAttribute("for", settingKey);
 		label.innerText = setting.description;
+		label.style.marginLeft = "5px";
 		container.append(label);
 		settingsContainer.append(container);
 	}
