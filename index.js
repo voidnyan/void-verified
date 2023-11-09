@@ -15,6 +15,7 @@
 	const evaluationIntervalInSeconds = 1;
 	const localStorageSettings = "void-verified-settings";
 	const localStorageUsers = "void-verified-users";
+	const anilistBlue = "120, 180, 255";
 
 	let voidVerifiedSettings = {
 		copyColorFromProfile: {
@@ -40,7 +41,7 @@
 		},
 		defaultSign: {
 			defaultValue: "✔",
-			description: "The default sign displayed next to a username",
+			description: "The default sign displayed next to a username.",
 		},
 		highlightEnabled: {
 			defaultValue: true,
@@ -48,11 +49,20 @@
 		},
 		highlightEnabledForReplies: {
 			defaultValue: true,
-			description: "Highligh replies with a border.",
+			description: "Highlight replies with a border.",
 		},
 		highlightSize: {
 			defaultValue: "5px",
 			description: "Width of the highlight border.",
+		},
+		useDefaultHighlightColor: {
+			defaultValue: false,
+			description:
+				"Use fallback highlight color when user color is not specified.",
+		},
+		defaultHighlightColor: {
+			defaultValue: "#FFFFFF",
+			description: "Fallback highlight color.",
 		},
 	};
 
@@ -65,10 +75,6 @@
 		}
 		voidVerifiedSettings[key].value = value.value;
 	}
-
-	const shouldIntervalBeUsed =
-		getOptionValue(voidVerifiedSettings.enabledForProfileName) ||
-		getOptionValue(voidVerifiedSettings.highlightEnabled);
 
 	let verifiedUsers =
 		JSON.parse(localStorage.getItem(localStorageUsers)) ?? [];
@@ -92,11 +98,17 @@
 		otherStyles = "";
 
 		for (const user of verifiedUsers) {
-			if (getOptionValue(voidVerifiedSettings.enabledForUsername)) {
+			if (
+				getOptionValue(voidVerifiedSettings.enabledForUsername) ||
+				user.enabledForUsername
+			) {
 				createUsernameCSS(user);
 			}
 
-			if (getOptionValue(voidVerifiedSettings.highlightEnabled)) {
+			if (
+				getOptionValue(voidVerifiedSettings.highlightEnabled) ||
+				user.highlightEnabled
+			) {
 				createHighlightCSS(
 					user,
 					`div.wrap:has( div.header > a.name[href*="${user.username}"] )`
@@ -108,7 +120,10 @@
 			}
 
 			if (
-				getOptionValue(voidVerifiedSettings.highlightEnabledForReplies)
+				getOptionValue(
+					voidVerifiedSettings.highlightEnabledForReplies
+				) ||
+				user.highlightEnabledForReplies
 			) {
 				createHighlightCSS(
 					user,
@@ -167,7 +182,7 @@
 				)};
                 border-right: ${getOptionValue(
 					voidVerifiedSettings.highlightSize
-				)} solid ${getUserColor(user) ?? "rgb(var(--color-blue))"};
+				)} solid ${getUserColor(user) ?? getDefaultHighlightColor()};
                 border-radius: 5px;
             }
             `;
@@ -243,10 +258,15 @@
 		const username = usernameHeader.innerHTML.trim();
 		const user = verifiedUsers.find((u) => u.username === username);
 
+		if (!user) {
+			return;
+		}
+
 		if (
-			user.copyColorFromProfile === false ||
-			(!user.copyColorFromProfile &&
-				!getOptionValue(voidVerifiedSettings.copyColorFromProfile))
+			!(
+				user.copyColorFromProfile ||
+				getOptionValue(voidVerifiedSettings.copyColorFromProfile)
+			)
 		) {
 			return;
 		}
@@ -335,18 +355,35 @@
 
 	function createUserRow(user) {
 		const row = document.createElement("tr");
-		row.append(createCell(user.username));
-		const input = document.createElement("input");
-		input.value = user.sign ?? "";
-		input.addEventListener("input", (event) =>
+		const userLink = document.createElement("a");
+		userLink.innerText = user.username;
+		userLink.setAttribute(
+			"href",
+			`https://anilist.co/user/${user.username}/`
+		);
+		userLink.setAttribute("target", "_blank");
+		row.append(userLink);
+
+		const signInput = document.createElement("input");
+		signInput.value = user.sign ?? "";
+		signInput.addEventListener("input", (event) =>
 			updateUserOption(user.username, "sign", event.target.value)
 		);
-		row.append(createCell(input));
+		const signCell = createCell(signInput);
+		signCell.append(
+			createUserCheckbox(
+				user.enabledForUsername,
+				user.username,
+				"enabledForUsername",
+				getOptionValue(voidVerifiedSettings.enabledForUsername)
+			)
+		);
+
+		row.append(createCell(signCell));
 
 		const colorInput = document.createElement("input");
 		colorInput.setAttribute("type", "color");
-		colorInput.value =
-			user.colorOverride ?? (user.color ? rgbToHex(user.color) : "");
+		colorInput.value = getUserColorPickerColor(user);
 		colorInput.addEventListener(
 			"change",
 			(event) => handleUserColorChange(event, user.username),
@@ -354,6 +391,34 @@
 		);
 
 		const colorCell = createCell(colorInput);
+
+		colorCell.append(
+			createUserCheckbox(
+				user.copyColorFromProfile,
+				user.username,
+				"copyColorFromProfile",
+				getOptionValue(voidVerifiedSettings.copyColorFromProfile)
+			)
+		);
+
+		colorCell.append(
+			createUserCheckbox(
+				user.highlightEnabled,
+				user.username,
+				"highlightEnabled",
+				getOptionValue(voidVerifiedSettings.highlightEnabled)
+			)
+		);
+
+		colorCell.append(
+			createUserCheckbox(
+				user.highlightEnabledForReplies,
+				user.username,
+				"highlightEnabledForReplies",
+				getOptionValue(voidVerifiedSettings.highlightEnabledForReplies)
+			)
+		);
+
 		const resetColorBtn = document.createElement("button");
 		resetColorBtn.innerText = "🔄";
 		resetColorBtn.addEventListener("click", () =>
@@ -368,6 +433,42 @@
 		deleteButton.addEventListener("click", () => removeUser(user.username));
 		row.append(createCell(deleteButton));
 		return row;
+	}
+
+	function getUserColorPickerColor(user) {
+		if (user.colorOverride) {
+			return user.colorOverride;
+		}
+
+		if (
+			user.color &&
+			(user.copyColorFromProfile ||
+				getOptionValue(voidVerifiedSettings.copyColorFromProfile))
+		) {
+			return rgbToHex(user.color);
+		}
+
+		if (getOptionValue(voidVerifiedSettings.useDefaultHighlightColor)) {
+			return getOptionValue(voidVerifiedSettings.defaultHighlightColor);
+		}
+
+		return rgbToHex(anilistBlue);
+	}
+
+	function createUserCheckbox(isChecked, username, settingKey, disabled) {
+		const checkbox = document.createElement("input");
+		if (disabled) {
+			checkbox.setAttribute("disabled", "");
+		}
+
+		checkbox.setAttribute("type", "checkbox");
+		checkbox.checked = isChecked;
+		checkbox.addEventListener("change", (event) =>
+			updateUserOption(username, settingKey, event.target.checked)
+		);
+
+		checkbox.title = voidVerifiedSettings[settingKey].description;
+		return checkbox;
 	}
 
 	function handleUserColorReset(username) {
@@ -418,6 +519,7 @@
 		);
 		localStorage.setItem(localStorageUsers, JSON.stringify(verifiedUsers));
 		refreshStyles();
+		refreshUserTable();
 	}
 
 	function removeUser(username) {
@@ -435,13 +537,30 @@
 		return cell;
 	}
 
-	function renderSetting(setting, settingsContainer, settingKey) {
+	function renderSetting(
+		setting,
+		settingsContainer,
+		settingKey,
+		disabled = false
+	) {
 		const value = getOptionValue(setting);
 		const type = typeof value;
 
 		const container = document.createElement("div");
 		const input = document.createElement("input");
-		input.setAttribute("type", type === "boolean" ? "checkbox" : "text");
+
+		if (type === "boolean") {
+			input.setAttribute("type", "checkbox");
+		} else if (settingKey == "defaultHighlightColor") {
+			input.setAttribute("type", "color");
+		} else if (type === "string") {
+			input.setAttribute("type", "text");
+		}
+
+		if (disabled) {
+			input.setAttribute("disabled", "");
+		}
+
 		input.setAttribute("id", settingKey);
 		input.addEventListener("change", (event) =>
 			handleOption(event, settingKey, type)
@@ -467,14 +586,29 @@
 			type === "boolean" ? event.target.checked : event.target.value;
 		saveSettingToLocalStorage(settingKey, value);
 		refreshStyles();
+		refreshUserTable();
 	}
 
 	function getUserColor(user) {
-		return user.colorOverride ?? `rgb(${user.color})`;
+		return (
+			user.colorOverride ??
+			(user.color &&
+			(user.copyColorFromProfile ||
+				getOptionValue(voidVerifiedSettings.copyColorFromProfile))
+				? `rgb(${user.color})`
+				: undefined)
+		);
+	}
+
+	function getDefaultHighlightColor() {
+		if (getOptionValue(voidVerifiedSettings.useDefaultHighlightColor)) {
+			return getOptionValue(voidVerifiedSettings.defaultHighlightColor);
+		}
+		return "rgb(var(--color-blue))";
 	}
 
 	function rgbToHex(rgb) {
-		const [r, g, b] = rgb.split(", ");
+		const [r, g, b] = rgb.split(",");
 		const hex = generateHex(r, g, b);
 		return hex;
 	}
@@ -577,9 +711,7 @@
 		}
 	}
 
-	if (shouldIntervalBeUsed) {
-		setInterval(handleIntervalScripts, evaluationIntervalInSeconds * 1000);
-	}
+	setInterval(handleIntervalScripts, evaluationIntervalInSeconds * 1000);
 
 	console.log(`VoidVerified ${version} loaded.`);
 })();
