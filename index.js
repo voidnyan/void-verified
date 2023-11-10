@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         VoidVerified-Prerelease
+// @name         VoidVerified
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0-Prerelease
+// @version      1.0.0
 // @description  Display a verified sign next to user's name in AniList.
 // @author       voidnyan
 // @match        https://anilist.co/*
@@ -11,7 +11,7 @@
 
 (function () {
 	"use strict";
-	const version = "1.0.0-Prerelease";
+	const version = "1.0.0";
 	const evaluationIntervalInSeconds = 1;
 	const localStorageSettings = "void-verified-settings";
 	const localStorageUsers = "void-verified-users";
