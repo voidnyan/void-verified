@@ -1,5 +1,4 @@
 node_modules/
+dist/
 
-host_to_local_dev.js
-package-lock.json
-package.json
+doc/discard.md

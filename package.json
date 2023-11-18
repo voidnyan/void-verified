@@ -1,0 +1,25 @@
+{
+    "name": "void-verified",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "node build.js",
+        "dev": "nodemon build.js --ignore ./dist/"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/voidnyan/void-verified.git"
+    },
+    "type": "module",
+    "author": "voidnyan",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/voidnyan/void-verified/issues"
+    },
+    "homepage": "https://github.com/voidnyan/void-verified#readme",
+    "devDependencies": {
+        "@kellnerd/userscript-bundler": "github:kellnerd/userscript-bundler",
+        "nodemon": "^3.0.1"
+    }
+}
