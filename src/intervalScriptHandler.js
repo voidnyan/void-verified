@@ -1,11 +1,24 @@
+import { GlobalCSS } from "./globalCSS";
+import { ActivityHandler } from "./activityHandler.js";
+import { SettingsUserInterface } from "./settingsUserInterface";
+import { StyleHandler } from "./styleHandler";
+
 export class IntervalScriptHandler {
 	styleHandler;
 	settingsUi;
 	activityHandler;
-	constructor(stylehandler, settingsUi, activityHandler) {
-		this.styleHandler = stylehandler;
-		this.settingsUi = settingsUi;
-		this.activityHandler = activityHandler;
+	settings;
+	globalCSS;
+	constructor(settings) {
+		this.settings = settings;
+
+		this.styleHandler = new StyleHandler(settings);
+		this.settingsUi = new SettingsUserInterface(
+			settings,
+			this.styleHandler
+		);
+		this.globalCSS = new GlobalCSS(settings);
+		this.activityHandler = new ActivityHandler(settings);
 	}
 
 	currentPath = "";
@@ -37,6 +50,7 @@ export class IntervalScriptHandler {
 		}
 
 		intervalScriptHandler.styleHandler.clearProfileVerify();
+		intervalScriptHandler.globalCSS.createCss();
 
 		if (path.startsWith("/user/")) {
 			intervalScriptHandler.styleHandler.verifyProfile();

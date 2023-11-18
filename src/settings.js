@@ -1,3 +1,5 @@
+import { GlobalCSS } from "./globalCSS";
+
 export class Settings {
 	LocalStorageUsers = "void-verified-users";
 	LocalStorageSettings = "void-verified-settings";
@@ -49,6 +51,14 @@ export class Settings {
 		defaultHighlightColor: {
 			defaultValue: "#FFFFFF",
 			description: "Fallback highlight color.",
+		},
+		globalCssEnabled: {
+			defaultValue: false,
+			description: "Enable custom global CSS.",
+		},
+		globalCssAutoDisable: {
+			defaultValue: true,
+			description: "Disable global CSS when a profile has custom CSS.",
 		},
 	};
 
