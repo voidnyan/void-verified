@@ -226,6 +226,11 @@
 		createStyleLink(highlightStyles, "highlight");
 	}
 
+	function clearProfileVerify() {
+		profileLink.href =
+			"data:text/css;charset=UTF-8," + encodeURIComponent("");
+	}
+
 	function verifyProfile() {
 		if (!getOptionValue(voidVerifiedSettings.enabledForProfileName)) {
 			return;
@@ -236,8 +241,7 @@
 
 		const user = verifiedUsers.find((u) => u.username === username);
 		if (!user) {
-			profileLink.href =
-				"data:text/css;charset=UTF-8," + encodeURIComponent("");
+			clearProfileVerify();
 			return;
 		}
 
@@ -737,6 +741,8 @@
 		if (!hasPathChanged(path)) {
 			return;
 		}
+
+		clearProfileVerify();
 
 		if (path.startsWith("/user/")) {
 			verifyProfile();
