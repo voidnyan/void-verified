@@ -7,7 +7,7 @@ export class ActivityHandler {
 	moveAndDisplaySubscribeButton() {
 		if (
 			!this.settings.getOptionValue(
-				this.settings.Options.moveSubscribeButtons
+				this.settings.options.moveSubscribeButtons
 			)
 		) {
 			return;

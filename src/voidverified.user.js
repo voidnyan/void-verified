@@ -9,4 +9,4 @@ const intervalScriptHandler = new IntervalScriptHandler(settings);
 styleHandler.refreshStyles();
 intervalScriptHandler.enableScriptIntervalHandling();
 
-console.log(`VoidVerified ${settings.Version} loaded.`);
+console.log(`VoidVerified ${settings.version} loaded.`);

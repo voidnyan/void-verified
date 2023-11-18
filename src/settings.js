@@ -1,81 +1,26 @@
-import { GlobalCSS } from "./globalCSS";
+import { defaultSettings } from "./defaultSettings";
 
 export class Settings {
-	LocalStorageUsers = "void-verified-users";
-	LocalStorageSettings = "void-verified-settings";
-	Version = "1.1.1";
+	localStorageUsers = "void-verified-users";
+	localStorageSettings = "void-verified-settings";
+	version = "1.2.0";
 
-	Options = {
-		copyColorFromProfile: {
-			defaultValue: true,
-			description: "Copy user color from their profile when visited.",
-		},
-		moveSubscribeButtons: {
-			defaultValue: false,
-			description:
-				"Move activity subscribe button next to comments and likes.",
-		},
-		hideLikeCount: {
-			defaultValue: false,
-			description: "Hide activity and reply like counts.",
-		},
-		enabledForUsername: {
-			defaultValue: true,
-			description: "Display a verified sign next to usernames.",
-		},
-		enabledForProfileName: {
-			defaultValue: false,
-			description: "Display a verified sign next to a profile name.",
-		},
-		defaultSign: {
-			defaultValue: "✔",
-			description: "The default sign displayed next to a username.",
-		},
-		highlightEnabled: {
-			defaultValue: true,
-			description: "Highlight user activity with a border.",
-		},
-		highlightEnabledForReplies: {
-			defaultValue: true,
-			description: "Highlight replies with a border.",
-		},
-		highlightSize: {
-			defaultValue: "5px",
-			description: "Width of the highlight border.",
-		},
-		useDefaultHighlightColor: {
-			defaultValue: false,
-			description:
-				"Use fallback highlight color when user color is not specified.",
-		},
-		defaultHighlightColor: {
-			defaultValue: "#FFFFFF",
-			description: "Fallback highlight color.",
-		},
-		globalCssEnabled: {
-			defaultValue: false,
-			description: "Enable custom global CSS.",
-		},
-		globalCssAutoDisable: {
-			defaultValue: true,
-			description: "Disable global CSS when a profile has custom CSS.",
-		},
-	};
+	verifiedUsers = [];
 
-	VerifiedUsers = [];
+	options = defaultSettings;
 
 	constructor() {
-		this.VerifiedUsers =
-			JSON.parse(localStorage.getItem(this.LocalStorageUsers)) ?? [];
+		this.verifiedUsers =
+			JSON.parse(localStorage.getItem(this.localStorageUsers)) ?? [];
 
 		const settingsInLocalStorage =
-			JSON.parse(localStorage.getItem(this.LocalStorageSettings)) ?? {};
+			JSON.parse(localStorage.getItem(this.localStorageSettings)) ?? {};
 
 		for (const [key, value] of Object.entries(settingsInLocalStorage)) {
-			if (!this.Options[key]) {
+			if (!this.options[key]) {
 				continue;
 			}
-			this.Options[key].value = value.value;
+			this.options[key].value = value.value;
 		}
 	}
 
@@ -87,19 +32,19 @@ export class Settings {
 	}
 
 	verifyUser(username) {
-		if (this.VerifiedUsers.find((user) => user.username === username)) {
+		if (this.verifiedUsers.find((user) => user.username === username)) {
 			return;
 		}
 
-		this.VerifiedUsers.push({ username });
+		this.verifiedUsers.push({ username });
 		localStorage.setItem(
-			this.LocalStorageUsers,
-			JSON.stringify(this.VerifiedUsers)
+			this.localStorageUsers,
+			JSON.stringify(this.verifiedUsers)
 		);
 	}
 
 	updateUserOption(username, key, value) {
-		this.VerifiedUsers = this.VerifiedUsers.map((u) =>
+		this.verifiedUsers = this.verifiedUsers.map((u) =>
 			u.username === username
 				? {
 						...u,
@@ -108,34 +53,34 @@ export class Settings {
 				: u
 		);
 		localStorage.setItem(
-			this.LocalStorageUsers,
-			JSON.stringify(this.VerifiedUsers)
+			this.localStorageUsers,
+			JSON.stringify(this.verifiedUsers)
 		);
 	}
 
 	removeUser(username) {
-		this.VerifiedUsers = this.VerifiedUsers.filter(
+		this.verifiedUsers = this.verifiedUsers.filter(
 			(user) => user.username !== username
 		);
 		localStorage.setItem(
-			this.LocalStorageUsers,
-			JSON.stringify(this.VerifiedUsers)
+			this.localStorageUsers,
+			JSON.stringify(this.verifiedUsers)
 		);
 	}
 
 	saveSettingToLocalStorage(key, value) {
 		let localSettings = JSON.parse(
-			localStorage.getItem(this.LocalStorageSettings)
+			localStorage.getItem(this.localStorageSettings)
 		);
 
-		this.Options[key].value = value;
+		this.options[key].value = value;
 
 		if (localSettings === null) {
 			const settings = {
 				[key]: value,
 			};
 			localStorage.setItem(
-				this.LocalStorageSettings,
+				this.localStorageSettings,
 				JSON.stringify(settings)
 			);
 			return;
@@ -143,7 +88,7 @@ export class Settings {
 
 		localSettings[key] = { value };
 		localStorage.setItem(
-			this.LocalStorageSettings,
+			this.localStorageSettings,
 			JSON.stringify(localSettings)
 		);
 	}

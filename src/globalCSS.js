@@ -18,7 +18,7 @@ export class GlobalCSS {
 	createCss() {
 		if (
 			!this.settings.getOptionValue(
-				this.settings.Options.globalCssEnabled
+				this.settings.options.globalCssEnabled
 			)
 		) {
 			this.styleHandler.clearStyles(this.styleId);
@@ -50,13 +50,13 @@ export class GlobalCSS {
 	}
 
 	shouldRender() {
-		if (window.location.pathname.startsWith("/settings/")) {
+		if (window.location.pathname.startsWith("/settings")) {
 			return false;
 		}
 
 		if (
 			!this.settings.getOptionValue(
-				this.settings.Options.globalCssAutoDisable
+				this.settings.options.globalCssAutoDisable
 			)
 		) {
 			return true;

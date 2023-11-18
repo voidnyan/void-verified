@@ -1,12 +1,12 @@
 export class SettingsUserInterface {
-	Settings;
-	StyleHandler;
+	settings;
+	styleHandler;
 	globalCSS;
 	AnilistBlue = "120, 180, 255";
 
 	constructor(settings, styleHandler, globalCSS) {
-		this.Settings = settings;
-		this.StyleHandler = styleHandler;
+		this.settings = settings;
+		this.styleHandler = styleHandler;
 		this.globalCSS = globalCSS;
 	}
 
@@ -22,7 +22,7 @@ export class SettingsUserInterface {
 		settingsListContainer.style.display = "flex";
 		settingsListContainer.style.flexDirection = "column";
 		settingsListContainer.style.gap = "5px";
-		for (const [key, setting] of Object.entries(this.Settings.Options)) {
+		for (const [key, setting] of Object.entries(this.settings.options)) {
 			this.renderSetting(setting, settingsListContainer, key);
 		}
 
@@ -44,13 +44,13 @@ export class SettingsUserInterface {
 		const headerContainer = document.createElement("div");
 		const header = document.createElement("h1");
 		header.style.marginTop = "30px";
-		header.innerText = "VoidVerified Settings";
+		header.innerText = "VoidVerified settings";
 
 		const versionInfo = document.createElement("p");
-		versionInfo.append("Version: ");
+		versionInfo.append("version: ");
 		const versionNumber = document.createElement("span");
 		versionNumber.style.color = `rgb(${this.AnilistBlue})`;
-		versionNumber.append(this.Settings.Version);
+		versionNumber.append(this.settings.version);
 
 		versionInfo.append(versionNumber);
 
@@ -80,7 +80,7 @@ export class SettingsUserInterface {
 
 		const body = document.createElement("tbody");
 
-		for (const user of this.Settings.VerifiedUsers) {
+		for (const user of this.settings.verifiedUsers) {
 			body.append(this.createUserRow(user));
 		}
 
@@ -90,7 +90,7 @@ export class SettingsUserInterface {
 
 		const inputForm = document.createElement("form");
 		inputForm.addEventListener("submit", (event) =>
-			this.handleVerifyUserForm(event, this.Settings)
+			this.handleVerifyUserForm(event, this.settings)
 		);
 		const label = document.createElement("label");
 		label.innerText = "Add user";
@@ -127,8 +127,8 @@ export class SettingsUserInterface {
 				user.enabledForUsername,
 				user.username,
 				"enabledForUsername",
-				this.Settings.getOptionValue(
-					this.Settings.Options.enabledForUsername
+				this.settings.getOptionValue(
+					this.settings.options.enabledForUsername
 				)
 			)
 		);
@@ -158,8 +158,8 @@ export class SettingsUserInterface {
 				user.copyColorFromProfile,
 				user.username,
 				"copyColorFromProfile",
-				this.Settings.getOptionValue(
-					this.Settings.Options.copyColorFromProfile
+				this.settings.getOptionValue(
+					this.settings.options.copyColorFromProfile
 				)
 			)
 		);
@@ -169,8 +169,8 @@ export class SettingsUserInterface {
 				user.highlightEnabled,
 				user.username,
 				"highlightEnabled",
-				this.Settings.getOptionValue(
-					this.Settings.Options.highlightEnabled
+				this.settings.getOptionValue(
+					this.settings.options.highlightEnabled
 				)
 			)
 		);
@@ -180,8 +180,8 @@ export class SettingsUserInterface {
 				user.highlightEnabledForReplies,
 				user.username,
 				"highlightEnabledForReplies",
-				this.Settings.getOptionValue(
-					this.Settings.Options.highlightEnabledForReplies
+				this.settings.getOptionValue(
+					this.settings.options.highlightEnabledForReplies
 				)
 			)
 		);
@@ -214,20 +214,20 @@ export class SettingsUserInterface {
 		if (
 			user.color &&
 			(user.copyColorFromProfile ||
-				this.Settings.getOptionValue(
-					this.Settings.Options.copyColorFromProfile
+				this.settings.getOptionValue(
+					this.settings.options.copyColorFromProfile
 				))
 		) {
 			return this.rgbToHex(user.color);
 		}
 
 		if (
-			this.Settings.getOptionValue(
-				this.Settings.Options.useDefaultHighlightColor
+			this.settings.getOptionValue(
+				this.settings.options.useDefaultHighlightColor
 			)
 		) {
-			return this.Settings.getOptionValue(
-				this.Settings.Options.defaultHighlightColor
+			return this.settings.getOptionValue(
+				this.settings.options.defaultHighlightColor
 			);
 		}
 
@@ -249,7 +249,7 @@ export class SettingsUserInterface {
 
 		checkbox.style.marginLeft = "5px";
 
-		checkbox.title = this.Settings.Options[settingKey].description;
+		checkbox.title = this.settings.options[settingKey].description;
 		return checkbox;
 	}
 
@@ -281,19 +281,19 @@ export class SettingsUserInterface {
 	}
 
 	updateUserOption(username, key, value) {
-		this.Settings.updateUserOption(username, key, value);
-		this.StyleHandler.refreshStyles();
+		this.settings.updateUserOption(username, key, value);
+		this.styleHandler.refreshStyles();
 	}
 
 	removeUser(username) {
-		this.Settings.removeUser(username);
+		this.settings.removeUser(username);
 		this.refreshUserTable();
-		this.StyleHandler.refreshStyles();
+		this.styleHandler.refreshStyles();
 	}
 
 	verifyUser(username) {
-		this.Settings.verifyUser(username);
-		this.StyleHandler.refreshStyles();
+		this.settings.verifyUser(username);
+		this.styleHandler.refreshStyles();
 	}
 
 	createCell(content, elementType = "td") {
@@ -303,7 +303,7 @@ export class SettingsUserInterface {
 	}
 
 	renderSetting(setting, settingsContainer, settingKey, disabled = false) {
-		const value = this.Settings.getOptionValue(setting);
+		const value = this.settings.getOptionValue(setting);
 		const type = typeof value;
 
 		const container = document.createElement("div");
@@ -351,8 +351,8 @@ export class SettingsUserInterface {
 	handleOption(event, settingKey, type) {
 		const value =
 			type === "boolean" ? event.target.checked : event.target.value;
-		this.Settings.saveSettingToLocalStorage(settingKey, value);
-		this.StyleHandler.refreshStyles();
+		this.settings.saveSettingToLocalStorage(settingKey, value);
+		this.styleHandler.refreshStyles();
 		this.refreshUserTable();
 	}
 
