@@ -19,7 +19,6 @@ export class StyleHandler {
 
 	createStyles() {
 		this.usernameStyles = "";
-		this.highlightStyles = "";
 		this.otherStyles = `a[href="/settings/developer" i]::after{content: " & Void"}`;
 
 		for (const user of this.Settings.VerifiedUsers) {
@@ -31,7 +30,45 @@ export class StyleHandler {
 			) {
 				this.createUsernameCSS(user);
 			}
+		}
 
+		if (
+			this.Settings.getOptionValue(
+				this.Settings.Options.moveSubscribeButtons
+			)
+		) {
+			this.otherStyles += `
+                .has-label::before {
+                top: -30px !important;
+                left: unset !important;
+                right: -10px;
+                }
+    
+                .has-label[label="Unsubscribe"],
+                .has-label[label="Subscribe"] {
+                font-size: 0.875em !important;
+                }
+    
+                .has-label[label="Unsubscribe"] {
+                color: rgba(var(--color-green),.8);
+                }
+                `;
+		}
+
+		this.createHighlightStyles();
+
+		if (this.Settings.getOptionValue(this.Settings.Options.hideLikeCount)) {
+			this.otherStyles += `
+                    .like-wrap .count {
+                        display: none;
+                    }
+                `;
+		}
+	}
+
+	createHighlightStyles() {
+		this.highlightStyles = "";
+		for (const user of this.Settings.VerifiedUsers) {
 			if (
 				this.Settings.getOptionValue(
 					this.Settings.Options.highlightEnabled
@@ -62,37 +99,6 @@ export class StyleHandler {
 		}
 
 		this.disableHighlightOnSmallCards();
-
-		if (
-			this.Settings.getOptionValue(
-				this.Settings.Options.moveSubscribeButtons
-			)
-		) {
-			this.otherStyles += `
-                .has-label::before {
-                top: -30px !important;
-                left: unset !important;
-                right: -10px;
-                }
-    
-                .has-label[label="Unsubscribe"],
-                .has-label[label="Subscribe"] {
-                font-size: 0.875em !important;
-                }
-    
-                .has-label[label="Unsubscribe"] {
-                color: rgba(var(--color-green),.8);
-                }
-                `;
-		}
-
-		if (this.Settings.getOptionValue(this.Settings.Options.hideLikeCount)) {
-			this.otherStyles += `
-                    .like-wrap .count {
-                        display: none;
-                    }
-                `;
-		}
 	}
 
 	createUsernameCSS(user) {
@@ -144,7 +150,7 @@ export class StyleHandler {
 		) {
 			return;
 		}
-
+		this.createHighlightStyles();
 		this.createStyleLink(this.highlightStyles, "highlight");
 	}
 
