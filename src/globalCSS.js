@@ -65,6 +65,11 @@ export class GlobalCSS {
 		const profileCustomCss = document.getElementById(
 			"customCSS-automail-styles"
 		);
+
+		if (!profileCustomCss) {
+			return true;
+		}
+
 		const shouldRender = profileCustomCss.innerHTML.trim().length === 0;
 		return shouldRender;
 	}

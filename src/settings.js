@@ -3,7 +3,7 @@ import { GlobalCSS } from "./globalCSS";
 export class Settings {
 	LocalStorageUsers = "void-verified-users";
 	LocalStorageSettings = "void-verified-settings";
-	Version = "DEV";
+	Version = "1.1.1";
 
 	Options = {
 		copyColorFromProfile: {
