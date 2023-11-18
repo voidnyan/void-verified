@@ -13,11 +13,12 @@ export class IntervalScriptHandler {
 		this.settings = settings;
 
 		this.styleHandler = new StyleHandler(settings);
+		this.globalCSS = new GlobalCSS(settings);
 		this.settingsUi = new SettingsUserInterface(
 			settings,
-			this.styleHandler
+			this.styleHandler,
+			this.globalCSS
 		);
-		this.globalCSS = new GlobalCSS(settings);
 		this.activityHandler = new ActivityHandler(settings);
 	}
 
@@ -35,10 +36,10 @@ export class IntervalScriptHandler {
 		const path = window.location.pathname;
 
 		intervalScriptHandler.activityHandler.moveAndDisplaySubscribeButton();
+		intervalScriptHandler.globalCSS.clearCssForProfile();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();
-			return;
 		}
 
 		if (!path.startsWith("/settings/developer")) {

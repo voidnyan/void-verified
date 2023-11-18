@@ -1,11 +1,13 @@
 export class SettingsUserInterface {
-	Settings = {};
-	StyleHandler = {};
+	Settings;
+	StyleHandler;
+	globalCSS;
 	AnilistBlue = "120, 180, 255";
 
-	constructor(settings, styleHandler) {
+	constructor(settings, styleHandler, globalCSS) {
 		this.Settings = settings;
 		this.StyleHandler = styleHandler;
+		this.globalCSS = globalCSS;
 	}
 
 	renderSettingsUi() {
@@ -27,6 +29,8 @@ export class SettingsUserInterface {
 		settingsContainer.append(settingsListContainer);
 
 		this.renderUserTable(settingsContainer);
+
+		this.renderCustomCssEditor(settingsContainer);
 
 		container.append(settingsContainer);
 	}
@@ -59,7 +63,10 @@ export class SettingsUserInterface {
 		const oldTableContainer = document.querySelector(
 			"#void-verified-user-table"
 		);
-		const tableContainer = document.createElement("div");
+		const tableContainer =
+			oldTableContainer ?? document.createElement("div");
+		tableContainer.innerHTML = "";
+
 		tableContainer.setAttribute("id", "void-verified-user-table");
 
 		const table = document.createElement("table");
@@ -94,8 +101,7 @@ export class SettingsUserInterface {
 		inputForm.append(textInput);
 		tableContainer.append(inputForm);
 
-		settingsContainer.append(tableContainer);
-		oldTableContainer?.remove();
+		oldTableContainer || settingsContainer.append(tableContainer);
 	}
 
 	createUserRow(user) {
@@ -144,7 +150,6 @@ export class SettingsUserInterface {
 		);
 
 		const colorInputContainer = document.createElement("span");
-		// colorInputContainer.append(colorInput);
 
 		const colorCell = this.createCell(colorInput);
 
@@ -349,6 +354,46 @@ export class SettingsUserInterface {
 		this.Settings.saveSettingToLocalStorage(settingKey, value);
 		this.StyleHandler.refreshStyles();
 		this.refreshUserTable();
+	}
+
+	renderCustomCssEditor(settingsContainer) {
+		const container = document.createElement("div");
+		const label = document.createElement("label");
+		label.innerText = "Custom Global CSS";
+		label.setAttribute("for", "void-verified-global-css-editor");
+		label.style.marginTop = "20px";
+		label.style.fontSize = "2rem";
+		label.style.display = "inline-block";
+		container.append(label);
+
+		const textarea = document.createElement("textarea");
+		textarea.setAttribute("id", "void-verified-global-css-editor");
+
+		textarea.value = this.globalCSS.css;
+		textarea.style.width = "100%";
+		textarea.style.height = "200px";
+		textarea.style.resize = "vertical";
+		textarea.style.background = "#14191f";
+		textarea.style.color = "white";
+
+		textarea.addEventListener("change", (event) => {
+			this.handleCustomCssEditor(event, this);
+		});
+
+		container.append(textarea);
+
+		const notice = document.createElement("div");
+		notice.innerText =
+			"Please note that Custom CSS is disabled in the settings. \nIn the event that you accidentally disable rendering of critical parts of AniList, navigate to the settings by URL";
+		notice.style.fontSize = "11px";
+		container.append(notice);
+
+		settingsContainer.append(container);
+	}
+
+	handleCustomCssEditor(event, settingsUi) {
+		const value = event.target.value;
+		settingsUi.globalCSS.updateCss(value);
 	}
 
 	rgbToHex(rgb) {

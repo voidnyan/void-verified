@@ -153,6 +153,11 @@ export class StyleHandler {
 			"data:text/css;charset=UTF-8," + encodeURIComponent("");
 	}
 
+	clearStyles(id) {
+		const styles = document.getElementById(`void-verified-${id}-styles`);
+		styles?.remove();
+	}
+
 	verifyProfile() {
 		if (
 			!this.Settings.getOptionValue(
