@@ -1,4 +1,5 @@
 import { defaultSettings } from "./defaultSettings";
+import { ColorFunctions } from "./colorFunctions";
 
 export class Settings {
 	localStorageUsers = "void-verified-users";
@@ -136,14 +137,6 @@ export class Settings {
 			return this.#defaultColorRgb[color];
 		}
 
-		return this.#hexToRgb(color);
-	}
-
-	#hexToRgb(hex) {
-		const r = parseInt(hex.slice(1, 3), 16);
-		const g = parseInt(hex.slice(3, 5), 16);
-		const b = parseInt(hex.slice(5, 7), 16);
-
-		return `${r}, ${g}, ${b}`;
+		return ColorFunctions.hexToRgb(color);
 	}
 }
