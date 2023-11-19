@@ -23,20 +23,14 @@ export class StyleHandler {
 
 		for (const user of this.settings.verifiedUsers) {
 			if (
-				this.settings.getOptionValue(
-					this.settings.options.enabledForUsername
-				) ||
+				this.settings.options.enabledForUsername.getValue() ||
 				user.enabledForUsername
 			) {
 				this.createUsernameCSS(user);
 			}
 		}
 
-		if (
-			this.settings.getOptionValue(
-				this.settings.options.moveSubscribeButtons
-			)
-		) {
+		if (this.settings.options.moveSubscribeButtons.getValue()) {
 			this.otherStyles += `
                 .has-label::before {
                 top: -30px !important;
@@ -57,7 +51,7 @@ export class StyleHandler {
 
 		this.createHighlightStyles();
 
-		if (this.settings.getOptionValue(this.settings.options.hideLikeCount)) {
+		if (this.settings.options.hideLikeCount.getValue()) {
 			this.otherStyles += `
                     .like-wrap .count {
                         display: none;
@@ -70,9 +64,7 @@ export class StyleHandler {
 		this.highlightStyles = "";
 		for (const user of this.settings.verifiedUsers) {
 			if (
-				this.settings.getOptionValue(
-					this.settings.options.highlightEnabled
-				) ||
+				this.settings.options.highlightEnabled.getValue() ||
 				user.highlightEnabled
 			) {
 				this.createHighlightCSS(
@@ -86,9 +78,7 @@ export class StyleHandler {
 			}
 
 			if (
-				this.settings.getOptionValue(
-					this.settings.options.highlightEnabledForReplies
-				) ||
+				this.settings.options.highlightEnabledForReplies.getValue() ||
 				user.highlightEnabledForReplies
 			) {
 				this.createHighlightCSS(
@@ -106,9 +96,7 @@ export class StyleHandler {
                 a.name[href*="${user.username}" i]::after {
                     content: "${
 						this.stringIsEmpty(user.sign) ??
-						this.settings.getOptionValue(
-							this.settings.options.defaultSign
-						)
+						this.settings.options.defaultSign.getValue()
 					}";
                     color: ${
 						this.getUserColor(user) ?? "rgb(var(--color-blue))"
@@ -120,12 +108,8 @@ export class StyleHandler {
 	createHighlightCSS(user, selector) {
 		this.highlightStyles += `
                 ${selector} {
-                    margin-right: -${this.settings.getOptionValue(
-						this.settings.options.highlightSize
-					)};
-                    border-right: ${this.settings.getOptionValue(
-						this.settings.options.highlightSize
-					)} solid ${
+                    margin-right: -${this.settings.options.highlightSize.getValue()};
+                    border-right: ${this.settings.options.highlightSize.getValue()} solid ${
 			this.getUserColor(user) ?? this.getDefaultHighlightColor()
 		};
                     border-radius: 5px;
@@ -143,11 +127,7 @@ export class StyleHandler {
 	}
 
 	refreshHomePage() {
-		if (
-			!this.settings.getOptionValue(
-				this.settings.options.highlightEnabled
-			)
-		) {
+		if (!this.settings.options.highlightEnabled.getValue()) {
 			return;
 		}
 		this.createHighlightStyles();
@@ -165,11 +145,7 @@ export class StyleHandler {
 	}
 
 	verifyProfile() {
-		if (
-			!this.settings.getOptionValue(
-				this.settings.options.enabledForProfileName
-			)
-		) {
+		if (!this.settings.options.enabledForProfileName.getValue()) {
 			return;
 		}
 
@@ -188,9 +164,7 @@ export class StyleHandler {
                     h1.name::after {
                     content: "${
 						this.stringIsEmpty(user.sign) ??
-						this.settings.getOptionValue(
-							this.settings.options.defaultSign
-						)
+						this.settings.options.defaultSign.getValue()
 					}"
                     }
                 `;
@@ -212,9 +186,7 @@ export class StyleHandler {
 		if (
 			!(
 				user.copyColorFromProfile ||
-				this.settings.getOptionValue(
-					this.settings.options.copyColorFromProfile
-				)
+				this.settings.options.copyColorFromProfile.getValue()
 			)
 		) {
 			return;
@@ -231,23 +203,15 @@ export class StyleHandler {
 			user.colorOverride ??
 			(user.color &&
 			(user.copyColorFromProfile ||
-				this.settings.getOptionValue(
-					this.settings.options.copyColorFromProfile
-				))
+				this.settings.options.copyColorFromProfile.getValue())
 				? `rgb(${user.color})`
 				: undefined)
 		);
 	}
 
 	getDefaultHighlightColor() {
-		if (
-			this.settings.getOptionValue(
-				this.settings.options.useDefaultHighlightColor
-			)
-		) {
-			return this.settings.getOptionValue(
-				this.settings.options.defaultHighlightColor
-			);
+		if (this.settings.options.useDefaultHighlightColor.getValue()) {
+			return this.settings.options.defaultHighlightColor.getValue();
 		}
 		return "rgb(var(--color-blue))";
 	}

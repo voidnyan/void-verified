@@ -16,11 +16,7 @@ export class GlobalCSS {
 	}
 
 	createCss() {
-		if (
-			!this.settings.getOptionValue(
-				this.settings.options.globalCssEnabled
-			)
-		) {
+		if (!this.settings.options.globalCssEnabled.getValue()) {
 			this.styleHandler.clearStyles(this.styleId);
 			return;
 		}
@@ -54,11 +50,7 @@ export class GlobalCSS {
 			return false;
 		}
 
-		if (
-			!this.settings.getOptionValue(
-				this.settings.options.globalCssAutoDisable
-			)
-		) {
+		if (!this.settings.options.globalCssAutoDisable.getValue()) {
 			return true;
 		}
 

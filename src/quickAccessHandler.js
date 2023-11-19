@@ -11,9 +11,7 @@ export class QuickAccess {
 		}
 
 		if (
-			!this.settings.getOptionValue(
-				this.settings.options.quickAccessEnabled
-			) &&
+			!this.settings.options.quickAccessEnabled.getValue() &&
 			!this.settings.verifiedUsers.some((user) => user.quickAccessEnabled)
 		) {
 			return;
@@ -98,11 +96,7 @@ export class QuickAccess {
 	}
 
 	#getQuickAccessUsers() {
-		if (
-			this.settings.getOptionValue(
-				this.settings.options.quickAccessEnabled
-			)
-		) {
+		if (this.settings.options.quickAccessEnabled.getValue()) {
 			return this.settings.verifiedUsers;
 		}
 

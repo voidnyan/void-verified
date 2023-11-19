@@ -130,9 +130,7 @@ export class SettingsUserInterface {
 				user.enabledForUsername,
 				user.username,
 				"enabledForUsername",
-				this.settings.getOptionValue(
-					this.settings.options.enabledForUsername
-				)
+				this.settings.options.enabledForUsername.getValue()
 			)
 		);
 
@@ -161,9 +159,7 @@ export class SettingsUserInterface {
 				user.copyColorFromProfile,
 				user.username,
 				"copyColorFromProfile",
-				this.settings.getOptionValue(
-					this.settings.options.copyColorFromProfile
-				)
+				this.settings.options.copyColorFromProfile.getValue()
 			)
 		);
 
@@ -172,9 +168,7 @@ export class SettingsUserInterface {
 				user.highlightEnabled,
 				user.username,
 				"highlightEnabled",
-				this.settings.getOptionValue(
-					this.settings.options.highlightEnabled
-				)
+				this.settings.options.highlightEnabled.getValue()
 			)
 		);
 
@@ -183,9 +177,7 @@ export class SettingsUserInterface {
 				user.highlightEnabledForReplies,
 				user.username,
 				"highlightEnabledForReplies",
-				this.settings.getOptionValue(
-					this.settings.options.highlightEnabledForReplies
-				)
+				this.settings.options.highlightEnabledForReplies.getValue()
 			)
 		);
 
@@ -204,9 +196,7 @@ export class SettingsUserInterface {
 			user.quickAccessEnabled,
 			user.username,
 			"quickAccessEnabled",
-			this.settings.getOptionValue(
-				this.settings.options.quickAccessEnabled
-			)
+			this.settings.options.quickAccessEnabled.getValue()
 		);
 		row.append(this.#createCell(quickAccessCheckbox));
 
@@ -227,21 +217,13 @@ export class SettingsUserInterface {
 		if (
 			user.color &&
 			(user.copyColorFromProfile ||
-				this.settings.getOptionValue(
-					this.settings.options.copyColorFromProfile
-				))
+				this.settings.options.copyColorFromProfile.getValue())
 		) {
 			return ColorFunctions.rgbToHex(user.color);
 		}
 
-		if (
-			this.settings.getOptionValue(
-				this.settings.options.useDefaultHighlightColor
-			)
-		) {
-			return this.settings.getOptionValue(
-				this.settings.options.defaultHighlightColor
-			);
+		if (this.settings.options.useDefaultHighlightColor.getValue()) {
+			return this.settings.options.defaultHighlightColor.getValue();
 		}
 
 		return ColorFunctions.rgbToHex(this.AnilistBlue);
@@ -311,7 +293,7 @@ export class SettingsUserInterface {
 	}
 
 	#renderSetting(setting, settingsContainer, settingKey, disabled = false) {
-		const value = this.settings.getOptionValue(setting);
+		const value = setting.getValue();
 		const type = typeof value;
 
 		const container = document.createElement("div");

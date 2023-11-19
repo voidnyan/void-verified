@@ -2,14 +2,31 @@ import { defaultSettings } from "./defaultSettings";
 import { ColorFunctions } from "./colorFunctions";
 import { AnilistAPI } from "./anilistAPI";
 
+class Option {
+	value;
+	defaultValue;
+	description;
+	constructor(option) {
+		this.defaultValue = option.defaultValue;
+		this.description = option.description;
+	}
+
+	getValue() {
+		if (this.value === "") {
+			return this.defaultValue;
+		}
+		return this.value ?? this.defaultValue;
+	}
+}
+
 export class Settings {
 	localStorageUsers = "void-verified-users";
 	localStorageSettings = "void-verified-settings";
-	version = "1.2.0";
+	version = "1.3.0";
 
 	verifiedUsers = [];
 
-	options = defaultSettings;
+	options = {};
 
 	constructor() {
 		this.verifiedUsers =
@@ -18,19 +35,16 @@ export class Settings {
 		const settingsInLocalStorage =
 			JSON.parse(localStorage.getItem(this.localStorageSettings)) ?? {};
 
+		for (const [key, value] of Object.entries(defaultSettings)) {
+			this.options[key] = new Option(value);
+		}
+
 		for (const [key, value] of Object.entries(settingsInLocalStorage)) {
 			if (!this.options[key]) {
 				continue;
 			}
 			this.options[key].value = value.value;
 		}
-	}
-
-	getOptionValue(object) {
-		if (object.value === "") {
-			return object.defaultValue;
-		}
-		return object.value ?? object.defaultValue;
 	}
 
 	verifyUser(username) {
