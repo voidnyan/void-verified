@@ -8,14 +8,6 @@ export class AnilistAPI {
 	}
 
 	queryUserData() {
-		if (
-			!this.settings.getOptionValue(
-				this.settings.options.copyColorFromProfile
-			)
-		) {
-			return;
-		}
-
 		this.#createUserQuery();
 	}
 
@@ -34,6 +26,10 @@ export class AnilistAPI {
 	#userQuery = `
         query ($username: String) {
             User(name: $username) {
+                name
+                avatar {
+                    large
+                }
                 options {
                     profileColor
                 }
@@ -65,7 +61,7 @@ export class AnilistAPI {
 			.then(this.#handleResponse)
 			.then((data) => {
 				const resultUser = data.User;
-				this.settings.updateUserFromApi(user.username, resultUser);
+				this.settings.updateUserFromApi(user, resultUser);
 			})
 			.catch((err) => {
 				console.error(err);
@@ -79,13 +75,16 @@ export class AnilistAPI {
 		if (
 			this.settings.getOptionValue(
 				this.settings.options.copyColorFromProfile
+			) ||
+			this.settings.getOptionValue(
+				this.settings.options.quickAccessEnabled
 			)
 		) {
 			return this.#filterUsersByLastFetch();
 		}
 
 		const users = this.settings.verifiedUsers.filter(
-			(user) => user.copyColorFromProfile
+			(user) => user.copyColorFromProfile || user.quickAccessEnabled
 		);
 
 		return this.#filterUsersByLastFetch(users);

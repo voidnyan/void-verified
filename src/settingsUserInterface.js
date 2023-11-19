@@ -77,6 +77,7 @@ export class SettingsUserInterface {
 		headrow.append(this.#createCell("Username", "th"));
 		headrow.append(this.#createCell("Sign", "th"));
 		headrow.append(this.#createCell("Color", "th"));
+		headrow.append(this.#createCell("Other", "th"));
 
 		head.append(headrow);
 
@@ -198,6 +199,16 @@ export class SettingsUserInterface {
 
 		colorCell.append(resetColorBtn);
 		row.append(colorCell);
+
+		const quickAccessCheckbox = this.#createUserCheckbox(
+			user.quickAccessEnabled,
+			user.username,
+			"quickAccessEnabled",
+			this.settings.getOptionValue(
+				this.settings.options.quickAccessEnabled
+			)
+		);
+		row.append(this.#createCell(quickAccessCheckbox));
 
 		const deleteButton = document.createElement("button");
 		deleteButton.innerText = "❌";

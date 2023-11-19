@@ -2,6 +2,7 @@ import { GlobalCSS } from "./globalCSS";
 import { ActivityHandler } from "./activityHandler.js";
 import { SettingsUserInterface } from "./settingsUserInterface";
 import { StyleHandler } from "./styleHandler";
+import { QuickAccess } from "./quickAccessHandler";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -9,6 +10,7 @@ export class IntervalScriptHandler {
 	activityHandler;
 	settings;
 	globalCSS;
+	quickAccess;
 	constructor(settings) {
 		this.settings = settings;
 
@@ -20,6 +22,7 @@ export class IntervalScriptHandler {
 			this.globalCSS
 		);
 		this.activityHandler = new ActivityHandler(settings);
+		this.quickAccess = new QuickAccess(settings);
 	}
 
 	currentPath = "";
@@ -40,6 +43,7 @@ export class IntervalScriptHandler {
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();
+			intervalScriptHandler.quickAccess.renderQuickAccess();
 		}
 
 		if (!path.startsWith("/settings/developer")) {

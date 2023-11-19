@@ -53,4 +53,8 @@ export const defaultSettings = {
 		defaultValue: true,
 		description: "Disable global CSS when a profile has custom CSS.",
 	},
+	quickAccessEnabled: {
+		defaultValue: false,
+		description: "Display quick access of users in home page.",
+	},
 };
