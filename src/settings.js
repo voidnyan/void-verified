@@ -1,5 +1,6 @@
 import { defaultSettings } from "./defaultSettings";
 import { ColorFunctions } from "./colorFunctions";
+import { AnilistAPI } from "./anilistAPI";
 
 export class Settings {
 	localStorageUsers = "void-verified-users";
@@ -33,7 +34,11 @@ export class Settings {
 	}
 
 	verifyUser(username) {
-		if (this.verifiedUsers.find((user) => user.username === username)) {
+		if (
+			this.verifiedUsers.find(
+				(user) => user.username.toLowerCase() === username.toLowerCase()
+			)
+		) {
 			return;
 		}
 
@@ -42,6 +47,9 @@ export class Settings {
 			this.localStorageUsers,
 			JSON.stringify(this.verifiedUsers)
 		);
+
+		const anilistAPI = new AnilistAPI(this);
+		anilistAPI.queryUserData();
 	}
 
 	updateUserOption(username, key, value) {
@@ -59,15 +67,11 @@ export class Settings {
 		);
 	}
 
-	updateUserFromApi(username, user) {
-		const color = this.#handleAnilistColor(user.options.profileColor);
+	updateUserFromApi(user, apiUser) {
+		const newUser = this.#mapApiUser(user, apiUser);
 		this.verifiedUsers = this.verifiedUsers.map((u) =>
-			u.username === username
-				? {
-						...u,
-						color,
-						lastFetch: new Date(),
-				  }
+			u.username.toLowerCase() === user.username.toLowerCase()
+				? newUser
 				: u
 		);
 
@@ -75,6 +79,20 @@ export class Settings {
 			this.localStorageUsers,
 			JSON.stringify(this.verifiedUsers)
 		);
+	}
+
+	#mapApiUser(user, apiUser) {
+		let userObject = { ...user };
+
+		userObject.color = this.#handleAnilistColor(
+			apiUser.options.profileColor
+		);
+
+		userObject.username = apiUser.name;
+		userObject.avatar = apiUser.avatar.large;
+		userObject.lastFetch = new Date();
+
+		return userObject;
 	}
 
 	removeUser(username) {
