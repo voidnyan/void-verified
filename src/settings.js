@@ -58,6 +58,24 @@ export class Settings {
 		);
 	}
 
+	updateUserFromApi(username, user) {
+		const color = this.#handleAnilistColor(user.options.profileColor);
+		this.verifiedUsers = this.verifiedUsers.map((u) =>
+			u.username === username
+				? {
+						...u,
+						color,
+						lastFetch: new Date(),
+				  }
+				: u
+		);
+
+		localStorage.setItem(
+			this.localStorageUsers,
+			JSON.stringify(this.verifiedUsers)
+		);
+	}
+
 	removeUser(username) {
 		this.verifiedUsers = this.verifiedUsers.filter(
 			(user) => user.username !== username
@@ -91,5 +109,41 @@ export class Settings {
 			this.localStorageSettings,
 			JSON.stringify(localSettings)
 		);
+	}
+
+	#defaultColors = [
+		"gray",
+		"blue",
+		"purple",
+		"green",
+		"orange",
+		"red",
+		"pink",
+	];
+
+	#defaultColorRgb = {
+		gray: "103, 123, 148",
+		blue: "61, 180, 242",
+		purple: "192, 99, 255",
+		green: "76, 202, 81",
+		orange: "239, 136, 26",
+		red: "225, 51, 51",
+		pink: "252, 157, 214",
+	};
+
+	#handleAnilistColor(color) {
+		if (this.#defaultColors.includes(color)) {
+			return this.#defaultColorRgb[color];
+		}
+
+		return this.#hexToRgb(color);
+	}
+
+	#hexToRgb(hex) {
+		const r = parseInt(hex.slice(1, 3), 16);
+		const g = parseInt(hex.slice(3, 5), 16);
+		const b = parseInt(hex.slice(5, 7), 16);
+
+		return `${r}, ${g}, ${b}`;
 	}
 }
