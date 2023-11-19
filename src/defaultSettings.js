@@ -1,7 +1,7 @@
 export const defaultSettings = {
 	copyColorFromProfile: {
 		defaultValue: true,
-		description: "Copy user color from their profile when visited.",
+		description: "Copy user color from their profile.",
 	},
 	moveSubscribeButtons: {
 		defaultValue: false,
