@@ -10,6 +10,8 @@ export class SettingsUserInterface {
 		this.settings = settings;
 		this.styleHandler = styleHandler;
 		this.globalCSS = globalCSS;
+
+		console.log(this.settings.options);
 	}
 
 	renderSettingsUi() {
@@ -70,6 +72,10 @@ export class SettingsUserInterface {
 		tableContainer.innerHTML = "";
 
 		tableContainer.setAttribute("id", "void-verified-user-table");
+
+		tableContainer.style = `
+            margin-top: 25px;
+        `;
 
 		const table = document.createElement("table");
 		const head = document.createElement("thead");
@@ -318,9 +324,17 @@ export class SettingsUserInterface {
 		}
 
 		input.setAttribute("id", settingKey);
-		input.addEventListener("change", (event) =>
-			this.#handleOption(event, settingKey, type)
-		);
+
+		if (settingKey === "pasteKeybind") {
+			input.style.width = "80px";
+			input.addEventListener("keydown", (event) =>
+				this.#handleKeybind(event, settingKey, input)
+			);
+		} else {
+			input.addEventListener("change", (event) =>
+				this.#handleOption(event, settingKey, type)
+			);
+		}
 
 		if (type === "boolean" && value) {
 			input.setAttribute("checked", true);
@@ -336,6 +350,13 @@ export class SettingsUserInterface {
 		label.style.marginLeft = "5px";
 		container.append(label);
 		settingsContainer.append(container);
+	}
+
+	#handleKeybind(event, settingKey, input) {
+		event.preventDefault();
+		const keybind = event.key;
+		this.settings.saveSettingToLocalStorage(settingKey, keybind);
+		input.value = keybind;
 	}
 
 	#handleOption(event, settingKey, type) {

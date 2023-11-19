@@ -57,4 +57,25 @@ export const defaultSettings = {
 		defaultValue: false,
 		description: "Display quick access of users in home page.",
 	},
+	pasteEnabled: {
+		defaultValue: false,
+		description:
+			"Automatically wrap pasted links and images with link and image tags.",
+	},
+	pasteWrapImagesWithLink: {
+		defaultValue: false,
+		description: "Wrap images with a link tag.",
+	},
+	pasteRequireKeyPress: {
+		defaultValue: true,
+		description: "Require an additional key to be pressed while pasting.",
+	},
+	pasteKeybind: {
+		defaultValue: "Shift",
+		description: "The key to be pressed while pasting.",
+	},
+	pasteImageWidth: {
+		defaultValue: "420",
+		description: "Width used when pasting images.",
+	},
 };
