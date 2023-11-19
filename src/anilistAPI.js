@@ -73,12 +73,8 @@ export class AnilistAPI {
 
 	#getUsersToQuery() {
 		if (
-			this.settings.getOptionValue(
-				this.settings.options.copyColorFromProfile
-			) ||
-			this.settings.getOptionValue(
-				this.settings.options.quickAccessEnabled
-			)
+			this.settings.options.copyColorFromProfile.getValue() ||
+			this.settings.options.quickAccessEnabled.getValue()
 		) {
 			return this.#filterUsersByLastFetch();
 		}

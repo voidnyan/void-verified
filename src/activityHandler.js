@@ -5,11 +5,7 @@ export class ActivityHandler {
 	}
 
 	moveAndDisplaySubscribeButton() {
-		if (
-			!this.settings.getOptionValue(
-				this.settings.options.moveSubscribeButtons
-			)
-		) {
+		if (!this.settings.options.moveSubscribeButtons.getValue()) {
 			return;
 		}
 
