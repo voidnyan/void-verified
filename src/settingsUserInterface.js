@@ -10,8 +10,6 @@ export class SettingsUserInterface {
 		this.settings = settings;
 		this.styleHandler = styleHandler;
 		this.globalCSS = globalCSS;
-
-		console.log(this.settings.options);
 	}
 
 	renderSettingsUi() {
