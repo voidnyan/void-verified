@@ -1,12 +1,14 @@
 export const styles = `
     .void-settings .void-nav ol {
         display: flex;
+        margin: 8px 0px;
+        padding: 0;
     }
 
     .void-settings .void-nav li {
         list-style: none;
         display: block;
-        color: rgb(--color-text);
+        color: white;
         padding: 3px 8px;
         text-transform: capitalize;
         background: black;
@@ -30,5 +32,111 @@ export const styles = `
     
     .void-settings .void-nav li:hover {
         background: rgb(var(--color-blue));
+    }
+
+    .void-settings .void-settings-header {
+        margin-top: 30px;
+    }
+
+    .void-settings .void-table input[type="text"] {
+        width: 100px;
+    }
+    .void-settings .void-table input[type="color"] {
+        border: 0;
+        height: 24px;
+        width: 40px;
+        padding: 0;
+        background-color: unset;
+        cursor: pointer;
+    }
+
+    .void-settings .void-table input[type="checkbox"] {
+        margin-left: 3px;
+        margin-right: 3px;
+    }
+
+    .void-settings .void-table button {
+        background: unset;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+    }
+
+    .void-settings .void-table form {
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .void-settings .void-settings-header span {
+        color: rgb(var(--color-blue));
+    }
+
+    .void-settings .void-settings-list {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .void-settings .void-settings-list input[type="color"] {
+        border: 0;
+        height: 20px;
+        width: 25px;
+        padding: 0;
+        background-color: unset;
+        cursor: pointer;
+    }
+
+    .void-settings .void-settings-list input[type="text"] {
+        width: 50px;
+    }
+
+    .void-settings .void-settings-list label {
+        margin-left: 5px;
+    }
+
+    .void-settings .void-css-editor label {
+        margin-top: 20px;
+        fontSize: 2rem;
+        display: inline-block;
+    }
+
+    .void-settings .void-css-editor textarea {
+        width: 100%;
+        height: 200px;
+        resize: vertical;
+        background: rgb(var(--color-foreground));
+        color: rgb(var(--color-text));
+    }
+    
+    .void-quick-access .void-quick-access-wrap {
+        background: rgb(var(--color-foreground));
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 60px);
+        grid-template-rows: repeat(auto-fill, 80px);
+        gap: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .void-quick-access-item {
+        display: inline-block;
+    }
+
+    .void-quick-access-pfp {
+        background-size: contain;
+        background-repeat: no-repeat;
+        height: 60px;
+        width: 60px;
+    }
+
+    .void-quick-access-username {
+        display: inline-block;
+        text-align: center;
+        bottom: -20px;
+        width: 100%;
+        word-break: break-all;
+        font-size: 1.2rem;
     }
 `;
