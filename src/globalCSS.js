@@ -54,6 +54,10 @@ export class GlobalCSS {
 			return true;
 		}
 
+		if (!window.location.pathname.startsWith("/user/")) {
+			return true;
+		}
+
 		const profileCustomCss = document.getElementById(
 			"customCSS-automail-styles"
 		);
