@@ -19,7 +19,7 @@ export class StyleHandler {
 
 	createStyles() {
 		this.usernameStyles = "";
-		this.otherStyles = `a[href="/settings/developer" i]::after{content: " & Void"}`;
+		this.otherStyles = "";
 
 		for (const user of this.settings.verifiedUsers) {
 			if (
@@ -69,11 +69,11 @@ export class StyleHandler {
 			) {
 				this.createHighlightCSS(
 					user,
-					`div.wrap:has( div.header > a.name[href*="${user.username}" i] )`
+					`div.wrap:has( div.header > a.name[href*="/${user.username}/" i] )`
 				);
 				this.createHighlightCSS(
 					user,
-					`div.wrap:has( div.details > a.name[href*="${user.username}" i] )`
+					`div.wrap:has( div.details > a.name[href*="/${user.username}/" i] )`
 				);
 			}
 
@@ -83,7 +83,7 @@ export class StyleHandler {
 			) {
 				this.createHighlightCSS(
 					user,
-					`div.reply:has( a.name[href*="${user.username}" i] )`
+					`div.reply:has( a.name[href*="/${user.username}/" i] )`
 				);
 			}
 		}
@@ -93,7 +93,7 @@ export class StyleHandler {
 
 	createUsernameCSS(user) {
 		this.usernameStyles += `
-                a.name[href*="${user.username}" i]::after {
+                a.name[href*="/${user.username}/" i]::after {
                     content: "${
 						this.stringIsEmpty(user.sign) ??
 						this.settings.options.defaultSign.getValue()
