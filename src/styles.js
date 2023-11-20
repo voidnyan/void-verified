@@ -1,4 +1,5 @@
 export const styles = `
+    a[href="/settings/developer" i]::after{content: " & Void"}
     .void-settings .void-nav ol {
         display: flex;
         margin: 8px 0px;
@@ -116,7 +117,7 @@ export const styles = `
         grid-template-columns: repeat(auto-fill, 60px);
         grid-template-rows: repeat(auto-fill, 80px);
         gap: 15px;
-        padding: 20px;
+        padding: 15px;
         margin-bottom: 25px;
     }
 
