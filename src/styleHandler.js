@@ -153,23 +153,23 @@ export class StyleHandler {
 		const username = usernameHeader.innerHTML.trim();
 
 		const user = this.settings.verifiedUsers.find(
-			(u) => u.username === username
+			(u) => u.username.toLowerCase() === username.toLowerCase()
 		);
+
 		if (!user) {
 			this.clearProfileVerify();
 			return;
 		}
 
 		const profileStyle = `
-                    h1.name::after {
+                    .name-wrapper h1.name::after {
                     content: "${
 						this.stringIsEmpty(user.sign) ??
 						this.settings.options.defaultSign.getValue()
 					}"
                     }
                 `;
-		this.profileLink.href =
-			"data:text/css;charset=UTF-8," + encodeURIComponent(profileStyle);
+		this.profileLink = this.createStyleLink(profileStyle, "profile");
 	}
 
 	copyUserColor() {

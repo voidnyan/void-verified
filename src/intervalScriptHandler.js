@@ -54,19 +54,18 @@ export class IntervalScriptHandler {
 			return;
 		}
 
-		intervalScriptHandler.styleHandler.clearProfileVerify();
-		intervalScriptHandler.globalCSS.createCss();
-
 		if (path.startsWith("/user/")) {
 			intervalScriptHandler.styleHandler.verifyProfile();
 			intervalScriptHandler.styleHandler.copyUserColor();
-			return;
+		} else {
+			intervalScriptHandler.styleHandler.clearProfileVerify();
 		}
 
 		if (path.startsWith("/settings/developer")) {
 			intervalScriptHandler.settingsUi.renderSettingsUi();
-			return;
 		}
+
+		intervalScriptHandler.globalCSS.createCss();
 	}
 
 	enableScriptIntervalHandling() {
