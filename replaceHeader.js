@@ -18,5 +18,15 @@ result[2] = versionLine;
 content = content.slice(14);
 
 result = result.concat(content);
-// result = result.join("\n");
+
+result = result.filter(keepLine);
 fs.writeFileSync("dist/voidverified.user.js", result.join("\n"));
+
+function keepLine(line) {
+	if (line.indexOf("console.log(`VoidVerified ") > 0) {
+		return true;
+	} else if (line.indexOf("console.log") > 0) {
+		return false;
+	}
+	return true;
+}
