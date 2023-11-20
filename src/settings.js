@@ -22,7 +22,7 @@ class Option {
 export class Settings {
 	localStorageUsers = "void-verified-users";
 	localStorageSettings = "void-verified-settings";
-	version = "1.3.0";
+	version = GM_info.script.version;
 
 	verifiedUsers = [];
 
