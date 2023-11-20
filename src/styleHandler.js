@@ -86,23 +86,54 @@ export class StyleHandler {
 					`div.reply:has( a.name[href*="/${user.username}/" i] )`
 				);
 			}
+
+			this.#createActivityCss(user);
 		}
 
 		this.disableHighlightOnSmallCards();
 	}
 
+	#createActivityCss(user) {
+		const colorUserActivity =
+			this.settings.options.colorUserActivity.getValue() ??
+			user.colorUserActivity;
+		const colorUserReplies =
+			this.settings.options.colorUserReplies.getValue() ??
+			user.colorUserReplies;
+
+		if (colorUserActivity) {
+			this.highlightStyles += `
+                .activity-entry :is(.details, .wrap):has(a[href*="/${
+					user.username
+				}/"]) a
+                {
+                    color: ${this.getUserColor(user)};
+                }
+            `;
+		}
+		if (colorUserReplies) {
+			this.highlightStyles += `
+                .reply:has(a[href*="/${user.username}/"]) a,
+                .reply:has(a[href*="/${
+					user.username
+				}/"]) .markdown-spoiler::before
+                {
+                    color: ${this.getUserColor(user)};
+                }
+            `;
+		}
+	}
+
 	createUsernameCSS(user) {
 		this.usernameStyles += `
-                a.name[href*="/${user.username}/" i]::after {
-                    content: "${
-						this.stringIsEmpty(user.sign) ??
-						this.settings.options.defaultSign.getValue()
-					}";
-                    color: ${
-						this.getUserColor(user) ?? "rgb(var(--color-blue))"
-					}
-                }
-                `;
+            a.name[href*="/${user.username}/" i]::after {
+                content: "${
+					this.stringIsEmpty(user.sign) ??
+					this.settings.options.defaultSign.getValue()
+				}";
+                color: ${this.getUserColor(user) ?? "rgb(var(--color-blue))"}
+            }
+        `;
 	}
 
 	createHighlightCSS(user, selector) {

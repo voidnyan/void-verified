@@ -51,6 +51,16 @@ export const defaultSettings = {
 		description: "Width of the highlight border.",
 		category: categories.users,
 	},
+	colorUserActivity: {
+		defaultValue: false,
+		description: "Color user activity links with user color.",
+		category: categories.users,
+	},
+	colorUserReplies: {
+		defaultValue: false,
+		description: "Color user reply links with user color.",
+		category: categories.users,
+	},
 	useDefaultHighlightColor: {
 		defaultValue: false,
 		description:
