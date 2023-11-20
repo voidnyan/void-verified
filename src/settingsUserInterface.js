@@ -240,6 +240,24 @@ export class SettingsUserInterface {
 			)
 		);
 
+		colorInputContainer.append(
+			this.#createUserCheckbox(
+				user.colorUserActivity,
+				user.username,
+				"colorUserActivity",
+				this.settings.options.colorUserActivity.getValue()
+			)
+		);
+
+		colorInputContainer.append(
+			this.#createUserCheckbox(
+				user.colorUserReplies,
+				user.username,
+				"colorUserReplies",
+				this.settings.options.colorUserReplies.getValue()
+			)
+		);
+
 		const colorCell = this.#createCell(colorInputContainer);
 		row.append(colorCell);
 
