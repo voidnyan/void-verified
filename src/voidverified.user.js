@@ -3,6 +3,7 @@ import { StyleHandler } from "./styleHandler";
 import { IntervalScriptHandler } from "./intervalScriptHandler";
 import { AnilistAPI } from "./anilistAPI";
 import { PasteHandler } from "./pasteHandler";
+import { styles } from "./styles";
 
 const settings = new Settings();
 const styleHandler = new StyleHandler(settings);
@@ -15,5 +16,7 @@ intervalScriptHandler.enableScriptIntervalHandling();
 
 anilistAPI.queryUserData();
 pasteHandler.setup();
+
+styleHandler.createStyleLink(styles, "script");
 
 console.log(`VoidVerified ${settings.version} loaded.`);

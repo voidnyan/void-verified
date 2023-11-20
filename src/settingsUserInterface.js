@@ -1,10 +1,12 @@
 import { ColorFunctions } from "./colorFunctions";
+import { categories } from "./defaultSettings";
 
 export class SettingsUserInterface {
 	settings;
 	styleHandler;
 	globalCSS;
 	AnilistBlue = "120, 180, 255";
+	#activeCategory = "all";
 
 	constructor(settings, styleHandler, globalCSS) {
 		this.settings = settings;
@@ -18,23 +20,39 @@ export class SettingsUserInterface {
 		);
 		const settingsContainer = document.createElement("div");
 		settingsContainer.setAttribute("id", "voidverified-settings");
+		settingsContainer.setAttribute("class", "void-settings");
 		this.#renderSettingsHeader(settingsContainer);
 
-		const settingsListContainer = document.createElement("div");
+		this.#renderCategories(settingsContainer);
+		this.#renderOptions(settingsContainer);
+		this.#renderUserTable(settingsContainer);
+		this.#renderCustomCssEditor(settingsContainer);
+
+		container.append(settingsContainer);
+	}
+
+	#renderOptions(settingsContainer) {
+		const oldSettingsListContainer =
+			document.getElementById("void-settings-list");
+		const settingsListContainer =
+			oldSettingsListContainer ?? document.createElement("div");
+		settingsListContainer.innerHTML = "";
+		settingsListContainer.setAttribute("id", "void-settings-list");
 		settingsListContainer.style.display = "flex";
 		settingsListContainer.style.flexDirection = "column";
 		settingsListContainer.style.gap = "5px";
 		for (const [key, setting] of Object.entries(this.settings.options)) {
+			if (
+				setting.category !== this.#activeCategory &&
+				this.#activeCategory !== "all"
+			) {
+				continue;
+			}
 			this.#renderSetting(setting, settingsListContainer, key);
 		}
 
-		settingsContainer.append(settingsListContainer);
-
-		this.#renderUserTable(settingsContainer);
-
-		this.#renderCustomCssEditor(settingsContainer);
-
-		container.append(settingsContainer);
+		oldSettingsListContainer ??
+			settingsContainer.append(settingsListContainer);
 	}
 
 	removeSettingsUi() {
@@ -59,6 +77,41 @@ export class SettingsUserInterface {
 		headerContainer.append(header);
 		headerContainer.append(versionInfo);
 		settingsContainer.append(headerContainer);
+	}
+
+	#renderCategories(settingsContainer) {
+		const oldNav = document.querySelector(".void-nav");
+		const nav = oldNav ?? document.createElement("nav");
+
+		nav.innerHTML = "";
+
+		nav.setAttribute("class", "void-nav");
+		const list = document.createElement("ol");
+
+		list.append(this.#createNavBtn("all"));
+
+		for (const category of Object.values(categories)) {
+			list.append(this.#createNavBtn(category));
+		}
+
+		nav.append(list);
+		oldNav ?? settingsContainer.append(nav);
+	}
+
+	#createNavBtn(category) {
+		const li = document.createElement("li");
+		li.append(category);
+		if (category === this.#activeCategory) {
+			li.setAttribute("class", "void-active");
+		}
+
+		li.addEventListener("click", () => {
+			this.#activeCategory = category;
+			this.#renderCategories();
+			this.#renderOptions();
+		});
+
+		return li;
 	}
 
 	#renderUserTable(settingsContainer) {
