@@ -18,6 +18,7 @@ export class QuickAccess {
 		}
 
 		const quickAccessContainer = document.createElement("div");
+		quickAccessContainer.setAttribute("class", "void-quick-access");
 		quickAccessContainer.setAttribute("id", this.#quickAccessId);
 
 		const sectionHeader = document.createElement("div");
@@ -29,15 +30,7 @@ export class QuickAccess {
 		quickAccessContainer.append(sectionHeader);
 
 		const quickAccessBody = document.createElement("div");
-		quickAccessBody.style = `
-            background: rgb(var(--color-foreground));
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 60px);
-            grid-template-rows: repeat(auto-fill, 80px);
-            gap: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
-        `;
+		quickAccessBody.setAttribute("class", "void-quick-access-wrap");
 
 		for (const user of this.#getQuickAccessUsers()) {
 			quickAccessBody.append(this.#createQuickAccessLink(user));
@@ -53,7 +46,7 @@ export class QuickAccess {
 
 	#createQuickAccessLink(user) {
 		const container = document.createElement("a");
-		container.style.display = "inline-block";
+		container.setAttribute("class", "void-quick-access-item");
 		const link = document.createElement("a");
 		container.setAttribute(
 			"href",
@@ -61,31 +54,15 @@ export class QuickAccess {
 		);
 
 		const image = document.createElement("div");
-		image.style = `
-            background-image: url(${user.avatar});
-            display: flex;
-            background-size: contain;
-            background-repeat: no-repeat;
-            height: 60px;
-            width: 60px;
-        `;
-
+		image.style.backgroundImage = `url(${user.avatar})`;
+		image.setAttribute("class", "void-quick-access-pfp");
 		container.append(image);
 
 		const username = document.createElement("div");
 		username.append(user.username);
-
-		username.style = `
-            display: inline-block;
-            text-align: center;
-            bottom: -20px;
-            width: 100%;
-            word-break: break-all;
-            font-size: 1.2rem;
-        `;
+		username.setAttribute("class", "void-quick-access-username");
 
 		container.append(username);
-
 		container.append(link);
 		return container;
 	}

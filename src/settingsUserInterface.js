@@ -38,9 +38,8 @@ export class SettingsUserInterface {
 			oldSettingsListContainer ?? document.createElement("div");
 		settingsListContainer.innerHTML = "";
 		settingsListContainer.setAttribute("id", "void-settings-list");
-		settingsListContainer.style.display = "flex";
-		settingsListContainer.style.flexDirection = "column";
-		settingsListContainer.style.gap = "5px";
+		settingsListContainer.setAttribute("class", "void-settings-list");
+
 		for (const [key, setting] of Object.entries(this.settings.options)) {
 			if (
 				setting.category !== this.#activeCategory &&
@@ -62,14 +61,13 @@ export class SettingsUserInterface {
 
 	#renderSettingsHeader(settingsContainer) {
 		const headerContainer = document.createElement("div");
+		headerContainer.setAttribute("class", "void-settings-header");
 		const header = document.createElement("h1");
-		header.style.marginTop = "30px";
 		header.innerText = "VoidVerified settings";
 
 		const versionInfo = document.createElement("p");
-		versionInfo.append("version: ");
+		versionInfo.append("Version: ");
 		const versionNumber = document.createElement("span");
-		versionNumber.style.color = `rgb(${this.AnilistBlue})`;
 		versionNumber.append(this.settings.version);
 
 		versionInfo.append(versionNumber);
@@ -121,6 +119,7 @@ export class SettingsUserInterface {
 		const tableContainer =
 			oldTableContainer ?? document.createElement("div");
 		tableContainer.innerHTML = "";
+		tableContainer.setAttribute("class", "void-table");
 
 		tableContainer.setAttribute("id", "void-verified-user-table");
 
@@ -176,8 +175,8 @@ export class SettingsUserInterface {
 		row.append(this.#createCell(userLink));
 
 		const signInput = document.createElement("input");
+		signInput.setAttribute("type", "text");
 		signInput.value = user.sign ?? "";
-		signInput.style.width = "100px";
 		signInput.addEventListener("input", (event) =>
 			this.#updateUserOption(user.username, "sign", event.target.value)
 		);
@@ -193,13 +192,10 @@ export class SettingsUserInterface {
 
 		row.append(this.#createCell(signCell));
 
+		const colorInputContainer = document.createElement("div");
+
 		const colorInput = document.createElement("input");
 		colorInput.setAttribute("type", "color");
-		colorInput.style.border = "0";
-		colorInput.style.height = "24px";
-		colorInput.style.width = "40px";
-		colorInput.style.padding = "0";
-		colorInput.style.backgroundColor = "unset";
 		colorInput.value = this.#getUserColorPickerColor(user);
 		colorInput.addEventListener(
 			"change",
@@ -207,9 +203,15 @@ export class SettingsUserInterface {
 			false
 		);
 
-		const colorInputContainer = document.createElement("span");
+		colorInputContainer.append(colorInput);
 
-		const colorCell = this.#createCell(colorInput);
+		const resetColorBtn = document.createElement("button");
+		resetColorBtn.innerText = "🔄";
+		resetColorBtn.addEventListener("click", () =>
+			this.#handleUserColorReset(user.username)
+		);
+
+		colorInputContainer.append(resetColorBtn);
 
 		colorInputContainer.append(
 			this.#createUserCheckbox(
@@ -238,15 +240,7 @@ export class SettingsUserInterface {
 			)
 		);
 
-		colorCell.append(colorInputContainer);
-
-		const resetColorBtn = document.createElement("button");
-		resetColorBtn.innerText = "🔄";
-		resetColorBtn.addEventListener("click", () =>
-			this.#handleUserColorReset(user.username)
-		);
-
-		colorCell.append(resetColorBtn);
+		const colorCell = this.#createCell(colorInputContainer);
 		row.append(colorCell);
 
 		const quickAccessCheckbox = this.#createUserCheckbox(
@@ -298,8 +292,6 @@ export class SettingsUserInterface {
 			this.#updateUserOption(username, settingKey, event.target.checked);
 			this.#refreshUserTable();
 		});
-
-		checkbox.style.marginLeft = "5px";
 
 		checkbox.title = this.settings.options[settingKey].description;
 		return checkbox;
@@ -360,14 +352,8 @@ export class SettingsUserInterface {
 			input.setAttribute("type", "checkbox");
 		} else if (settingKey == "defaultHighlightColor") {
 			input.setAttribute("type", "color");
-			input.style.border = "0";
-			input.style.height = "15px";
-			input.style.width = "25px";
-			input.style.padding = "0";
-			input.style.backgroundColor = "unset";
 		} else if (type === "string") {
 			input.setAttribute("type", "text");
-			input.style.width = "50px";
 		}
 
 		if (disabled) {
@@ -398,7 +384,6 @@ export class SettingsUserInterface {
 		const label = document.createElement("label");
 		label.setAttribute("for", settingKey);
 		label.innerText = setting.description;
-		label.style.marginLeft = "5px";
 		container.append(label);
 		settingsContainer.append(container);
 	}
@@ -420,23 +405,15 @@ export class SettingsUserInterface {
 
 	#renderCustomCssEditor(settingsContainer) {
 		const container = document.createElement("div");
+		container.setAttribute("class", "void-css-editor");
 		const label = document.createElement("label");
 		label.innerText = "Custom Global CSS";
 		label.setAttribute("for", "void-verified-global-css-editor");
-		label.style.marginTop = "20px";
-		label.style.fontSize = "2rem";
-		label.style.display = "inline-block";
 		container.append(label);
 
 		const textarea = document.createElement("textarea");
 		textarea.setAttribute("id", "void-verified-global-css-editor");
-
 		textarea.value = this.globalCSS.css;
-		textarea.style.width = "100%";
-		textarea.style.height = "200px";
-		textarea.style.resize = "vertical";
-		textarea.style.background = "#14191f";
-		textarea.style.color = "white";
 
 		textarea.addEventListener("change", (event) => {
 			this.#handleCustomCssEditor(event, this);
