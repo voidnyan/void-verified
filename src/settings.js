@@ -6,9 +6,11 @@ class Option {
 	value;
 	defaultValue;
 	description;
+	category;
 	constructor(option) {
 		this.defaultValue = option.defaultValue;
 		this.description = option.description;
+		this.category = option.category;
 	}
 
 	getValue() {
@@ -45,6 +47,7 @@ export class Settings {
 			}
 			this.options[key].value = value.value;
 		}
+		console.log(this.options);
 	}
 
 	verifyUser(username) {
