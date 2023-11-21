@@ -116,8 +116,8 @@ export class StyleHandler {
 		}
 		if (colorUserReplies) {
 			this.highlightStyles += `
-                .reply:has(a[href*="/${user.username}/"]) a,
-                .reply:has(a[href*="/${
+                .reply:has(a.name[href*="/${user.username}/"]) a,
+                .reply:has(a.name[href*="/${
 					user.username
 				}/"]) .markdown-spoiler::before
                 {
