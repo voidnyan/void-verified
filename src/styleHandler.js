@@ -103,7 +103,10 @@ export class StyleHandler {
 
 		if (colorUserActivity) {
 			this.highlightStyles += `
-                .activity-entry :is(.details, .wrap):has(a[href*="/${
+                div.wrap:has( div.header > a.name[href*="/${
+					user.username
+				}/"]) a,
+                div.wrap:has( div.details > a.name[href*="/${
 					user.username
 				}/"]) a
                 {
