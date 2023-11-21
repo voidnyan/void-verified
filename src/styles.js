@@ -130,6 +130,7 @@ export const styles = `
         background-repeat: no-repeat;
         height: 60px;
         width: 60px;
+        border-radius: 4px;
     }
 
     .void-quick-access-username {
