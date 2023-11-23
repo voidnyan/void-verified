@@ -1,3 +1,5 @@
+import { ImageApiFactory } from "./api/imageApiFactory";
+import { imageHosts, ImageHostService } from "./api/imageHostConfiguration";
 import { ColorFunctions } from "./colorFunctions";
 import { categories } from "./defaultSettings";
 
@@ -27,6 +29,12 @@ export class SettingsUserInterface {
 		this.#renderOptions(settingsContainer);
 		this.#renderUserTable(settingsContainer);
 		this.#renderCustomCssEditor(settingsContainer);
+
+		const imageHostContainer = document.createElement("div");
+		imageHostContainer.setAttribute("id", "void-verified-image-host");
+		settingsContainer.append(imageHostContainer);
+
+		this.#renderImageHostSettings(imageHostContainer);
 
 		container.append(settingsContainer);
 	}
@@ -451,5 +459,47 @@ export class SettingsUserInterface {
 	#handleCustomCssEditor(event, settingsUi) {
 		const value = event.target.value;
 		settingsUi.globalCSS.updateCss(value);
+	}
+
+	#renderImageHostSettings(cont) {
+		const container =
+			cont ?? document.getElementById("void-verified-image-host");
+		const title = document.createElement("label");
+		title.append("Image Host");
+		container.append(title);
+
+		const imageHostService = new ImageHostService();
+		const imageApiFactory = new ImageApiFactory();
+
+		const select = document.createElement("select");
+		select.append(undefined);
+		for (const imageHost of Object.values(imageHosts)) {
+			select.append(
+				this.#createOption(
+					imageHost,
+					imageHost === imageHostService.getSelectedHost()
+				)
+			);
+		}
+
+		container.append(select);
+
+		const hostSpecificSettings = document.createElement("div");
+
+		const imageHostApi = imageApiFactory.getImageHostInstance();
+
+		hostSpecificSettings.append(imageHostApi.renderSettings());
+
+		container.append(hostSpecificSettings);
+	}
+
+	#createOption(value, selected = false) {
+		const option = document.createElement("option");
+		if (selected) {
+			option.setAttribute("selected", true);
+		}
+		option.setAttribute("value", value);
+		option.append(value);
+		return option;
 	}
 }

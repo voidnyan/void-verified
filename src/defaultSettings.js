@@ -113,4 +113,10 @@ export const defaultSettings = {
 		description: "Width used when pasting images.",
 		category: categories.paste,
 	},
+	pasteImagesToHostService: {
+		defaultValue: false,
+		description:
+			"Upload image from the clipboard to image host (configure below).",
+		category: categories.paste,
+	},
 };
