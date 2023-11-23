@@ -15,6 +15,7 @@ export class PasteHandler {
 	];
 
 	#isKeyPressed = false;
+	#uploadInProgress = false;
 	constructor(settings) {
 		this.settings = settings;
 	}
@@ -44,37 +45,38 @@ export class PasteHandler {
 		}
 
 		const clipboard = event.clipboardData.getData("text/plain").trim();
-		const file = event.clipboardData.items[0].getAsFile();
-
-		if (!this.settings.options.pasteEnabled.getValue()) {
-			return;
-		}
-
-		if (
-			this.settings.options.pasteRequireKeyPress.getValue() &&
-			!this.#isKeyPressed
-		) {
-			return;
-		}
-
-		event.preventDefault();
-
+		const file = event.clipboardData.items[0]?.getAsFile();
 		let result = [];
 		if (
 			file &&
 			file.type.startsWith("image/") &&
 			this.settings.options.pasteImagesToHostService.getValue()
 		) {
-			const imageApi = new ImageApiFactory().getImageHostInstance();
-			const response = await imageApi.uploadImage(file);
-
-			result.push(this.#handleRow(response.data.url));
-		} else {
+			event.preventDefault();
+			if (this.#uploadInProgress) {
+				return;
+			}
+			this.#uploadInProgress = true;
+			document.body.setAttribute("id", "void-upload-in-progess");
+			try {
+				const imageApi = new ImageApiFactory().getImageHostInstance();
+				const response = await imageApi.uploadImage(file);
+				result.push(this.#handleRow(response.data.url));
+			} catch (error) {
+				console.error(error);
+			} finally {
+				this.#uploadInProgress = false;
+				document.body.removeAttribute("id");
+			}
+		} else if (this.settings.options.pasteEnabled.getValue()) {
+			event.preventDefault();
 			const rows = clipboard.split("\n");
 
 			for (let row of rows) {
 				result.push(this.#handleRow(row));
 			}
+		} else {
+			return;
 		}
 
 		const transformedClipboard = result.join("\n\n");
