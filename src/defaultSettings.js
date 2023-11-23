@@ -98,16 +98,16 @@ export const defaultSettings = {
 		description: "Wrap images with a link tag.",
 		category: categories.paste,
 	},
-	pasteRequireKeyPress: {
-		defaultValue: true,
-		description: "Require an additional key to be pressed while pasting.",
-		category: categories.paste,
-	},
-	pasteKeybind: {
-		defaultValue: "Shift",
-		description: "The key to be pressed while pasting.",
-		category: categories.paste,
-	},
+	// pasteRequireKeyPress: {
+	// 	defaultValue: true,
+	// 	description: "Require an additional key to be pressed while pasting.",
+	// 	category: categories.paste,
+	// },
+	// pasteKeybind: {
+	// 	defaultValue: "Shift",
+	// 	description: "The key to be pressed while pasting.",
+	// 	category: categories.paste,
+	// },
 	pasteImageWidth: {
 		defaultValue: "420",
 		description: "Width used when pasting images.",

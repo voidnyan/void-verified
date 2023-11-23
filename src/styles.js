@@ -154,4 +154,8 @@ export const styles = /* css */ `
         font-size: 11px;
         margin-top: 5px;
     }
+
+    #void-upload-in-progess {
+        cursor: wait;
+    }
 `;
