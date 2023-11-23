@@ -1,7 +1,7 @@
 import { Settings } from "./settings";
 import { StyleHandler } from "./styleHandler";
 import { IntervalScriptHandler } from "./intervalScriptHandler";
-import { AnilistAPI } from "./anilistAPI";
+import { AnilistAPI } from "./api/anilistAPI";
 import { PasteHandler } from "./pasteHandler";
 import { styles } from "./styles";
 

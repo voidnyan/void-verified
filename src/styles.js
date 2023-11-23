@@ -1,4 +1,4 @@
-export const styles = `
+export const styles = /* css */ `
     a[href="/settings/developer" i]::after{content: " & Void"}
     .void-settings .void-nav ol {
         display: flex;
@@ -140,5 +140,18 @@ export const styles = `
         width: 100%;
         word-break: break-all;
         font-size: 1.2rem;
+    }
+
+    .void-api-label {
+        margin-right: 5px;
+    }
+
+    .void-api-key {
+        width: 300px;
+    }
+
+    .void-notice {
+        font-size: 11px;
+        margin-top: 5px;
     }
 `;

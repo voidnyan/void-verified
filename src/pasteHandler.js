@@ -1,3 +1,5 @@
+import { ImageApiFactory } from "./api/imageApiFactory";
+
 export class PasteHandler {
 	settings;
 
@@ -36,8 +38,13 @@ export class PasteHandler {
 		this.#isKeyPressed = isKeyDown;
 	}
 
-	#handlePaste(event) {
+	async #handlePaste(event) {
+		if (event.target.tagName !== "TEXTAREA") {
+			return;
+		}
+
 		const clipboard = event.clipboardData.getData("text/plain").trim();
+		const file = event.clipboardData.items[0].getAsFile();
 
 		if (!this.settings.options.pasteEnabled.getValue()) {
 			return;
@@ -51,11 +58,23 @@ export class PasteHandler {
 		}
 
 		event.preventDefault();
-		const rows = clipboard.split("\n");
-		let result = [];
 
-		for (let row of rows) {
-			result.push(this.#handleRow(row));
+		let result = [];
+		if (
+			file &&
+			file.type.startsWith("image/") &&
+			this.settings.options.pasteImagesToHostService.getValue()
+		) {
+			const imageApi = new ImageApiFactory().getImageHostInstance();
+			const response = await imageApi.uploadImage(file);
+
+			result.push(this.#handleRow(response.data.url));
+		} else {
+			const rows = clipboard.split("\n");
+
+			for (let row of rows) {
+				result.push(this.#handleRow(row));
+			}
 		}
 
 		const transformedClipboard = result.join("\n\n");

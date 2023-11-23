@@ -1,6 +1,6 @@
 import { defaultSettings } from "./defaultSettings";
 import { ColorFunctions } from "./colorFunctions";
-import { AnilistAPI } from "./anilistAPI";
+import { AnilistAPI } from "./api/anilistAPI";
 
 class Option {
 	value;
@@ -47,7 +47,6 @@ export class Settings {
 			}
 			this.options[key].value = value.value;
 		}
-		console.log(this.options);
 	}
 
 	verifyUser(username) {
