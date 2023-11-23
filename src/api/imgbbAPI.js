@@ -7,6 +7,7 @@ export class ImgbbAPI extends ImageHostBase {
 	constructor(configuration) {
 		super();
 		this.#configuration = configuration;
+		console.log(configuration);
 	}
 
 	async uploadImage(image) {

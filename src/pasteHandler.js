@@ -14,30 +14,30 @@ export class PasteHandler {
 		"svg",
 	];
 
-	#isKeyPressed = false;
+	// #isKeyPressed = false;
 	#uploadInProgress = false;
 	constructor(settings) {
 		this.settings = settings;
 	}
 
 	setup() {
-		window.addEventListener("keydown", (event) => {
-			this.#handleKeybind(event);
-		});
-		window.addEventListener("keyup", (event) => {
-			this.#handleKeybind(event, false);
-		});
+		// window.addEventListener("keydown", (event) => {
+		// 	this.#handleKeybind(event);
+		// });
+		// window.addEventListener("keyup", (event) => {
+		// 	this.#handleKeybind(event, false);
+		// });
 		window.addEventListener("paste", (event) => {
 			this.#handlePaste(event);
 		});
 	}
 
-	#handleKeybind(event, isKeyDown = true) {
-		if (this.settings.options.pasteKeybind.getValue() !== event.key) {
-			return;
-		}
-		this.#isKeyPressed = isKeyDown;
-	}
+	// #handleKeybind(event, isKeyDown = true) {
+	// 	if (this.settings.options.pasteKeybind.getValue() !== event.key) {
+	// 		return;
+	// 	}
+	// 	this.#isKeyPressed = isKeyDown;
+	// }
 
 	async #handlePaste(event) {
 		if (event.target.tagName !== "TEXTAREA") {
