@@ -24,10 +24,12 @@ export class ImageHostService {
 			);
 		}
 		this.#configuration = config ?? imageHostConfiguration;
+
+		console.log(this.#configuration);
 	}
 
 	getImageHostConfiguration(host) {
-		return this.#configuration[host];
+		return this.#configuration.configurations[host];
 	}
 
 	getSelectedHost() {
@@ -43,7 +45,7 @@ export class ImageHostService {
 	}
 
 	setImageHostConfiguration(host, config) {
-		this.#configuration[host] = config;
+		this.#configuration.configurations[host] = config;
 		localStorage.setItem(
 			this.#localStorage,
 			JSON.stringify(this.#configuration)
