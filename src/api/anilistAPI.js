@@ -1,5 +1,5 @@
 export class AnilistAPI {
-	apiQueryTimeoutInMinutes = 30;
+	apiQueryTimeoutInMinutes = 15;
 	apiQueryTimeout = this.apiQueryTimeoutInMinutes * 60 * 1000;
 
 	settings;

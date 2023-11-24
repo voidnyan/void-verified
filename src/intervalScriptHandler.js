@@ -56,7 +56,6 @@ export class IntervalScriptHandler {
 
 		if (path.startsWith("/user/")) {
 			intervalScriptHandler.styleHandler.verifyProfile();
-			intervalScriptHandler.styleHandler.copyUserColor();
 			intervalScriptHandler.quickAccess.clearBadge();
 		} else {
 			intervalScriptHandler.styleHandler.clearProfileVerify();
