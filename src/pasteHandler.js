@@ -57,7 +57,7 @@ export class PasteHandler {
 				return;
 			}
 			this.#uploadInProgress = true;
-			document.body.setAttribute("id", "void-upload-in-progess");
+			document.body.classList.add("void-upload-in-progress");
 			try {
 				const imageApi = new ImageApiFactory().getImageHostInstance();
 				const response = await imageApi.uploadImage(file);
@@ -66,7 +66,7 @@ export class PasteHandler {
 				console.error(error);
 			} finally {
 				this.#uploadInProgress = false;
-				document.body.removeAttribute("id");
+				document.body.classList.remove("void-upload-in-progress");
 			}
 		} else if (this.settings.options.pasteEnabled.getValue()) {
 			event.preventDefault();
