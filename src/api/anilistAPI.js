@@ -3,15 +3,43 @@ export class AnilistAPI {
 	apiQueryTimeout = this.apiQueryTimeoutInMinutes * 60 * 1000;
 
 	settings;
+	#url = "https://graphql.anilist.co";
 	constructor(settings) {
 		this.settings = settings;
 	}
 
-	queryUserData() {
-		this.#createUserQuery();
+	async getActivityCss(activityId) {
+		const query = `query ($activityId: Int) {
+            Activity(id: $activityId) {
+                ... on ListActivity {
+                    user {
+                        about
+                }}
+                ... on TextActivity {
+                    user {
+                        about
+                    }
+                }
+                ... on MessageActivity {
+                    recipient {
+                        about
+                    }
+                }
+            }
+        }`;
+
+		const variables = { activityId };
+		const options = this.#getQueryOptions(query, variables);
+		try {
+			const response = await fetch(this.#url, options);
+			const result = await response.json();
+			return result;
+		} catch (error) {
+			return await error.json();
+		}
 	}
 
-	async #createUserQuery() {
+	queryUserData() {
 		let stopQueries = false;
 
 		for (const user of this.#getUsersToQuery()) {
@@ -23,8 +51,9 @@ export class AnilistAPI {
 		}
 	}
 
-	#userQuery = `
-        query ($username: String) {
+	#queryUser(user) {
+		const variables = { username: user.username };
+		const query = `query ($username: String) {
             User(name: $username) {
                 name
                 avatar {
@@ -38,27 +67,10 @@ export class AnilistAPI {
         }
     `;
 
-	#queryUser(user) {
-		const variables = {
-			username: user.username,
-		};
-
-		const url = "https://graphql.anilist.co";
-		const options = {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Accept: "application/json",
-			},
-			body: JSON.stringify({
-				query: this.#userQuery,
-				variables,
-			}),
-		};
+		const options = this.#getQueryOptions(query, variables);
 
 		let stopQueries = false;
-
-		fetch(url, options)
+		fetch(this.#url, options)
 			.then(this.#handleResponse)
 			.then((data) => {
 				const resultUser = data.User;
@@ -70,6 +82,20 @@ export class AnilistAPI {
 			});
 
 		return stopQueries;
+	}
+
+	#getQueryOptions(query, variables) {
+		return {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+			},
+			body: JSON.stringify({
+				query,
+				variables,
+			}),
+		};
 	}
 
 	#getUsersToQuery() {
