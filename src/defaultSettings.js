@@ -90,7 +90,7 @@ export const defaultSettings = {
 	quickAccessBadge: {
 		defaultValue: false,
 		description:
-			"Display a badge on quick access when changes are detected on user's layout",
+			"Display a badge on quick access when changes are detected on user's layout.",
 		category: categories.users,
 	},
 	pasteEnabled: {
