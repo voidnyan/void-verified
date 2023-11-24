@@ -3,6 +3,7 @@ import { ActivityHandler } from "./activityHandler.js";
 import { SettingsUserInterface } from "./settingsUserInterface";
 import { StyleHandler } from "./styleHandler";
 import { QuickAccess } from "./quickAccessHandler";
+import { UserCSS } from "./userCSS.js";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -11,6 +12,7 @@ export class IntervalScriptHandler {
 	settings;
 	globalCSS;
 	quickAccess;
+	userCSS;
 	constructor(settings) {
 		this.settings = settings;
 
@@ -23,6 +25,7 @@ export class IntervalScriptHandler {
 		);
 		this.activityHandler = new ActivityHandler(settings);
 		this.quickAccess = new QuickAccess(settings);
+		this.userCSS = new UserCSS(settings);
 	}
 
 	currentPath = "";
@@ -54,6 +57,8 @@ export class IntervalScriptHandler {
 			return;
 		}
 
+		intervalScriptHandler.globalCSS.createCss();
+
 		if (path.startsWith("/user/")) {
 			intervalScriptHandler.styleHandler.verifyProfile();
 			intervalScriptHandler.quickAccess.clearBadge();
@@ -61,11 +66,16 @@ export class IntervalScriptHandler {
 			intervalScriptHandler.styleHandler.clearProfileVerify();
 		}
 
+		if (path.startsWith("/activity/")) {
+			intervalScriptHandler.userCSS.checkActivityCss();
+		} else {
+			intervalScriptHandler.styleHandler.clearStyles("activity-css");
+			intervalScriptHandler.userCSS.resetCurrentActivity();
+		}
+
 		if (path.startsWith("/settings/developer")) {
 			intervalScriptHandler.settingsUi.renderSettingsUi();
 		}
-
-		intervalScriptHandler.globalCSS.createCss();
 	}
 
 	enableScriptIntervalHandling() {

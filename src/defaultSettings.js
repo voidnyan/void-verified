@@ -82,6 +82,12 @@ export const defaultSettings = {
 		description: "Disable global CSS when a profile has custom CSS.",
 		category: categories.misc,
 	},
+	activityCssEnabled: {
+		defaultValue: false,
+		description:
+			"Load user's custom CSS when viewing their activity (direct link).",
+		category: categories.misc,
+	},
 	quickAccessEnabled: {
 		defaultValue: false,
 		description: "Display quick access of users in home page.",
