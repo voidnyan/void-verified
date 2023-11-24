@@ -106,7 +106,18 @@ export class Settings {
 
 		userObject.username = apiUser.name;
 		userObject.avatar = apiUser.avatar.large;
+		userObject.banner = apiUser.bannerImage;
 		userObject.lastFetch = new Date();
+
+		if (this.options.quickAccessBadge.getValue() || user.quickAccessBadge) {
+			if (
+				(user.avatar && user.avatar !== userObject.avatar) ||
+				(user.color && user.color !== userObject.color) ||
+				(user.banner && user.banner !== userObject.banner)
+			) {
+				userObject.quickAccessBadgeDisplay = true;
+			}
+		}
 
 		return userObject;
 	}

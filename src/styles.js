@@ -142,6 +142,22 @@ export const styles = /* css */ `
         font-size: 1.2rem;
     }
 
+    .void-quick-access-badge {
+        position: relative;
+    }
+
+    .void-quick-access-badge::after {
+        content: "New";
+        background: rgb(var(--color-blue));
+        border-radius: 10px;
+        padding: 2px 4px;
+        font-size: 9px;
+        position: absolute;
+        top: 2px;
+        right: -10px;
+        color: white;
+    }
+
     .void-api-label {
         margin-right: 5px;
     }
@@ -155,7 +171,7 @@ export const styles = /* css */ `
         margin-top: 5px;
     }
 
-    #void-upload-in-progess {
+    .void-upload-in-progress {
         cursor: wait;
     }
 `;

@@ -44,10 +44,19 @@ export class QuickAccess {
 		section.insertBefore(quickAccessContainer, section.firstChild);
 	}
 
+	clearBadge() {
+		const username =
+			window.location.pathname.match(/^\/user\/([^/]*)\/?/)[1];
+		this.settings.updateUserOption(
+			username,
+			"quickAccessBadgeDisplay",
+			false
+		);
+	}
+
 	#createQuickAccessLink(user) {
 		const container = document.createElement("a");
 		container.setAttribute("class", "void-quick-access-item");
-		const link = document.createElement("a");
 		container.setAttribute(
 			"href",
 			`https://anilist.co/user/${user.username}/`
@@ -62,8 +71,15 @@ export class QuickAccess {
 		username.append(user.username);
 		username.setAttribute("class", "void-quick-access-username");
 
+		if (
+			(this.settings.options.quickAccessBadge.getValue() ||
+				user.quickAccessBadge) &&
+			user.quickAccessBadgeDisplay
+		) {
+			container.classList.add("void-quick-access-badge");
+		}
+
 		container.append(username);
-		container.append(link);
 		return container;
 	}
 

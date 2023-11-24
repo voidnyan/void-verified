@@ -24,8 +24,6 @@ export class ImageHostService {
 			);
 		}
 		this.#configuration = config ?? imageHostConfiguration;
-
-		console.log(this.#configuration);
 	}
 
 	getImageHostConfiguration(host) {

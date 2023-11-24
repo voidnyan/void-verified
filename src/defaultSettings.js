@@ -87,6 +87,12 @@ export const defaultSettings = {
 		description: "Display quick access of users in home page.",
 		category: categories.users,
 	},
+	quickAccessBadge: {
+		defaultValue: false,
+		description:
+			"Display a badge on quick access when changes are detected on user's layout",
+		category: categories.users,
+	},
 	pasteEnabled: {
 		defaultValue: false,
 		description:

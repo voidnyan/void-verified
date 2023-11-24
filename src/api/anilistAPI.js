@@ -30,6 +30,7 @@ export class AnilistAPI {
                 avatar {
                     large
                 }
+                bannerImage
                 options {
                     profileColor
                 }
