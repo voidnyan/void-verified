@@ -4,8 +4,6 @@ export class StyleHandler {
 	highlightStyles = "";
 	otherStyles = "";
 
-	profileLink = this.createStyleLink("", "profile");
-
 	constructor(settings) {
 		this.settings = settings;
 	}
@@ -168,11 +166,6 @@ export class StyleHandler {
 		this.createStyleLink(this.highlightStyles, "highlight");
 	}
 
-	clearProfileVerify() {
-		this.profileLink.href =
-			"data:text/css;charset=UTF-8," + encodeURIComponent("");
-	}
-
 	clearStyles(id) {
 		const styles = document.getElementById(`void-verified-${id}-styles`);
 		styles?.remove();
@@ -191,7 +184,7 @@ export class StyleHandler {
 		);
 
 		if (!user) {
-			this.clearProfileVerify();
+			this.clearStyles("profile");
 			return;
 		}
 
@@ -203,7 +196,11 @@ export class StyleHandler {
 					}"
                     }
                 `;
-		this.profileLink = this.createStyleLink(profileStyle, "profile");
+		this.createStyleLink(profileStyle, "profile");
+	}
+
+	getStyleLink(id) {
+		return document.getElementById(`void-verified-${id}-styles`);
 	}
 
 	copyUserColor() {

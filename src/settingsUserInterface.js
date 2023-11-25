@@ -275,7 +275,19 @@ export class SettingsUserInterface {
 			"quickAccessEnabled",
 			this.settings.options.quickAccessEnabled.getValue()
 		);
-		row.append(this.#createCell(quickAccessCheckbox));
+
+		const otherCell = this.#createCell(quickAccessCheckbox);
+
+		const cssEnabledCheckbox = this.#createUserCheckbox(
+			user.onlyLoadCssFromVerifiedUser,
+			user.username,
+			"onlyLoadCssFromVerifiedUser",
+			this.settings.options.onlyLoadCssFromVerifiedUser.getValue()
+		);
+
+		otherCell.append(cssEnabledCheckbox);
+
+		row.append(otherCell);
 
 		const deleteButton = document.createElement("button");
 		deleteButton.innerText = "❌";

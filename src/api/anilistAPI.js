@@ -13,15 +13,18 @@ export class AnilistAPI {
             Activity(id: $activityId) {
                 ... on ListActivity {
                     user {
+                        name
                         about
                 }}
                 ... on TextActivity {
                     user {
+                        name
                         about
                     }
                 }
                 ... on MessageActivity {
                     recipient {
+                        name
                         about
                     }
                 }
@@ -34,6 +37,24 @@ export class AnilistAPI {
 			const response = await fetch(this.#url, options);
 			const result = await response.json();
 			return result;
+		} catch (error) {
+			return await error.json();
+		}
+	}
+
+	async getUserCss(username) {
+		const query = `query ($username: String) {
+            User(name: $username) {
+                about
+            }
+        }`;
+
+		const variables = { username };
+		const options = this.#getQueryOptions(query, variables);
+		try {
+			const response = await fetch(this.#url, options);
+			const result = await response.json();
+			return result.data;
 		} catch (error) {
 			return await error.json();
 		}

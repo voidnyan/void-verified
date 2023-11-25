@@ -54,7 +54,10 @@ export class GlobalCSS {
 			return true;
 		}
 
-		if (!window.location.pathname.startsWith("/user/")) {
+		if (
+			!window.location.pathname.startsWith("/user/") &&
+			!window.location.pathname.startsWith("/activity/")
+		) {
 			return true;
 		}
 
@@ -62,7 +65,11 @@ export class GlobalCSS {
 			"customCSS-automail-styles"
 		);
 
-		if (!profileCustomCss) {
+		const styleHandler = new StyleHandler(this.settings);
+		const voidActivityStyles = styleHandler.getStyleLink("activity-css");
+		const voidUserStyles = styleHandler.getStyleLink("user-css");
+
+		if (!profileCustomCss && !voidActivityStyles && !voidUserStyles) {
 			return true;
 		}
 

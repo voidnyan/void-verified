@@ -68,6 +68,14 @@ export class Settings {
 		anilistAPI.queryUserData();
 	}
 
+	getUser(username) {
+		return this.verifiedUsers.find((user) => user.username === username);
+	}
+
+	isVerified(username) {
+		return this.verifiedUsers.some((user) => user.username === username);
+	}
+
 	updateUserOption(username, key, value) {
 		this.verifiedUsers = this.verifiedUsers.map((u) =>
 			u.username === username

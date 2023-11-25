@@ -1,6 +1,7 @@
 export const categories = {
 	users: "users",
 	paste: "paste",
+	css: "css",
 	misc: "misc",
 };
 
@@ -75,18 +76,28 @@ export const defaultSettings = {
 	globalCssEnabled: {
 		defaultValue: false,
 		description: "Enable custom global CSS.",
-		category: categories.misc,
+		category: categories.css,
 	},
 	globalCssAutoDisable: {
 		defaultValue: true,
 		description: "Disable global CSS when a profile has custom CSS.",
-		category: categories.misc,
+		category: categories.css,
+	},
+	profileCssEnabled: {
+		defaultValue: false,
+		description: "Load user's custom CSS when viewing their profile.",
+		category: categories.css,
 	},
 	activityCssEnabled: {
 		defaultValue: false,
 		description:
 			"Load user's custom CSS when viewing their activity (direct link).",
-		category: categories.misc,
+		category: categories.css,
+	},
+	onlyLoadCssFromVerifiedUser: {
+		defaultValue: false,
+		description: "Only load custom CSS from verified users.",
+		category: categories.css,
 	},
 	quickAccessEnabled: {
 		defaultValue: false,
