@@ -60,10 +60,13 @@ export class IntervalScriptHandler {
 		intervalScriptHandler.globalCSS.createCss();
 
 		if (path.startsWith("/user/")) {
+			intervalScriptHandler.userCSS.checkUserCss();
 			intervalScriptHandler.styleHandler.verifyProfile();
 			intervalScriptHandler.quickAccess.clearBadge();
 		} else {
-			intervalScriptHandler.styleHandler.clearProfileVerify();
+			intervalScriptHandler.styleHandler.clearStyles("user-css");
+			intervalScriptHandler.userCSS.resetCurrentUser();
+			intervalScriptHandler.styleHandler.clearStyles("profile");
 		}
 
 		if (path.startsWith("/activity/")) {
