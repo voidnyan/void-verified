@@ -528,11 +528,15 @@ export class SettingsUserInterface {
 
 		const clientId = 15519;
 
-		const authenticationContainer = document.createElement("div");
+		const authenticationContainer =
+			document.getElementById("void-verified-auth-container") ??
+			document.createElement("div");
 		authenticationContainer.setAttribute(
 			"id",
 			"void-verified-auth-container"
 		);
+
+		authenticationContainer.innerHTML = "";
 
 		const header = document.createElement("h3");
 		header.append("Authenticate VoidVerified");
@@ -560,10 +564,10 @@ export class SettingsUserInterface {
 
 		const removeAuthButton = document.createElement("button");
 		removeAuthButton.classList.add("button");
-		removeAuthButton.addEventListener(
-			"click",
-			this.settings.removeAuthToken
-		);
+		removeAuthButton.addEventListener("click", () => {
+			this.settings.removeAuthToken();
+			this.#creatAuthenticationSection();
+		});
 		removeAuthButton.append("Revoke auth token");
 
 		authenticationContainer.append(header);
@@ -573,7 +577,7 @@ export class SettingsUserInterface {
 			!isAuthenticated ? authLink : removeAuthButton
 		);
 
-		container.append(authenticationContainer);
+		container?.append(authenticationContainer);
 	}
 
 	#checkAuthFromUrl() {
@@ -595,5 +599,11 @@ export class SettingsUserInterface {
 			token: token.split("=")[1],
 			expires: expiresDate,
 		});
+
+		window.history.replaceState(
+			null,
+			"",
+			"https://anilist.co/settings/developer"
+		);
 	}
 }
