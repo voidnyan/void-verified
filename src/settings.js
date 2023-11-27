@@ -7,10 +7,12 @@ class Option {
 	defaultValue;
 	description;
 	category;
+	authRequired;
 	constructor(option) {
 		this.defaultValue = option.defaultValue;
 		this.description = option.description;
 		this.category = option.category;
+		this.authRequired = option.authRequired;
 	}
 
 	getValue() {
@@ -24,7 +26,9 @@ class Option {
 export class Settings {
 	localStorageUsers = "void-verified-users";
 	localStorageSettings = "void-verified-settings";
+	localStorageAuth = "void-verified-auth";
 	version = GM_info.script.version;
+	auth = null;
 
 	verifiedUsers = [];
 
@@ -47,6 +51,9 @@ export class Settings {
 			}
 			this.options[key].value = value.value;
 		}
+
+		this.auth =
+			JSON.parse(localStorage.getItem(this.localStorageAuth)) ?? null;
 	}
 
 	verifyUser(username) {
@@ -128,6 +135,19 @@ export class Settings {
 		}
 
 		return userObject;
+	}
+
+	saveAuthToken(tokenObject) {
+		this.auth = tokenObject;
+		localStorage.setItem(
+			this.localStorageAuth,
+			JSON.stringify(tokenObject)
+		);
+	}
+
+	removeAuthToken() {
+		this.auth = null;
+		localStorage.removeItem(this.localStorageAuth);
 	}
 
 	removeUser(username) {
