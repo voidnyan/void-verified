@@ -3,6 +3,7 @@ export const categories = {
 	paste: "paste",
 	css: "css",
 	misc: "misc",
+	hidden: "hidden",
 };
 
 export const defaultSettings = {
@@ -87,12 +88,14 @@ export const defaultSettings = {
 		defaultValue: false,
 		description: "Load user's custom CSS when viewing their profile.",
 		category: categories.css,
+		authRequired: true,
 	},
 	activityCssEnabled: {
 		defaultValue: false,
 		description:
 			"Load user's custom CSS when viewing their activity (direct link).",
 		category: categories.css,
+		authRequired: true,
 	},
 	onlyLoadCssFromVerifiedUser: {
 		defaultValue: false,

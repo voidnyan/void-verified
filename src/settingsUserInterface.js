@@ -17,6 +17,7 @@ export class SettingsUserInterface {
 	}
 
 	renderSettingsUi() {
+		this.#checkAuthFromUrl();
 		const container = document.querySelector(
 			".settings.container > .content"
 		);
@@ -35,6 +36,8 @@ export class SettingsUserInterface {
 		settingsContainer.append(imageHostContainer);
 
 		this.#renderImageHostSettings(imageHostContainer);
+
+		this.#creatAuthenticationSection(settingsContainer);
 
 		container.append(settingsContainer);
 	}
@@ -380,6 +383,9 @@ export class SettingsUserInterface {
 	}
 
 	#renderSetting(setting, settingsContainer, settingKey, disabled = false) {
+		if (setting.category === categories.hidden) {
+			return;
+		}
 		const value = setting.getValue();
 		const type = typeof value;
 
@@ -513,5 +519,81 @@ export class SettingsUserInterface {
 		option.setAttribute("value", value);
 		option.append(value);
 		return option;
+	}
+
+	#creatAuthenticationSection(container) {
+		const isAuthenticated =
+			this.settings.auth !== null &&
+			new Date(this.settings.auth?.expires) > new Date();
+
+		const clientId = 15519;
+
+		const authenticationContainer = document.createElement("div");
+		authenticationContainer.setAttribute(
+			"id",
+			"void-verified-auth-container"
+		);
+
+		const header = document.createElement("h3");
+		header.append("Authenticate VoidVerified");
+		const description = document.createElement("p");
+		description.append(
+			"Some features of VoidVerified might need your access token to work correctly or fully. Below is a list of features using your access token. If you do not wish to use any of these features, you do not need to authenticate. If revoking authentication, be sure to revoke VoidVerified from Anilist Apps as well."
+		);
+
+		const list = document.createElement("ul");
+		for (const option of Object.values(this.settings.options).filter(
+			(o) => o.authRequired
+		)) {
+			const listItem = document.createElement("li");
+			listItem.append(option.description);
+			list.append(listItem);
+		}
+
+		const authLink = document.createElement("a");
+		authLink.setAttribute(
+			"href",
+			`https://anilist.co/api/v2/oauth/authorize?client_id=${clientId}&response_type=token`
+		);
+		authLink.classList.add("button");
+		authLink.append("Authenticate VoidVerified");
+
+		const removeAuthButton = document.createElement("button");
+		removeAuthButton.classList.add("button");
+		removeAuthButton.addEventListener(
+			"click",
+			this.settings.removeAuthToken
+		);
+		removeAuthButton.append("Revoke auth token");
+
+		authenticationContainer.append(header);
+		authenticationContainer.append(description);
+		authenticationContainer.append(list);
+		authenticationContainer.append(
+			!isAuthenticated ? authLink : removeAuthButton
+		);
+
+		container.append(authenticationContainer);
+	}
+
+	#checkAuthFromUrl() {
+		const hash = window.location.hash.substring(1);
+		if (!hash) {
+			return;
+		}
+
+		const [path, token, type, expiress] = hash.split("&");
+		if (path !== "void_auth") {
+			return;
+		}
+
+		const expiresDate = new Date(
+			new Date().getTime() + Number(expiress.split("=")[1]) * 1000
+		);
+
+		this.settings.saveAuthToken({
+			token: token.split("=")[1],
+			expires: expiresDate,
+		});
 	}
 }
