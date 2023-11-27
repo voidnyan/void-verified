@@ -29,6 +29,7 @@ export class Settings {
 	localStorageAuth = "void-verified-auth";
 	version = GM_info.script.version;
 	auth = null;
+	anilistUser;
 
 	verifiedUsers = [];
 
@@ -54,6 +55,9 @@ export class Settings {
 
 		this.auth =
 			JSON.parse(localStorage.getItem(this.localStorageAuth)) ?? null;
+
+		const auth = JSON.parse(localStorage.getItem("auth"));
+		this.anilistUser = auth?.name;
 	}
 
 	verifyUser(username) {

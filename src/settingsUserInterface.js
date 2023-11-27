@@ -2,18 +2,21 @@ import { ImageApiFactory } from "./api/imageApiFactory";
 import { imageHosts, ImageHostService } from "./api/imageHostConfiguration";
 import { ColorFunctions } from "./colorFunctions";
 import { categories } from "./defaultSettings";
+import { GlobalCSS } from "./globalCSS";
 
 export class SettingsUserInterface {
 	settings;
 	styleHandler;
 	globalCSS;
+	userCSS;
 	AnilistBlue = "120, 180, 255";
 	#activeCategory = "all";
 
-	constructor(settings, styleHandler, globalCSS) {
+	constructor(settings, styleHandler, globalCSS, userCSS) {
 		this.settings = settings;
 		this.styleHandler = styleHandler;
 		this.globalCSS = globalCSS;
+		this.userCSS = userCSS;
 	}
 
 	renderSettingsUi() {
@@ -21,7 +24,10 @@ export class SettingsUserInterface {
 		const container = document.querySelector(
 			".settings.container > .content"
 		);
-		const settingsContainer = document.createElement("div");
+		const settingsContainer =
+			document.getElementById("voidverified-settings") ??
+			document.createElement("div");
+		settingsContainer.innerHTML = "";
 		settingsContainer.setAttribute("id", "voidverified-settings");
 		settingsContainer.setAttribute("class", "void-settings");
 		this.#renderSettingsHeader(settingsContainer);
@@ -29,7 +35,16 @@ export class SettingsUserInterface {
 		this.#renderCategories(settingsContainer);
 		this.#renderOptions(settingsContainer);
 		this.#renderUserTable(settingsContainer);
-		this.#renderCustomCssEditor(settingsContainer);
+		if (this.settings.options.globalCssEnabled.getValue()) {
+			this.#renderCustomCssEditor(settingsContainer, this.globalCSS);
+		}
+		if (
+			this.settings.auth?.token &&
+			(this.settings.options.profileCssEnabled.getValue() ||
+				this.settings.options.activityCssEnabled.getValue())
+		) {
+			this.#renderCustomCssEditor(settingsContainer, this.userCSS);
+		}
 
 		const imageHostContainer = document.createElement("div");
 		imageHostContainer.setAttribute("id", "void-verified-image-host");
@@ -444,39 +459,86 @@ export class SettingsUserInterface {
 			type === "boolean" ? event.target.checked : event.target.value;
 		this.settings.saveSettingToLocalStorage(settingKey, value);
 		this.styleHandler.refreshStyles();
-		this.#refreshUserTable();
+
+		this.renderSettingsUi();
 	}
 
-	#renderCustomCssEditor(settingsContainer) {
+	#renderCustomCssEditor(settingsContainer, cssHandler) {
+		const cssName = cssHandler instanceof GlobalCSS ? "global" : "user";
 		const container = document.createElement("div");
 		container.setAttribute("class", "void-css-editor");
 		const label = document.createElement("label");
-		label.innerText = "Custom Global CSS";
-		label.setAttribute("for", "void-verified-global-css-editor");
+		label.append(`Custom ${cssName} CSS`);
+		label.setAttribute("for", `void-verified-${cssName}-css-editor`);
 		container.append(label);
 
 		const textarea = document.createElement("textarea");
-		textarea.setAttribute("id", "void-verified-global-css-editor");
-		textarea.value = this.globalCSS.css;
+		textarea.setAttribute("id", `void-verified-${cssName}-css-editor`);
+		textarea.value = cssHandler.css;
 
 		textarea.addEventListener("change", (event) => {
-			this.#handleCustomCssEditor(event, this);
+			this.#handleCustomCssEditor(event, cssHandler);
 		});
 
 		container.append(textarea);
 
 		const notice = document.createElement("div");
-		notice.innerText =
-			"Please note that Custom CSS is disabled in the settings. \nIn the event that you accidentally disable rendering of critical parts of AniList, navigate to the settings by URL";
-		notice.style.fontSize = "11px";
-		container.append(notice);
+
+		if (cssName === "global") {
+			notice.innerText =
+				"Please note that Custom CSS is disabled in the settings. \nIn the event that you accidentally disable rendering of critical parts of AniList, navigate to the settings by URL";
+			notice.style.fontSize = "11px";
+			container.append(notice);
+		} else {
+			const publishButton = document.createElement("button");
+			publishButton.classList.add("button");
+			publishButton.append("Publish");
+			publishButton.addEventListener("click", (event) =>
+				this.#handlePublishCss(event, cssHandler)
+			);
+
+			const previewButton = document.createElement("button");
+			previewButton.classList.add("button");
+			previewButton.append(
+				cssHandler.preview ? "Disable Preview" : "Enable Preview"
+			);
+			previewButton.addEventListener("click", () => {
+				cssHandler.togglePreview();
+				previewButton.innerText = cssHandler.preview
+					? "Disable Preview"
+					: "Enable Preview";
+			});
+
+			const resetButton = document.createElement("button");
+			resetButton.classList.add("button");
+			resetButton.append("Reset");
+			resetButton.addEventListener("click", () => {
+				if (window.confirm("Your changes will be lost.")) {
+					cssHandler.getAuthUserCss().then(() => {
+						textarea.value = cssHandler.css;
+					});
+				}
+			});
+
+			container.append(publishButton);
+			container.append(previewButton);
+			container.append(resetButton);
+		}
 
 		settingsContainer.append(container);
 	}
 
-	#handleCustomCssEditor(event, settingsUi) {
+	#handlePublishCss(event, cssHandler) {
+		const btn = event.target;
+		btn.innerText = "Publishing...";
+		cssHandler.publishUserCss().then(() => {
+			btn.innerText = "Publish";
+		});
+	}
+
+	#handleCustomCssEditor(event, cssHandler) {
 		const value = event.target.value;
-		settingsUi.globalCSS.updateCss(value);
+		cssHandler.updateCss(value);
 	}
 
 	#renderImageHostSettings(cont) {
@@ -566,7 +628,7 @@ export class SettingsUserInterface {
 		removeAuthButton.classList.add("button");
 		removeAuthButton.addEventListener("click", () => {
 			this.settings.removeAuthToken();
-			this.#creatAuthenticationSection();
+			this.renderSettingsUi();
 		});
 		removeAuthButton.append("Revoke auth token");
 

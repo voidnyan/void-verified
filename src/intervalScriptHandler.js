@@ -18,14 +18,15 @@ export class IntervalScriptHandler {
 
 		this.styleHandler = new StyleHandler(settings);
 		this.globalCSS = new GlobalCSS(settings);
+		this.userCSS = new UserCSS(settings);
 		this.settingsUi = new SettingsUserInterface(
 			settings,
 			this.styleHandler,
-			this.globalCSS
+			this.globalCSS,
+			this.userCSS
 		);
 		this.activityHandler = new ActivityHandler(settings);
 		this.quickAccess = new QuickAccess(settings);
-		this.userCSS = new UserCSS(settings);
 	}
 
 	currentPath = "";
