@@ -6,8 +6,26 @@ export class UserCSS {
 	#settings;
 	#currentActivity;
 	#currentUser;
+	css = "";
+	preview = false;
+	cssInLocalStorage = "void-verified-user-css";
 	constructor(settings) {
 		this.#settings = settings;
+		console.log(this.#settings);
+		if (
+			this.#settings.auth?.token &&
+			this.#settings.options.profileCssEnabled.getValue()
+		) {
+			const cssInLocalStorage = JSON.parse(
+				localStorage.getItem(this.cssInLocalStorage)
+			);
+			if (cssInLocalStorage) {
+				this.css = cssInLocalStorage.css;
+				this.preview = cssInLocalStorage.preview;
+			} else {
+				this.getAuthUserCss();
+			}
+		}
 	}
 
 	async checkActivityCss() {
@@ -42,7 +60,7 @@ export class UserCSS {
 			result.data.Activity.user?.about ??
 			result.data.Activity.recipient?.about;
 
-		const css = this.#decodeCss(about);
+		const css = this.#decodeAbout(about).customCSS;
 		if (css) {
 			this.#renderCss(css, "activity-css");
 		}
@@ -67,6 +85,11 @@ export class UserCSS {
 			return;
 		}
 
+		if (username === this.#settings.anilistUser && this.preview) {
+			this.#renderCss(this.css, "user-css");
+			return;
+		}
+
 		new StyleHandler(this.#settings).clearStyles("user-css");
 		if (!this.#shouldRenderCss(username)) {
 			return;
@@ -75,9 +98,9 @@ export class UserCSS {
 		this.#currentUser = username;
 
 		const anilistAPI = new AnilistAPI(this.#settings);
-		const result = await anilistAPI.getUserCss(username);
+		const result = await anilistAPI.getUserAbout(username);
 		const about = result.User.about;
-		const css = this.#decodeCss(about);
+		const css = this.#decodeAbout(about).customCSS;
 		if (css) {
 			this.#renderCss(css, "user-css");
 		}
@@ -85,6 +108,65 @@ export class UserCSS {
 
 	resetCurrentUser() {
 		this.#currentUser = null;
+	}
+
+	updateCss(css) {
+		this.css = css;
+		this.#saveToLocalStorage();
+	}
+
+	async publishUserCss() {
+		const username = this.#settings.anilistUser;
+		if (!username) {
+			return;
+		}
+
+		const anilistAPI = new AnilistAPI(this.#settings);
+		const result = await anilistAPI.getUserAbout(username);
+		let about = result.User.about;
+		let aboutJson = this.#decodeAbout(about);
+		aboutJson.customCSS = this.css;
+		const compressedAbout = LZString.compressToBase64(
+			JSON.stringify(aboutJson)
+		);
+
+		const target = about.match(/^\[\]\(json([A-Za-z0-9+/=]+)\)/)[1];
+		if (target) {
+			about = about.replace(target, compressedAbout);
+		} else {
+			about = `[](json${compressedAbout})` + about;
+		}
+		const mutationResult = await anilistAPI.saveUserAbout(about);
+		return mutationResult?.errors === undefined;
+	}
+
+	togglePreview() {
+		this.preview = !this.preview;
+		this.#saveToLocalStorage();
+	}
+
+	async getAuthUserCss() {
+		const anilistAPI = new AnilistAPI(this.#settings);
+		const username = this.#settings.anilistUser;
+		if (!username) {
+			return;
+		}
+		const response = await anilistAPI.getUserAbout(username);
+		const about = response.User.about;
+		const css = this.#decodeAbout(about).customCSS;
+		this.css = css;
+		this.#saveToLocalStorage();
+		return css;
+	}
+
+	#saveToLocalStorage() {
+		localStorage.setItem(
+			this.cssInLocalStorage,
+			JSON.stringify({
+				css: this.css,
+				preview: this.preview,
+			})
+		);
 	}
 
 	#shouldRenderCss(username) {
@@ -119,7 +201,7 @@ export class UserCSS {
 		}
 	}
 
-	#decodeCss(about) {
+	#decodeAbout(about) {
 		let json = (about || "").match(/^\[\]\(json([A-Za-z0-9+/=]+)\)/);
 		if (!json) {
 			return null;
@@ -131,9 +213,6 @@ export class UserCSS {
 		} catch (e) {
 			jsonData = JSON.parse(LZString.decompressFromBase64(json[1]));
 		}
-		if (jsonData.customCSS) {
-			return jsonData.customCSS;
-		}
-		return null;
+		return jsonData;
 	}
 }

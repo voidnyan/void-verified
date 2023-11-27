@@ -42,7 +42,7 @@ export class AnilistAPI {
 		}
 	}
 
-	async getUserCss(username) {
+	async getUserAbout(username) {
 		const query = `query ($username: String) {
             User(name: $username) {
                 about
@@ -51,6 +51,23 @@ export class AnilistAPI {
 
 		const variables = { username };
 		const options = this.#getQueryOptions(query, variables);
+		try {
+			const response = await fetch(this.#url, options);
+			const result = await response.json();
+			return result.data;
+		} catch (error) {
+			return await error.json();
+		}
+	}
+
+	async saveUserAbout(about) {
+		const query = `mutation ($about: String) {
+            UpdateUser(about: $about) {
+                about
+            }
+        }`;
+		const variables = { about };
+		const options = this.#getMutationOptions(query, variables);
 		try {
 			const response = await fetch(this.#url, options);
 			const result = await response.json();
@@ -117,6 +134,16 @@ export class AnilistAPI {
 				variables,
 			}),
 		};
+	}
+
+	#getMutationOptions(query, variables) {
+		if (!this.settings.auth.token) {
+			console.error("VoidVerified is not authenticated.");
+			return;
+		}
+		let queryOptions = this.#getQueryOptions(query, variables);
+		queryOptions.headers.Authorization = `Bearer ${this.settings.auth.token}`;
+		return queryOptions;
 	}
 
 	#getUsersToQuery() {
