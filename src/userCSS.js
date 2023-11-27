@@ -33,8 +33,8 @@ export class UserCSS {
 			result.data.Activity.user?.name ??
 			result.data.Activity.recipient?.name;
 
+		new StyleHandler(this.#settings).clearStyles("activity-css");
 		if (!this.#shouldRenderCss(username)) {
-			new StyleHandler(this.#settings).clearStyles("activity-css");
 			return;
 		}
 
@@ -54,7 +54,7 @@ export class UserCSS {
 
 	async checkUserCss() {
 		if (
-			!this.#settings.options.profileCssEnabled.getValue ||
+			!this.#settings.options.profileCssEnabled.getValue() ||
 			!window.location.pathname.startsWith("/user/")
 		) {
 			return;
@@ -67,8 +67,8 @@ export class UserCSS {
 			return;
 		}
 
+		new StyleHandler(this.#settings).clearStyles("user-css");
 		if (!this.#shouldRenderCss(username)) {
-			new StyleHandler(this.#settings).clearStyles("user-css");
 			return;
 		}
 

@@ -176,8 +176,8 @@ export class StyleHandler {
 			return;
 		}
 
-		const usernameHeader = document.querySelector("h1.name");
-		const username = usernameHeader.innerHTML.trim();
+		const username =
+			window.location.pathname.match(/^\/user\/([^/]*)\/?/)[1];
 
 		const user = this.settings.verifiedUsers.find(
 			(u) => u.username.toLowerCase() === username.toLowerCase()

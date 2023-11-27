@@ -61,8 +61,8 @@ export class IntervalScriptHandler {
 
 		if (path.startsWith("/user/")) {
 			intervalScriptHandler.userCSS.checkUserCss();
-			intervalScriptHandler.styleHandler.verifyProfile();
 			intervalScriptHandler.quickAccess.clearBadge();
+			intervalScriptHandler.styleHandler.verifyProfile();
 		} else {
 			intervalScriptHandler.styleHandler.clearStyles("user-css");
 			intervalScriptHandler.userCSS.resetCurrentUser();
