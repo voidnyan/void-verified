@@ -11,7 +11,6 @@ export class UserCSS {
 	cssInLocalStorage = "void-verified-user-css";
 	constructor(settings) {
 		this.#settings = settings;
-		console.log(this.#settings);
 		if (
 			this.#settings.auth?.token &&
 			this.#settings.options.profileCssEnabled.getValue()
@@ -60,7 +59,7 @@ export class UserCSS {
 			result.data.Activity.user?.about ??
 			result.data.Activity.recipient?.about;
 
-		const css = this.#decodeAbout(about).customCSS;
+		const css = this.#decodeAbout(about)?.customCSS;
 		if (css) {
 			this.#renderCss(css, "activity-css");
 		}
@@ -100,7 +99,7 @@ export class UserCSS {
 		const anilistAPI = new AnilistAPI(this.#settings);
 		const result = await anilistAPI.getUserAbout(username);
 		const about = result.User.about;
-		const css = this.#decodeAbout(about).customCSS;
+		const css = this.#decodeAbout(about)?.customCSS;
 		if (css) {
 			this.#renderCss(css, "user-css");
 		}
