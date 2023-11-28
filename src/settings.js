@@ -119,7 +119,7 @@ export class Settings {
 	#mapApiUser(user, apiUser) {
 		let userObject = { ...user };
 
-		userObject.color = this.#handleAnilistColor(
+		userObject.color = ColorFunctions.handleAnilistColor(
 			apiUser.options.profileColor
 		);
 
@@ -187,33 +187,5 @@ export class Settings {
 			this.localStorageSettings,
 			JSON.stringify(localSettings)
 		);
-	}
-
-	#defaultColors = [
-		"gray",
-		"blue",
-		"purple",
-		"green",
-		"orange",
-		"red",
-		"pink",
-	];
-
-	#defaultColorRgb = {
-		gray: "103, 123, 148",
-		blue: "61, 180, 242",
-		purple: "192, 99, 255",
-		green: "76, 202, 81",
-		orange: "239, 136, 26",
-		red: "225, 51, 51",
-		pink: "252, 157, 214",
-	};
-
-	#handleAnilistColor(color) {
-		if (this.#defaultColors.includes(color)) {
-			return this.#defaultColorRgb[color];
-		}
-
-		return ColorFunctions.hexToRgb(color);
 	}
 }

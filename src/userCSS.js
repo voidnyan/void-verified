@@ -1,4 +1,5 @@
 import { AnilistAPI } from "./api/anilistAPI";
+import { ColorFunctions } from "./colorFunctions";
 import { StyleHandler } from "./styleHandler";
 import LZString from "./utils/lz-string";
 
@@ -57,7 +58,6 @@ export class UserCSS {
 			result.data.Activity.recipient?.name;
 
 		if (username === this.#currentUser) {
-			console.log("same user, no need to flash");
 			return;
 		}
 
@@ -75,6 +75,19 @@ export class UserCSS {
 		const about =
 			result.data.Activity.user?.about ??
 			result.data.Activity.recipient?.about;
+
+		const userColor =
+			result.data.Activity.user?.options.profileColor ??
+			result.data.Activity.recipient?.options.profileColor;
+
+		const rgb = ColorFunctions.handleAnilistColor(userColor);
+
+		const activityEntry = document.querySelector(
+			".container > .activity-entry"
+		);
+
+		activityEntry.style.setProperty("--color-blue", rgb);
+		activityEntry.style.setProperty("--color-blue-dim", rgb);
 
 		const css = this.#decodeAbout(about)?.customCSS;
 		if (css) {

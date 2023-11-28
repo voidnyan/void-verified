@@ -24,4 +24,32 @@ export class ColorFunctions {
 				.join("")
 		);
 	}
+
+	static defaultColors = [
+		"gray",
+		"blue",
+		"purple",
+		"green",
+		"orange",
+		"red",
+		"pink",
+	];
+
+	static defaultColorRgb = {
+		gray: "103, 123, 148",
+		blue: "61, 180, 242",
+		purple: "192, 99, 255",
+		green: "76, 202, 81",
+		orange: "239, 136, 26",
+		red: "225, 51, 51",
+		pink: "252, 157, 214",
+	};
+
+	static handleAnilistColor(color) {
+		if (this.defaultColors.includes(color)) {
+			return this.defaultColorRgb[color];
+		}
+
+		return this.hexToRgb(color);
+	}
 }

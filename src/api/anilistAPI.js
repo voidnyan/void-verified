@@ -15,17 +15,26 @@ export class AnilistAPI {
                     user {
                         name
                         about
+                        options {
+                            profileColor
+                        }
                 }}
                 ... on TextActivity {
                     user {
                         name
                         about
+                        options {
+                            profileColor
+                        }
                     }
                 }
                 ... on MessageActivity {
                     recipient {
                         name
                         about
+                        options {
+                            profileColor
+                        }
                     }
                 }
             }
