@@ -65,16 +65,17 @@ export class IntervalScriptHandler {
 			intervalScriptHandler.quickAccess.clearBadge();
 			intervalScriptHandler.styleHandler.verifyProfile();
 		} else {
-			intervalScriptHandler.styleHandler.clearStyles("user-css");
-			intervalScriptHandler.userCSS.resetCurrentUser();
 			intervalScriptHandler.styleHandler.clearStyles("profile");
 		}
 
 		if (path.startsWith("/activity/")) {
 			intervalScriptHandler.userCSS.checkActivityCss();
-		} else {
-			intervalScriptHandler.styleHandler.clearStyles("activity-css");
+		}
+
+		if (!path.startsWith("/activity/") && !path.startsWith("/user/")) {
 			intervalScriptHandler.userCSS.resetCurrentActivity();
+			intervalScriptHandler.userCSS.resetCurrentUser();
+			intervalScriptHandler.styleHandler.clearStyles("user-css");
 		}
 
 		if (path.startsWith("/settings/developer")) {
