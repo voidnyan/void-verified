@@ -9,6 +9,7 @@ export class UserCSS {
 	css = "";
 	preview = false;
 	cssInLocalStorage = "void-verified-user-css";
+	broadcastChannel;
 	constructor(settings) {
 		this.#settings = settings;
 		if (
@@ -25,6 +26,11 @@ export class UserCSS {
 				this.getAuthUserCss();
 			}
 		}
+
+		this.broadcastChannel = new BroadcastChannel("user-css");
+		this.broadcastChannel.addEventListener("message", (event) =>
+			this.#handleBroadcastMessage(event, this.#settings)
+		);
 	}
 
 	async checkActivityCss() {
@@ -50,7 +56,18 @@ export class UserCSS {
 			result.data.Activity.user?.name ??
 			result.data.Activity.recipient?.name;
 
-		new StyleHandler(this.#settings).clearStyles("activity-css");
+		if (username === this.#currentUser) {
+			console.log("same user, no need to flash");
+			return;
+		}
+
+		new StyleHandler(this.#settings).clearStyles("user-css");
+
+		if (username === this.#settings.anilistUser && this.preview) {
+			this.#renderCss(this.css, "user-css");
+			return;
+		}
+
 		if (!this.#shouldRenderCss(username)) {
 			return;
 		}
@@ -61,8 +78,10 @@ export class UserCSS {
 
 		const css = this.#decodeAbout(about)?.customCSS;
 		if (css) {
-			this.#renderCss(css, "activity-css");
+			this.#renderCss(css, "user-css");
 		}
+
+		this.#currentUser = username;
 	}
 
 	resetCurrentActivity() {
@@ -111,6 +130,9 @@ export class UserCSS {
 
 	updateCss(css) {
 		this.css = css;
+		if (this.preview) {
+			this.broadcastChannel.postMessage({ type: "css", css });
+		}
 		this.#saveToLocalStorage();
 	}
 
@@ -141,6 +163,10 @@ export class UserCSS {
 
 	togglePreview() {
 		this.preview = !this.preview;
+		this.broadcastChannel.postMessage({
+			type: "preview",
+			preview: this.preview,
+		});
 		this.#saveToLocalStorage();
 	}
 
@@ -156,6 +182,43 @@ export class UserCSS {
 		this.css = css;
 		this.#saveToLocalStorage();
 		return css;
+	}
+
+	#handleBroadcastMessage(event, settings) {
+		switch (event.data.type) {
+			case "css":
+				this.#handlePreviewCssMessage(event.data.css, settings);
+				break;
+			case "preview":
+				this.#handlePreviewToggleMessage(event.data.preview);
+				break;
+		}
+	}
+
+	#handlePreviewCssMessage(css, settings) {
+		this.css = css;
+		const hasUserCss = document.getElementById(
+			"void-verified-user-css-styles"
+		);
+		if (hasUserCss) {
+			new StyleHandler(settings).createStyleLink(css, "user-css");
+		}
+	}
+
+	#handlePreviewToggleMessage(preview) {
+		this.preview = preview;
+		const hasUserCss = document.getElementById(
+			"void-verified-user-css-styles"
+		);
+		if (!hasUserCss) {
+			return;
+		}
+
+		this.resetCurrentUser();
+		this.resetCurrentActivity();
+
+		this.checkUserCss();
+		this.checkActivityCss();
 	}
 
 	#saveToLocalStorage() {
