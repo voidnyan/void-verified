@@ -47,11 +47,11 @@ export class UserCSS {
 			/^\/activity\/([^/]*)\/?/
 		)[1];
 
-		// if (this.#currentActivity === activityId) {
-		// 	return;
-		// }
+		if (this.#currentActivity === activityId) {
+			return;
+		}
 
-		// this.#currentActivity = activityId;
+		this.#currentActivity = activityId;
 		const anilistAPI = new AnilistAPI(this.#settings);
 		const result = await anilistAPI.getActivityCss(activityId);
 		const username =
