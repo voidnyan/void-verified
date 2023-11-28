@@ -11,6 +11,7 @@ export class UserCSS {
 	preview = false;
 	cssInLocalStorage = "void-verified-user-css";
 	broadcastChannel;
+
 	constructor(settings) {
 		this.#settings = settings;
 		if (
@@ -46,40 +47,20 @@ export class UserCSS {
 			/^\/activity\/([^/]*)\/?/
 		)[1];
 
-		if (this.#currentActivity === activityId) {
-			return;
-		}
+		// if (this.#currentActivity === activityId) {
+		// 	return;
+		// }
 
-		this.#currentActivity = activityId;
+		// this.#currentActivity = activityId;
 		const anilistAPI = new AnilistAPI(this.#settings);
 		const result = await anilistAPI.getActivityCss(activityId);
 		const username =
 			result.data.Activity.user?.name ??
 			result.data.Activity.recipient?.name;
 
-		if (username === this.#currentUser) {
-			return;
-		}
-
-		new StyleHandler(this.#settings).clearStyles("user-css");
-
-		if (username === this.#settings.anilistUser && this.preview) {
-			this.#renderCss(this.css, "user-css");
-			return;
-		}
-
-		if (!this.#shouldRenderCss(username)) {
-			return;
-		}
-
-		const about =
-			result.data.Activity.user?.about ??
-			result.data.Activity.recipient?.about;
-
 		const userColor =
 			result.data.Activity.user?.options.profileColor ??
 			result.data.Activity.recipient?.options.profileColor;
-
 		const rgb = ColorFunctions.handleAnilistColor(userColor);
 
 		const activityEntry = document.querySelector(
@@ -88,6 +69,25 @@ export class UserCSS {
 
 		activityEntry.style.setProperty("--color-blue", rgb);
 		activityEntry.style.setProperty("--color-blue-dim", rgb);
+
+		if (username === this.#settings.anilistUser && this.preview) {
+			this.#renderCss(this.css, "user-css");
+			return;
+		}
+
+		if (username === this.#currentUser) {
+			this.#clearGlobalCss();
+			return;
+		}
+		new StyleHandler(this.#settings).clearStyles("user-css");
+
+		if (!this.#shouldRenderCss(username)) {
+			return;
+		}
+
+		const about =
+			result.data.Activity.user?.about ??
+			result.data.Activity.recipient?.about;
 
 		const css = this.#decodeAbout(about)?.customCSS;
 		if (css) {
@@ -271,8 +271,12 @@ export class UserCSS {
 
 		const styleHandler = new StyleHandler(this.#settings);
 		styleHandler.createStyleLink(css, id);
+		this.#clearGlobalCss();
+	}
+
+	#clearGlobalCss() {
 		if (this.#settings.options.globalCssAutoDisable.getValue()) {
-			styleHandler.clearStyles("global-css");
+			new StyleHandler(this.#settings).clearStyles("global-css");
 		}
 	}
 
