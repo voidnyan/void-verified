@@ -74,7 +74,7 @@ export class SettingsUserInterface {
 	}
 
 	removeSettingsUi() {
-		const settings = document.querySelector("#voidverified-settings");
+		const settings = document.querySelector("#void-verified-settings");
 		settings?.remove();
 	}
 

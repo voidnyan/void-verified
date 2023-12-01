@@ -58,8 +58,6 @@ export class IntervalScriptHandler {
 			return;
 		}
 
-		intervalScriptHandler.globalCSS.createCss();
-
 		if (path.startsWith("/user/")) {
 			intervalScriptHandler.userCSS.checkUserCss();
 			intervalScriptHandler.quickAccess.clearBadge();
@@ -77,6 +75,8 @@ export class IntervalScriptHandler {
 			intervalScriptHandler.userCSS.resetCurrentUser();
 			intervalScriptHandler.styleHandler.clearStyles("user-css");
 		}
+
+		intervalScriptHandler.globalCSS.createCss();
 
 		if (path.startsWith("/settings/developer")) {
 			intervalScriptHandler.settingsUi.renderSettingsUi();
