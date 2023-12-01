@@ -69,7 +69,11 @@ export class GlobalCSS {
 		const voidActivityStyles = styleHandler.getStyleLink("activity-css");
 		const voidUserStyles = styleHandler.getStyleLink("user-css");
 
-		if (!profileCustomCss && !voidActivityStyles && !voidUserStyles) {
+		if (voidActivityStyles || voidUserStyles) {
+			return false;
+		}
+
+		if (!profileCustomCss) {
 			return true;
 		}
 

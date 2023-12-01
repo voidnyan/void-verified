@@ -121,8 +121,8 @@ export class UserCSS {
 			return;
 		}
 
-		new StyleHandler(this.#settings).clearStyles("user-css");
 		if (!this.#shouldRenderCss(username)) {
+			new StyleHandler(this.#settings).clearStyles("user-css");
 			return;
 		}
 
@@ -132,9 +132,10 @@ export class UserCSS {
 		const result = await anilistAPI.getUserAbout(username);
 		const about = result.User.about;
 		const css = this.#decodeAbout(about)?.customCSS;
-		if (css) {
-			this.#renderCss(css, "user-css");
+		if (!css) {
+			new StyleHandler(this.#settings).clearStyles("user-css");
 		}
+		this.#renderCss(css, "user-css");
 	}
 
 	resetCurrentUser() {
