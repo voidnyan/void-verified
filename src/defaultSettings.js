@@ -3,7 +3,6 @@ export const categories = {
 	paste: "paste",
 	css: "css",
 	misc: "misc",
-	hidden: "hidden",
 };
 
 export const defaultSettings = {
@@ -16,6 +15,11 @@ export const defaultSettings = {
 		defaultValue: false,
 		description:
 			"Move activity subscribe button next to comments and likes.",
+		category: categories.misc,
+	},
+	autoLikeOnSubscribe: {
+		defaultValue: false,
+		description: "Like activities when subscribing.",
 		category: categories.misc,
 	},
 	hideLikeCount: {
