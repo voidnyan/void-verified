@@ -3,7 +3,6 @@ export const categories = {
 	paste: "paste",
 	css: "css",
 	misc: "misc",
-	hidden: "hidden",
 };
 
 export const defaultSettings = {
