@@ -506,6 +506,11 @@ export class SettingsUserInterface {
 				)
 			);
 		}
+		select.value = imageHostService.getSelectedHost();
+		select.addEventListener("change", (event) => {
+			imageHostService.setSelectedHost(event.target.value);
+			this.renderSettingsUi();
+		});
 		container.append(select);
 
 		const hostSpecificSettings = DOM.create("div");
