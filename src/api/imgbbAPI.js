@@ -27,7 +27,11 @@ export class ImgbbAPI extends ImageHostBase {
 				Accept: "application/json",
 				"Content-Type": "application/x-www-form-urlencoded",
 			},
-			body: "image=" + encodeURIComponent(base64),
+			body:
+				"image=" +
+				encodeURIComponent(base64) +
+				"&name=" +
+				image.name.split(".")[0],
 		};
 
 		try {
