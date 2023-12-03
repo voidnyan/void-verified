@@ -1,10 +1,11 @@
 export const imageHosts = {
 	imgbb: "imgbb",
 	imgur: "imgur",
+	catbox: "catbox",
 };
 
 const imageHostConfiguration = {
-	selectedHost: imageHosts.imgbb,
+	selectedHost: imageHosts.catbox,
 	configurations: {
 		imgbb: {
 			name: "imgbb",
@@ -17,6 +18,10 @@ const imageHostConfiguration = {
 			expires: null,
 			refreshToken: null,
 			authToken: null,
+		},
+		catbox: {
+			name: "catbox",
+			userHash: "",
 		},
 	},
 };
