@@ -1,3 +1,4 @@
+import { CatboxAPI } from "./catboxAPI";
 import { ImageHostService, imageHosts } from "./imageHostConfiguration";
 import { ImgbbAPI } from "./imgbbAPI";
 export class ImageApiFactory {
@@ -7,6 +8,12 @@ export class ImageApiFactory {
 			case imageHosts.imgbb:
 				return new ImgbbAPI(
 					imageHostService.getImageHostConfiguration(imageHosts.imgbb)
+				);
+			case imageHosts.catbox:
+				return new CatboxAPI(
+					imageHostService.getImageHostConfiguration(
+						imageHosts.catbox
+					)
 				);
 		}
 	}

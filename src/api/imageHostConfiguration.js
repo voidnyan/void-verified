@@ -1,14 +1,16 @@
 export const imageHosts = {
 	imgbb: "imgbb",
+	catbox: "catbox",
 };
 
 const imageHostConfiguration = {
-	selectedHost: imageHosts.imgbb,
+	selectedHost: imageHosts.catbox,
 	configurations: {
 		imgbb: {
 			name: "imgbb",
 			apiKey: "",
 		},
+		catbox: {},
 	},
 };
 
