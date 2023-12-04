@@ -40,10 +40,10 @@ export class ImgbbAPI extends ImageHostBase {
 				settings
 			);
 			const data = await response.json();
-			return data;
+			return data.data.url;
 		} catch (error) {
 			console.error(error);
-			return error;
+			return null;
 		}
 	}
 

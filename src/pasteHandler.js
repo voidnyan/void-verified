@@ -45,29 +45,12 @@ export class PasteHandler {
 		}
 
 		const clipboard = event.clipboardData.getData("text/plain").trim();
-		const file = event.clipboardData.items[0]?.getAsFile();
 		let result = [];
-		if (
-			file &&
-			file.type.startsWith("image/") &&
-			this.settings.options.pasteImagesToHostService.getValue()
-		) {
+
+		const file = event.clipboardData.items[0]?.getAsFile();
+		if (file && this.settings.options.pasteImagesToHostService.getValue()) {
 			event.preventDefault();
-			if (this.#uploadInProgress) {
-				return;
-			}
-			this.#uploadInProgress = true;
-			document.body.classList.add("void-upload-in-progress");
-			try {
-				const imageApi = new ImageApiFactory().getImageHostInstance();
-				const response = await imageApi.uploadImage(file);
-				result.push(this.#handleRow(response.data.url));
-			} catch (error) {
-				console.error(error);
-			} finally {
-				this.#uploadInProgress = false;
-				document.body.classList.remove("void-upload-in-progress");
-			}
+			result = await this.#handleImages(event.clipboardData.items);
 		} else if (this.settings.options.pasteEnabled.getValue()) {
 			event.preventDefault();
 			const rows = clipboard.split("\n");
@@ -81,6 +64,34 @@ export class PasteHandler {
 
 		const transformedClipboard = result.join("\n\n");
 		window.document.execCommand("insertText", false, transformedClipboard);
+	}
+
+	async #handleImages(_files) {
+		if (this.#uploadInProgress) {
+			return;
+		}
+		this.#uploadInProgress = true;
+		document.body.classList.add("void-upload-in-progress");
+
+		const imageApi = new ImageApiFactory().getImageHostInstance();
+
+		const files = Object.values(_files).map((file) => file.getAsFile());
+		const images = files.filter((file) => file.type.startsWith("image/"));
+
+		try {
+			const results = await Promise.all(
+				images.map((image) => imageApi.uploadImage(image))
+			);
+			return results
+				.filter((url) => url !== null)
+				.map((url) => this.#handleRow(url));
+		} catch {
+			console.error(error);
+			return [];
+		} finally {
+			this.#uploadInProgress = false;
+			document.body.classList.remove("void-upload-in-progress");
+		}
 	}
 
 	#handleRow(row) {
