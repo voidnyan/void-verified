@@ -1,5 +1,6 @@
 export const imageHosts = {
 	imgbb: "imgbb",
+	imgur: "imgur",
 };
 
 const imageHostConfiguration = {
@@ -8,6 +9,14 @@ const imageHostConfiguration = {
 		imgbb: {
 			name: "imgbb",
 			apiKey: "",
+		},
+		imgur: {
+			name: "imgur",
+			clientId: "",
+			clientSecret: "",
+			expires: null,
+			refreshToken: null,
+			authToken: null,
 		},
 	},
 };
@@ -22,7 +31,19 @@ export class ImageHostService {
 				this.#localStorage,
 				JSON.stringify(imageHostConfiguration)
 			);
+		} else {
+			for (const key of Object.keys(
+				imageHostConfiguration.configurations
+			)) {
+				if (config.configurations[key]) {
+					continue;
+				}
+				config.configurations[key] =
+					imageHostConfiguration.configurations[key];
+			}
+			localStorage.setItem(this.#localStorage, JSON.stringify(config));
 		}
+
 		this.#configuration = config ?? imageHostConfiguration;
 	}
 

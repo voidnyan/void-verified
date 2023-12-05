@@ -4,6 +4,8 @@ import { IntervalScriptHandler } from "./intervalScriptHandler";
 import { AnilistAPI } from "./api/anilistAPI";
 import { PasteHandler } from "./pasteHandler";
 import { styles } from "./styles";
+import { ImgurAPI } from "./api/imgurAPI";
+import { ImageHostService, imageHosts } from "./api/imageHostConfiguration";
 
 const settings = new Settings();
 const styleHandler = new StyleHandler(settings);
@@ -16,6 +18,10 @@ intervalScriptHandler.enableScriptIntervalHandling();
 
 anilistAPI.queryUserData();
 pasteHandler.setup();
+
+new ImgurAPI(
+	new ImageHostService().getImageHostConfiguration(imageHosts.imgur)
+).refreshAuthToken();
 
 styleHandler.createStyleLink(styles, "script");
 
