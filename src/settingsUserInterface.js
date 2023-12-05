@@ -1,5 +1,6 @@
 import { ImageApiFactory } from "./api/imageApiFactory";
 import { imageHosts, ImageHostService } from "./api/imageHostConfiguration";
+import { ImgurAPI } from "./api/imgurAPI";
 import { ColorFunctions } from "./colorFunctions";
 import { categories } from "./defaultSettings";
 import { GlobalCSS } from "./globalCSS";
@@ -515,7 +516,7 @@ export class SettingsUserInterface {
 
 		const hostSpecificSettings = DOM.create("div");
 		const imageHostApi = imageApiFactory.getImageHostInstance();
-		hostSpecificSettings.append(imageHostApi.renderSettings());
+		hostSpecificSettings.append(imageHostApi.renderSettings(this));
 
 		container.append(hostSpecificSettings);
 		settingsContainer.append(container);
@@ -587,6 +588,14 @@ export class SettingsUserInterface {
 		}
 
 		const [path, token, type, expiress] = hash.split("&");
+
+		if (path === "void_imgur") {
+			const imgurConfig =
+				new ImageHostService().getImageHostConfiguration(
+					imageHosts.imgur
+				);
+			new ImgurAPI(imgurConfig).handleAuth();
+		}
 		if (path !== "void_auth") {
 			return;
 		}

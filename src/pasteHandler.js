@@ -85,7 +85,7 @@ export class PasteHandler {
 			return results
 				.filter((url) => url !== null)
 				.map((url) => this.#handleRow(url));
-		} catch {
+		} catch (error) {
 			console.error(error);
 			return [];
 		} finally {
