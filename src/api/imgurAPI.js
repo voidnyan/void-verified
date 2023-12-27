@@ -24,6 +24,7 @@ export class ImgurAPI extends ImageHostBase {
 
 		const formData = new FormData();
 		formData.append("image", base64);
+		formData.append("title", image.name.split(".")[0]);
 
 		const settings = {
 			method: "POST",
