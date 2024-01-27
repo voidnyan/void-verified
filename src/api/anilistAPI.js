@@ -1,11 +1,14 @@
 export class AnilistAPI {
-	apiQueryTimeoutInMinutes = 15;
+	apiQueryTimeoutInMinutes = 0.5;
 	apiQueryTimeout = this.apiQueryTimeoutInMinutes * 60 * 1000;
 
 	settings;
+	#userId;
 	#url = "https://graphql.anilist.co";
+	#lastFetchedSessionStorage = "void-verified-last-fetched";
 	constructor(settings) {
 		this.settings = settings;
+		this.#userId = Number(JSON.parse(localStorage.getItem("auth")).id);
 	}
 
 	async getActivityCss(activityId) {
@@ -65,7 +68,7 @@ export class AnilistAPI {
 			const result = await response.json();
 			return result.data;
 		} catch (error) {
-			return await error.json();
+			return error;
 		}
 	}
 
@@ -87,48 +90,92 @@ export class AnilistAPI {
 	}
 
 	queryUserData() {
-		let stopQueries = false;
+		const lastFetched = new Date(
+			sessionStorage.getItem(this.#lastFetchedSessionStorage)
+		);
+		const currentTime = new Date();
 
-		for (const user of this.#getUsersToQuery()) {
-			if (stopQueries) {
-				break;
-			}
-
-			stopQueries = this.#queryUser(user);
+		if (!lastFetched || currentTime - lastFetched > this.apiQueryTimeout) {
+			this.#querySelf();
+			this.#queryUsers(1);
+			sessionStorage.setItem(this.#lastFetchedSessionStorage, new Date());
 		}
 	}
 
-	#queryUser(user) {
-		const variables = { username: user.username };
-		const query = `query ($username: String) {
-            User(name: $username) {
-                name
-                avatar {
+	#querySelf() {
+		const variables = { userId: this.#userId };
+		const query = `query ($userId: Int!) {
+                User(id: $userId) {
+                  name
+                  avatar {
                     large
-                }
-                bannerImage
-                options {
+                  }
+                  bannerImage
+                  options {
                     profileColor
-                }
+                  }
+              }
             }
-        }
-    `;
+        `;
 
 		const options = this.#getQueryOptions(query, variables);
 
-		let stopQueries = false;
 		fetch(this.#url, options)
 			.then(this.#handleResponse)
 			.then((data) => {
-				const resultUser = data.User;
-				this.settings.updateUserFromApi(user, resultUser);
+				console.log(data);
+				this.settings.updateUserFromApi(data.User);
 			})
 			.catch((err) => {
 				console.error(err);
-				stopQueries = true;
 			});
+	}
 
-		return stopQueries;
+	#queryUsers(page) {
+		const variables = { page, userId: this.#userId };
+		const query = `query ($page: Int, $userId: Int!) {
+            Page(page: $page) {
+                following(userId: $userId) {
+                  name
+                  avatar {
+                    large
+                  }
+                  bannerImage
+                  options {
+                    profileColor
+                  }
+                }, 
+                pageInfo {
+                  total
+                  perPage
+                  currentPage
+                  lastPage
+                  hasNextPage
+                }
+              }
+            }
+        `;
+
+		const options = this.#getQueryOptions(query, variables);
+
+		fetch(this.#url, options)
+			.then(this.#handleResponse)
+			.then((data) => {
+				this.#handleQueriedUsers(data.Page.following);
+				const pageInfo = data.Page.pageInfo;
+				if (pageInfo.hasNextPage) {
+					this.#queryUsers(pageInfo.currentPage + 1);
+				}
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	}
+
+	#handleQueriedUsers(users) {
+		for (const user of users) {
+			this.settings.updateUserFromApi(user);
+		}
 	}
 
 	#getQueryOptions(query, variables) {
@@ -137,6 +184,9 @@ export class AnilistAPI {
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
+				Authorization: this.settings.auth.token
+					? `Bearer ${this.settings.auth.token}`
+					: undefined,
 			},
 			body: JSON.stringify({
 				query,
@@ -151,45 +201,12 @@ export class AnilistAPI {
 			return;
 		}
 		let queryOptions = this.#getQueryOptions(query, variables);
-		queryOptions.headers.Authorization = `Bearer ${this.settings.auth.token}`;
 		return queryOptions;
-	}
-
-	#getUsersToQuery() {
-		if (
-			this.settings.options.copyColorFromProfile.getValue() ||
-			this.settings.options.quickAccessEnabled.getValue()
-		) {
-			return this.#filterUsersByLastFetch();
-		}
-
-		const users = this.settings.verifiedUsers.filter(
-			(user) => user.copyColorFromProfile || user.quickAccessEnabled
-		);
-
-		return this.#filterUsersByLastFetch(users);
 	}
 
 	#handleResponse(response) {
 		return response.json().then((json) => {
 			return response.ok ? json.data : Promise.reject(json);
 		});
-	}
-
-	#filterUsersByLastFetch(users = null) {
-		const currentDate = new Date();
-		if (users) {
-			return users.filter(
-				(user) =>
-					!user.lastFetch ||
-					currentDate - new Date(user.lastFetch) >
-						this.apiQueryTimeout
-			);
-		}
-		return this.settings.verifiedUsers.filter(
-			(user) =>
-				!user.lastFetch ||
-				currentDate - new Date(user.lastFetch) > this.apiQueryTimeout
-		);
 	}
 }

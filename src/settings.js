@@ -102,7 +102,14 @@ export class Settings {
 		);
 	}
 
-	updateUserFromApi(user, apiUser) {
+	updateUserFromApi(apiUser) {
+		const user = this.verifiedUsers.find(
+			(u) => u.username === apiUser.name
+		);
+		if (!user) {
+			return;
+		}
+
 		const newUser = this.#mapApiUser(user, apiUser);
 		this.verifiedUsers = this.verifiedUsers.map((u) =>
 			u.username.toLowerCase() === user.username.toLowerCase()

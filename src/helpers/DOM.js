@@ -12,9 +12,9 @@ export class DOM {
 		}
 
 		if (children) {
-			try {
+			if (Array.isArray(children)) {
 				el.append(...children);
-			} catch {
+			} else {
 				el.append(children);
 			}
 		}
