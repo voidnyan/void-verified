@@ -123,7 +123,6 @@ export class AnilistAPI {
 		fetch(this.#url, options)
 			.then(this.#handleResponse)
 			.then((data) => {
-				console.log(data);
 				this.settings.updateUserFromApi(data.User);
 			})
 			.catch((err) => {
@@ -179,20 +178,23 @@ export class AnilistAPI {
 	}
 
 	#getQueryOptions(query, variables) {
-		return {
+		const options = {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
-				Authorization: this.settings.auth.token
-					? `Bearer ${this.settings.auth.token}`
-					: undefined,
 			},
 			body: JSON.stringify({
 				query,
 				variables,
 			}),
 		};
+
+		if (this.settings.auth?.token) {
+			options.headers.Authorization = `Bearer ${this.settings.auth.token}`;
+		}
+
+		return options;
 	}
 
 	#getMutationOptions(query, variables) {
