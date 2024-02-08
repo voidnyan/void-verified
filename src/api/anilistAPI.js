@@ -5,7 +5,7 @@ export class AnilistAPI {
 	settings;
 	#userId;
 	#url = "https://graphql.anilist.co";
-	#lastFetchedSessionStorage = "void-verified-last-fetched";
+	#lastFetchedLocalStorage = "void-verified-last-fetched";
 	constructor(settings) {
 		this.settings = settings;
 		this.#userId = Number(JSON.parse(localStorage.getItem("auth")).id);
@@ -129,14 +129,14 @@ export class AnilistAPI {
 
 	queryUserData() {
 		const lastFetched = new Date(
-			sessionStorage.getItem(this.#lastFetchedSessionStorage)
+			localStorage.getItem(this.#lastFetchedLocalStorage)
 		);
 		const currentTime = new Date();
 
 		if (!lastFetched || currentTime - lastFetched > this.apiQueryTimeout) {
 			this.#querySelf();
 			this.#queryUsers(1);
-			sessionStorage.setItem(this.#lastFetchedSessionStorage, new Date());
+			localStorage.setItem(this.#lastFetchedLocalStorage, new Date());
 		}
 	}
 

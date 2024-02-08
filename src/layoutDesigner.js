@@ -1,7 +1,8 @@
 import { DOM } from "./helpers/DOM";
 import { ColorFunctions } from "./colorFunctions";
-import { Button, ColorPicker, InputField } from "./components/components";
+import { Button, ColorPicker, InputField, Note } from "./components/components";
 import { AnilistAPI } from "./api/anilistAPI";
+import { Markdown } from "./utils/markdown";
 
 class Layout {
 	avatar;
@@ -22,6 +23,7 @@ class Layout {
 export class LayoutDesigner {
 	#settings;
 	#layoutsInLocalStorage = "void-verified-layouts";
+	#originalHtml;
 	#broadcastChannel;
 	#donatorTier = 0;
 	#anilistSettings;
@@ -68,13 +70,12 @@ export class LayoutDesigner {
 			return;
 		}
 
-		// TODO: handle these with pure css which can be easily enabled or disabled
-		// or actually, the user's things should mostly be in localStorage already, set there by anilist itself
 		this.#handleAvatar(this.#layout.avatar);
 		this.#handleBanner(this.#layout.banner);
 		this.#handleColor(this.#layout.color);
 		this.#handleDonatorBadge(this.#layout.donatorBadge);
 		this.#handleCss();
+		this.#handleAbout(Markdown.parse(this.#layout.bio ?? ""));
 	}
 
 	#handleBroadcastMessage(event) {
@@ -103,6 +104,7 @@ export class LayoutDesigner {
 		this.#handleDonatorBadge(this.#anilistSettings.donatorBadge);
 		this.#layouts.disableCss = false;
 		this.#handleCss();
+		this.#handleAbout(this.#originalHtml);
 	}
 
 	#handleLayoutMessage(layout) {
@@ -174,6 +176,16 @@ export class LayoutDesigner {
 		}
 	}
 
+	#handleAbout(about) {
+		const aboutContainer = DOM.get(".about .markdown");
+
+		if (!this.#originalHtml) {
+			this.#originalHtml = aboutContainer.innerHTML;
+		}
+
+		aboutContainer.innerHTML = about !== "" ? about : this.#originalHtml;
+	}
+
 	renderSettings(settingsUi) {
 		const container = DOM.create("div", "layout-designer-container");
 
@@ -191,50 +203,57 @@ export class LayoutDesigner {
 			settingsUi
 		);
 
+		const imageUploadNote = Note(
+			"Unfortunately AniList API does not support third parties uploading new avatars or banners. You have to upload them separately."
+		);
+
 		const colorSelection = this.#createColorSelection(settingsUi);
 
-		const aboutHeader = DOM.create("h5", "layout-header", "About");
-		const aboutInput = DOM.create("textarea");
-		aboutInput.addEventListener("change", (event) => {
-			this.#updateOption("bio", event.target.value, settingsUi);
-		});
-		aboutInput.value = this.#layout.bio;
-
-		const previewButton = DOM.create(
-			"button",
-			null,
-			this.#layouts.preview ? "Disable Preview" : "Enable Preview"
+		const previewButton = Button(
+			this.#layouts.preview ? "Disable Preview" : "Enable Preview",
+			() => {
+				this.#togglePreview(settingsUi);
+			}
 		);
 
-		previewButton.classList.add("button");
-		previewButton.addEventListener("click", () => {
-			this.#togglePreview(settingsUi);
-		});
-
-		const cssButton = DOM.create(
-			"button",
-			null,
-			this.#layouts.disableCss ? "Enable Css" : "Disable Css"
+		const cssButton = Button(
+			this.#layouts.disableCss ? "Enable Css" : "Disable Css",
+			() => {
+				this.#toggleCss();
+				cssButton.innerText = this.#layouts.disableCss
+					? "Enable Css"
+					: "Disable Css";
+			}
 		);
 
-		cssButton.classList.add("button");
-		cssButton.addEventListener("click", () => {
-			this.#toggleCss();
-			cssButton.innerText = this.#layouts.disableCss
-				? "Enable Css"
-				: "Disable Css";
+		const getAboutButton = Button("Reset About", () => {
+			this.#getUserAbout(settingsUi);
 		});
 
-		container.append(header, avatarInput, bannerInput, colorSelection);
+		container.append(
+			header,
+			avatarInput,
+			bannerInput,
+			imageUploadNote,
+			colorSelection
+		);
 
 		if (this.#donatorTier >= 3) {
 			container.append(this.#createDonatorBadgeField(settingsUi));
 		}
 
 		container.append(
-			// aboutHeader, aboutInput,
-			previewButton
+			this.#createAboutSection(settingsUi),
+			previewButton,
+			getAboutButton
 		);
+
+		if (this.#settings.auth?.token) {
+			const saveAboutButton = Button("Publish About", (event) => {
+				this.#publishAbout(event, settingsUi);
+			});
+			container.append(saveAboutButton);
+		}
 
 		if (this.#layouts.preview) {
 			container.append(cssButton);
@@ -276,7 +295,8 @@ export class LayoutDesigner {
 
 		if (
 			this.#layout.donatorBadge !== this.#anilistSettings.donatorBadge &&
-			this.#layout.donatorBadge !== ""
+			this.#layout.donatorBadge !== "" &&
+			this.#settings.auth?.token
 		) {
 			const publishButton = Button("Publish Donator Badge", (event) => {
 				this.#publishDonatorText(event, settingsUi);
@@ -329,6 +349,48 @@ export class LayoutDesigner {
 		return container;
 	}
 
+	#createAboutSection(settingsUi) {
+		const container = DOM.create("div");
+		const aboutHeader = DOM.create("h5", "layout-header", "About");
+		const aboutInput = DOM.create("textarea");
+		aboutInput.addEventListener("change", (event) => {
+			this.#updateOption("bio", event.target.value, settingsUi);
+		});
+		aboutInput.value = this.#layout.bio;
+		const note = Note(
+			"Please note that VoidVerified does not have access to AniList's markdown parser. AniList specific features might not be available while previewing. Recommended to be used for smaller changes like previewing a different image for a layout."
+		);
+
+		container.append(aboutHeader, aboutInput, note);
+		return container;
+	}
+
+	async #publishAbout(event, settingsUi) {
+		const button = event.target;
+		button.innerText = "Publishing...";
+
+		try {
+			const anilistAPI = new AnilistAPI(this.#settings);
+			const result = await anilistAPI.getUserAbout(
+				this.#settings.anilistUser
+			);
+			const currentAbout = result.User?.about;
+			const about = this.#transformAbout(currentAbout, this.#layout.bio);
+
+			await anilistAPI.saveUserAbout(about);
+			settingsUi.renderSettingsUi();
+		} catch {
+			console.error("Failed to publish about");
+		}
+	}
+
+	#transformAbout(currentAbout, newAbout) {
+		const json = currentAbout.match(/^\[\]\(json([A-Za-z0-9+/=]+)\)/)[1];
+
+		const about = `[](json${json})` + newAbout;
+		return about;
+	}
+
 	async #publishColor(event, settingsUi) {
 		const button = event.target;
 		const color = this.#layout.color;
@@ -359,6 +421,34 @@ export class LayoutDesigner {
 		} finally {
 			settingsUi.renderSettingsUi();
 		}
+	}
+
+	async #getUserAbout(settingsUi) {
+		if (
+			this.#layout.bio !== "" &&
+			!window.confirm(
+				"Are you sure you want to reset about? Any changes will be lost."
+			)
+		) {
+			return;
+		}
+
+		try {
+			const anilistAPI = new AnilistAPI(this.#settings);
+			const result = await anilistAPI.getUserAbout(
+				this.#settings.anilistUser
+			);
+			const about = result.User.about;
+			const clearedAbout = this.#removeJson(about);
+
+			this.#updateOption("bio", clearedAbout, settingsUi);
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	#removeJson(about) {
+		return about.replace(/^\[\]\(json([A-Za-z0-9+/=]+)\)/, "");
 	}
 
 	#createColorButton(anilistColor, settingsUi) {
