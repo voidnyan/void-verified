@@ -103,12 +103,163 @@ export const styles = /* css */ `
         display: inline-block;
     }
 
-    .void-settings .void-css-editor textarea {
+    .void-settings textarea {
         width: 100%;
         height: 200px;
         resize: vertical;
         background: rgb(var(--color-foreground));
         color: rgb(var(--color-text));
+    }
+
+    .void-layout-image-container {
+        width: 50%;
+        padding: 4px;
+        display: inline-block;
+    }
+
+    .void-layout-header {
+        text-transform: uppercase;
+        margin-top: 2.2em;
+        margin-bottom: .8em;
+    }
+
+    .void-layout-image-display {
+        height: 140px;
+        background-repeat: no-repeat;
+        margin: auto;
+        margin-bottom: 6px;
+        border-radius: 4px;
+    }
+
+    .void-layout-image-display.void-banner {
+        width: 100%;
+        background-size: cover;
+        background-position: 50% 50%;
+        background-size: 
+    }
+
+    .void-layout-image-display.void-avatar {
+        background-size: contain;
+        width: 140px;
+    }
+
+    .void-layout-image-container input {
+        width: 100%;
+    }
+
+    .void-layout-color-selection {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .void-layout-color-selection .void-color-button {
+        width: 50px;
+        height: 50px;
+        display: inline-flex;
+        border-radius: 4px;
+        margin-right: 10px;
+    }
+
+    .void-layout-color-selection .void-color-button.active {
+        border: 4px solid rgb(var(--color-blue));
+    }
+
+    .void-layout-color-selection .void-color-picker-container.active {
+        border: 2px solid rgb(var(--color-blue));
+    }
+
+    .void-color-picker-container {
+        display: inline-block;
+        vertical-align: top;
+        width: 75px;
+        height: 50px;
+        border: 2px solid transparent;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .void-color-picker-container:has(:focus) {
+        border: 2px solid rgb(var(--color-blue));
+    }
+
+    .void-color-picker-input {
+        width: 100%;
+        height: 20px;
+        background-color: rgba(var(--color-background), .6);
+        padding: 1px;
+        font-size: 11px;
+        color: rgb(var(--color-text));
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+        text-align: center;
+        border: unset;
+        border-radius: 0px 0px 4px 4px;
+    }
+
+    .void-color-picker {
+        /* width: 100%;;
+        height: 50px; */
+        block-size: 30px;
+        border-width: 0px;
+        padding: 0px;
+        background-color: unset;
+        inline-size: 100%;
+        border-radius: 4px;
+        appearance: none;
+        vertical-align: top;
+        padding-block: 0px;
+        padding-inline: 0px;
+        outline: none;
+    }
+
+    .void-color-picker::-webkit-color-swatch,
+    .void-color-picker::-moz-color-swatch {
+        border: none;
+        border-radius: 4px;
+    }
+
+    .void-color-picker::-webkit-color-swatch-wrapper,
+    .void-color-picker::-webkit-color-swatch-wrapper {
+        padding: 0px;
+        border-radius: 4px;
+    }
+
+    .void-input {
+        /* width: 100%; */
+        /* height: 20px; */
+        background-color: rgba(var(--color-background), .6);
+        padding: 4px 6px;
+        /* font-size: 11px; */
+        color: rgb(var(--color-text));
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+        border: 2px solid transparent;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .void-input:focus {
+        border: 2px solid rgb(var(--color-blue));
+    }
+
+    .void-button {
+        align-items: center;
+        background: rgb(var(--color-blue));
+        border-radius: 4px;
+        color: rgb(var(--color-text-bright));
+        cursor: pointer;
+        display: inline-flex;
+        font-size: 1.3rem;
+        padding: 10px 15px;
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+        border: 0px solid rgb(var(--color-background));
+        vertical-align: top;
+        margin-top: 15px;
+        margin-right: 10px;
     }
     
     .void-quick-access .void-quick-access-wrap {

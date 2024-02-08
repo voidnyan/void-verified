@@ -14,33 +14,22 @@ export class PasteHandler {
 		"svg",
 	];
 
-	// #isKeyPressed = false;
 	#uploadInProgress = false;
 	constructor(settings) {
 		this.settings = settings;
 	}
 
 	setup() {
-		// window.addEventListener("keydown", (event) => {
-		// 	this.#handleKeybind(event);
-		// });
-		// window.addEventListener("keyup", (event) => {
-		// 	this.#handleKeybind(event, false);
-		// });
 		window.addEventListener("paste", (event) => {
 			this.#handlePaste(event);
 		});
 	}
 
-	// #handleKeybind(event, isKeyDown = true) {
-	// 	if (this.settings.options.pasteKeybind.getValue() !== event.key) {
-	// 		return;
-	// 	}
-	// 	this.#isKeyPressed = isKeyDown;
-	// }
-
 	async #handlePaste(event) {
-		if (event.target.tagName !== "TEXTAREA") {
+		if (
+			event.target.tagName !== "TEXTAREA" &&
+			event.target.tagName !== "INPUT"
+		) {
 			return;
 		}
 
@@ -50,13 +39,13 @@ export class PasteHandler {
 		const file = event.clipboardData.items[0]?.getAsFile();
 		if (file && this.settings.options.pasteImagesToHostService.getValue()) {
 			event.preventDefault();
-			result = await this.#handleImages(event.clipboardData.items);
+			result = await this.#handleImages(event);
 		} else if (this.settings.options.pasteEnabled.getValue()) {
 			event.preventDefault();
 			const rows = clipboard.split("\n");
 
 			for (let row of rows) {
-				result.push(this.#handleRow(row));
+				result.push(this.#handleRow(row, event));
 			}
 		} else {
 			return;
@@ -66,7 +55,8 @@ export class PasteHandler {
 		window.document.execCommand("insertText", false, transformedClipboard);
 	}
 
-	async #handleImages(_files) {
+	async #handleImages(event) {
+		const _files = event.clipboardData.items;
 		if (this.#uploadInProgress) {
 			return;
 		}
@@ -84,7 +74,7 @@ export class PasteHandler {
 			);
 			return results
 				.filter((url) => url !== null)
-				.map((url) => this.#handleRow(url));
+				.map((url) => this.#handleRow(url, event));
 		} catch (error) {
 			console.error(error);
 			return [];
@@ -94,7 +84,14 @@ export class PasteHandler {
 		}
 	}
 
-	#handleRow(row) {
+	#handleRow(row, event) {
+		if (
+			event.target.parentElement.classList.contains("void-css-editor") ||
+			event.target.tagName === "INPUT"
+		) {
+			return row;
+		}
+
 		row = row.trim();
 		if (
 			this.#imageFormats.some((format) =>

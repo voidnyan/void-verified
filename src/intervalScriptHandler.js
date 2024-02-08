@@ -4,6 +4,7 @@ import { SettingsUserInterface } from "./settingsUserInterface";
 import { StyleHandler } from "./styleHandler";
 import { QuickAccess } from "./quickAccessHandler";
 import { UserCSS } from "./userCSS.js";
+import { LayoutDesigner } from "./layoutDesigner.js";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -13,17 +14,21 @@ export class IntervalScriptHandler {
 	globalCSS;
 	quickAccess;
 	userCSS;
+	layoutDesigner;
 	constructor(settings) {
 		this.settings = settings;
 
 		this.styleHandler = new StyleHandler(settings);
 		this.globalCSS = new GlobalCSS(settings);
 		this.userCSS = new UserCSS(settings);
+		this.layoutDesigner = new LayoutDesigner(settings);
+
 		this.settingsUi = new SettingsUserInterface(
 			settings,
 			this.styleHandler,
 			this.globalCSS,
-			this.userCSS
+			this.userCSS,
+			this.layoutDesigner
 		);
 		this.activityHandler = new ActivityHandler(settings);
 		this.quickAccess = new QuickAccess(settings);
@@ -44,6 +49,7 @@ export class IntervalScriptHandler {
 
 		intervalScriptHandler.activityHandler.moveAndDisplaySubscribeButton();
 		intervalScriptHandler.globalCSS.clearCssForProfile();
+		intervalScriptHandler.layoutDesigner.renderLayoutPreview();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();
