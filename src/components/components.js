@@ -35,3 +35,8 @@ export const Button = (text, onClick) => {
 	});
 	return button;
 };
+
+export const Note = (text) => {
+	const note = DOM.create("div", "notice", text);
+	return note;
+};

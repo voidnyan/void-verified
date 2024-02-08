@@ -161,11 +161,11 @@ export const styles = /* css */ `
     }
 
     .void-layout-color-selection .void-color-button.active {
-        border: 4px solid rgb(var(--color-blue));
+        border: 4px solid rgb(var(--color-text));
     }
 
     .void-layout-color-selection .void-color-picker-container.active {
-        border: 2px solid rgb(var(--color-blue));
+        border: 2px solid rgb(var(--color-text));
     }
 
     .void-color-picker-container {
@@ -179,7 +179,7 @@ export const styles = /* css */ `
     }
 
     .void-color-picker-container:has(:focus) {
-        border: 2px solid rgb(var(--color-blue));
+        border: 2px solid rgb(var(--color-text));
     }
 
     .void-color-picker-input {
