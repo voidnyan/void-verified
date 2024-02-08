@@ -26,13 +26,13 @@ export class ColorFunctions {
 	}
 
 	static defaultColors = [
-		"gray",
 		"blue",
 		"purple",
 		"green",
 		"orange",
 		"red",
 		"pink",
+		"gray",
 	];
 
 	static defaultColorRgb = {

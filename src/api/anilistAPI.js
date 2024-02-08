@@ -1,5 +1,5 @@
 export class AnilistAPI {
-	apiQueryTimeoutInMinutes = 0.5;
+	apiQueryTimeoutInMinutes = 15;
 	apiQueryTimeout = this.apiQueryTimeoutInMinutes * 60 * 1000;
 
 	settings;
@@ -50,7 +50,7 @@ export class AnilistAPI {
 			const result = await response.json();
 			return result;
 		} catch (error) {
-			return await error.json();
+			return error;
 		}
 	}
 
@@ -85,7 +85,45 @@ export class AnilistAPI {
 			const result = await response.json();
 			return result.data;
 		} catch (error) {
-			return await error.json();
+			return error;
+		}
+	}
+
+	async saveUserColor(color) {
+		const query = `mutation ($color: String) {
+            UpdateUser(profileColor: $color) {
+                options {
+                    profileColor
+                }
+            }
+        }`;
+
+		const variables = { color };
+		const options = this.#getMutationOptions(query, variables);
+		try {
+			const response = await fetch(this.#url, options);
+			const result = await response.json();
+			return result.data;
+		} catch (error) {
+			throw new Error("Failed to publish profile color", error);
+		}
+	}
+
+	async saveDonatorBadge(text) {
+		const query = `mutation ($text: String) {
+            UpdateUser(donatorBadge: $text) {
+                donatorBadge
+            }
+        }`;
+
+		const variables = { text };
+		const options = this.#getMutationOptions(query, variables);
+		try {
+			const response = await fetch(this.#url, options);
+			const result = await response.json();
+			return result.data;
+		} catch (error) {
+			throw new Error("Failed to publish donator badge", error);
 		}
 	}
 

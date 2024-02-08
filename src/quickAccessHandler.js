@@ -1,8 +1,12 @@
 export class QuickAccess {
 	settings;
 	#quickAccessId = "void-verified-quick-access";
+	#lastFetched;
 	constructor(settings) {
 		this.settings = settings;
+		this.#lastFetched = new Date(
+			sessionStorage.getItem("void-verified-last-fetched")
+		);
 	}
 
 	renderQuickAccess() {
@@ -25,6 +29,10 @@ export class QuickAccess {
 		sectionHeader.setAttribute("class", "section-header");
 		const title = document.createElement("h2");
 		title.append("Quick Access");
+		title.setAttribute(
+			"title",
+			`Last updated at ${this.#lastFetched.toLocaleTimeString()}`
+		);
 		sectionHeader.append(title);
 
 		quickAccessContainer.append(sectionHeader);

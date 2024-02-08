@@ -11,24 +11,30 @@ export class SettingsUserInterface {
 	styleHandler;
 	globalCSS;
 	userCSS;
+	layoutDesigner;
 	AnilistBlue = "120, 180, 255";
 	#activeCategory = "all";
 
-	constructor(settings, styleHandler, globalCSS, userCSS) {
+	constructor(settings, styleHandler, globalCSS, userCSS, layoutDesigner) {
 		this.settings = settings;
 		this.styleHandler = styleHandler;
 		this.globalCSS = globalCSS;
 		this.userCSS = userCSS;
+		this.layoutDesigner = layoutDesigner;
 	}
 
 	renderSettingsUi() {
 		this.#checkAuthFromUrl();
 		const container = DOM.get(".settings.container > .content");
-		const settingsContainer = DOM.create(
-			"div",
-			"#verified-settings settings"
-		);
-		container.append(settingsContainer);
+		const settingsContainerExists =
+			DOM.get("#void-verified-settings") !== null;
+		if (!settingsContainerExists) {
+			const settingsContainer = DOM.create(
+				"div",
+				"#verified-settings settings"
+			);
+			container.append(settingsContainer);
+		}
 
 		this.renderSettingsUiContent();
 	}
@@ -55,6 +61,8 @@ export class SettingsUserInterface {
 		this.#renderImageHostSettings(innerContainer);
 
 		this.#creatAuthenticationSection(innerContainer);
+
+		innerContainer.append(this.layoutDesigner.renderSettings(this));
 
 		settingsContainer.replaceChildren(innerContainer);
 	}
@@ -153,7 +161,10 @@ export class SettingsUserInterface {
 			this.#handleVerifyUserForm(event, this.settings);
 		});
 
-		inputForm.append(DOM.create("label", null, "Add user"));
+		const inputFormLabel = DOM.create("label", null, "Add user");
+		inputFormLabel.setAttribute("for", "void-verified-add-user");
+
+		inputForm.append(inputFormLabel);
 		inputForm.append(DOM.create("input", "#verified-add-user"));
 		tableContainer.append(inputForm);
 
@@ -361,6 +372,7 @@ export class SettingsUserInterface {
 
 		const container = DOM.create("div");
 		const input = DOM.create("input");
+		input.setAttribute("id", settingKey);
 
 		if (type === "boolean") {
 			input.setAttribute("type", "checkbox");
@@ -493,12 +505,14 @@ export class SettingsUserInterface {
 
 	#renderImageHostSettings(settingsContainer) {
 		const container = DOM.create("div");
-		container.append(DOM.create("label", null, "Image Host"));
+		const header = DOM.create("label", null, "Image Host");
+		header.setAttribute("for", "void-image-host-select");
+		container.append(header);
 
 		const imageHostService = new ImageHostService();
 		const imageApiFactory = new ImageApiFactory();
 
-		const select = DOM.create("select");
+		const select = DOM.create("select", "#image-host-select");
 		for (const imageHost of Object.values(imageHosts)) {
 			select.append(
 				this.#createOption(
