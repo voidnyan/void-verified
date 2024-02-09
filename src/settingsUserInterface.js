@@ -2,7 +2,14 @@ import { ImageApiFactory } from "./api/imageApiFactory";
 import { imageHosts, ImageHostService } from "./api/imageHostConfiguration";
 import { ImgurAPI } from "./api/imgurAPI";
 import { ColorFunctions } from "./colorFunctions";
-import { InputField, Link, TextArea } from "./components/components";
+import {
+	InputField,
+	Label,
+	Link,
+	Option,
+	Select,
+	TextArea,
+} from "./components/components";
 import { categories } from "./defaultSettings";
 import { GlobalCSS } from "./globalCSS";
 import { DOM } from "./helpers/DOM";
@@ -14,7 +21,7 @@ const subCategories = {
 	imageHost: "image host",
 	layout: "layout & CSS",
 	globalCss: "global CSS",
-	toaster: "toaster",
+	toasts: "toasts",
 };
 
 export class SettingsUserInterface {
@@ -85,7 +92,7 @@ export class SettingsUserInterface {
 					this.#renderCustomCssEditor(innerContainer, this.globalCSS);
 				}
 				break;
-			case subCategories.toaster:
+			case subCategories.toasts:
 				innerContainer.append(Toaster.renderSettings(this));
 		}
 
@@ -204,7 +211,7 @@ export class SettingsUserInterface {
 				);
 			case subCategories.globalCss:
 				return this.settings.options.globalCssEnabled.getValue();
-			case subCategories.toaster:
+			case subCategories.toasts:
 				return this.settings.options.toasterEnabled.getValue();
 		}
 	}
@@ -603,28 +610,23 @@ export class SettingsUserInterface {
 
 	#renderImageHostSettings(settingsContainer) {
 		const container = DOM.create("div");
-		const header = DOM.create("label", null, "Image Host");
-		header.setAttribute("for", "void-image-host-select");
-		container.append(header);
 
 		const imageHostService = new ImageHostService();
 		const imageApiFactory = new ImageApiFactory();
 
-		const select = DOM.create("select", "#image-host-select");
-		for (const imageHost of Object.values(imageHosts)) {
-			select.append(
-				this.#createOption(
-					imageHost,
-					imageHost === imageHostService.getSelectedHost()
-				)
-			);
-		}
-		select.value = imageHostService.getSelectedHost();
-		select.addEventListener("change", (event) => {
-			imageHostService.setSelectedHost(event.target.value);
-			this.renderSettingsUi();
-		});
-		container.append(select);
+		const imageHostOptions = Object.values(imageHosts).map((imageHost) =>
+			Option(
+				imageHost,
+				imageHost === imageHostService.getSelectedHost(),
+				() => {
+					imageHostService.setSelectedHost(imageHost);
+					this.renderSettingsUi();
+				}
+			)
+		);
+
+		const select = Select(imageHostOptions);
+		container.append(Label("Image host", select));
 
 		const hostSpecificSettings = DOM.create("div");
 		const imageHostApi = imageApiFactory.getImageHostInstance();

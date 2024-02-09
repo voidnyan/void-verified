@@ -1,3 +1,4 @@
+import { InputField, Label, Link, Note } from "../components/components";
 import { Toaster } from "../utils/toaster";
 import { ImageHostBase } from "./imageHostBase";
 import { ImageHostService } from "./imageHostConfiguration";
@@ -53,33 +54,19 @@ export class ImgbbAPI extends ImageHostBase {
 
 	renderSettings() {
 		const container = document.createElement("div");
-		const apiKeyInput = document.createElement("input");
-		apiKeyInput.setAttribute("type", "text");
 
-		const label = document.createElement("label");
-		label.append("API key");
-		label.setAttribute("class", "void-api-label");
-		container.append(label);
-
-		apiKeyInput.setAttribute("value", this.#configuration.apiKey);
-		apiKeyInput.addEventListener("change", (event) =>
-			this.#updateApiKey(event, this.#configuration)
+		const apiKey = Label(
+			"API key",
+			InputField(this.#configuration.apiKey, (event) => {
+				this.#updateApiKey(event, this.#configuration);
+			})
 		);
-		apiKeyInput.setAttribute("class", "void-api-key");
-		container.append(apiKeyInput);
 
-		const note = document.createElement("div");
-		note.append("You need to get the API key from the following link: ");
-
-		note.setAttribute("class", "void-notice");
-
-		const apiKeyLink = document.createElement("a");
-		apiKeyLink.setAttribute("href", "https://api.imgbb.com/");
-		apiKeyLink.append("api.imgbb.com");
-		apiKeyLink.setAttribute("target", "_blank");
-		note.append(apiKeyLink);
-
-		container.append(note);
+		const note = Note(
+			"You need to get the API key from the following link: "
+		);
+		note.append(Link("api.imgbb.com", "https://api.imgbb.com/", "_blank"));
+		container.append(apiKey, note);
 
 		return container;
 	}

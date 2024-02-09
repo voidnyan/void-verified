@@ -2,6 +2,7 @@ import { ImageHostBase } from "./imageHostBase";
 import { ImageHostService, imageHosts } from "./imageHostConfiguration";
 import { DOM } from "../helpers/DOM";
 import { Toaster } from "../utils/toaster";
+import { InputField, Label, Link, Note } from "../components/components";
 
 export class ImgurAPI extends ImageHostBase {
 	#url = "https://api.imgur.com/3/image";
@@ -53,36 +54,23 @@ export class ImgurAPI extends ImageHostBase {
 	renderSettings(settingsUi) {
 		const container = DOM.create("div");
 
-		const idInput = DOM.create("input");
-		idInput.addEventListener("change", (event) => {
-			this.#updateConfig(event, this.#configuration);
-			settingsUi.renderSettingsUi();
-		});
-
-		idInput.setAttribute("name", "clientId");
-		idInput.value = this.#configuration?.clientId ?? "";
-
-		const idLabel = DOM.create("label", "api-label", [
+		const clientId = Label(
 			"Client ID",
-			idInput,
-		]);
+			InputField(this.#configuration?.clientId ?? "", (event) => {
+				this.#updateConfig(event, "clientId", this.#configuration);
+				settingsUi.renderSettingsUi();
+			})
+		);
 
-		const secretInput = DOM.create("input");
-		secretInput.addEventListener("change", (event) => {
-			this.#updateConfig(event, this.#configuration);
-			settingsUi.renderSettingsUi();
-		});
-
-		secretInput.setAttribute("name", "clientSecret");
-		secretInput.value = this.#configuration?.clientSecret ?? "";
-
-		const secretLabel = DOM.create("label", "api-label", [
+		const clientSecret = Label(
 			"Client Secret",
-			secretInput,
-		]);
+			InputField(this.#configuration?.clientSecret ?? "", (event) => {
+				this.#updateConfig(event, "clientSecret", this.#configuration);
+				settingsUi.renderSettingsUi();
+			})
+		);
 
-		container.append(DOM.create("div", null, idLabel));
-		container.append(DOM.create("div", null, secretLabel));
+		container.append(clientId, clientSecret);
 
 		if (
 			this.#configuration.clientId &&
@@ -197,19 +185,13 @@ export class ImgurAPI extends ImageHostBase {
 	}
 
 	#renderNote(container) {
-		const note = DOM.create(
-			"div",
-			"notice",
-			"How to setup Imgur integration"
-		);
+		const note = Note("How to setup Imgur integration");
 
-		const registerLink = DOM.create("a", null, "api.imgur.com");
-		registerLink.setAttribute(
-			"href",
-			"https://api.imgur.com/oauth2/addclient"
+		const registerLink = Link(
+			"api.imgur.com",
+			"https://api.imgur.com/oauth2/addclient",
+			"_blank"
 		);
-		registerLink.setAttribute("target", "_blank");
-
 		const stepList = DOM.create("ol", null, [
 			DOM.create("li", null, [
 				"Register your application: ",
@@ -227,9 +209,7 @@ export class ImgurAPI extends ImageHostBase {
 				"Click on authorize (you can skip this step if you don't want images tied to your account)."
 			),
 		]);
-
 		note.append(stepList);
-
 		note.append(
 			"Hitting Imgur API limits might get your API access blocked."
 		);
@@ -250,9 +230,8 @@ export class ImgurAPI extends ImageHostBase {
 		);
 	}
 
-	#updateConfig(event, configuration) {
+	#updateConfig(event, key, configuration) {
 		const value = event.target.value;
-		const key = event.target.name;
 		const config = {
 			...configuration,
 			[key]: value,
