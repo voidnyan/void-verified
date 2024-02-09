@@ -175,14 +175,13 @@ export class ImgurAPI extends ImageHostBase {
 				method: "POST",
 				body: formData,
 			});
-			const data = await response.json();
 			if (!response.status === 200) {
 				console.error("Failed to reauthorize Imgur");
 				return;
 			}
+			const data = await response.json();
 			const config = {
 				...this.#configuration,
-				refreshToken: data.refresh_token,
 				authToken: data.access_token,
 				expires: new Date(new Date().getTime() + data.expires_in),
 			};
@@ -190,6 +189,7 @@ export class ImgurAPI extends ImageHostBase {
 				imageHosts.imgur,
 				config
 			);
+			Toaster.success("Refreshed imgur access token.");
 		} catch (error) {
 			Toaster.error("Error while refreshing imgur token.");
 			console.error(error);
