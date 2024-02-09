@@ -9,6 +9,7 @@ import { ImageHostService, imageHosts } from "./api/imageHostConfiguration";
 import { Toaster } from "./utils/toaster";
 
 const settings = new Settings();
+Toaster.initializeToaster(settings);
 const styleHandler = new StyleHandler(settings);
 const intervalScriptHandler = new IntervalScriptHandler(settings);
 const anilistAPI = new AnilistAPI(settings);
@@ -25,7 +26,5 @@ new ImgurAPI(
 ).refreshAuthToken();
 
 styleHandler.createStyleLink(styles, "script");
-
-Toaster.initializeToaster(settings);
 
 console.log(`VoidVerified ${settings.version} loaded.`);
