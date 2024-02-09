@@ -408,6 +408,15 @@ export const styles = /* css */ `
         color: rgb(var(--color-text-bright));
     }
 
+    .void-label-container {
+        margin-top: 6px;
+        margin-bottom: 6px;
+    }
+
+    .void-label-span {
+        margin-right: 6px;
+    }
+
     .void-upload-in-progress {
         cursor: wait !important;
     }
@@ -417,14 +426,35 @@ export const styles = /* css */ `
         display: flex;
         flex-direction: column;
         gap: 10px;
-        bottom: 2rem;
-        left: 2rem;
+    }
+
+    #void-toast-container.void-bottom-left {
+        bottom: 10px;
+        left: 10px;
+        flex-direction: column-reverse;
+    }
+
+    #void-toast-container.void-bottom-right {
+        bottom: 10px;
+        right: 10px;
+        flex-direction: column-reverse;
+    }
+
+    #void-toast-container.void-top-left {
+        top: 70px;
+        left: 10px;
+    }
+
+    #void-toast-container.void-top-right {
+        top: 70px;
+        right: 10px;
     }
 
     .void-toast {
         font-size: 14px;
         color: rgb(var(--color-text-bright));
         min-width: 200px;
+        max-width: 300px;
         min-heigth: 50px;
         padding: 10px 8px;
         border-radius: 4px;

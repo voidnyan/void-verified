@@ -59,7 +59,7 @@ export class UserCSS {
 			const anilistAPI = new AnilistAPI(this.#settings);
 			activity = await anilistAPI.getActivityCss(activityId);
 		} catch {
-			Toaster.error("Failed to get activiy CSS.");
+			Toaster.error("Failed to get activity CSS.");
 			return;
 		}
 

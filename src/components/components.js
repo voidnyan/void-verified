@@ -83,6 +83,13 @@ export const Option = (value, selected, onClick) => {
 	return option;
 };
 
+export const Label = (text, element) => {
+	const container = DOM.create("div", "label-container");
+	container.append(DOM.create("span", "label-span", text));
+	container.append(element);
+	return container;
+};
+
 const transformClasses = (base, additional) => {
 	let classes = base;
 	if (additional) {
