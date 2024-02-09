@@ -61,6 +61,28 @@ export const TextArea = (text, onChange, classes) => {
 	return textArea;
 };
 
+export const Toast = (message, type) => {
+	const toast = DOM.create("div", transformClasses("toast", type), message);
+	return toast;
+};
+
+export const Select = (options) => {
+	const container = DOM.create("div", "select");
+	for (const option of options) {
+		container.append(option);
+	}
+	return container;
+};
+
+export const Option = (value, selected, onClick) => {
+	const option = DOM.create("div", "option", value);
+	if (selected) {
+		option.classList.add("active");
+	}
+	option.addEventListener("click", onClick);
+	return option;
+};
+
 const transformClasses = (base, additional) => {
 	let classes = base;
 	if (additional) {

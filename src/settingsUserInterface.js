@@ -6,6 +6,7 @@ import { InputField, Link, TextArea } from "./components/components";
 import { categories } from "./defaultSettings";
 import { GlobalCSS } from "./globalCSS";
 import { DOM } from "./helpers/DOM";
+import { Toaster } from "./utils/toaster";
 
 const subCategories = {
 	users: "users",
@@ -13,6 +14,7 @@ const subCategories = {
 	imageHost: "image host",
 	layout: "layout & CSS",
 	globalCss: "global CSS",
+	toaster: "toaster",
 };
 
 export class SettingsUserInterface {
@@ -23,7 +25,7 @@ export class SettingsUserInterface {
 	layoutDesigner;
 	AnilistBlue = "120, 180, 255";
 	#activeCategory = "all";
-	#activeSubCategory = "users";
+	#activeSubCategory = subCategories.toaster;
 
 	constructor(settings, styleHandler, globalCSS, userCSS, layoutDesigner) {
 		this.settings = settings;
@@ -83,6 +85,8 @@ export class SettingsUserInterface {
 					this.#renderCustomCssEditor(innerContainer, this.globalCSS);
 				}
 				break;
+			case subCategories.toaster:
+				innerContainer.append(Toaster.renderSettings(this));
 		}
 
 		settingsContainer.replaceChildren(innerContainer);
@@ -200,6 +204,8 @@ export class SettingsUserInterface {
 				);
 			case subCategories.globalCss:
 				return this.settings.options.globalCssEnabled.getValue();
+			case subCategories.toaster:
+				return this.settings.options.toasterEnabled.getValue();
 		}
 	}
 
