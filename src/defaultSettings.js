@@ -101,6 +101,12 @@ export const defaultSettings = {
 		description: "Only load custom CSS from verified users.",
 		category: categories.css,
 	},
+	layoutDesignerEnabled: {
+		defaultValue: false,
+		description: "Enable Layout Designer in the settings tab.",
+		category: categories.misc,
+		authRequired: true,
+	},
 	quickAccessEnabled: {
 		defaultValue: false,
 		description: "Display quick access of users in home page.",

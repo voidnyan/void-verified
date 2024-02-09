@@ -6,21 +6,27 @@ export const styles = /* css */ `
         padding: 0;
     }
 
+    .void-nav {
+        margin-top: 3rem;
+    }
+
     .void-settings .void-nav li {
         list-style: none;
         display: block;
-        color: white;
-        padding: 3px 8px;
+        color: rgb(var(--color-text));
+        padding: 4px 8px;
         text-transform: capitalize;
-        background: black;
+        background: rgb(var(--color-foreground-blue));
         cursor: pointer;
         min-width: 50px;
         text-align: center;
-        font-size: 1.3rem;
+        font-size: 1.4rem;
     }
 
-    .void-settings .void-nav li.void-active {
+    .void-settings .void-nav li.void-active,
+    .void-settings .void-nav li:hover {
         background: rgb(var(--color-blue));
+        color: rgb(var(--color-text-bright));
     }
 
     .void-settings .void-nav li:first-child {
@@ -31,10 +37,6 @@ export const styles = /* css */ `
         border-radius: 0px 4px 4px 0px;
     }
     
-    .void-settings .void-nav li:hover {
-        background: rgb(var(--color-blue));
-    }
-
     .void-settings .void-settings-header {
         margin-top: 30px;
     }

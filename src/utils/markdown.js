@@ -37,7 +37,7 @@ const markdownRegex = [
 	},
 	{
 		regex: /\[([^\]]*)\]\(([^\)]+)\)/gi,
-		format: "<a href='$2'>$1</a>",
+		format: "<a href='$2' target='_blank'>$1</a>",
 	},
 	{
 		regex: /\~\!(.*)\!\~/gi,

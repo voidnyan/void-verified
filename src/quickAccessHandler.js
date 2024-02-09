@@ -5,7 +5,7 @@ export class QuickAccess {
 	constructor(settings) {
 		this.settings = settings;
 		this.#lastFetched = new Date(
-			sessionStorage.getItem("void-verified-last-fetched")
+			localStorage.getItem("void-verified-last-fetched")
 		);
 	}
 
