@@ -76,6 +76,9 @@ export class QuickAccess {
 	}
 
 	#updateTimer() {
+		if (!this.settings.options.quickAccessTimer.getValue()) {
+			return;
+		}
 		const timer = DOM.get(".void-quick-access-timer");
 		const nextQuery = new Date(
 			this.#lastFetched.getTime() + this.#apiQueryTimeout

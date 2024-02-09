@@ -118,6 +118,11 @@ export const defaultSettings = {
 			"Display a badge on quick access when changes are detected on user's layout.",
 		category: categories.users,
 	},
+	quickAccessTimer: {
+		defaultValue: true,
+		description: "Display a timer until next update of Quick Access.",
+		category: categories.users,
+	},
 	pasteEnabled: {
 		defaultValue: false,
 		description:
@@ -141,7 +146,7 @@ export const defaultSettings = {
 		category: categories.paste,
 	},
 	toasterEnabled: {
-		defaultValue: false,
+		defaultValue: true,
 		description: "Enable toast notifications.",
 		category: categories.misc,
 	},
