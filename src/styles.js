@@ -41,9 +41,26 @@ export const styles = /* css */ `
         margin-top: 30px;
     }
 
-    .void-settings .void-table input[type="text"] {
-        width: 100px;
+    .void-settings .void-table table {
+        border-collapse: collapse;
     }
+
+    .void-settings .void-table :is(th, td) {
+        padding: 2px 6px !important;
+    }
+
+    .void-settings .void-table :is(th, td):first-child {
+        border-radius: 4px 0px 0px 4px;
+    }
+
+    .void-settings .void-table :is(th, td):last-child {
+        border-radius: 0px 4px 4px 0px;
+    }
+
+    .void-settings .void-table tbody tr:hover {
+        background-color: rgba(var(--color-foreground-blue), .7);
+    }
+
     .void-settings .void-table input[type="color"] {
         border: 0;
         height: 24px;
@@ -105,18 +122,34 @@ export const styles = /* css */ `
         display: inline-block;
     }
 
-    .void-settings textarea {
+    .void-textarea {
         width: 100%;
-        height: 200px;
+        height: 300px;
+        min-height: 200px;
         resize: vertical;
-        background: rgb(var(--color-foreground));
+        background: rgb(var(--color-foreground-blue));
         color: rgb(var(--color-text));
+        padding: 4px;
+        border-radius: 4px;
+        border: 2px solid transparent;
+        outline: none !important;
+    }
+
+    .void-textarea:focus {
+        border: 2px solid rgb(var(--color-blue)) !important;
     }
 
     .void-layout-image-container {
-        width: 50%;
         padding: 4px;
         display: inline-block;
+    }
+
+    .void-layout-image-container:first-child {
+        width: 35%;
+    }
+
+    .void-layout-image-container:last-child {
+        width: 65%;
     }
 
     .void-layout-header {
@@ -132,6 +165,8 @@ export const styles = /* css */ `
         margin-bottom: 6px;
         border-radius: 4px;
     }
+
+
 
     .void-layout-image-display.void-banner {
         width: 100%;
@@ -228,11 +263,8 @@ export const styles = /* css */ `
     }
 
     .void-input {
-        /* width: 100%; */
-        /* height: 20px; */
         background-color: rgba(var(--color-background), .6);
         padding: 4px 6px;
-        /* font-size: 11px; */
         color: rgb(var(--color-text));
         outline: none;
         appearance: none;
@@ -240,6 +272,17 @@ export const styles = /* css */ `
         border: 2px solid transparent;
         border-radius: 4px;
         box-sizing: border-box;
+    }
+
+    a.void-link {
+        color: rgb(var(--color-blue)) !important;
+    }
+
+    .void-input.void-sign {
+        width: 75px;
+        text-align: center;
+        height: 20px;
+        font-size: 14px;
     }
 
     .void-input:focus {

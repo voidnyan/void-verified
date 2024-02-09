@@ -1,6 +1,12 @@
 import { DOM } from "./helpers/DOM";
 import { ColorFunctions } from "./colorFunctions";
-import { Button, ColorPicker, InputField, Note } from "./components/components";
+import {
+	Button,
+	ColorPicker,
+	InputField,
+	Note,
+	TextArea,
+} from "./components/components";
 import { AnilistAPI } from "./api/anilistAPI";
 import { Markdown } from "./utils/markdown";
 
@@ -197,19 +203,22 @@ export class LayoutDesigner {
 
 		const header = DOM.create("h3", null, "Layout Designer");
 
-		const avatarInput = this.#createImageField(
-			"avatar",
-			this.#layout.avatar,
-			settingsUi
+		const imageSection = DOM.create("div");
+
+		imageSection.append(
+			this.#createImageField("avatar", this.#layout.avatar, settingsUi)
 		);
 
-		const bannerInput = this.#createImageField(
-			"banner",
-			this.#layout.banner,
-			settingsUi
+		imageSection.append(
+			this.#createImageField("banner", this.#layout.banner, settingsUi)
 		);
 
 		const imageUploadNote = Note(
+			"You can preview avatar & banner by providing a link to an image. If you have configured a image host, you can upload images by pasting them to the fields. "
+		);
+
+		imageUploadNote.append(
+			DOM.create("br"),
 			"Unfortunately AniList API does not support third parties uploading new avatars or banners. You have to upload them separately."
 		);
 
@@ -236,13 +245,7 @@ export class LayoutDesigner {
 			this.#getUserAbout(settingsUi);
 		});
 
-		container.append(
-			header,
-			avatarInput,
-			bannerInput,
-			imageUploadNote,
-			colorSelection
-		);
+		container.append(header, imageSection, imageUploadNote, colorSelection);
 
 		if (this.#donatorTier >= 3) {
 			container.append(this.#createDonatorBadgeField(settingsUi));
@@ -356,11 +359,9 @@ export class LayoutDesigner {
 	#createAboutSection(settingsUi) {
 		const container = DOM.create("div");
 		const aboutHeader = DOM.create("h5", "layout-header", "About");
-		const aboutInput = DOM.create("textarea");
-		aboutInput.addEventListener("change", (event) => {
+		const aboutInput = TextArea(this.#layout.bio, (event) => {
 			this.#updateOption("bio", event.target.value, settingsUi);
 		});
-		aboutInput.value = this.#layout.bio;
 		const note = Note(
 			"Please note that VoidVerified does not have access to AniList's markdown parser. AniList specific features might not be available while previewing. Recommended to be used for smaller changes like previewing a different image for a layout."
 		);
