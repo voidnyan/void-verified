@@ -2,6 +2,7 @@ import { AnilistAPI } from "./api/anilistAPI";
 import { ColorFunctions } from "./colorFunctions";
 import { StyleHandler } from "./styleHandler";
 import LZString from "./utils/lz-string";
+import { Toaster } from "./utils/toaster";
 
 export class UserCSS {
 	#settings;
@@ -52,15 +53,21 @@ export class UserCSS {
 		}
 
 		this.#currentActivity = activityId;
-		const anilistAPI = new AnilistAPI(this.#settings);
-		const result = await anilistAPI.getActivityCss(activityId);
-		const username =
-			result.data.Activity.user?.name ??
-			result.data.Activity.recipient?.name;
+		let activity;
+		try {
+			Toaster.debug("Querying user activity.");
+			const anilistAPI = new AnilistAPI(this.#settings);
+			activity = await anilistAPI.getActivityCss(activityId);
+		} catch {
+			Toaster.error("Failed to get activiy CSS.");
+			return;
+		}
+
+		const username = activity.user?.name ?? activity.recipient?.name;
 
 		const userColor =
-			result.data.Activity.user?.options.profileColor ??
-			result.data.Activity.recipient?.options.profileColor;
+			activity.user?.options.profileColor ??
+			activity.recipient?.options.profileColor;
 		const rgb = ColorFunctions.handleAnilistColor(userColor);
 
 		const activityEntry = document.querySelector(
@@ -85,13 +92,13 @@ export class UserCSS {
 			return;
 		}
 
-		const about =
-			result.data.Activity.user?.about ??
-			result.data.Activity.recipient?.about;
+		const about = activity.user?.about ?? activity.recipient?.about;
 
 		const css = this.#decodeAbout(about)?.customCSS;
 		if (css) {
 			this.#renderCss(css, "user-css");
+		} else {
+			Toaster.debug("User has no custom CSS.");
 		}
 
 		this.#currentUser = username;
@@ -128,11 +135,19 @@ export class UserCSS {
 
 		this.#currentUser = username;
 
-		const anilistAPI = new AnilistAPI(this.#settings);
-		const result = await anilistAPI.getUserAbout(username);
-		const about = result.User.about;
+		let about;
+		try {
+			Toaster.debug("Querying user CSS.");
+			const anilistAPI = new AnilistAPI(this.#settings);
+			about = await anilistAPI.getUserAbout(username);
+		} catch (error) {
+			Toaster.error("Failed to load user's CSS.");
+			return;
+		}
+
 		const css = this.#decodeAbout(about)?.customCSS;
 		if (!css) {
+			Toaster.debug("User has no custom CSS.");
 			new StyleHandler(this.#settings).clearStyles("user-css");
 		}
 		this.#renderCss(css, "user-css");
@@ -157,7 +172,13 @@ export class UserCSS {
 		}
 
 		const anilistAPI = new AnilistAPI(this.#settings);
-		const result = await anilistAPI.getUserAbout(username);
+		let result;
+		try {
+			Toaster.debug("Querying account user about to merge changes into.");
+			result = await anilistAPI.getUserAbout(username);
+		} catch (error) {
+			Toaster.error("Failed to get current about for merging new CSS.");
+		}
 		let about = result.User.about;
 		let aboutJson = this.#decodeAbout(about);
 		aboutJson.customCSS = this.css;
@@ -171,8 +192,13 @@ export class UserCSS {
 		} else {
 			about = `[](json${compressedAbout})` + about;
 		}
-		const mutationResult = await anilistAPI.saveUserAbout(about);
-		return mutationResult?.errors === undefined;
+		try {
+			Toaster.debug("Publishing CSS.");
+			await anilistAPI.saveUserAbout(about);
+			Toaster.success("CSS published.");
+		} catch (error) {
+			Toaster.error("Failed to publish CSS changes.");
+		}
 	}
 
 	togglePreview() {
@@ -190,12 +216,16 @@ export class UserCSS {
 		if (!username) {
 			return;
 		}
-		const response = await anilistAPI.getUserAbout(username);
-		const about = response.User.about;
-		const css = this.#decodeAbout(about).customCSS;
-		this.css = css;
-		this.#saveToLocalStorage();
-		return css;
+		try {
+			Toaster.debug("Querying account user CSS.");
+			const about = await anilistAPI.getUserAbout(username);
+			const css = this.#decodeAbout(about).customCSS;
+			this.css = css;
+			this.#saveToLocalStorage();
+			return css;
+		} catch (error) {
+			Toaster.error("Failed to query account user CSS.");
+		}
 	}
 
 	#handleBroadcastMessage(event, settings) {

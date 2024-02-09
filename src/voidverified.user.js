@@ -12,13 +12,11 @@ const settings = new Settings();
 Toaster.initializeToaster(settings);
 const styleHandler = new StyleHandler(settings);
 const intervalScriptHandler = new IntervalScriptHandler(settings);
-const anilistAPI = new AnilistAPI(settings);
 const pasteHandler = new PasteHandler(settings);
 
 styleHandler.refreshStyles();
 intervalScriptHandler.enableScriptIntervalHandling();
 
-anilistAPI.queryUserData();
 pasteHandler.setup();
 
 new ImgurAPI(

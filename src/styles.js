@@ -323,6 +323,16 @@ export const styles = /* css */ `
         padding: 15px;
         margin-bottom: 25px;
     }
+    
+    .void-quick-access .section-header {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .void-quick-access-timer {
+        font-size: 12px;
+        color: rgb(var(--color-text));
+    }
 
     .void-quick-access-item {
         display: inline-block;

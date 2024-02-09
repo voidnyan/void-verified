@@ -45,7 +45,7 @@ export class ImgurAPI extends ImageHostBase {
 			return data.data.link;
 		} catch (error) {
 			Toaster.error("Failed to upload image to imgur.");
-			console.error(error);
+			console.error("Failed to upload image to imgur.", error);
 			return null;
 		}
 	}

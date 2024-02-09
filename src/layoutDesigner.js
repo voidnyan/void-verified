@@ -377,10 +377,9 @@ export class LayoutDesigner {
 
 		try {
 			const anilistAPI = new AnilistAPI(this.#settings);
-			const result = await anilistAPI.getUserAbout(
+			const currentAbout = await anilistAPI.getUserAbout(
 				this.#settings.anilistUser
 			);
-			const currentAbout = result.User?.about;
 			const about = this.#transformAbout(currentAbout, this.#layout.bio);
 
 			await anilistAPI.saveUserAbout(about);
@@ -388,7 +387,6 @@ export class LayoutDesigner {
 			settingsUi.renderSettingsUi();
 		} catch (error) {
 			Toaster.error("Failed to publish about.");
-			console.error("Failed to publish about", error);
 		}
 	}
 
@@ -448,18 +446,17 @@ export class LayoutDesigner {
 		}
 
 		try {
+			Toaster.debug("Querying user about.");
 			const anilistAPI = new AnilistAPI(this.#settings);
-			const result = await anilistAPI.getUserAbout(
+			const about = await anilistAPI.getUserAbout(
 				this.#settings.anilistUser
 			);
-			const about = result.User.about;
 			const clearedAbout = this.#removeJson(about);
 
 			this.#updateOption("bio", clearedAbout, settingsUi);
 			Toaster.success("About reset.");
 		} catch (error) {
 			Toaster.error("Failed to query current about from AniList API.");
-			console.error(error);
 		}
 	}
 

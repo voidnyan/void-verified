@@ -25,7 +25,7 @@ export class SettingsUserInterface {
 	layoutDesigner;
 	AnilistBlue = "120, 180, 255";
 	#activeCategory = "all";
-	#activeSubCategory = subCategories.toaster;
+	#activeSubCategory = subCategories.users;
 
 	constructor(settings, styleHandler, globalCSS, userCSS, layoutDesigner) {
 		this.settings = settings;
@@ -593,7 +593,6 @@ export class SettingsUserInterface {
 		btn.innerText = "Publishing...";
 		cssHandler.publishUserCss().then(() => {
 			btn.innerText = "Publish";
-			Toaster.success("CSS published.");
 		});
 	}
 

@@ -1,11 +1,7 @@
 export class AnilistAPI {
-	apiQueryTimeoutInMinutes = 15;
-	apiQueryTimeout = this.apiQueryTimeoutInMinutes * 60 * 1000;
-
 	settings;
 	#userId;
 	#url = "https://graphql.anilist.co";
-	#lastFetchedLocalStorage = "void-verified-last-fetched";
 	constructor(settings) {
 		this.settings = settings;
 		this.#userId = Number(JSON.parse(localStorage.getItem("auth")).id);
@@ -48,9 +44,9 @@ export class AnilistAPI {
 		try {
 			const response = await fetch(this.#url, options);
 			const result = await response.json();
-			return result;
+			return result.data.Activity;
 		} catch (error) {
-			return error;
+			throw new Error("Error querying activity.", error);
 		}
 	}
 
@@ -66,9 +62,9 @@ export class AnilistAPI {
 		try {
 			const response = await fetch(this.#url, options);
 			const result = await response.json();
-			return result.data;
+			return result.data.User.about;
 		} catch (error) {
-			return error;
+			throw new Error("Error querying user about.", error);
 		}
 	}
 
@@ -85,7 +81,7 @@ export class AnilistAPI {
 			const result = await response.json();
 			return result.data;
 		} catch (error) {
-			return error;
+			throw new Error("failed to save user about.", error);
 		}
 	}
 
@@ -127,20 +123,12 @@ export class AnilistAPI {
 		}
 	}
 
-	queryUserData() {
-		const lastFetched = new Date(
-			localStorage.getItem(this.#lastFetchedLocalStorage)
-		);
-		const currentTime = new Date();
-
-		if (!lastFetched || currentTime - lastFetched > this.apiQueryTimeout) {
-			this.#querySelf();
-			this.#queryUsers(1);
-			localStorage.setItem(this.#lastFetchedLocalStorage, new Date());
-		}
+	async queryVerifiedUsers() {
+		await this.#querySelf();
+		await this.#queryUsers(1);
 	}
 
-	#querySelf() {
+	async #querySelf() {
 		const variables = { userId: this.#userId };
 		const query = `query ($userId: Int!) {
                 User(id: $userId) {
@@ -158,17 +146,23 @@ export class AnilistAPI {
 
 		const options = this.#getQueryOptions(query, variables);
 
-		fetch(this.#url, options)
-			.then(this.#handleResponse)
-			.then((data) => {
-				this.settings.updateUserFromApi(data.User);
-			})
-			.catch((err) => {
-				console.error(err);
-			});
+		try {
+			const response = await fetch(this.#url, options);
+			const result = await response.json();
+			if (!response.ok) {
+				throw new Error("Failed to query account user.", result);
+			}
+			const data = result.data;
+			this.settings.updateUserFromApi(data.User);
+		} catch (error) {
+			throw new Error(
+				"Failed to query account user from Anilist API",
+				error
+			);
+		}
 	}
 
-	#queryUsers(page) {
+	async #queryUsers(page) {
 		const variables = { page, userId: this.#userId };
 		const query = `query ($page: Int, $userId: Int!) {
             Page(page: $page) {
@@ -195,18 +189,21 @@ export class AnilistAPI {
 
 		const options = this.#getQueryOptions(query, variables);
 
-		fetch(this.#url, options)
-			.then(this.#handleResponse)
-			.then((data) => {
-				this.#handleQueriedUsers(data.Page.following);
-				const pageInfo = data.Page.pageInfo;
-				if (pageInfo.hasNextPage) {
-					this.#queryUsers(pageInfo.currentPage + 1);
-				}
-			})
-			.catch((err) => {
-				console.error(err);
-			});
+		try {
+			const response = await fetch(this.#url, options);
+			const result = await response.json();
+			if (!response.ok) {
+				throw new Error("Failed to query followed users.", result);
+			}
+			const data = result.data;
+			this.#handleQueriedUsers(data.Page.following);
+			const pageInfo = data.Page.pageInfo;
+			if (pageInfo.hasNextPage) {
+				await this.#queryUsers(pageInfo.currentPage + 1);
+			}
+		} catch (error) {
+			throw new Error("Failed to query followed users.", err);
+		}
 	}
 
 	#handleQueriedUsers(users) {
@@ -242,11 +239,5 @@ export class AnilistAPI {
 		}
 		let queryOptions = this.#getQueryOptions(query, variables);
 		return queryOptions;
-	}
-
-	#handleResponse(response) {
-		return response.json().then((json) => {
-			return response.ok ? json.data : Promise.reject(json);
-		});
 	}
 }

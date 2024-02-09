@@ -142,7 +142,7 @@ export const defaultSettings = {
 	},
 	toasterEnabled: {
 		defaultValue: false,
-		description: "Display messages as toasts.",
+		description: "Enable toast notifications.",
 		category: categories.misc,
 	},
 };
