@@ -19,8 +19,8 @@ export const ColorPicker = (value, onChange) => {
 	return container;
 };
 
-export const InputField = (value, onChange) => {
-	const inputField = DOM.create("input", "input");
+export const InputField = (value, onChange, classes) => {
+	const inputField = DOM.create("input", transformClasses("input", classes));
 	inputField.value = value;
 	inputField.addEventListener("change", (event) => {
 		onChange(event);
@@ -39,4 +39,32 @@ export const Button = (text, onClick) => {
 export const Note = (text) => {
 	const note = DOM.create("div", "notice", text);
 	return note;
+};
+
+export const Link = (text, href, target = "_blank", classes) => {
+	const link = DOM.create("a", transformClasses("link", classes), text);
+	link.setAttribute("href", href);
+	link.setAttribute("target", target);
+	return link;
+};
+
+export const TextArea = (text, onChange, classes) => {
+	const textArea = DOM.create(
+		"textarea",
+		transformClasses("textarea", classes),
+		text
+	);
+	textArea.addEventListener("change", (event) => {
+		onChange(event);
+	});
+
+	return textArea;
+};
+
+const transformClasses = (base, additional) => {
+	let classes = base;
+	if (additional) {
+		classes += ` ${additional}`;
+	}
+	return classes;
 };

@@ -2,6 +2,7 @@ import { ImageApiFactory } from "./api/imageApiFactory";
 import { imageHosts, ImageHostService } from "./api/imageHostConfiguration";
 import { ImgurAPI } from "./api/imgurAPI";
 import { ColorFunctions } from "./colorFunctions";
+import { InputField, Link, TextArea } from "./components/components";
 import { categories } from "./defaultSettings";
 import { GlobalCSS } from "./globalCSS";
 import { DOM } from "./helpers/DOM";
@@ -118,6 +119,12 @@ export class SettingsUserInterface {
 
 		headerContainer.append(header);
 		headerContainer.append(versionInfo);
+		headerContainer.append(
+			DOM.create("p", null, [
+				"Author: ",
+				Link("voidnyan", "https://anilist.co/user/voidnyan/"),
+			])
+		);
 		settingsContainer.append(headerContainer);
 	}
 
@@ -245,7 +252,7 @@ export class SettingsUserInterface {
 		inputFormLabel.setAttribute("for", "void-verified-add-user");
 
 		inputForm.append(inputFormLabel);
-		inputForm.append(DOM.create("input", "#verified-add-user"));
+		inputForm.append(InputField("", () => {}, "#verified-add-user"));
 		tableContainer.append(inputForm);
 
 		settingsContainer.append(tableContainer);
@@ -261,12 +268,18 @@ export class SettingsUserInterface {
 		userLink.setAttribute("target", "_blank");
 		row.append(DOM.create("td", null, userLink));
 
-		const signInput = DOM.create("input");
-		signInput.setAttribute("type", "text");
-		signInput.value = user.sign ?? "";
-		signInput.addEventListener("input", (event) =>
-			this.#updateUserOption(user.username, "sign", event.target.value)
+		const signInput = InputField(
+			user.sign ?? "",
+			(event) => {
+				this.#updateUserOption(
+					user.username,
+					"sign",
+					event.target.value
+				);
+			},
+			"sign"
 		);
+
 		const signCell = DOM.create("td", null, signInput);
 		signCell.append(
 			this.#createUserCheckbox(
@@ -520,12 +533,7 @@ export class SettingsUserInterface {
 		label.setAttribute("for", `void-verified-${cssName}-css-editor`);
 		container.append(label);
 
-		const textarea = DOM.create(
-			"textarea",
-			`#verified-${cssName}-css-editor`
-		);
-		textarea.value = cssHandler.css;
-		textarea.addEventListener("change", (event) => {
+		const textarea = TextArea(cssHandler.css, (event) => {
 			this.#handleCustomCssEditor(event, cssHandler);
 		});
 		container.append(textarea);
