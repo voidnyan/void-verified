@@ -129,16 +129,6 @@ export const defaultSettings = {
 		description: "Wrap images with a link tag.",
 		category: categories.paste,
 	},
-	// pasteRequireKeyPress: {
-	// 	defaultValue: true,
-	// 	description: "Require an additional key to be pressed while pasting.",
-	// 	category: categories.paste,
-	// },
-	// pasteKeybind: {
-	// 	defaultValue: "Shift",
-	// 	description: "The key to be pressed while pasting.",
-	// 	category: categories.paste,
-	// },
 	pasteImageWidth: {
 		defaultValue: "420",
 		description: "Width used when pasting images.",
@@ -149,5 +139,10 @@ export const defaultSettings = {
 		description:
 			"Upload image from the clipboard to image host (configure below).",
 		category: categories.paste,
+	},
+	toasterEnabled: {
+		defaultValue: false,
+		description: "Display messages as toasts.",
+		category: categories.misc,
 	},
 };

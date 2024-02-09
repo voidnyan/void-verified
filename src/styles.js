@@ -1,4 +1,11 @@
 export const styles = /* css */ `
+    :root {
+        --void-info: 46, 149, 179;
+        --void-danger: 188, 53, 46;
+        --void-success: 80, 162, 80;
+    }
+
+
     a[href="/settings/developer" i]::after{content: " & Void"}
     .void-settings .void-nav ol {
         display: flex;
@@ -367,7 +374,62 @@ export const styles = /* css */ `
         margin-top: 5px;
     }
 
-    .void-upload-in-progress {
-        cursor: wait;
+    .void-select {
+        display: inline-flex;
     }
+
+    .void-select .void-option {
+        padding: 3px 8px;
+        background: rgb(var(--color-foreground-blue));
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+    .void-select .void-option:first-child {
+        border-radius: 4px 0px 0px 4px;
+    }
+
+    .void-select .void-option:last-child {
+        border-radius: 0px 4px 4px 0px;
+    }
+
+    .void-select .void-option.active {
+        background: rgb(var(--color-blue));
+        color: rgb(var(--color-text-bright));
+    }
+
+    .void-upload-in-progress {
+        cursor: wait !important;
+    }
+
+    #void-toast-container {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        bottom: 2rem;
+        left: 2rem;
+    }
+
+    .void-toast {
+        font-size: 14px;
+        color: rgb(var(--color-text-bright));
+        min-width: 200px;
+        min-heigth: 50px;
+        padding: 10px 8px;
+        border-radius: 4px;
+    }
+
+    .void-info {
+        background: rgb(var(--void-info));
+    }
+
+    .void-success {
+        background: rgb(var(--void-success));
+    }
+
+    .void-danger {
+        background: rgb(var(--void-danger));
+    }
+    .
 `;

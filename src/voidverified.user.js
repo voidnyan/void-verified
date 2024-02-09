@@ -6,6 +6,7 @@ import { PasteHandler } from "./pasteHandler";
 import { styles } from "./styles";
 import { ImgurAPI } from "./api/imgurAPI";
 import { ImageHostService, imageHosts } from "./api/imageHostConfiguration";
+import { Toaster } from "./utils/toaster";
 
 const settings = new Settings();
 const styleHandler = new StyleHandler(settings);
@@ -24,5 +25,7 @@ new ImgurAPI(
 ).refreshAuthToken();
 
 styleHandler.createStyleLink(styles, "script");
+
+Toaster.initializeToaster(settings);
 
 console.log(`VoidVerified ${settings.version} loaded.`);
