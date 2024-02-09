@@ -9,6 +9,7 @@ import {
 } from "./components/components";
 import { AnilistAPI } from "./api/anilistAPI";
 import { Markdown } from "./utils/markdown";
+import { Toaster } from "./utils/toaster";
 
 class Layout {
 	avatar;
@@ -383,9 +384,11 @@ export class LayoutDesigner {
 			const about = this.#transformAbout(currentAbout, this.#layout.bio);
 
 			await anilistAPI.saveUserAbout(about);
+			Toaster.success("About published.");
 			settingsUi.renderSettingsUi();
-		} catch {
-			console.error("Failed to publish about");
+		} catch (error) {
+			Toaster.error("Failed to publish about.");
+			console.error("Failed to publish about", error);
 		}
 	}
 
@@ -406,7 +409,10 @@ export class LayoutDesigner {
 			const result = await anilistAPI.saveUserColor(color);
 			const profileColor = result.UpdateUser?.options?.profileColor;
 			this.#anilistSettings.options.profileColor = profileColor;
-		} catch {
+			Toaster.success("Color published.");
+		} catch (error) {
+			Toaster.error("Failed to publish color.");
+			console.error("Failed to publish color.", error);
 		} finally {
 			settingsUi.renderSettingsUi();
 		}
@@ -422,7 +428,10 @@ export class LayoutDesigner {
 			const result = await anilistAPI.saveDonatorBadge(donatorText);
 			const donatorBadge = result.UpdateUser?.donatorBadge;
 			this.#anilistSettings.donatorBadge = donatorBadge;
-		} catch {
+			Toaster.success("Donator badge published.");
+		} catch (error) {
+			Toaster.error("Failed to publish donator badge.");
+			console.error("Failed to publish donator badge.", error);
 		} finally {
 			settingsUi.renderSettingsUi();
 		}
@@ -447,7 +456,9 @@ export class LayoutDesigner {
 			const clearedAbout = this.#removeJson(about);
 
 			this.#updateOption("bio", clearedAbout, settingsUi);
+			Toaster.success("About reset.");
 		} catch (error) {
+			Toaster.error("Failed to query current about from AniList API.");
 			console.error(error);
 		}
 	}

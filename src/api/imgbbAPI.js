@@ -1,3 +1,4 @@
+import { Toaster } from "../utils/toaster";
 import { ImageHostBase } from "./imageHostBase";
 import { ImageHostService } from "./imageHostConfiguration";
 
@@ -35,13 +36,16 @@ export class ImgbbAPI extends ImageHostBase {
 		};
 
 		try {
+			Toaster.debug("Uploading image to imgbb.");
 			const response = await fetch(
 				`${this.#url}?key=${this.#configuration.apiKey}`,
 				settings
 			);
 			const data = await response.json();
+			Toaster.success("Uploaded image to imgbb.");
 			return data.data.url;
 		} catch (error) {
+			Toaster.error("Failed to upload image to imgbb.");
 			console.error(error);
 			return null;
 		}

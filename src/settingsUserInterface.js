@@ -593,6 +593,7 @@ export class SettingsUserInterface {
 		btn.innerText = "Publishing...";
 		cssHandler.publishUserCss().then(() => {
 			btn.innerText = "Publish";
+			Toaster.success("CSS published.");
 		});
 	}
 

@@ -1,6 +1,7 @@
 import { ImageHostBase } from "./imageHostBase";
 import { ImageHostService, imageHosts } from "./imageHostConfiguration";
 import { DOM } from "../helpers/DOM";
+import { Toaster } from "../utils/toaster";
 
 export class ImgurAPI extends ImageHostBase {
 	#url = "https://api.imgur.com/3/image";
@@ -37,10 +38,13 @@ export class ImgurAPI extends ImageHostBase {
 		};
 
 		try {
+			Toaster.debug("Uploading image to imgur.");
 			const response = await fetch(this.#url, settings);
 			const data = await response.json();
+			Toaster.success("Uploaded image to imgur.");
 			return data.data.link;
 		} catch (error) {
+			Toaster.error("Failed to upload image to imgur.");
 			console.error(error);
 			return null;
 		}
@@ -166,6 +170,7 @@ export class ImgurAPI extends ImageHostBase {
 		formData.append("grant_type", "refresh_token");
 
 		try {
+			Toaster.debug("Refreshing imgur token.");
 			const response = await fetch("https://api.imgur.com/oauth2/token", {
 				method: "POST",
 				body: formData,
@@ -186,6 +191,7 @@ export class ImgurAPI extends ImageHostBase {
 				config
 			);
 		} catch (error) {
+			Toaster.error("Error while refreshing imgur token.");
 			console.error(error);
 		}
 	}

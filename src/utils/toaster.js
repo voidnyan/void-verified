@@ -17,7 +17,7 @@ class ToasterConfig {
 	toastLevel;
 	duration;
 	constructor(config) {
-		this.toastLevel = config?.toastLevel ?? 1;
+		this.toastLevel = config?.toastLevel ?? 2;
 		this.duration = config?.duration ?? 5;
 	}
 }
