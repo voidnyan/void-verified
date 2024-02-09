@@ -1,5 +1,5 @@
 import { DOM } from "../helpers/DOM";
-import { Select, Toast, Option, Note } from "../components/components";
+import { Select, Toast, Option, Button, Label } from "../components/components";
 
 const toastTypes = {
 	info: "info",
@@ -13,12 +13,18 @@ const toastLevels = {
 	danger: 2,
 };
 
+const toastDurations = [1, 3, 5, 10];
+
+const toastLocations = ["top-left", "top-right", "bottom-left", "bottom-right"];
+
 class ToasterConfig {
 	toastLevel;
 	duration;
+	location;
 	constructor(config) {
 		this.toastLevel = config?.toastLevel ?? 2;
 		this.duration = config?.duration ?? 5;
+		this.location = config.location ?? "bottom-left";
 	}
 }
 
@@ -73,7 +79,10 @@ export class Toaster {
 			localStorage.getItem(this.#configInLocalStorage)
 		);
 		this.#config = new ToasterConfig(config);
-		const toastContainer = DOM.create("div", "#toast-container");
+		const toastContainer = DOM.create(
+			"div",
+			`#toast-container ${this.#config.location}`
+		);
 		document.body.append(toastContainer);
 	}
 
@@ -129,7 +138,7 @@ export class Toaster {
 	static renderSettings(settingsUi) {
 		const container = DOM.create("div");
 
-		container.append(DOM.create("h3", null, "Toaster Configuration"));
+		container.append(DOM.create("h3", null, "Configure Toasts"));
 
 		container.append(
 			DOM.create(
@@ -139,20 +148,68 @@ export class Toaster {
 			)
 		);
 
-		container.append(DOM.create("span", null, "Toast level: "));
-
 		const options = Object.values(toastTypes).map((type) =>
 			Option(type, this.#config.toastLevel === toastLevels[type], () => {
-				this.#config.toastLevel = toastLevels[type];
-				localStorage.setItem(
-					this.#configInLocalStorage,
-					JSON.stringify(this.#config)
-				);
+				this.#handleLevelChange(type);
 				settingsUi.renderSettingsUi();
 			})
 		);
-		container.append(Select(options));
+		container.append(Label("Toast level", Select(options)));
+
+		const locationOptions = toastLocations.map((location) =>
+			Option(location, this.#config.location === location, () => {
+				this.#handleLocationChange(location);
+				settingsUi.renderSettingsUi();
+			})
+		);
+
+		container.append(Label("Toast location", Select(locationOptions)));
+
+		const durationOptions = toastDurations.map((duration) =>
+			Option(`${duration}s`, duration === this.#config.duration, () => {
+				this.#handleDurationChange(duration);
+				settingsUi.renderSettingsUi();
+			})
+		);
+
+		container.append(Label("Toast duration", Select(durationOptions)));
+
+		container.append(
+			Button("Test Toats", () => {
+				Toaster.debug("This is a debug toast.");
+				Toaster.success("This is a success toast.");
+				Toaster.error("This is an error toast.");
+			})
+		);
 
 		return container;
+	}
+
+	static #handleLevelChange(type) {
+		this.#config.toastLevel = toastLevels[type];
+		this.#saveConfig();
+	}
+
+	static #handleLocationChange(location) {
+		this.#config.location = location;
+		this.#saveConfig();
+
+		const container = DOM.get("#void-toast-container");
+		for (const className of container.classList) {
+			container.classList.remove(className);
+		}
+		container.classList.add(`void-${location}`);
+	}
+
+	static #handleDurationChange(duration) {
+		this.#config.duration = duration;
+		this.#saveConfig();
+	}
+
+	static #saveConfig() {
+		localStorage.setItem(
+			this.#configInLocalStorage,
+			JSON.stringify(this.#config)
+		);
 	}
 }
