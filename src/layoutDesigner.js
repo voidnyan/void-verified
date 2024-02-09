@@ -60,6 +60,10 @@ export class LayoutDesigner {
 	}
 
 	renderLayoutPreview() {
+		if (!this.#settings.options.layoutDesignerEnabled.getValue()) {
+			return;
+		}
+
 		if (!window.location.pathname.startsWith("/user/")) {
 			return;
 		}
@@ -151,7 +155,6 @@ export class LayoutDesigner {
 		const pageContent = DOM.get(".page-content > .user");
 		pageContent.style.setProperty("--color-blue", color);
 		pageContent.style.setProperty("--color-blue-dim", color);
-		pageContent.style.setProperty("--color-logo", `rgb(${color})`);
 	}
 
 	#handleDonatorBadge(donatorText) {
@@ -187,6 +190,9 @@ export class LayoutDesigner {
 	}
 
 	renderSettings(settingsUi) {
+		if (!this.#settings.options.layoutDesignerEnabled.getValue()) {
+			return "";
+		}
 		const container = DOM.create("div", "layout-designer-container");
 
 		const header = DOM.create("h3", null, "Layout Designer");
@@ -242,11 +248,7 @@ export class LayoutDesigner {
 			container.append(this.#createDonatorBadgeField(settingsUi));
 		}
 
-		container.append(
-			this.#createAboutSection(settingsUi),
-			previewButton,
-			getAboutButton
-		);
+		container.append(this.#createAboutSection(settingsUi), getAboutButton);
 
 		if (this.#settings.auth?.token) {
 			const saveAboutButton = Button("Publish About", (event) => {
@@ -254,6 +256,8 @@ export class LayoutDesigner {
 			});
 			container.append(saveAboutButton);
 		}
+
+		container.append(previewButton);
 
 		if (this.#layouts.preview) {
 			container.append(cssButton);

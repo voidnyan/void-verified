@@ -6,6 +6,14 @@ import { categories } from "./defaultSettings";
 import { GlobalCSS } from "./globalCSS";
 import { DOM } from "./helpers/DOM";
 
+const subCategories = {
+	users: "users",
+	authorization: "authorization",
+	imageHost: "image host",
+	layout: "layout & CSS",
+	globalCss: "global CSS",
+};
+
 export class SettingsUserInterface {
 	settings;
 	styleHandler;
@@ -14,6 +22,7 @@ export class SettingsUserInterface {
 	layoutDesigner;
 	AnilistBlue = "120, 180, 255";
 	#activeCategory = "all";
+	#activeSubCategory = "users";
 
 	constructor(settings, styleHandler, globalCSS, userCSS, layoutDesigner) {
 		this.settings = settings;
@@ -46,23 +55,34 @@ export class SettingsUserInterface {
 
 		this.#renderCategories(innerContainer);
 		this.#renderOptions(innerContainer);
-		this.#renderUserTable(innerContainer);
-		if (this.settings.options.globalCssEnabled.getValue()) {
-			this.#renderCustomCssEditor(innerContainer, this.globalCSS);
+		this.#renderSubCategories(innerContainer);
+
+		switch (this.#activeSubCategory) {
+			case subCategories.users:
+				this.#renderUserTable(innerContainer);
+				break;
+			case subCategories.authorization:
+				this.#creatAuthenticationSection(innerContainer);
+				break;
+			case subCategories.imageHost:
+				this.#renderImageHostSettings(innerContainer);
+				break;
+			case subCategories.layout:
+				innerContainer.append(this.layoutDesigner.renderSettings(this));
+				if (
+					this.settings.auth?.token &&
+					(this.settings.options.profileCssEnabled.getValue() ||
+						this.settings.options.activityCssEnabled.getValue())
+				) {
+					this.#renderCustomCssEditor(innerContainer, this.userCSS);
+				}
+				break;
+			case subCategories.globalCss:
+				if (this.settings.options.globalCssEnabled.getValue()) {
+					this.#renderCustomCssEditor(innerContainer, this.globalCSS);
+				}
+				break;
 		}
-		if (
-			this.settings.auth?.token &&
-			(this.settings.options.profileCssEnabled.getValue() ||
-				this.settings.options.activityCssEnabled.getValue())
-		) {
-			this.#renderCustomCssEditor(innerContainer, this.userCSS);
-		}
-
-		this.#renderImageHostSettings(innerContainer);
-
-		this.#creatAuthenticationSection(innerContainer);
-
-		innerContainer.append(this.layoutDesigner.renderSettings(this));
 
 		settingsContainer.replaceChildren(innerContainer);
 	}
@@ -105,23 +125,83 @@ export class SettingsUserInterface {
 		const nav = DOM.create("nav", "nav");
 		const list = DOM.create("ol");
 
-		list.append(this.#createNavBtn("all"));
+		const onClick = (_category) => {
+			this.#activeCategory = _category;
+			this.renderSettingsUiContent();
+		};
+
+		list.append(
+			this.#createNavBtn("all", "all" === this.#activeCategory, () => {
+				onClick("all");
+			})
+		);
 
 		for (const category of Object.values(categories)) {
-			list.append(this.#createNavBtn(category));
+			list.append(
+				this.#createNavBtn(
+					category,
+					category === this.#activeCategory,
+					() => {
+						onClick(category);
+					}
+				)
+			);
 		}
 
 		nav.append(list);
 		settingsContainer.append(nav);
 	}
 
-	#createNavBtn(category) {
-		const className = category === this.#activeCategory ? "active" : null;
+	#renderSubCategories(settingsContainer) {
+		const nav = DOM.create("nav", "nav");
+		const list = DOM.create("ol");
+
+		for (const subCategory of Object.values(subCategories)) {
+			if (!this.#shouldDisplaySubCategory(subCategory)) {
+				continue;
+			}
+			list.append(
+				this.#createNavBtn(
+					subCategory,
+					this.#activeSubCategory === subCategory,
+					() => {
+						this.#activeSubCategory = subCategory;
+						this.renderSettingsUiContent();
+					}
+				)
+			);
+		}
+
+		nav.append(list);
+		settingsContainer.append(nav);
+	}
+
+	#shouldDisplaySubCategory(subCategory) {
+		switch (subCategory) {
+			case subCategories.users:
+				return true;
+			case subCategories.authorization:
+				return true;
+			case subCategories.imageHost:
+				return this.settings.options.pasteImagesToHostService.getValue();
+			case subCategories.layout:
+				return (
+					this.settings.auth?.token &&
+					(this.settings.options.profileCssEnabled.getValue() ||
+						this.settings.options.activityCssEnabled.getValue() ||
+						this.settings.options.layoutDesignerEnabled.getValue())
+				);
+			case subCategories.globalCss:
+				return this.settings.options.globalCssEnabled.getValue();
+		}
+	}
+
+	#createNavBtn(category, isActive, onClick) {
+		const className = isActive ? "active" : null;
 		const li = DOM.create("li", className, category);
 
 		li.addEventListener("click", () => {
-			this.#activeCategory = category;
-			this.renderSettingsUiContent();
+			onClick();
 		});
 
 		return li;
@@ -426,6 +506,10 @@ export class SettingsUserInterface {
 		this.settings.saveSettingToLocalStorage(settingKey, value);
 		this.styleHandler.refreshStyles();
 
+		if (!this.#shouldDisplaySubCategory(this.#activeSubCategory)) {
+			this.#activeSubCategory = subCategories.users;
+		}
+
 		this.renderSettingsUiContent();
 	}
 
@@ -554,7 +638,7 @@ export class SettingsUserInterface {
 
 		const authenticationContainer = DOM.create("div");
 
-		const header = DOM.create("h3", null, "Authenticate VoidVerified");
+		const header = DOM.create("h3", null, "Authorize VoidVerified");
 		const description = DOM.create(
 			"p",
 			null,
