@@ -1,3 +1,4 @@
+import { EyeClosedIcon, EyeIcon } from "../assets/icons";
 import { DOM } from "../helpers/DOM";
 
 export const ColorPicker = (value, onChange) => {
@@ -26,6 +27,26 @@ export const InputField = (value, onChange, classes) => {
 		onChange(event);
 	});
 	return inputField;
+};
+
+export const SecretField = (value, onChange) => {
+	const secret = InputField(value, onChange);
+	secret.setAttribute("type", "password");
+	const eyeIcon = EyeIcon();
+	const closedEyeIcon = EyeClosedIcon();
+
+	const container = DOM.create("div", "secret-container", secret);
+	const iconButton = IconButton(eyeIcon, (event) => {
+		if (event.target.firstChild === eyeIcon) {
+			event.target.replaceChildren(closedEyeIcon);
+			secret.setAttribute("type", "text");
+			return;
+		}
+		event.target.replaceChildren(eyeIcon);
+		secret.setAttribute("type", "password");
+	});
+	container.append(iconButton);
+	return container;
 };
 
 export const Button = (text, onClick) => {

@@ -1,4 +1,4 @@
-import { InputField, Label, Link, Note } from "../components/components";
+import { Label, Link, Note, SecretField } from "../components/components";
 import { Toaster } from "../utils/toaster";
 import { ImageHostBase } from "./imageHostBase";
 import { ImageHostService } from "./imageHostConfiguration";
@@ -57,7 +57,7 @@ export class ImgbbAPI extends ImageHostBase {
 
 		const apiKey = Label(
 			"API key",
-			InputField(this.#configuration.apiKey, (event) => {
+			SecretField(this.#configuration.apiKey, (event) => {
 				this.#updateApiKey(event, this.#configuration);
 			})
 		);

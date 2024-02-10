@@ -286,6 +286,31 @@ export const styles = /* css */ `
         box-sizing: border-box;
     }
 
+    .void-secret-container {
+        display: inline-block;
+        width: min-content;
+        position: relative;
+    }
+
+    .void-secret-container .void-icon-button {
+        position: absolute;
+        padding: 0px 8px;
+        margin: 0px;
+        top: 0px;
+        right: 0px;
+        background: rgb(var(--color-foreground-blue-dark));
+        border-radius: 0px 4px 4px 0px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .void-icon-button svg {
+        pointer-events: none;
+        height: 14px !important;
+    }
+
     a.void-link {
         color: rgb(var(--color-blue)) !important;
     }
