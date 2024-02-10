@@ -50,6 +50,7 @@ export class IntervalScriptHandler {
 		const path = window.location.pathname;
 
 		intervalScriptHandler.activityHandler.moveAndDisplaySubscribeButton();
+		intervalScriptHandler.activityHandler.removeBlankFromAnilistLinks();
 		intervalScriptHandler.globalCSS.clearCssForProfile();
 		intervalScriptHandler.layoutDesigner.renderLayoutPreview();
 
