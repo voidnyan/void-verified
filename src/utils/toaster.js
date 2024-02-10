@@ -166,7 +166,7 @@ export class Toaster {
 			DOM.create(
 				"p",
 				null,
-				"Toasts are notifications that pop up in the corner of your screen when things are happening. Info-level is only recommended for debugging."
+				"Toasts are notifications that pop up in the corner of your screen when things are happening."
 			)
 		);
 

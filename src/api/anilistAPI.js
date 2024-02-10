@@ -62,7 +62,6 @@ export class AnilistAPI {
 		const options = this.#getQueryOptions(query, variables);
 		try {
 			const data = await this.#elevatedFetch(options);
-			console.log(data);
 			return data.User.about;
 		} catch (error) {
 			throw new Error("Error querying user about.", error);

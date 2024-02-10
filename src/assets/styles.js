@@ -105,10 +105,15 @@ export const styles = /* css */ `
     .void-setting-label {
         margin-left: 6px;
         vertical-align: middle;
+        cursor: pointer;
     }
 
     .void-setting-label-container .void-checkbox {
         vertical-align: middle;
+    }
+
+    .void-checkbox {
+        cursor: pointer;
     }
     
 
@@ -461,7 +466,7 @@ export const styles = /* css */ `
     .void-toast {
         font-size: 14px;
         color: rgb(var(--color-text-bright));
-        min-width: 200px;
+        min-width: 150px;
         max-width: 300px;
         min-heigth: 50px;
         padding: 10px 8px;

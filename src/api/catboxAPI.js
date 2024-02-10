@@ -80,7 +80,6 @@ export class CatboxAPI extends ImageHostBase {
 			...configuration,
 			userHash,
 		};
-		console.log(config);
 		new ImageHostService().setImageHostConfiguration(config.name, config);
 	}
 }

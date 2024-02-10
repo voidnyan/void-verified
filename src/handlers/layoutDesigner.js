@@ -377,21 +377,29 @@ export class LayoutDesigner {
 
 		try {
 			const anilistAPI = new AnilistAPI(this.#settings);
-			const currentAbout = await anilistAPI.getUserAbout(
+			let currentAbout = await anilistAPI.getUserAbout(
 				this.#settings.anilistUser
 			);
+			if (!currentAbout) {
+				currentAbout = "";
+			}
 			const about = this.#transformAbout(currentAbout, this.#layout.bio);
 
 			await anilistAPI.saveUserAbout(about);
 			Toaster.success("About published.");
 			settingsUi.renderSettingsUiContent();
 		} catch (error) {
+			console.error(error);
 			Toaster.error("Failed to publish about.");
 		}
 	}
 
 	#transformAbout(currentAbout, newAbout) {
-		const json = currentAbout.match(/^\[\]\(json([A-Za-z0-9+/=]+)\)/)[1];
+		const json = currentAbout.match(/^\[\]\(json([A-Za-z0-9+/=]+)\)/)?.[1];
+
+		if (!json) {
+			return newAbout;
+		}
 
 		const about = `[](json${json})` + newAbout;
 		return about;

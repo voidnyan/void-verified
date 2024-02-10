@@ -172,25 +172,28 @@ export class UserCSS {
 		}
 
 		const anilistAPI = new AnilistAPI(this.#settings);
-		let result;
+		let about;
 		try {
 			Toaster.debug("Querying account user about to merge changes into.");
-			result = await anilistAPI.getUserAbout(username);
+			about = await anilistAPI.getUserAbout(username);
 		} catch (error) {
 			Toaster.error("Failed to get current about for merging new CSS.");
 		}
-		let about = result.User.about;
+		if (!about) {
+			about = "";
+		}
 		let aboutJson = this.#decodeAbout(about);
 		aboutJson.customCSS = this.css;
 		const compressedAbout = LZString.compressToBase64(
 			JSON.stringify(aboutJson)
 		);
 
-		const target = about.match(/^\[\]\(json([A-Za-z0-9+/=]+)\)/)[1];
+		const target = about.match(/^\[\]\(json([A-Za-z0-9+/=]+)\)/)?.[1];
+
 		if (target) {
 			about = about.replace(target, compressedAbout);
 		} else {
-			about = `[](json${compressedAbout})` + about;
+			about = `[](json${compressedAbout})\n\n` + about;
 		}
 		try {
 			Toaster.debug("Publishing CSS.");
@@ -314,7 +317,9 @@ export class UserCSS {
 	#decodeAbout(about) {
 		let json = (about || "").match(/^\[\]\(json([A-Za-z0-9+/=]+)\)/);
 		if (!json) {
-			return null;
+			return {
+				customCss: "",
+			};
 		}
 
 		let jsonData;
