@@ -459,12 +459,12 @@ export class SettingsUserInterface {
 		this.#updateUserOption(username, "colorOverride", color);
 	}
 
-	#handleVerifyUserForm(event, settings) {
+	async #handleVerifyUserForm(event, settings) {
 		event.preventDefault();
 
 		const usernameInput = DOM.get("#void-verified-add-user");
 		const username = usernameInput.value;
-		settings.verifyUser(username);
+		await settings.verifyUser(username);
 		usernameInput.value = "";
 		this.renderSettingsUiContent();
 	}

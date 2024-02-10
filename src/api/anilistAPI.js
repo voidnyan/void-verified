@@ -124,15 +124,17 @@ export class AnilistAPI {
 	}
 
 	async queryVerifiedUsers() {
-		await this.#querySelf();
+		const accountUser = await this.queryUser(this.settings.anilistUser);
+		this.settings.updateUserFromApi(accountUser);
 		await this.#queryUsers(1);
 	}
 
-	async #querySelf() {
-		const variables = { userId: this.#userId };
-		const query = `query ($userId: Int!) {
-                User(id: $userId) {
+	async queryUser(username) {
+		const variables = { username };
+		const query = `query ($username: String!) {
+                User(name: $username) {
                   name
+                  id
                   avatar {
                     large
                   }
@@ -153,12 +155,9 @@ export class AnilistAPI {
 				throw new Error("Failed to query account user.", result);
 			}
 			const data = result.data;
-			this.settings.updateUserFromApi(data.User);
+			return data.User;
 		} catch (error) {
-			throw new Error(
-				"Failed to query account user from Anilist API",
-				error
-			);
+			throw new Error("Failed to query user from Anilist API", error);
 		}
 	}
 
@@ -168,6 +167,7 @@ export class AnilistAPI {
             Page(page: $page) {
                 following(userId: $userId) {
                   name
+                  id
                   avatar {
                     large
                   }
