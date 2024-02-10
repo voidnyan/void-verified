@@ -313,6 +313,20 @@ export const styles = /* css */ `
         margin-top: 15px;
         margin-right: 10px;
     }
+
+    .void-icon-button {
+        display: inline-block;
+        cursor: pointer;
+        margin-left: 4px;
+        margin-right: 4px;
+        vertical-align: middle;
+    }
+
+    .void-icon-button svg {
+        height: 12px;
+        vertical-align: middle;
+        display: inline-block;
+    }
     
     .void-quick-access .void-quick-access-wrap {
         background: rgb(var(--color-foreground));
