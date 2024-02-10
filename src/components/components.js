@@ -36,6 +36,14 @@ export const Button = (text, onClick) => {
 	return button;
 };
 
+export const IconButton = (text, onClick) => {
+	const button = DOM.create("div", "icon-button", text);
+	button.addEventListener("click", (event) => {
+		onClick(event);
+	});
+	return button;
+};
+
 export const Note = (text) => {
 	const note = DOM.create("div", "notice", text);
 	return note;

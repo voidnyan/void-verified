@@ -1,4 +1,6 @@
 import { AnilistAPI } from "../api/anilistAPI";
+import { RefreshIcon } from "../assets/icons";
+import { IconButton } from "../components/components";
 import { DOM } from "../helpers/DOM";
 import { Toaster } from "../utils/toaster";
 
@@ -54,7 +56,12 @@ export class QuickAccess {
 		sectionHeader.append(title);
 
 		const timer = DOM.create("span", "quick-access-timer", "");
-		sectionHeader.append(timer);
+
+		const refreshButton = IconButton(RefreshIcon(), () => {
+			this.#queryUsers(true);
+		});
+
+		sectionHeader.append(DOM.create("div", null, [timer, refreshButton]));
 
 		const quickAccessBody = document.createElement("div");
 		quickAccessBody.setAttribute("class", "void-quick-access-wrap");
@@ -94,12 +101,13 @@ export class QuickAccess {
 		timer.replaceChildren(`${timeLeftInSeconds}s`);
 	}
 
-	async #queryUsers() {
+	async #queryUsers(ignoreLastFetched = false) {
 		const currentTime = new Date();
 
 		if (
 			!this.#lastFetched ||
-			currentTime - this.#lastFetched > this.#apiQueryTimeout
+			currentTime - this.#lastFetched > this.#apiQueryTimeout ||
+			ignoreLastFetched
 		) {
 			try {
 				Toaster.debug("Querying Quick Access users.");

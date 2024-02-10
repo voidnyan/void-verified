@@ -15,11 +15,13 @@ import {
 	TableHead,
 	TextArea,
 	ColorPicker,
+	IconButton,
 } from "../components/components";
 import { categories } from "../assets/defaultSettings";
 import { GlobalCSS } from "./globalCSS";
 import { DOM } from "../helpers/DOM";
 import { Toaster } from "../utils/toaster";
+import { RefreshIcon } from "../assets/icons";
 
 const subCategories = {
 	users: "users",
@@ -331,12 +333,11 @@ export class SettingsUserInterface {
 
 		colorInputContainer.append(colorInput);
 
-		const resetColorBtn = DOM.create("button", null, "🔄");
-		resetColorBtn.addEventListener("click", () =>
-			this.#handleUserColorReset(user.username)
+		colorInputContainer.append(
+			IconButton(RefreshIcon(), () => {
+				this.#handleUserColorReset(user.username);
+			})
 		);
-
-		colorInputContainer.append(resetColorBtn);
 
 		colorInputContainer.append(
 			this.#createUserCheckbox(
