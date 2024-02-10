@@ -1,6 +1,7 @@
 import { defaultSettings } from "../assets/defaultSettings";
 import { ColorFunctions } from "./colorFunctions";
 import { AnilistAPI } from "../api/anilistAPI";
+import { Toaster } from "./toaster";
 
 class Option {
 	value;
@@ -60,7 +61,7 @@ export class Settings {
 		this.anilistUser = auth?.name;
 	}
 
-	verifyUser(username) {
+	async verifyUser(username) {
 		if (
 			this.verifiedUsers.find(
 				(user) => user.username.toLowerCase() === username.toLowerCase()
@@ -75,8 +76,15 @@ export class Settings {
 			JSON.stringify(this.verifiedUsers)
 		);
 
-		const anilistAPI = new AnilistAPI(this);
-		anilistAPI.queryUserData();
+		try {
+			Toaster.debug(`Querying ${username}.`);
+			const anilistAPI = new AnilistAPI(this);
+			const user = await anilistAPI.queryUser(username);
+			this.updateUserFromApi(user);
+		} catch (error) {
+			Toaster.error("Failed to query new user.");
+			console.error(error);
+		}
 	}
 
 	getUser(username) {
@@ -103,23 +111,44 @@ export class Settings {
 	}
 
 	updateUserFromApi(apiUser) {
-		const user = this.verifiedUsers.find(
-			(u) => u.username === apiUser.name
-		);
+		let user = this.#findVerifiedUser(apiUser);
+
 		if (!user) {
 			return;
 		}
 
 		const newUser = this.#mapApiUser(user, apiUser);
-		this.verifiedUsers = this.verifiedUsers.map((u) =>
-			u.username.toLowerCase() === user.username.toLowerCase()
-				? newUser
-				: u
-		);
+		this.#mapVerifiedUsers(newUser);
 
 		localStorage.setItem(
 			this.localStorageUsers,
 			JSON.stringify(this.verifiedUsers)
+		);
+	}
+
+	#findVerifiedUser(apiUser) {
+		let user = this.verifiedUsers.find((u) => u.id && u.id === apiUser.id);
+
+		if (user) {
+			return user;
+		}
+
+		return this.verifiedUsers.find(
+			(u) => u.username.toLowerCase() === apiUser.name.toLowerCase()
+		);
+	}
+
+	#mapVerifiedUsers(newUser) {
+		if (this.verifiedUsers.find((u) => u.id && u.id === newUser.id)) {
+			this.verifiedUsers = this.verifiedUsers.map((u) =>
+				u.id === newUser.id ? newUser : u
+			);
+			return;
+		}
+		this.verifiedUsers = this.verifiedUsers.map((u) =>
+			u.username.toLowerCase() === newUser.username.toLowerCase()
+				? newUser
+				: u
 		);
 	}
 
@@ -133,13 +162,17 @@ export class Settings {
 		userObject.username = apiUser.name;
 		userObject.avatar = apiUser.avatar.large;
 		userObject.banner = apiUser.bannerImage;
+		userObject.id = apiUser.id;
 		userObject.lastFetch = new Date();
 
 		if (this.options.quickAccessBadge.getValue() || user.quickAccessBadge) {
 			if (
 				(user.avatar && user.avatar !== userObject.avatar) ||
 				(user.color && user.color !== userObject.color) ||
-				(user.banner && user.banner !== userObject.banner)
+				(user.banner && user.banner !== userObject.banner) ||
+				(user.username &&
+					user.username.toLowerCase() !==
+						userObject.username.toLowerCase())
 			) {
 				userObject.quickAccessBadgeDisplay = true;
 			}
