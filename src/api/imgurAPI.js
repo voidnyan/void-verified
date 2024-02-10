@@ -58,7 +58,7 @@ export class ImgurAPI extends ImageHostBase {
 			"Client ID",
 			InputField(this.#configuration?.clientId ?? "", (event) => {
 				this.#updateConfig(event, "clientId", this.#configuration);
-				settingsUi.renderSettingsUi();
+				settingsUi.renderSettingsUiContent();
 			})
 		);
 
@@ -66,7 +66,7 @@ export class ImgurAPI extends ImageHostBase {
 			"Client Secret",
 			InputField(this.#configuration?.clientSecret ?? "", (event) => {
 				this.#updateConfig(event, "clientSecret", this.#configuration);
-				settingsUi.renderSettingsUi();
+				settingsUi.renderSettingsUiContent();
 			})
 		);
 
@@ -97,7 +97,7 @@ export class ImgurAPI extends ImageHostBase {
 			revokeAuthButton.classList.add("button");
 			revokeAuthButton.addEventListener("click", () => {
 				this.#revokeAuth();
-				settingsUi.renderSettingsUi();
+				settingsUi.renderSettingsUiContent();
 			});
 			container.append(revokeAuthButton);
 		}

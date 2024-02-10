@@ -384,7 +384,7 @@ export class LayoutDesigner {
 
 			await anilistAPI.saveUserAbout(about);
 			Toaster.success("About published.");
-			settingsUi.renderSettingsUi();
+			settingsUi.renderSettingsUiContent();
 		} catch (error) {
 			Toaster.error("Failed to publish about.");
 		}
@@ -412,7 +412,7 @@ export class LayoutDesigner {
 			Toaster.error("Failed to publish color.");
 			console.error("Failed to publish color.", error);
 		} finally {
-			settingsUi.renderSettingsUi();
+			settingsUi.renderSettingsUiContent();
 		}
 	}
 
@@ -431,7 +431,7 @@ export class LayoutDesigner {
 			Toaster.error("Failed to publish donator badge.");
 			console.error("Failed to publish donator badge.", error);
 		} finally {
-			settingsUi.renderSettingsUi();
+			settingsUi.renderSettingsUiContent();
 		}
 	}
 
@@ -484,7 +484,7 @@ export class LayoutDesigner {
 	#updateOption(field, value, settingsUi) {
 		this.#layout[field] = value;
 		this.#updateLayout(this.#layout);
-		settingsUi.renderSettingsUi();
+		settingsUi.renderSettingsUiContent();
 	}
 
 	#togglePreview(settingsUi) {
@@ -497,7 +497,7 @@ export class LayoutDesigner {
 			preview: this.#layouts.preview,
 		});
 		this.#saveToLocalStorage();
-		settingsUi.renderSettingsUi();
+		settingsUi.renderSettingsUiContent();
 	}
 
 	#toggleCss() {

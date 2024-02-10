@@ -9,13 +9,13 @@ export const ColorPicker = (value, onChange) => {
 		onChange(event);
 	});
 
+	container.append(colorPicker);
 	const inputField = DOM.create("input", "color-picker-input");
-	inputField.value = value;
+	inputField.value = value ?? "#";
 	inputField.addEventListener("change", (event) => {
 		onChange(event);
 	});
-
-	container.append(colorPicker, inputField);
+	container.append(inputField);
 	return container;
 };
 
@@ -85,8 +85,52 @@ export const Option = (value, selected, onClick) => {
 
 export const Label = (text, element) => {
 	const container = DOM.create("div", "label-container");
-	container.append(DOM.create("span", "label-span", text));
-	container.append(element);
+	const label = DOM.create("label", "label-span", text);
+	const id = Math.random();
+	label.setAttribute("for", id);
+	element.setAttribute("id", id);
+	container.append(label, element);
+	return container;
+};
+
+export const Table = (head, body) => {
+	const table = DOM.create("table", "table", [head, body]);
+	return table;
+};
+
+export const TableHead = (...headers) => {
+	const headerCells = headers.map((header) => DOM.create("th", null, header));
+	const headerRow = DOM.create("tr", null, headerCells);
+	const head = DOM.create("thead", null, headerRow);
+	return head;
+};
+
+export const TableBody = (rows) => {
+	const tableBody = DOM.create("tbody", null, rows);
+	return tableBody;
+};
+
+export const Checkbox = (checked, onChange, title, disabled = false) => {
+	const checkbox = DOM.create("input", "checkbox");
+	checkbox.setAttribute("type", "checkbox");
+	checkbox.checked = checked;
+
+	if (disabled) {
+		checkbox.setAttribute("disabled", "");
+	}
+
+	checkbox.addEventListener("change", onChange);
+	checkbox.title = title;
+	return checkbox;
+};
+
+export const SettingLabel = (text, input) => {
+	const container = DOM.create("div", "setting-label-container", input);
+	const label = DOM.create("label", "setting-label", text);
+	const id = Math.random();
+	label.setAttribute("for", id);
+	input.setAttribute("id", id);
+	container.append(label);
 	return container;
 };
 

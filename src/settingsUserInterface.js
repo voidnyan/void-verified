@@ -3,12 +3,18 @@ import { imageHosts, ImageHostService } from "./api/imageHostConfiguration";
 import { ImgurAPI } from "./api/imgurAPI";
 import { ColorFunctions } from "./colorFunctions";
 import {
+	Checkbox,
 	InputField,
 	Label,
 	Link,
 	Option,
 	Select,
+	SettingLabel,
+	Table,
+	TableBody,
+	TableHead,
 	TextArea,
+	ColorPicker,
 } from "./components/components";
 import { categories } from "./defaultSettings";
 import { GlobalCSS } from "./globalCSS";
@@ -59,44 +65,54 @@ export class SettingsUserInterface {
 	}
 
 	renderSettingsUiContent() {
-		const settingsContainer = DOM.get("#void-verified-settings");
-		const innerContainer = DOM.create("div");
-		this.#renderSettingsHeader(innerContainer);
+		const settingsContainer = DOM.create("div");
 
-		this.#renderCategories(innerContainer);
-		this.#renderOptions(innerContainer);
-		this.#renderSubCategories(innerContainer);
+		this.#renderSettingsHeader(settingsContainer);
+		this.#renderCategories(settingsContainer);
+		this.#renderOptions(settingsContainer);
+		this.#handleSubcategories(settingsContainer);
 
+		DOM.get("#void-verified-settings").replaceChildren(settingsContainer);
+	}
+
+	#handleSubcategories(settingsContainer) {
+		this.#renderSubCategoriesNavigation(settingsContainer);
 		switch (this.#activeSubCategory) {
 			case subCategories.users:
-				this.#renderUserTable(innerContainer);
+				this.#renderUserTable(settingsContainer);
 				break;
 			case subCategories.authorization:
-				this.#creatAuthenticationSection(innerContainer);
+				this.#creatAuthenticationSection(settingsContainer);
 				break;
 			case subCategories.imageHost:
-				this.#renderImageHostSettings(innerContainer);
+				this.#renderImageHostSettings(settingsContainer);
 				break;
 			case subCategories.layout:
-				innerContainer.append(this.layoutDesigner.renderSettings(this));
+				settingsContainer.append(
+					this.layoutDesigner.renderSettings(this)
+				);
 				if (
 					this.settings.auth?.token &&
 					(this.settings.options.profileCssEnabled.getValue() ||
 						this.settings.options.activityCssEnabled.getValue())
 				) {
-					this.#renderCustomCssEditor(innerContainer, this.userCSS);
+					this.#renderCustomCssEditor(
+						settingsContainer,
+						this.userCSS
+					);
 				}
 				break;
 			case subCategories.globalCss:
 				if (this.settings.options.globalCssEnabled.getValue()) {
-					this.#renderCustomCssEditor(innerContainer, this.globalCSS);
+					this.#renderCustomCssEditor(
+						settingsContainer,
+						this.globalCSS
+					);
 				}
 				break;
 			case subCategories.toasts:
-				innerContainer.append(Toaster.renderSettings(this));
+				settingsContainer.append(Toaster.renderSettings(this));
 		}
-
-		settingsContainer.replaceChildren(innerContainer);
 	}
 
 	#renderOptions(settingsContainer) {
@@ -130,12 +146,13 @@ export class SettingsUserInterface {
 
 		headerContainer.append(header);
 		headerContainer.append(versionInfo);
-		headerContainer.append(
-			DOM.create("p", null, [
-				"Author: ",
-				Link("voidnyan", "https://anilist.co/user/voidnyan/"),
-			])
-		);
+		const author = DOM.create("p", null, [
+			"Author: ",
+			Link("voidnyan", "https://anilist.co/user/voidnyan/"),
+		]);
+
+		headerContainer.append(header, versionInfo, author);
+
 		settingsContainer.append(headerContainer);
 	}
 
@@ -170,7 +187,7 @@ export class SettingsUserInterface {
 		settingsContainer.append(nav);
 	}
 
-	#renderSubCategories(settingsContainer) {
+	#renderSubCategoriesNavigation(settingsContainer) {
 		const nav = DOM.create("nav", "nav");
 		const list = DOM.create("ol");
 
@@ -233,29 +250,17 @@ export class SettingsUserInterface {
 		tableContainer.style = `
             margin-top: 25px;
         `;
+		const head = TableHead("Username", "Sign", "Color", "Other");
 
-		const table = DOM.create("table");
-		const head = DOM.create("thead");
-		const headrow = DOM.create("tr", null, [
-			DOM.create("th", null, "Username"),
-			DOM.create("th", null, "Sign"),
-			DOM.create("th", null, "Color"),
-			DOM.create("th", null, "Other"),
-		]);
+		const rows = this.settings.verifiedUsers.map((user) =>
+			this.#createUserRow(user)
+		);
+		const body = TableBody(rows);
 
-		head.append(headrow);
-
-		const body = DOM.create("tbody");
-
-		for (const user of this.settings.verifiedUsers) {
-			body.append(this.#createUserRow(user));
-		}
-
-		table.append(head);
-		table.append(body);
+		const table = Table(head, body);
 		tableContainer.append(table);
 
-		const inputForm = DOM.create("form", null, null);
+		const inputForm = DOM.create("form");
 
 		inputForm.addEventListener("submit", (event) => {
 			this.#handleVerifyUserForm(event, this.settings);
@@ -269,6 +274,14 @@ export class SettingsUserInterface {
 		tableContainer.append(inputForm);
 
 		settingsContainer.append(tableContainer);
+
+		const fallbackColorOption = this.settings.options.defaultHighlightColor;
+		settingsContainer.append(
+			DOM.create("h5", null, "Fallback color"),
+			ColorPicker(fallbackColorOption.getValue(), (event) => {
+				this.#handleOption(event, "fallbackColor");
+			})
+		);
 	}
 
 	#createUserRow(user) {
@@ -422,19 +435,17 @@ export class SettingsUserInterface {
 	}
 
 	#createUserCheckbox(isChecked, username, settingKey, disabled) {
-		const checkbox = DOM.create("input");
-		if (disabled) {
-			checkbox.setAttribute("disabled", "");
-		}
-
-		checkbox.setAttribute("type", "checkbox");
-		checkbox.checked = isChecked;
-		checkbox.addEventListener("change", (event) => {
+		const onChange = (event) => {
 			this.#updateUserOption(username, settingKey, event.target.checked);
 			this.renderSettingsUiContent();
-		});
-
-		checkbox.title = this.settings.options[settingKey].description;
+		};
+		const checkbox = Checkbox(
+			isChecked,
+			onChange,
+			this.settings.options[settingKey].description,
+			disabled,
+			true
+		);
 		return checkbox;
 	}
 
@@ -469,61 +480,29 @@ export class SettingsUserInterface {
 		this.styleHandler.refreshStyles();
 	}
 
-	#renderSetting(setting, settingsContainer, settingKey, disabled = false) {
+	#renderSetting(setting, settingsContainer, settingKey) {
 		if (setting.category === categories.hidden) {
 			return;
 		}
 		const value = setting.getValue();
 		const type = typeof value;
 
-		const container = DOM.create("div");
-		const input = DOM.create("input");
-		input.setAttribute("id", settingKey);
+		let input;
+
+		const onChange = (event) => {
+			this.#handleOption(event, settingKey, type);
+		};
 
 		if (type === "boolean") {
-			input.setAttribute("type", "checkbox");
+			input = Checkbox(value, onChange);
 		} else if (settingKey == "defaultHighlightColor") {
-			input.setAttribute("type", "color");
+			return;
 		} else if (type === "string") {
-			input.setAttribute("type", "text");
+			input = InputField(value, onChange);
 		}
-
-		if (disabled) {
-			input.setAttribute("disabled", "");
-		}
-
 		input.setAttribute("id", settingKey);
 
-		if (settingKey === "pasteKeybind") {
-			input.style.width = "80px";
-			input.addEventListener("keydown", (event) =>
-				this.#handleKeybind(event, settingKey, input)
-			);
-		} else {
-			input.addEventListener("change", (event) =>
-				this.#handleOption(event, settingKey, type)
-			);
-		}
-
-		if (type === "boolean" && value) {
-			input.setAttribute("checked", true);
-		} else if (type === "string") {
-			input.value = value;
-		}
-
-		container.append(input);
-
-		const label = DOM.create("label", null, setting.description);
-		label.setAttribute("for", settingKey);
-		container.append(label);
-		settingsContainer.append(container);
-	}
-
-	#handleKeybind(event, settingKey, input) {
-		event.preventDefault();
-		const keybind = event.key;
-		this.settings.saveSettingToLocalStorage(settingKey, keybind);
-		input.value = keybind;
+		settingsContainer.append(SettingLabel(setting.description, input));
 	}
 
 	#handleOption(event, settingKey, type) {
@@ -539,6 +518,7 @@ export class SettingsUserInterface {
 		this.renderSettingsUiContent();
 	}
 
+	// TODO: separate userCSS
 	#renderCustomCssEditor(settingsContainer, cssHandler) {
 		const cssName = cssHandler instanceof GlobalCSS ? "global" : "user";
 		const container = DOM.create("div", "css-editor");
@@ -595,6 +575,7 @@ export class SettingsUserInterface {
 		settingsContainer.append(container);
 	}
 
+	// TODO: separate userCSS
 	#handlePublishCss(event, cssHandler) {
 		const btn = event.target;
 		btn.innerText = "Publishing...";
@@ -603,11 +584,13 @@ export class SettingsUserInterface {
 		});
 	}
 
+	// TODO: separate userCSS
 	#handleCustomCssEditor(event, cssHandler) {
 		const value = event.target.value;
 		cssHandler.updateCss(value);
 	}
 
+	// TODO: separate to imageHostService?
 	#renderImageHostSettings(settingsContainer) {
 		const container = DOM.create("div");
 
@@ -620,7 +603,7 @@ export class SettingsUserInterface {
 				imageHost === imageHostService.getSelectedHost(),
 				() => {
 					imageHostService.setSelectedHost(imageHost);
-					this.renderSettingsUi();
+					this.renderSettingsUiContent();
 				}
 			)
 		);
@@ -634,15 +617,6 @@ export class SettingsUserInterface {
 
 		container.append(hostSpecificSettings);
 		settingsContainer.append(container);
-	}
-
-	#createOption(value, selected = false) {
-		const option = DOM.create("option", null, value);
-		if (selected) {
-			option.setAttribute("selected", true);
-		}
-		option.setAttribute("value", value);
-		return option;
 	}
 
 	#creatAuthenticationSection(settingsContainer) {

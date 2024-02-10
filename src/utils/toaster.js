@@ -151,7 +151,7 @@ export class Toaster {
 		const options = Object.values(toastTypes).map((type) =>
 			Option(type, this.#config.toastLevel === toastLevels[type], () => {
 				this.#handleLevelChange(type);
-				settingsUi.renderSettingsUi();
+				settingsUi.renderSettingsUiContent();
 			})
 		);
 		container.append(Label("Toast level", Select(options)));
@@ -159,7 +159,7 @@ export class Toaster {
 		const locationOptions = toastLocations.map((location) =>
 			Option(location, this.#config.location === location, () => {
 				this.#handleLocationChange(location);
-				settingsUi.renderSettingsUi();
+				settingsUi.renderSettingsUiContent();
 			})
 		);
 
@@ -168,7 +168,7 @@ export class Toaster {
 		const durationOptions = toastDurations.map((duration) =>
 			Option(`${duration}s`, duration === this.#config.duration, () => {
 				this.#handleDurationChange(duration);
-				settingsUi.renderSettingsUi();
+				settingsUi.renderSettingsUiContent();
 			})
 		);
 

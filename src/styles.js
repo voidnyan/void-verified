@@ -77,11 +77,6 @@ export const styles = /* css */ `
         cursor: pointer;
     }
 
-    .void-settings .void-table input[type="checkbox"] {
-        margin-left: 3px;
-        margin-right: 3px;
-    }
-
     .void-settings .void-table button {
         background: unset;
         border: none;
@@ -106,17 +101,21 @@ export const styles = /* css */ `
         gap: 5px;
     }
 
-    .void-settings .void-settings-list input[type="color"] {
-        border: 0;
-        height: 20px;
-        width: 25px;
-        padding: 0;
-        background-color: unset;
-        cursor: pointer;
+    .void-setting-label {
+        margin-left: 6px;
+        vertical-align: middle;
     }
 
-    .void-settings .void-settings-list input[type="text"] {
+    .void-setting-label-container .void-checkbox {
+        vertical-align: middle;
+    }
+    
+
+    .void-settings .void-settings-list input.void-input {
         width: 50px;
+        text-align: center;
+        height: 20px;
+        font-size: 12px;
     }
 
     .void-settings .void-settings-list label {
