@@ -233,9 +233,11 @@ export class AnilistAPI {
 	}
 
 	#getMutationOptions(query, variables) {
-		if (!this.settings.auth.token) {
-			console.error("VoidVerified is not authenticated.");
-			return;
+		if (!this.settings.auth?.token) {
+			Toaster.error(
+				"Tried to make API query without authorizing VoidVerified. You can do so in the settings."
+			);
+			throw new Error("VoidVerified is missing auth token.");
 		}
 		let queryOptions = this.#getQueryOptions(query, variables);
 		return queryOptions;

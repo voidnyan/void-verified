@@ -5,6 +5,8 @@ import { StyleHandler } from "./styleHandler.js";
 import { QuickAccess } from "./quickAccessHandler.js";
 import { UserCSS } from "./userCSS.js";
 import { LayoutDesigner } from "./layoutDesigner.js";
+import { Toaster } from "../utils/toaster.js";
+import { Link } from "../components/components.js";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -90,8 +92,22 @@ export class IntervalScriptHandler {
 	}
 
 	enableScriptIntervalHandling() {
-		setInterval(() => {
-			this.handleIntervalScripts(this);
+		const interval = setInterval(() => {
+			try {
+				this.handleIntervalScripts(this);
+			} catch (error) {
+				Toaster.critical([
+					"A critical error has occured running interval script loop. VoidVerified is not working correctly. Please check developer console and contact ",
+					Link(
+						"voidnyan",
+						"https://anilist.co/user/voidnyan/",
+						"_blank"
+					),
+					".",
+				]);
+				clearInterval(interval);
+				console.error(error);
+			}
 		}, this.evaluationIntervalInSeconds * 1000);
 	}
 }

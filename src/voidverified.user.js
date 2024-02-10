@@ -10,18 +10,35 @@ import { Toaster } from "./utils/toaster";
 const settings = new Settings();
 Toaster.initializeToaster(settings);
 const styleHandler = new StyleHandler(settings);
-const intervalScriptHandler = new IntervalScriptHandler(settings);
-const pasteHandler = new PasteHandler(settings);
-
 styleHandler.refreshStyles();
-intervalScriptHandler.enableScriptIntervalHandling();
 
-pasteHandler.setup();
+try {
+	const intervalScriptHandler = new IntervalScriptHandler(settings);
+	intervalScriptHandler.enableScriptIntervalHandling();
+} catch (error) {
+	Toaster.critical(
+		"A critical error has occured setting up intervalScriptHandler. Please check developer console and contact ",
+		Link("voidnyan", "https://anilist.co/user/voidnyan/", "_blank"),
+		"."
+	);
+	console.error(error);
+}
+
+try {
+	const pasteHandler = new PasteHandler(settings);
+	pasteHandler.setup();
+} catch (error) {
+	Toaster.critical(
+		"A critical error has occured setting up pasteHandler. Please check developer console and contact ",
+		Link("voidnyan", "https://anilist.co/user/voidnyan/", "_blank"),
+		"."
+	);
+}
+
+styleHandler.createStyleLink(styles, "script");
 
 new ImgurAPI(
 	new ImageHostService().getImageHostConfiguration(imageHosts.imgur)
 ).refreshAuthToken();
-
-styleHandler.createStyleLink(styles, "script");
 
 console.log(`VoidVerified ${settings.version} loaded.`);

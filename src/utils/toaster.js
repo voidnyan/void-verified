@@ -128,6 +128,12 @@ export class Toaster {
 		);
 	}
 
+	static critical(message) {
+		DOM.get("#void-toast-container").append(
+			new ToastInstance(message, toastTypes.danger, 8).toast()
+		);
+	}
+
 	static #shouldToast(type) {
 		return (
 			this.#settings.options.toasterEnabled.getValue() &&

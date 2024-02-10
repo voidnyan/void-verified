@@ -119,7 +119,7 @@ export const styles = /* css */ `
     }
 
     .void-settings .void-settings-list label {
-        margin-left: 5px;
+        margin-left: 8px;
     }
 
     .void-settings .void-css-editor label {
@@ -370,14 +370,6 @@ export const styles = /* css */ `
         color: white;
     }
 
-    .void-api-label {
-        margin-right: 5px;
-    }
-
-    .void-api-key {
-        width: 300px;
-    }
-
     .void-notice {
         font-size: 11px;
         margin-top: 5px;
@@ -413,7 +405,9 @@ export const styles = /* css */ `
     }
 
     .void-label-span {
-        margin-right: 6px;
+        margin-right: 10px;
+        min-width: 200px;
+        display: inline-block;
     }
 
     .void-upload-in-progress {
