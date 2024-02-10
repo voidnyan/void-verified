@@ -40,7 +40,7 @@ export class SettingsUserInterface {
 	layoutDesigner;
 	AnilistBlue = "120, 180, 255";
 	#activeCategory = "all";
-	#activeSubCategory = subCategories.users;
+	#activeSubCategory = subCategories.imageHost;
 
 	constructor(settings, styleHandler, globalCSS, userCSS, layoutDesigner) {
 		this.settings = settings;

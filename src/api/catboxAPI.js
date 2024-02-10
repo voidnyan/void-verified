@@ -1,6 +1,6 @@
 import { ImageHostBase } from "./imageHostBase";
 import { DOM } from "../helpers/DOM";
-import { InputField, Label, Note } from "../components/components";
+import { Label, Note, SecretField } from "../components/components";
 import { ImageHostService } from "./imageHostConfiguration";
 import { Toaster } from "../utils/toaster";
 
@@ -61,7 +61,7 @@ export class CatboxAPI extends ImageHostBase {
 		container.append(
 			Label(
 				"Userhash",
-				InputField(this.#configuration.userHash, (event) => {
+				SecretField(this.#configuration.userHash, (event) => {
 					this.#updateUserhash(event, this.#configuration);
 				})
 			)

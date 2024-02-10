@@ -2,7 +2,7 @@ import { ImageHostBase } from "./imageHostBase";
 import { ImageHostService, imageHosts } from "./imageHostConfiguration";
 import { DOM } from "../helpers/DOM";
 import { Toaster } from "../utils/toaster";
-import { InputField, Label, Link, Note } from "../components/components";
+import { Label, Link, Note, SecretField } from "../components/components";
 
 export class ImgurAPI extends ImageHostBase {
 	#url = "https://api.imgur.com/3/image";
@@ -56,7 +56,7 @@ export class ImgurAPI extends ImageHostBase {
 
 		const clientId = Label(
 			"Client ID",
-			InputField(this.#configuration?.clientId ?? "", (event) => {
+			SecretField(this.#configuration?.clientId ?? "", (event) => {
 				this.#updateConfig(event, "clientId", this.#configuration);
 				settingsUi.renderSettingsUiContent();
 			})
@@ -64,7 +64,7 @@ export class ImgurAPI extends ImageHostBase {
 
 		const clientSecret = Label(
 			"Client Secret",
-			InputField(this.#configuration?.clientSecret ?? "", (event) => {
+			SecretField(this.#configuration?.clientSecret ?? "", (event) => {
 				this.#updateConfig(event, "clientSecret", this.#configuration);
 				settingsUi.renderSettingsUiContent();
 			})
