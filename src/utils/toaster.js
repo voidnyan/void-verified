@@ -4,13 +4,15 @@ import { Select, Toast, Option, Button, Label } from "../components/components";
 const toastTypes = {
 	info: "info",
 	success: "success",
-	danger: "danger",
+	warning: "warning",
+	error: "error",
 };
 
 const toastLevels = {
 	info: 0,
 	success: 1,
-	danger: 2,
+	warning: 2,
+	error: 3,
 };
 
 const toastDurations = [1, 3, 5, 10];
@@ -114,15 +116,29 @@ export class Toaster {
 		);
 	}
 
-	static error(message) {
-		if (!this.#shouldToast(toastTypes.danger)) {
+	static warning(message) {
+		if (!this.#shouldToast(toastTypes.warning)) {
 			return;
 		}
 
 		DOM.get("#void-toast-container").append(
 			new ToastInstance(
 				message,
-				toastTypes.danger,
+				toastTypes.warning,
+				this.#config.duration
+			).toast()
+		);
+	}
+
+	static error(message) {
+		if (!this.#shouldToast(toastTypes.error)) {
+			return;
+		}
+
+		DOM.get("#void-toast-container").append(
+			new ToastInstance(
+				message,
+				toastTypes.error,
 				this.#config.duration
 			).toast()
 		);
@@ -130,7 +146,7 @@ export class Toaster {
 
 	static critical(message) {
 		DOM.get("#void-toast-container").append(
-			new ToastInstance(message, toastTypes.danger, 8).toast()
+			new ToastInstance(message, toastTypes.error, 8).toast()
 		);
 	}
 
@@ -184,6 +200,7 @@ export class Toaster {
 			Button("Test Toasts", () => {
 				Toaster.debug("This is a debug toast.");
 				Toaster.success("This is a success toast.");
+				Toaster.warning("This is a warning toast.");
 				Toaster.error("This is an error toast.");
 			})
 		);

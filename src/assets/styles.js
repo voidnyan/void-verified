@@ -1,8 +1,9 @@
 export const styles = /* css */ `
     :root {
         --void-info: 46, 149, 179;
-        --void-danger: 188, 53, 46;
+        --void-error: 188, 53, 46;
         --void-success: 80, 162, 80;
+        --void-warning: 232, 180, 2;
     }
 
 
@@ -461,8 +462,12 @@ export const styles = /* css */ `
         background: rgb(var(--void-success));
     }
 
-    .void-danger {
-        background: rgb(var(--void-danger));
+    .void-error {
+        background: rgb(var(--void-error));
+    }
+
+    .void-warning {
+        background: rgb(var(--void-warning));
     }
     .
 `;

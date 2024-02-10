@@ -1,3 +1,5 @@
+import { Toaster } from "../utils/toaster";
+
 export class AnilistAPI {
 	settings;
 	#userId;
@@ -42,9 +44,8 @@ export class AnilistAPI {
 		const variables = { activityId };
 		const options = this.#getQueryOptions(query, variables);
 		try {
-			const response = await fetch(this.#url, options);
-			const result = await response.json();
-			return result.data.Activity;
+			const data = await this.#elevatedFetch(options);
+			return data.Activity;
 		} catch (error) {
 			throw new Error("Error querying activity.", error);
 		}
@@ -60,9 +61,9 @@ export class AnilistAPI {
 		const variables = { username };
 		const options = this.#getQueryOptions(query, variables);
 		try {
-			const response = await fetch(this.#url, options);
-			const result = await response.json();
-			return result.data.User.about;
+			const data = await this.#elevatedFetch(options);
+			console.log(data);
+			return data.User.about;
 		} catch (error) {
 			throw new Error("Error querying user about.", error);
 		}
@@ -77,9 +78,8 @@ export class AnilistAPI {
 		const variables = { about };
 		const options = this.#getMutationOptions(query, variables);
 		try {
-			const response = await fetch(this.#url, options);
-			const result = await response.json();
-			return result.data;
+			const data = await this.#elevatedFetch(options);
+			return data;
 		} catch (error) {
 			throw new Error("failed to save user about.", error);
 		}
@@ -97,9 +97,8 @@ export class AnilistAPI {
 		const variables = { color };
 		const options = this.#getMutationOptions(query, variables);
 		try {
-			const response = await fetch(this.#url, options);
-			const result = await response.json();
-			return result.data;
+			const data = await this.#elevatedFetch(options);
+			return data;
 		} catch (error) {
 			throw new Error("Failed to publish profile color", error);
 		}
@@ -115,9 +114,8 @@ export class AnilistAPI {
 		const variables = { text };
 		const options = this.#getMutationOptions(query, variables);
 		try {
-			const response = await fetch(this.#url, options);
-			const result = await response.json();
-			return result.data;
+			const data = await this.#elevatedFetch(options);
+			return data;
 		} catch (error) {
 			throw new Error("Failed to publish donator badge", error);
 		}
@@ -149,16 +147,44 @@ export class AnilistAPI {
 		const options = this.#getQueryOptions(query, variables);
 
 		try {
-			const response = await fetch(this.#url, options);
-			const result = await response.json();
-			if (!response.ok) {
-				throw new Error("Failed to query account user.", result);
-			}
-			const data = result.data;
+			const data = await this.#elevatedFetch(options);
 			return data.User;
 		} catch (error) {
 			throw new Error("Failed to query user from Anilist API", error);
 		}
+	}
+
+	async #elevatedFetch(options) {
+		const runElevated = this.settings.options.useElevatedFetch.getValue();
+		if (runElevated && GM.xmlHttpRequest) {
+			try {
+				const response = await GM.xmlHttpRequest({
+					method: "POST",
+					url: this.#url,
+					data: options.body,
+					headers: options.headers,
+				});
+				const data = JSON.parse(response.response);
+				return data.data;
+			} catch (error) {
+				if (error.error.includes("Request was blocked by the user")) {
+					Toaster.warning(
+						"Elevated access has been enabled in the userscript settings but user has refused permissions to run it. Using regular fetch."
+					);
+				} else {
+					Toaster.debug(
+						"Could not query AniList API with elevated access. Using regular fetch."
+					);
+				}
+				console.error(error);
+			}
+		}
+
+		Toaster.error("this should not trigger");
+
+		const response = await fetch(this.#url, options);
+		const data = await response.json();
+		return data.data;
 	}
 
 	async #queryUsers(page) {
@@ -190,19 +216,14 @@ export class AnilistAPI {
 		const options = this.#getQueryOptions(query, variables);
 
 		try {
-			const response = await fetch(this.#url, options);
-			const result = await response.json();
-			if (!response.ok) {
-				throw new Error("Failed to query followed users.", result);
-			}
-			const data = result.data;
+			const data = await this.#elevatedFetch(options);
 			this.#handleQueriedUsers(data.Page.following);
 			const pageInfo = data.Page.pageInfo;
 			if (pageInfo.hasNextPage) {
 				await this.#queryUsers(pageInfo.currentPage + 1);
 			}
 		} catch (error) {
-			throw new Error("Failed to query followed users.", err);
+			throw new Error("Failed to query followed users.", error);
 		}
 	}
 
