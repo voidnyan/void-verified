@@ -1,6 +1,6 @@
-import { AnilistAPI } from "./api/anilistAPI";
-import { DOM } from "./helpers/DOM";
-import { Toaster } from "./utils/toaster";
+import { AnilistAPI } from "../api/anilistAPI";
+import { DOM } from "../helpers/DOM";
+import { Toaster } from "../utils/toaster";
 
 export class QuickAccess {
 	settings;

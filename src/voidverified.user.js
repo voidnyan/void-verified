@@ -1,9 +1,8 @@
-import { Settings } from "./settings";
-import { StyleHandler } from "./styleHandler";
-import { IntervalScriptHandler } from "./intervalScriptHandler";
-import { AnilistAPI } from "./api/anilistAPI";
-import { PasteHandler } from "./pasteHandler";
-import { styles } from "./styles";
+import { Settings } from "./utils/settings";
+import { StyleHandler } from "./handlers/styleHandler";
+import { IntervalScriptHandler } from "./handlers/intervalScriptHandler";
+import { PasteHandler } from "./handlers/pasteHandler";
+import { styles } from "./assets/styles";
 import { ImgurAPI } from "./api/imgurAPI";
 import { ImageHostService, imageHosts } from "./api/imageHostConfiguration";
 import { Toaster } from "./utils/toaster";

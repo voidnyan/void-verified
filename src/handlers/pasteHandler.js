@@ -1,4 +1,4 @@
-import { ImageApiFactory } from "./api/imageApiFactory";
+import { ImageApiFactory } from "../api/imageApiFactory";
 
 export class PasteHandler {
 	settings;

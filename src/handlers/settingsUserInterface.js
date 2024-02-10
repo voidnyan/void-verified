@@ -1,7 +1,7 @@
-import { ImageApiFactory } from "./api/imageApiFactory";
-import { imageHosts, ImageHostService } from "./api/imageHostConfiguration";
-import { ImgurAPI } from "./api/imgurAPI";
-import { ColorFunctions } from "./colorFunctions";
+import { ImageApiFactory } from "../api/imageApiFactory";
+import { imageHosts, ImageHostService } from "../api/imageHostConfiguration";
+import { ImgurAPI } from "../api/imgurAPI";
+import { ColorFunctions } from "../utils/colorFunctions";
 import {
 	Checkbox,
 	InputField,
@@ -15,11 +15,11 @@ import {
 	TableHead,
 	TextArea,
 	ColorPicker,
-} from "./components/components";
-import { categories } from "./defaultSettings";
+} from "../components/components";
+import { categories } from "../assets/defaultSettings";
 import { GlobalCSS } from "./globalCSS";
-import { DOM } from "./helpers/DOM";
-import { Toaster } from "./utils/toaster";
+import { DOM } from "../helpers/DOM";
+import { Toaster } from "../utils/toaster";
 
 const subCategories = {
 	users: "users",

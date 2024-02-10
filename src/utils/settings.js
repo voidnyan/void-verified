@@ -1,6 +1,6 @@
-import { defaultSettings } from "./defaultSettings";
+import { defaultSettings } from "../assets/defaultSettings";
 import { ColorFunctions } from "./colorFunctions";
-import { AnilistAPI } from "./api/anilistAPI";
+import { AnilistAPI } from "../api/anilistAPI";
 
 class Option {
 	value;

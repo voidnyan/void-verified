@@ -1,8 +1,8 @@
-import { GlobalCSS } from "./globalCSS";
+import { GlobalCSS } from "./globalCSS.js";
 import { ActivityHandler } from "./activityHandler.js";
-import { SettingsUserInterface } from "./settingsUserInterface";
-import { StyleHandler } from "./styleHandler";
-import { QuickAccess } from "./quickAccessHandler";
+import { SettingsUserInterface } from "./settingsUserInterface.js";
+import { StyleHandler } from "./styleHandler.js";
+import { QuickAccess } from "./quickAccessHandler.js";
 import { UserCSS } from "./userCSS.js";
 import { LayoutDesigner } from "./layoutDesigner.js";
 

@@ -1,8 +1,8 @@
-import { AnilistAPI } from "./api/anilistAPI";
-import { ColorFunctions } from "./colorFunctions";
+import { AnilistAPI } from "../api/anilistAPI";
+import { ColorFunctions } from "../utils/colorFunctions";
 import { StyleHandler } from "./styleHandler";
-import LZString from "./utils/lz-string";
-import { Toaster } from "./utils/toaster";
+import LZString from "../utils/lz-string";
+import { Toaster } from "../utils/toaster";
 
 export class UserCSS {
 	#settings;

@@ -1,15 +1,15 @@
-import { DOM } from "./helpers/DOM";
-import { ColorFunctions } from "./colorFunctions";
+import { DOM } from "../helpers/DOM";
+import { ColorFunctions } from "../utils/colorFunctions";
 import {
 	Button,
 	ColorPicker,
 	InputField,
 	Note,
 	TextArea,
-} from "./components/components";
-import { AnilistAPI } from "./api/anilistAPI";
-import { Markdown } from "./utils/markdown";
-import { Toaster } from "./utils/toaster";
+} from "../components/components";
+import { AnilistAPI } from "../api/anilistAPI";
+import { Markdown } from "../utils/markdown";
+import { Toaster } from "../utils/toaster";
 
 class Layout {
 	avatar;

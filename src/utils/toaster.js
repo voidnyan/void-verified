@@ -175,7 +175,7 @@ export class Toaster {
 		container.append(Label("Toast duration", Select(durationOptions)));
 
 		container.append(
-			Button("Test Toats", () => {
+			Button("Test Toasts", () => {
 				Toaster.debug("This is a debug toast.");
 				Toaster.success("This is a success toast.");
 				Toaster.error("This is an error toast.");
