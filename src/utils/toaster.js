@@ -26,7 +26,7 @@ class ToasterConfig {
 	constructor(config) {
 		this.toastLevel = config?.toastLevel ?? 2;
 		this.duration = config?.duration ?? 5;
-		this.location = config.location ?? "bottom-left";
+		this.location = config?.location ?? "bottom-left";
 	}
 }
 
