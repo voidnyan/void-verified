@@ -156,4 +156,9 @@ export const defaultSettings = {
 			"Query AniList API with elevated browser access (this might solve some API issues).",
 		category: categories.misc,
 	},
+	removeAnilistBlanks: {
+		defaultValue: false,
+		description: "Open AniList links in the same tab.",
+		category: categories.misc,
+	},
 };

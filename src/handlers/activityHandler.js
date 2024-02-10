@@ -1,3 +1,5 @@
+import { DOM } from "../helpers/DOM";
+
 export class ActivityHandler {
 	settings;
 	constructor(settings) {
@@ -20,6 +22,20 @@ export class ActivityHandler {
 			const container = subscribeButton.parentNode.parentNode;
 			const actions = container.querySelector(".actions");
 			actions.append(subscribeButton);
+		}
+	}
+
+	removeBlankFromAnilistLinks() {
+		if (!this.settings.options.removeAnilistBlanks.getValue()) {
+			return;
+		}
+
+		const anilistLinks = DOM.getAll(
+			"a[href^='https://anilist.co'][target='_blank']"
+		);
+
+		for (const link of anilistLinks) {
+			link.removeAttribute("target");
 		}
 	}
 }
