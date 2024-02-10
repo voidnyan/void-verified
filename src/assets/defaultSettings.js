@@ -150,4 +150,10 @@ export const defaultSettings = {
 		description: "Enable toast notifications.",
 		category: categories.misc,
 	},
+	useElevatedFetch: {
+		defaultValue: false,
+		description:
+			"Query AniList API with elevated browser access (this might solve some API issues).",
+		category: categories.misc,
+	},
 };

@@ -106,16 +106,16 @@ export class QuickAccess {
 				this.#queryInProgress = true;
 				const anilistAPI = new AnilistAPI(this.settings);
 				await anilistAPI.queryVerifiedUsers();
-				this.#lastFetched = new Date();
-				localStorage.setItem(
-					this.#lastFetchedLocalStorage,
-					this.#lastFetched
-				);
 				Toaster.success("Quick Access users updated.");
 			} catch (error) {
 				Toaster.error("Querying Quick Access failed.");
 				console.error(error);
 			} finally {
+				this.#lastFetched = new Date();
+				localStorage.setItem(
+					this.#lastFetchedLocalStorage,
+					this.#lastFetched
+				);
 				this.#queryInProgress = false;
 				return true;
 			}
