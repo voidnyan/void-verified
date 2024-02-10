@@ -179,8 +179,6 @@ export class AnilistAPI {
 			}
 		}
 
-		Toaster.error("this should not trigger");
-
 		const response = await fetch(this.#url, options);
 		const data = await response.json();
 		return data.data;

@@ -17,9 +17,7 @@ try {
 	intervalScriptHandler.enableScriptIntervalHandling();
 } catch (error) {
 	Toaster.critical(
-		"A critical error has occured setting up intervalScriptHandler. Please check developer console and contact ",
-		Link("voidnyan", "https://anilist.co/user/voidnyan/", "_blank"),
-		"."
+		"A critical error has occured setting up intervalScriptHandler. Please check developer console and contact voidnyan."
 	);
 	console.error(error);
 }
@@ -29,9 +27,7 @@ try {
 	pasteHandler.setup();
 } catch (error) {
 	Toaster.critical(
-		"A critical error has occured setting up pasteHandler. Please check developer console and contact ",
-		Link("voidnyan", "https://anilist.co/user/voidnyan/", "_blank"),
-		"."
+		"A critical error has occured setting up pasteHandler. Please check developer console and contact voidnyan."
 	);
 }
 

@@ -6,8 +6,7 @@
 // @description   Social enhancements for AniList.
 // @homepageURL   https://github.com/voidnyan/void-verified#voidverified
 // @supportURL    https://github.com/voidnyan/void-verified/issues
-// @grant         none
-// @match         https://anilist.co/*
 // @grant         GM_xmlhttpRequest
+// @match         https://anilist.co/*
 // @license MIT
 // ==/UserScript==
