@@ -306,9 +306,8 @@ export const styles = /* css */ `
         justify-content: center;
     }
 
-    .void-icon-button svg {
-        pointer-events: none;
-        height: 14px !important;
+    .void-secret-container .void-icon-button svg {
+        height: 14px;
     }
 
     a.void-link {
@@ -356,6 +355,125 @@ export const styles = /* css */ `
         height: 12px;
         vertical-align: middle;
         display: inline-block;
+        pointer-events: none;
+    }
+
+    .void-range-container {
+        display: inline-flex;
+        vertical-align: middle;
+    }
+
+    .void-range-display {
+        margin-left: 5px;
+        user-select: none;
+    }
+
+    .void-gif-button svg {
+        height: 18px;
+        vertical-align: top;
+        color: rgb(var(--color-red));
+    }
+
+    .void-gif-button:hover svg {
+        color: rgb(var(--color-blue));
+    }
+
+    .void-gif-button {
+        margin: 0px;
+    }
+
+    .markdown-editor[style*="display: none;"] + .void-gif-keyboard-container {
+        display: none;
+    }
+
+    .void-gif-keyboard-container {
+        width: 100%;
+        background: rgb(var(--color-foreground));
+        margin-bottom: 12px;
+        border-radius: 4px;
+    }
+
+    .void-gif-keyboard-header {
+        background: rgb(var(--color-foreground-grey-dark));
+        padding: 12px 20px;
+        border-radius: 4px 4px 0px 0px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .void-gif-keyboard-list-container {
+        height: 300px;
+        overflow-y: scroll;
+        user-select: none;
+    }
+
+    .void-gif-keyboard-list {
+        padding: 12px 20px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .void-gif-keyboard-list-column {
+        width: calc(100% / 3);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .void-gif-keyboard-list-placeholder {
+        font-size: 20px;
+        color: rgb(var(--color-text));
+        display: flex;
+        height: 300px;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+    }
+
+    .void-gif-keyboard-item img {
+        width: 100%;
+        background-size: contain;
+        background-repeat: no-repeat;
+        border-radius: 4px;
+        cursor: pointer;
+        display: block;
+
+    }
+
+    .void-gif-like-container {
+        position: relative;
+        width: fit-content;
+    }
+
+    .void-gif-like-container .void-gif-like {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        height: 20px;
+        opacity: 0;
+        transition: 0.2s ease-in all;
+        color: rgb(var(--color-text-bright));
+    }
+
+    .void-gif-like-container:hover .void-gif-like {
+        opacity: 1;
+    }
+
+    .void-gif-like-container .void-gif-like svg {
+        height: 24px;
+    }
+
+    .void-gif-like-container .void-gif-like.void-liked,
+    .void-liked {
+        color: rgb(var(--color-red));
+    }
+
+    .void-hidden {
+        display: none;
     }
     
     .void-quick-access .void-quick-access-wrap {
@@ -430,10 +548,11 @@ export const styles = /* css */ `
         background: rgb(var(--color-foreground-blue));
         font-size: 12px;
         cursor: pointer;
+        user-select: none;
     }
 
     .void-select .void-option:hover {
-        background: rgb(var(--color-blue-dark));
+        background: rgb(var(--color-foreground-blue-dark));
         color: rgb(var(--color-text));
     }
 

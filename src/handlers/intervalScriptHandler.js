@@ -7,6 +7,7 @@ import { UserCSS } from "./userCSS.js";
 import { LayoutDesigner } from "./layoutDesigner.js";
 import { Toaster } from "../utils/toaster.js";
 import { Link } from "../components/components.js";
+import { GifKeyboardHandler } from "./gifKeyboardHandler.js";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -17,6 +18,7 @@ export class IntervalScriptHandler {
 	quickAccess;
 	userCSS;
 	layoutDesigner;
+	gifKeyboard;
 	constructor(settings) {
 		this.settings = settings;
 
@@ -24,6 +26,7 @@ export class IntervalScriptHandler {
 		this.globalCSS = new GlobalCSS(settings);
 		this.userCSS = new UserCSS(settings);
 		this.layoutDesigner = new LayoutDesigner(settings);
+		this.gifKeyboard = new GifKeyboardHandler(settings);
 
 		this.settingsUi = new SettingsUserInterface(
 			settings,
@@ -51,6 +54,7 @@ export class IntervalScriptHandler {
 
 		intervalScriptHandler.activityHandler.moveAndDisplaySubscribeButton();
 		intervalScriptHandler.activityHandler.removeBlankFromAnilistLinks();
+		intervalScriptHandler.gifKeyboard.handleGifKeyboard();
 		intervalScriptHandler.globalCSS.clearCssForProfile();
 		intervalScriptHandler.layoutDesigner.renderLayoutPreview();
 

@@ -1,0 +1,250 @@
+import { GifIcon } from "../assets/icons";
+import { ImageFormats } from "../assets/imageFormats";
+import {
+	GifContainer,
+	GifItem,
+	GifKeyboard,
+	IconButton,
+	Note,
+	Option,
+	RangeField,
+	Select,
+} from "../components/components";
+import { DOM } from "../helpers/DOM";
+
+const keyboardTabs = {
+	gifs: "GIFS",
+	images: "Images",
+};
+
+class GifKeyboardConfig {
+	gifs;
+	gifSize;
+	images;
+	#configInLocalStorage = "void-verified-gif-keyboard";
+	constructor() {
+		const config = JSON.parse(
+			localStorage.getItem(this.#configInLocalStorage)
+		);
+		this.gifs = config?.gifs ?? [];
+		this.images = config?.images ?? [];
+		this.gifSize = config?.gifSize ?? 260;
+	}
+
+	save() {
+		localStorage.setItem(
+			"void-verified-gif-keyboard",
+			JSON.stringify(this)
+		);
+	}
+}
+
+export class GifKeyboardHandler {
+	#settings;
+	#activeTab = keyboardTabs.gifs;
+	config;
+	constructor(settings) {
+		this.#settings = settings;
+		this.config = new GifKeyboardConfig();
+	}
+
+	handleGifKeyboard() {
+		this.#addGifKeyboards();
+		this.#addMediaLikeButtons();
+	}
+
+	#addMediaLikeButtons() {
+		if (!this.#settings.options.gifKeyboardEnabled.getValue()) {
+			return;
+		}
+
+		const gifs = DOM.getAll(".markdown img[src$='.gif']");
+		for (const gif of gifs) {
+			this.#addMediaLikeButton(gif, keyboardTabs.gifs, this.config.gifs);
+		}
+
+		const images = ImageFormats.map((format) => {
+			return [...DOM.getAll(`.markdown img[src$='.${format}']`)];
+		}).flat(1);
+		for (const image of images) {
+			this.#addMediaLikeButton(
+				image,
+				keyboardTabs.images,
+				this.config.images
+			);
+		}
+	}
+
+	#addMediaLikeButton(media, mediaType, mediaList) {
+		if (media.parentElement.classList.contains("void-gif-like-container")) {
+			return;
+		}
+
+		const img = media.cloneNode();
+
+		media.replaceWith(
+			GifContainer(
+				img,
+				() => {
+					this.#addOrRemoveMedia(media.src, mediaType);
+					this.config.save();
+					this.#refreshKeyboards();
+				},
+				mediaList
+			)
+		);
+	}
+
+	#addGifKeyboards() {
+		if (!this.#settings.options.gifKeyboardEnabled.getValue()) {
+			return;
+		}
+
+		const markdownEditors = DOM.getAll(".markdown-editor");
+		for (const markdownEditor of markdownEditors) {
+			if (markdownEditor.querySelector(".void-gif-button")) {
+				continue;
+			}
+
+			const gifKeyboard = GifKeyboard(this.#createKeyboardHeader());
+
+			gifKeyboard.classList.add("void-hidden");
+			this.#renderMediaList(gifKeyboard, markdownEditor);
+
+			markdownEditor.append(
+				IconButton(
+					GifIcon(),
+					() => {
+						this.#toggleKeyboardVisibility(
+							gifKeyboard,
+							markdownEditor
+						);
+					},
+					"gif-button"
+				)
+			);
+
+			markdownEditor.parentNode.insertBefore(
+				gifKeyboard,
+				markdownEditor.nextSibling
+			);
+		}
+	}
+
+	#refreshKeyboards() {
+		const keyboards = DOM.getAll(".void-gif-keyboard-container");
+		console.log(keyboards);
+		for (const keyboard of keyboards) {
+			const markdownEditor =
+				keyboard.parentElement.querySelector(".markdown-editor");
+			this.#renderMediaList(keyboard, markdownEditor);
+		}
+	}
+
+	#createKeyboardHeader = () => {
+		const header = DOM.create("div", "gif-keyboard-header");
+
+		const options = Object.values(keyboardTabs).map((option) =>
+			Option(option, option === this.#activeTab, (event) => {
+				this.#activeTab = option;
+				const keyboard =
+					event.target.parentElement.parentElement.parentElement; // oh god
+				const markdownEditor =
+					keyboard.parentElement.querySelector(".markdown-editor");
+				this.#renderMediaList(keyboard, markdownEditor);
+				event.target.parentElement.parentElement.replaceWith(
+					this.#createKeyboardHeader()
+				);
+			})
+		);
+
+		header.append(Select(options));
+
+		header.append(
+			RangeField(
+				this.config.gifSize,
+				(event) => {
+					this.config.gifSize = event.target.value;
+					this.config.save();
+				},
+				600,
+				10,
+				10
+			)
+		);
+		return header;
+	};
+
+	#addOrRemoveMedia(url, mediaType) {
+		let mediaList =
+			mediaType === keyboardTabs.gifs
+				? this.config.gifs
+				: this.config.images;
+		if (mediaList.includes(url)) {
+			mediaList = mediaList.filter((media) => media !== url);
+		} else {
+			mediaList.push(url);
+		}
+		switch (mediaType) {
+			case keyboardTabs.gifs:
+				this.config.gifs = mediaList;
+				break;
+			case keyboardTabs.images:
+				this.config.images = mediaList;
+				break;
+		}
+	}
+
+	#toggleKeyboardVisibility(keyboard, markdownEditor) {
+		if (keyboard.classList.contains("void-hidden")) {
+			this.#renderMediaList(keyboard, markdownEditor);
+			keyboard.classList.remove("void-hidden");
+		} else {
+			keyboard.classList.add("void-hidden");
+		}
+	}
+
+	#renderMediaList(keyboard, markdownEditor) {
+		if (!keyboard || !markdownEditor) {
+			return;
+		}
+		const mediaItems = keyboard.querySelector(".void-gif-keyboard-list");
+		const columns = [1, 2, 3].map(() => {
+			return DOM.create("div", "gif-keyboard-list-column");
+		});
+		mediaItems.replaceChildren(...columns);
+		const textarea = markdownEditor.parentElement.querySelector("textarea");
+		const mediaList =
+			this.#activeTab === keyboardTabs.gifs
+				? this.config.gifs
+				: this.config.images;
+		if (mediaList.length === 0) {
+			mediaItems.replaceChildren(
+				DOM.create(
+					"div",
+					"gif-keyboard-list-placeholder",
+					this.#activeTab === keyboardTabs.gifs
+						? "It's pronounced GIF."
+						: "You have no funny memes :c"
+				)
+			);
+		}
+		for (const [index, media] of mediaList.entries()) {
+			mediaItems.children.item(index % 3).append(
+				GifItem(
+					media,
+					() => {
+						textarea.setRangeText(
+							`img${this.config.gifSize}(${media})`
+						);
+					},
+					() => {
+						this.#addOrRemoveMedia(media, this.#activeTab);
+						this.config.save();
+					},
+					mediaList
+				)
+			);
+		}
+	}
+}
