@@ -3,13 +3,18 @@ import { ColorFunctions } from "../utils/colorFunctions";
 import {
 	Button,
 	ColorPicker,
+	IconButton,
 	InputField,
+	Label,
 	Note,
+	Option,
+	Select,
 	TextArea,
 } from "../components/components";
 import { AnilistAPI } from "../api/anilistAPI";
 import { Markdown } from "../utils/markdown";
 import { Toaster } from "../utils/toaster";
+import { AddIcon, TrashcanIcon } from "../assets/icons";
 
 class Layout {
 	avatar;
@@ -17,6 +22,7 @@ class Layout {
 	bio;
 	color;
 	donatorBadge;
+	name;
 
 	constructor(layout) {
 		this.avatar = layout?.avatar ?? "";
@@ -24,6 +30,7 @@ class Layout {
 		this.bio = layout?.bio ?? "";
 		this.color = layout?.color ?? "";
 		this.donatorBadge = layout?.donatorBadge ?? "";
+		this.name = layout?.name ?? "New Layout";
 	}
 }
 
@@ -204,6 +211,9 @@ export class LayoutDesigner {
 
 		const header = DOM.create("h3", null, "Layout Designer");
 
+		const layoutSelector = this.#createLayoutSelector(settingsUi);
+		const layoutInfoSection = this.#layoutInfoSection(settingsUi);
+
 		const imageSection = DOM.create("div");
 
 		imageSection.append(
@@ -246,7 +256,14 @@ export class LayoutDesigner {
 			this.#getUserAbout(settingsUi);
 		});
 
-		container.append(header, imageSection, imageUploadNote, colorSelection);
+		container.append(
+			header,
+			layoutSelector,
+			layoutInfoSection,
+			imageSection,
+			imageUploadNote,
+			colorSelection
+		);
 
 		if (this.#donatorTier >= 3) {
 			container.append(this.#createDonatorBadgeField(settingsUi));
@@ -266,6 +283,86 @@ export class LayoutDesigner {
 		if (this.#layouts.preview) {
 			container.append(cssButton);
 		}
+		return container;
+	}
+
+	#createLayoutSelector(settingsUi) {
+		const container = DOM.create("div");
+		container.append(
+			IconButton(AddIcon(), () => {
+				this.#addLayout();
+				settingsUi.renderSettingsUiContent();
+			})
+		);
+		const options = this.#layouts.layoutsList.map((layout, index) =>
+			Option(
+				`${layout.name} #${index + 1}`,
+				index === this.#layouts.selectedLayout,
+				() => {
+					this.#switchLayout(index);
+					settingsUi.renderSettingsUiContent();
+				}
+			)
+		);
+
+		container.append(Select(options));
+		return container;
+	}
+
+	#switchLayout(index) {
+		this.#layout = this.#layouts.layoutsList[index];
+		this.#layouts.selectedLayout = index;
+		this.#saveToLocalStorage();
+		this.#broadcastLayoutChange();
+	}
+
+	#addLayout() {
+		const layout = new Layout();
+		this.#layout = layout;
+		this.#layouts.layoutsList.push(layout);
+		this.#layouts.selectedLayout = Math.max(
+			this.#layouts.layoutsList.length - 1,
+			0
+		);
+		this.#saveToLocalStorage();
+		this.#broadcastLayoutChange();
+	}
+
+	#deleteLayout() {
+		if (!window.confirm("Are you sure you want to delete this layout?")) {
+			return;
+		}
+		this.#layouts.layoutsList.splice(this.#layouts.selectedLayout, 1);
+		this.#layouts.selectedLayout = Math.max(
+			this.#layouts.selectedLayout - 1,
+			0
+		);
+
+		console.log(this.#layouts.layoutsList);
+
+		if (this.#layouts.layoutsList.length === 0) {
+			this.#layouts.layoutsList.push(new Layout());
+		}
+
+		this.#layout = this.#layouts.layoutsList[this.#layouts.selectedLayout];
+		this.#saveToLocalStorage();
+		this.#broadcastLayoutChange();
+	}
+
+	#layoutInfoSection(settingsUi) {
+		const container = Label(
+			"Layout name",
+			InputField(this.#layout?.name, (event) => {
+				this.#updateOption("name", event.target.value, settingsUi);
+			})
+		);
+
+		container.append(
+			IconButton(TrashcanIcon(), () => {
+				this.#deleteLayout();
+				settingsUi.renderSettingsUiContent();
+			})
+		);
 		return container;
 	}
 
@@ -524,6 +621,10 @@ export class LayoutDesigner {
 	#updateLayout(layout) {
 		this.#layouts.layoutsList[this.#layouts.selectedLayout] = layout;
 		this.#saveToLocalStorage();
+		this.#broadcastLayoutChange();
+	}
+
+	#broadcastLayoutChange() {
 		this.#broadcastChannel.postMessage({
 			type: "layout",
 			layout: this.#layout,
