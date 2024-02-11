@@ -31,7 +31,7 @@ export class ActivityHandler {
 		}
 
 		const anilistLinks = DOM.getAll(
-			"a[href^='https://anilist.co'][target='_blank']"
+			"a:not(.void-link)[href^='https://anilist.co'][target='_blank']"
 		);
 
 		for (const link of anilistLinks) {
