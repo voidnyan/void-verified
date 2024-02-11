@@ -422,6 +422,7 @@ export const styles = /* css */ `
 
     .void-select {
         display: inline-flex;
+        flex-wrap: wrap;
     }
 
     .void-select .void-option {
@@ -429,6 +430,11 @@ export const styles = /* css */ `
         background: rgb(var(--color-foreground-blue));
         font-size: 12px;
         cursor: pointer;
+    }
+
+    .void-select .void-option:hover {
+        background: rgb(var(--color-blue-dark));
+        color: rgb(var(--color-text));
     }
 
     .void-select .void-option:first-child {
