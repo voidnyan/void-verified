@@ -161,4 +161,9 @@ export const defaultSettings = {
 		description: "Open AniList links in the same tab.",
 		category: categories.misc,
 	},
+	gifKeyboardEnabled: {
+		defaultValue: false,
+		description: "Add a GIF keyboard to activity fields.",
+		categories: categories.misc,
+	},
 };

@@ -1,4 +1,4 @@
-import { EyeClosedIcon, EyeIcon } from "../assets/icons";
+import { EyeClosedIcon, EyeIcon, HeartIcon } from "../assets/icons";
 import { DOM } from "../helpers/DOM";
 
 export const ColorPicker = (value, onChange) => {
@@ -49,6 +49,25 @@ export const SecretField = (value, onChange) => {
 	return container;
 };
 
+export const RangeField = (value, onChange, max, step = 1, min = 0, unit) => {
+	const container = DOM.create("div", "range-container");
+	const range = DOM.create("input", "range");
+	const display = DOM.create("div", "range-display", `${value}${unit ?? ""}`);
+	range.setAttribute("type", "range");
+	range.addEventListener("change", (event) => {
+		onChange(event);
+	});
+	range.addEventListener("input", () => {
+		display.replaceChildren(`${event.target.value}${unit ?? ""}`);
+	});
+	range.setAttribute("max", max);
+	range.setAttribute("min", min);
+	range.setAttribute("step", step);
+	range.setAttribute("value", value);
+	container.append(range, display);
+	return container;
+};
+
 export const Button = (text, onClick) => {
 	const button = DOM.create("button", "button", text);
 	button.addEventListener("click", (event) => {
@@ -57,8 +76,12 @@ export const Button = (text, onClick) => {
 	return button;
 };
 
-export const IconButton = (text, onClick) => {
-	const button = DOM.create("div", "icon-button", text);
+export const IconButton = (text, onClick, classes) => {
+	const button = DOM.create(
+		"div",
+		transformClasses("icon-button", classes),
+		text
+	);
 	button.addEventListener("click", (event) => {
 		onClick(event);
 	});
@@ -160,6 +183,47 @@ export const SettingLabel = (text, input) => {
 	label.setAttribute("for", id);
 	input.setAttribute("id", id);
 	container.append(label);
+	return container;
+};
+
+export const GifKeyboard = (header) => {
+	const container = DOM.create("div", "gif-keyboard-container");
+	container.append(header);
+	const gifList = DOM.create("div", "gif-keyboard-list");
+	container.append(DOM.create("div", "gif-keyboard-list-container", gifList));
+	return container;
+};
+
+export const GifItem = (url, onClick, onLike, gifs) => {
+	const container = DOM.create("div", "gif-keyboard-item");
+	container.addEventListener("click", () => {
+		onClick();
+	});
+	const img = DOM.create("img");
+	img.setAttribute("src", url);
+	container.append(GifContainer(img, onLike, gifs));
+	return container;
+};
+
+export const GifContainer = (imgElement, onLike, gifs) => {
+	const container = DOM.create("div", "gif-like-container");
+	container.append(
+		imgElement,
+		IconButton(
+			HeartIcon(),
+			(event) => {
+				event.stopPropagation();
+				event.preventDefault();
+				onLike(event);
+				if (event.target.classList.contains("void-liked")) {
+					event.target.classList.remove("void-liked");
+				} else {
+					event.target.classList.add("void-liked");
+				}
+			},
+			`gif-like ${gifs.includes(imgElement.src) && "liked"}`
+		)
+	);
 	return container;
 };
 

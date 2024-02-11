@@ -1,19 +1,8 @@
 import { ImageApiFactory } from "../api/imageApiFactory";
+import { ImageFormats } from "../assets/imageFormats";
 
 export class PasteHandler {
 	settings;
-
-	#imageFormats = [
-		"jpg",
-		"png",
-		"gif",
-		"webp",
-		"apng",
-		"avif",
-		"jpeg",
-		"svg",
-	];
-
 	#uploadInProgress = false;
 	constructor(settings) {
 		this.settings = settings;
@@ -93,11 +82,7 @@ export class PasteHandler {
 		}
 
 		row = row.trim();
-		if (
-			this.#imageFormats.some((format) =>
-				row.toLowerCase().endsWith(format)
-			)
-		) {
+		if (ImageFormats.some((format) => row.toLowerCase().endsWith(format))) {
 			return this.#handleImg(row);
 		} else if (row.toLowerCase().startsWith("http")) {
 			return `[](${row})`;

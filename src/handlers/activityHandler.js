@@ -1,3 +1,5 @@
+import { GifIcon } from "../assets/icons";
+import { IconButton } from "../components/components";
 import { DOM } from "../helpers/DOM";
 
 export class ActivityHandler {
@@ -11,7 +13,7 @@ export class ActivityHandler {
 			return;
 		}
 
-		const subscribeButtons = document.querySelectorAll(
+		const subscribeButtons = DOM.getAll(
 			"span[label='Unsubscribe'], span[label='Subscribe']"
 		);
 		for (const subscribeButton of subscribeButtons) {
