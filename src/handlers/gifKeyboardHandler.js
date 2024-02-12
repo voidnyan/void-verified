@@ -260,28 +260,7 @@ export class GifKeyboardHandler {
 		const actionfield = ActionInputField(
 			"",
 			(_, inputField) => {
-				const url = inputField.value;
-				inputField.value = "";
-
-				let format;
-				if (url.toLowerCase().endsWith(".gif")) {
-					format = keyboardTabs.gifs;
-				} else if (
-					ImageFormats.some((imgFormat) =>
-						url
-							.toLowerCase()
-							.endsWith(imgFormat.toLocaleLowerCase())
-					)
-				) {
-					format = keyboardTabs.images;
-				}
-				if (!format) {
-					Toaster.error("Url was not recognized as image or GIF.");
-					return;
-				}
-				this.#addOrRemoveMedia(url, format);
-				this.config.save();
-				this.#renderMediaList(keyboard, markdownEditor);
+				this.#handleAddMediaField(inputField, keyboard, markdownEditor);
 			},
 			AddIcon()
 		);
@@ -295,5 +274,30 @@ export class GifKeyboardHandler {
 		);
 
 		return container;
+	}
+
+	#handleAddMediaField(inputField, keyboard, markdownEditor) {
+		const url = inputField.value;
+		inputField.value = "";
+
+		let format;
+		if (url.toLowerCase().endsWith(".gif")) {
+			format = keyboardTabs.gifs;
+		} else if (
+			ImageFormats.some((imgFormat) =>
+				url.toLowerCase().endsWith(imgFormat.toLocaleLowerCase())
+			)
+		) {
+			format = keyboardTabs.images;
+		}
+		if (!format) {
+			Toaster.error("Url was not recognized as image or GIF.");
+			return;
+		}
+
+		Toaster.success(`Added media to ${format}`);
+		this.#addOrRemoveMedia(url, format);
+		this.config.save();
+		this.#renderMediaList(keyboard, markdownEditor);
 	}
 }
