@@ -286,13 +286,13 @@ export const styles = /* css */ `
         box-sizing: border-box;
     }
 
-    .void-secret-container {
+    .void-action-container {
         display: inline-block;
         width: min-content;
         position: relative;
     }
 
-    .void-secret-container .void-icon-button {
+    .void-action-container .void-icon-button {
         position: absolute;
         padding: 0px 8px;
         margin: 0px;
@@ -306,7 +306,7 @@ export const styles = /* css */ `
         justify-content: center;
     }
 
-    .void-secret-container .void-icon-button svg {
+    .void-action-container .void-icon-button svg {
         height: 14px;
     }
 
@@ -399,6 +399,12 @@ export const styles = /* css */ `
         border-radius: 4px 4px 0px 0px;
         display: flex;
         justify-content: space-between;
+    }
+
+    .void-gif-keyboard-add-field-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 12px;
     }
 
     .void-gif-keyboard-list-container {

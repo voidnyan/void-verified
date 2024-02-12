@@ -35,7 +35,7 @@ export const SecretField = (value, onChange) => {
 	const eyeIcon = EyeIcon();
 	const closedEyeIcon = EyeClosedIcon();
 
-	const container = DOM.create("div", "secret-container", secret);
+	const container = DOM.create("div", "action-container", secret);
 	const iconButton = IconButton(eyeIcon, (event) => {
 		if (event.target.firstChild === eyeIcon) {
 			event.target.replaceChildren(closedEyeIcon);
@@ -44,6 +44,17 @@ export const SecretField = (value, onChange) => {
 		}
 		event.target.replaceChildren(eyeIcon);
 		secret.setAttribute("type", "password");
+	});
+	container.append(iconButton);
+	return container;
+};
+
+export const ActionInputField = (value, onClick, icon) => {
+	const inputField = InputField(value, () => {});
+
+	const container = DOM.create("div", "action-container", inputField);
+	const iconButton = IconButton(icon, (event) => {
+		onClick(event, inputField);
 	});
 	container.append(iconButton);
 	return container;

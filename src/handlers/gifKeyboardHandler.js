@@ -1,16 +1,19 @@
-import { GifIcon } from "../assets/icons";
+import { AddIcon, GifIcon } from "../assets/icons";
 import { ImageFormats } from "../assets/imageFormats";
 import {
+	ActionInputField,
 	GifContainer,
 	GifItem,
 	GifKeyboard,
 	IconButton,
+	InputField,
 	Note,
 	Option,
 	RangeField,
 	Select,
 } from "../components/components";
 import { DOM } from "../helpers/DOM";
+import { Toaster } from "../utils/toaster";
 
 const keyboardTabs = {
 	gifs: "GIFS",
@@ -107,6 +110,12 @@ export class GifKeyboardHandler {
 			}
 
 			const gifKeyboard = GifKeyboard(this.#createKeyboardHeader());
+			gifKeyboard
+				.querySelector(".void-gif-keyboard-list-container")
+				.insertBefore(
+					this.#createMediaAddField(gifKeyboard, markdownEditor),
+					gifKeyboard.querySelector(".void-gif-keyboard-list")
+				);
 
 			gifKeyboard.classList.add("void-hidden");
 			this.#renderMediaList(gifKeyboard, markdownEditor);
@@ -157,7 +166,6 @@ export class GifKeyboardHandler {
 				);
 			})
 		);
-
 		header.append(Select(options));
 
 		header.append(
@@ -246,5 +254,46 @@ export class GifKeyboardHandler {
 				)
 			);
 		}
+	}
+
+	#createMediaAddField(keyboard, markdownEditor) {
+		const actionfield = ActionInputField(
+			"",
+			(_, inputField) => {
+				const url = inputField.value;
+				inputField.value = "";
+
+				let format;
+				if (url.toLowerCase().endsWith(".gif")) {
+					format = keyboardTabs.gifs;
+				} else if (
+					ImageFormats.some((imgFormat) =>
+						url
+							.toLowerCase()
+							.endsWith(imgFormat.toLocaleLowerCase())
+					)
+				) {
+					format = keyboardTabs.images;
+				}
+				if (!format) {
+					Toaster.error("Url was not recognized as image or GIF.");
+					return;
+				}
+				this.#addOrRemoveMedia(url, format);
+				this.config.save();
+				this.#renderMediaList(keyboard, markdownEditor);
+			},
+			AddIcon()
+		);
+		actionfield
+			.querySelector("input")
+			.setAttribute("placeholder", "Add media...");
+		const container = DOM.create(
+			"div",
+			"gif-keyboard-add-field-container",
+			actionfield
+		);
+
+		return container;
 	}
 }
