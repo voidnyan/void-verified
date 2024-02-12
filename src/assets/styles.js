@@ -288,26 +288,31 @@ export const styles = /* css */ `
 
     .void-action-container {
         display: inline-block;
-        width: min-content;
-        position: relative;
+        width: fit-content;
     }
 
     .void-action-container .void-icon-button {
-        position: absolute;
-        padding: 0px 8px;
+        padding: 4px 8px;
         margin: 0px;
-        top: 0px;
-        right: 0px;
         background: rgb(var(--color-foreground-blue-dark));
         border-radius: 0px 4px 4px 0px;
         height: 100%;
-        display: flex;
+        display: inline-flex;
         flex-direction: column;
         justify-content: center;
+        border: 2px solid transparent;
+        border-left: 0px !important;
+        line-height: 1.15;
+        box-sizing: border-box;
+        vertical-align: top;
     }
 
     .void-action-container .void-icon-button svg {
         height: 14px;
+    }
+
+    .void-action-container .void-input {
+        border-radius: 4px 0px 0px 4px;
     }
 
     a.void-link {
