@@ -295,6 +295,7 @@ export const styles = /* css */ `
         padding: 4px 8px;
         margin: 0px;
         background: rgb(var(--color-foreground-blue-dark));
+        color: rgb(var(--color-text));
         border-radius: 0px 4px 4px 0px;
         height: 100%;
         display: inline-flex;
@@ -305,6 +306,10 @@ export const styles = /* css */ `
         line-height: 1.15;
         box-sizing: border-box;
         vertical-align: top;
+    }
+
+    .void-action-container .void-icon-button:hover {
+        color: rgb(var(--color-blue));
     }
 
     .void-action-container .void-icon-button svg {
@@ -365,12 +370,17 @@ export const styles = /* css */ `
 
     .void-range-container {
         display: inline-flex;
-        vertical-align: middle;
     }
 
     .void-range-display {
         margin-left: 5px;
         user-select: none;
+        font-size: 14px;
+        font-weight: bold;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 25px;
     }
 
     .void-gif-button svg {
@@ -438,7 +448,7 @@ export const styles = /* css */ `
         font-size: 20px;
         color: rgb(var(--color-text));
         display: flex;
-        height: 300px;
+        height: 220px;
         width: 100%;
         justify-content: center;
         align-items: center;
