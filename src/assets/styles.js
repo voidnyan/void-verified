@@ -292,7 +292,7 @@ export const styles = /* css */ `
     }
 
     .void-action-container .void-icon-button {
-        padding: 4px 8px;
+        padding: 6px 8px;
         margin: 0px;
         background: rgb(var(--color-foreground-blue-dark));
         color: rgb(var(--color-text));
@@ -416,10 +416,10 @@ export const styles = /* css */ `
         justify-content: space-between;
     }
 
-    .void-gif-keyboard-add-field-container {
+    .void-gif-keyboard-control-container {
         display: flex;
-        justify-content: center;
-        margin-top: 12px;
+        justify-content: space-between;
+        padding: 12px 12px 0px 12px;
     }
 
     .void-gif-keyboard-list-container {
@@ -495,6 +495,15 @@ export const styles = /* css */ `
 
     .void-hidden {
         display: none;
+    }
+
+    .void-pagination-container .void-icon-button.void-active,
+    .void-pagination-container .void-icon-button:hover {
+        color: rgb(var(--color-blue));
+    }
+
+    .void-pagination-container .void-icon-button.void-pagination-skip {
+        vertical-align: top;
     }
     
     .void-quick-access .void-quick-access-wrap {
