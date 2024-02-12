@@ -1,4 +1,10 @@
-import { EyeClosedIcon, EyeIcon, HeartIcon } from "../assets/icons";
+import {
+	DoubleChevronLeftIcon,
+	DoubleChevronRightIcon,
+	EyeClosedIcon,
+	EyeIcon,
+	HeartIcon,
+} from "../assets/icons";
 import { DOM } from "../helpers/DOM";
 
 export const ColorPicker = (value, onChange) => {
@@ -201,7 +207,11 @@ export const GifKeyboard = (header) => {
 	const container = DOM.create("div", "gif-keyboard-container");
 	container.append(header);
 	const gifList = DOM.create("div", "gif-keyboard-list");
-	container.append(DOM.create("div", "gif-keyboard-list-container", gifList));
+	const controls = DOM.create("div", "gif-keyboard-control-container");
+	container.append(
+		DOM.create("div", "gif-keyboard-list-container", [controls, gifList])
+	);
+
 	return container;
 };
 
@@ -235,6 +245,65 @@ export const GifContainer = (imgElement, onLike, gifs) => {
 			`gif-like ${gifs.includes(imgElement.src) && "liked"}`
 		)
 	);
+	return container;
+};
+
+export const Pagination = (currentPage, maxPage, onClick) => {
+	const container = DOM.create("div", "pagination-container");
+
+	if (maxPage <= 1) {
+		return container;
+	}
+
+	let displayedPages = [];
+	if (maxPage > 3) {
+		container.append(
+			IconButton(
+				DoubleChevronLeftIcon(),
+				() => {
+					onClick(0);
+				},
+				`pagination-skip ${currentPage === 0 && "active"}`
+			)
+		);
+		if (currentPage >= maxPage - 1) {
+			displayedPages.push(maxPage - 2, maxPage - 1, maxPage);
+		} else if (currentPage === 0) {
+			displayedPages.push(currentPage, currentPage + 1, currentPage + 2);
+		} else {
+			displayedPages.push(currentPage - 1, currentPage, currentPage + 1);
+		}
+	} else {
+		for (let i = 0; i <= maxPage; i++) {
+			displayedPages.push(i);
+		}
+	}
+
+	for (const page of displayedPages) {
+		container.append(
+			IconButton(
+				page + 1,
+				() => {
+					onClick(page);
+				},
+				currentPage === page && "active"
+			)
+		);
+	}
+
+	if (maxPage > 3) {
+		container.append(
+			IconButton(
+				DoubleChevronRightIcon(),
+				() => {
+					onClick(maxPage);
+				},
+				`pagination-skip ${currentPage === maxPage && "active"}`
+			)
+		);
+	}
+	console.log(displayedPages);
+
 	return container;
 };
 
