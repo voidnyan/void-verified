@@ -1,4 +1,4 @@
-import { defaultSettings } from "../assets/defaultSettings";
+import { categories, defaultSettings } from "../assets/defaultSettings";
 import { ColorFunctions } from "./colorFunctions";
 import { AnilistAPI } from "../api/anilistAPI";
 import { Toaster } from "./toaster";
@@ -12,7 +12,7 @@ class Option {
 	constructor(option) {
 		this.defaultValue = option.defaultValue;
 		this.description = option.description;
-		this.category = option.category;
+		this.category = option.category ?? categories.misc;
 		this.authRequired = option.authRequired;
 	}
 

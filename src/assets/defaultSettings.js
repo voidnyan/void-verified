@@ -163,7 +163,7 @@ export const defaultSettings = {
 	},
 	gifKeyboardEnabled: {
 		defaultValue: false,
-		description: "Add a GIF keyboard to activity fields.",
-		categories: categories.misc,
+		description: "Add a GIF keyboard to activity editor.",
+		category: categories.paste,
 	},
 };
