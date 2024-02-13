@@ -104,7 +104,9 @@ export class GifKeyboardHandler {
 		);
 
 		const width = media.getAttribute("width");
-		gifContainer.style.width = width?.endsWith("%") ? width : `${width}px`;
+		gifContainer.style.maxWidth = width?.endsWith("%")
+			? width
+			: `${width}px`;
 
 		media.replaceWith(gifContainer);
 	}
