@@ -58,6 +58,10 @@ export class GifKeyboardHandler {
 	}
 
 	#addMediaLikeButtons() {
+		if (!this.#settings.options.gifKeyboardEnabled.getValue()) {
+			return;
+		}
+
 		if (!this.#settings.options.gifKeyboardLikeButtonsEnabled.getValue()) {
 			return;
 		}
@@ -155,11 +159,15 @@ export class GifKeyboardHandler {
 	#refreshKeyboards() {
 		const keyboards = DOM.getAll(".void-gif-keyboard-container");
 		for (const keyboard of keyboards) {
-			const markdownEditor =
-				keyboard.parentElement.querySelector(".markdown-editor");
-			this.#renderMediaList(keyboard, markdownEditor);
-			this.#renderControls(keyboard, markdownEditor);
+			this.#refreshKeyboard(keyboard);
 		}
+	}
+
+	#refreshKeyboard(keyboard) {
+		const markdownEditor =
+			keyboard.parentElement.querySelector(".markdown-editor");
+		this.#renderControls(keyboard, markdownEditor);
+		this.#renderMediaList(keyboard, markdownEditor);
 	}
 
 	#createKeyboardHeader = () => {
@@ -170,9 +178,7 @@ export class GifKeyboardHandler {
 				this.#activeTab = option;
 				const keyboard =
 					event.target.parentElement.parentElement.parentElement; // oh god
-				const markdownEditor =
-					keyboard.parentElement.querySelector(".markdown-editor");
-				this.#renderMediaList(keyboard, markdownEditor);
+				this.#refreshKeyboard(keyboard);
 				event.target.parentElement.parentElement.replaceWith(
 					this.#createKeyboardHeader()
 				);
@@ -215,9 +221,9 @@ export class GifKeyboardHandler {
 		}
 	}
 
-	#toggleKeyboardVisibility(keyboard, markdownEditor) {
+	#toggleKeyboardVisibility(keyboard) {
 		if (keyboard.classList.contains("void-hidden")) {
-			this.#renderMediaList(keyboard, markdownEditor);
+			this.#refreshKeyboard(keyboard);
 			keyboard.classList.remove("void-hidden");
 		} else {
 			keyboard.classList.add("void-hidden");
@@ -319,7 +325,7 @@ export class GifKeyboardHandler {
 		Toaster.success(`Added media to ${format}`);
 		this.#addOrRemoveMedia(url, format);
 		this.config.save();
-		this.#renderMediaList(keyboard, markdownEditor);
+		this.#refreshKeyboard(keyboard);
 	}
 
 	#createPagination(keyboard, markdownEditor) {
@@ -332,6 +338,10 @@ export class GifKeyboardHandler {
 				? this.config.gifs
 				: this.config.images;
 		const maxPages = Math.ceil(mediaList.length / this.#pageSize) - 1;
+
+		if (this.#paginationPage > maxPages) {
+			this.#paginationPage = maxPages;
+		}
 
 		container.append(
 			Pagination(this.#paginationPage, maxPages, (page) => {

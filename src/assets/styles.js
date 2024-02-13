@@ -424,7 +424,10 @@ export const styles = /* css */ `
 
     .void-gif-keyboard-list-container {
         height: 300px;
+        min-height: 200px;
+        max-height: 500px;
         overflow-y: scroll;
+        resize: vertical;
         user-select: none;
     }
 
