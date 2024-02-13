@@ -58,17 +58,23 @@ export class GifKeyboardHandler {
 	}
 
 	#addMediaLikeButtons() {
-		if (!this.#settings.options.gifKeyboardEnabled.getValue()) {
+		if (!this.#settings.options.gifKeyboardLikeButtonsEnabled.getValue()) {
 			return;
 		}
 
-		const gifs = DOM.getAll(".markdown img[src$='.gif']");
+		const gifs = DOM.getAll(
+			":is(.activity-markdown, .reply-markdown) .markdown img[src$='.gif']"
+		);
 		for (const gif of gifs) {
 			this.#addMediaLikeButton(gif, keyboardTabs.gifs, this.config.gifs);
 		}
 
 		const images = ImageFormats.map((format) => {
-			return [...DOM.getAll(`.markdown img[src$='.${format}']`)];
+			return [
+				...DOM.getAll(
+					`:is(.activity-markdown, .reply-markdown) .markdown img[src$='.${format}']`
+				),
+			];
 		}).flat(1);
 		for (const image of images) {
 			this.#addMediaLikeButton(
@@ -85,18 +91,22 @@ export class GifKeyboardHandler {
 		}
 
 		const img = media.cloneNode();
+		img.removeAttribute("width");
 
-		media.replaceWith(
-			GifContainer(
-				img,
-				() => {
-					this.#addOrRemoveMedia(media.src, mediaType);
-					this.config.save();
-					this.#refreshKeyboards();
-				},
-				mediaList
-			)
+		const gifContainer = GifContainer(
+			img,
+			() => {
+				this.#addOrRemoveMedia(media.src, mediaType);
+				this.config.save();
+				this.#refreshKeyboards();
+			},
+			mediaList
 		);
+
+		const width = media.getAttribute("width");
+		gifContainer.style.width = width?.endsWith("%") ? width : `${width}px`;
+
+		media.replaceWith(gifContainer);
 	}
 
 	#addGifKeyboards() {
@@ -111,12 +121,6 @@ export class GifKeyboardHandler {
 			}
 
 			const gifKeyboard = GifKeyboard(this.#createKeyboardHeader());
-			// gifKeyboard
-			// 	.querySelector(".void-gif-keyboard-list-container")
-			// 	.insertBefore(
-			// 		this.#createMediaAddField(gifKeyboard, markdownEditor),
-			// 		gifKeyboard.querySelector(".void-gif-keyboard-list")
-			// 	);
 
 			gifKeyboard.classList.add("void-hidden");
 			this.#renderMediaList(gifKeyboard, markdownEditor);

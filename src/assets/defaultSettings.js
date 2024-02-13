@@ -166,4 +166,9 @@ export const defaultSettings = {
 		description: "Add a GIF keyboard to activity editor.",
 		category: categories.paste,
 	},
+	gifKeyboardLikeButtonsEnabled: {
+		defaultValue: true,
+		description: "Add like buttons to add media to GIF keyboard.",
+		category: categories.paste,
+	},
 };
