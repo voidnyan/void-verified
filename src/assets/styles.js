@@ -468,6 +468,11 @@ export const styles = /* css */ `
     .void-gif-like-container {
         position: relative;
         width: fit-content;
+        display: inline-block;
+    }
+
+    .void-gif-like-container img {
+        width: 100%;
     }
 
     .void-gif-like-container .void-gif-like {
