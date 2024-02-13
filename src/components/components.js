@@ -251,7 +251,7 @@ export const GifContainer = (imgElement, onLike, gifs) => {
 export const Pagination = (currentPage, maxPage, onClick) => {
 	const container = DOM.create("div", "pagination-container");
 
-	if (maxPage <= 1) {
+	if (maxPage < 1) {
 		return container;
 	}
 
@@ -302,7 +302,6 @@ export const Pagination = (currentPage, maxPage, onClick) => {
 			)
 		);
 	}
-	console.log(displayedPages);
 
 	return container;
 };
