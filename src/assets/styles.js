@@ -467,7 +467,7 @@ export const styles = /* css */ `
 
     .void-gif-like-container {
         position: relative;
-        width: fit-content;
+        width: 100%;
         display: inline-block;
     }
 
