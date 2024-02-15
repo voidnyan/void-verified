@@ -60,13 +60,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.3415130012915768"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.3415130012915768"
+          for="0.12352"
         >
           Copy user color from their profile.
         </label>
@@ -76,13 +76,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.034333564845265174"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.034333564845265174"
+          for="0.12352"
         >
           Move activity subscribe button next to comments and likes.
         </label>
@@ -92,13 +92,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.05962876272050499"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.05962876272050499"
+          for="0.12352"
         >
           Hide activity and reply like counts.
         </label>
@@ -108,13 +108,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.8520153600628608"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.8520153600628608"
+          for="0.12352"
         >
           Display a verified sign next to usernames.
         </label>
@@ -124,13 +124,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.7722035725331695"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.7722035725331695"
+          for="0.12352"
         >
           Display a verified sign next to a profile name.
         </label>
@@ -140,11 +140,11 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-input"
-          id="0.21212997007505496"
+          id="0.12352"
         />
         <label
           class="void-setting-label"
-          for="0.21212997007505496"
+          for="0.12352"
         >
           The default sign displayed next to a username.
         </label>
@@ -154,13 +154,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.46196443104816254"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.46196443104816254"
+          for="0.12352"
         >
           Highlight user activity with a border.
         </label>
@@ -170,13 +170,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.07330159228638333"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.07330159228638333"
+          for="0.12352"
         >
           Highlight replies with a border.
         </label>
@@ -186,11 +186,11 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-input"
-          id="0.18161789094683534"
+          id="0.12352"
         />
         <label
           class="void-setting-label"
-          for="0.18161789094683534"
+          for="0.12352"
         >
           Width of the highlight border.
         </label>
@@ -200,13 +200,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.7655415531626175"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.7655415531626175"
+          for="0.12352"
         >
           Color user activity links with user color.
         </label>
@@ -216,13 +216,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.10217880814900893"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.10217880814900893"
+          for="0.12352"
         >
           Color user reply links with user color.
         </label>
@@ -232,13 +232,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.6779187267504487"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.6779187267504487"
+          for="0.12352"
         >
           Use fallback highlight color when user color is not specified.
         </label>
@@ -248,13 +248,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.3918398413437767"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.3918398413437767"
+          for="0.12352"
         >
           Enable custom global CSS.
         </label>
@@ -264,13 +264,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.6187152078636238"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.6187152078636238"
+          for="0.12352"
         >
           Disable global CSS when a profile has custom CSS.
         </label>
@@ -280,13 +280,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.44800478620811046"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.44800478620811046"
+          for="0.12352"
         >
           Load user's custom CSS when viewing their profile.
         </label>
@@ -296,13 +296,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.10619890316547842"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.10619890316547842"
+          for="0.12352"
         >
           Load user's custom CSS when viewing their activity (direct link).
         </label>
@@ -312,13 +312,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.5717643479596983"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.5717643479596983"
+          for="0.12352"
         >
           Only load custom CSS from verified users.
         </label>
@@ -328,13 +328,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.9386714069341653"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.9386714069341653"
+          for="0.12352"
         >
           Enable Layout Designer in the settings tab.
         </label>
@@ -344,13 +344,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.9301987347177001"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.9301987347177001"
+          for="0.12352"
         >
           Display quick access of users in home page.
         </label>
@@ -360,13 +360,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.20720567339984575"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.20720567339984575"
+          for="0.12352"
         >
           Display a badge on quick access when changes are detected on user's layout.
         </label>
@@ -376,13 +376,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.299639653239282"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.299639653239282"
+          for="0.12352"
         >
           Display a timer until next update of Quick Access.
         </label>
@@ -392,13 +392,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.287494443428399"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.287494443428399"
+          for="0.12352"
         >
           Automatically wrap pasted links and images with link and image tags.
         </label>
@@ -408,13 +408,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.3255029127325981"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.3255029127325981"
+          for="0.12352"
         >
           Wrap images with a link tag.
         </label>
@@ -424,11 +424,11 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-input"
-          id="0.791832663338156"
+          id="0.12352"
         />
         <label
           class="void-setting-label"
-          for="0.791832663338156"
+          for="0.12352"
         >
           Width used when pasting images.
         </label>
@@ -438,13 +438,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.7002834280213619"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.7002834280213619"
+          for="0.12352"
         >
           Upload image from the clipboard to image host (configure below).
         </label>
@@ -454,13 +454,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.3930164712597495"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.3930164712597495"
+          for="0.12352"
         >
           Enable toast notifications.
         </label>
@@ -470,13 +470,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.7441943182394886"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.7441943182394886"
+          for="0.12352"
         >
           Query AniList API with elevated browser access (this might solve some API issues).
         </label>
@@ -486,13 +486,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.3366819080831278"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.3366819080831278"
+          for="0.12352"
         >
           Open AniList links in the same tab.
         </label>
@@ -502,13 +502,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.6613545725080101"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.6613545725080101"
+          for="0.12352"
         >
           Add a GIF keyboard to activity editor.
         </label>
@@ -518,13 +518,13 @@ exports[`Settings User Interface renders 1`] = `
       >
         <input
           class="void-checkbox"
-          id="0.28012129328312674"
+          id="0.12352"
           title="undefined"
           type="checkbox"
         />
         <label
           class="void-setting-label"
-          for="0.28012129328312674"
+          for="0.12352"
         >
           Add like buttons to add media to GIF keyboard.
         </label>

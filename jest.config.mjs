@@ -11,7 +11,7 @@ const config = {
 	moduleFileExtensions: ["js"],
 
 	roots: ["./src", "./tests"],
-	setupFiles: ["./tests/GM_infoMock.js"],
+	setupFiles: ["./tests/GM_infoMock.js", "./tests/broadcastChannerMock.js"],
 	transform: {
 		"\\.[jt]sx?$": "babel-jest",
 	},

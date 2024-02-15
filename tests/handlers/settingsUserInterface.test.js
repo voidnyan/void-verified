@@ -1,13 +1,25 @@
 import { Settings } from "../../src/utils/settings";
 import { SettingsUserInterface } from "../../src/handlers/settingsUserInterface";
+import { StyleHandler } from "../../src/handlers/styleHandler";
+import { GlobalCSS } from "../../src/handlers/globalCSS";
+import { UserCSS } from "../../src/handlers/userCSS";
+import { LayoutDesigner } from "../../src/handlers/layoutDesigner";
+
+beforeAll(() => {
+	jest.spyOn(global.Math, "random").mockReturnValue(0.12352);
+});
+
+afterAll(() => {
+	jest.spyOn(global.Math, "random").mockRestore();
+});
 
 describe("Settings User Interface", () => {
 	it("renders", () => {
 		const settings = new Settings();
-		const styleHandler = jest.fn("../../src/handlers/styleHandler.js");
-		const globalCSS = jest.fn("../../src/handlers/globalCSS.js");
-		const userCSS = jest.fn("../../src/handlers/userCSS.js");
-		const layoutDesigner = jest.fn("../../src/handlers/layoutDesigner.js");
+		const styleHandler = new StyleHandler(settings);
+		const globalCSS = new GlobalCSS(settings);
+		const userCSS = new UserCSS(settings);
+		const layoutDesigner = new LayoutDesigner(settings);
 
 		const settingsUserInterface = new SettingsUserInterface(
 			settings,
