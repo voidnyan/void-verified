@@ -33,5 +33,6 @@ describe("Settings User Interface", () => {
 		);
 
 		expect(settingsUserInterfaceDOM).not.toBeNull();
+		expect(settingsUserInterfaceDOM).toMatchSnapshot();
 	});
 });
