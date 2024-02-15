@@ -3,15 +3,16 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "type": "module",
     "scripts": {
         "build": "node build.js && node replaceHeader.js",
-        "dev": "nodemon build.js --ignore ./dist/"
+        "dev": "nodemon build.js --ignore ./dist/",
+        "test": "jest"
     },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/voidnyan/void-verified.git"
     },
-    "type": "module",
     "author": "voidnyan",
     "license": "MIT",
     "bugs": {
@@ -20,6 +21,12 @@
     "homepage": "https://github.com/voidnyan/void-verified#readme",
     "devDependencies": {
         "@kellnerd/userscript-bundler": "github:kellnerd/userscript-bundler",
+        "jest": "^29.7.0",
+        "jest-environment-jsdom": "^29.7.0",
         "nodemon": "^3.0.1"
+    },
+    "dependencies": {
+        "@babel/core": "^7.23.9",
+        "@babel/preset-env": "^7.23.9"
     }
 }
