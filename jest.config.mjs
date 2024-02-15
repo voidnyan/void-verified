@@ -11,7 +11,7 @@ const config = {
 	moduleFileExtensions: ["js"],
 
 	roots: ["./src", "./tests"],
-	setupFilesAfterEnv: ["./tests/localStorageMock.js"],
+	setupFiles: ["./tests/GM_infoMock.js"],
 	transform: {
 		"\\.[jt]sx?$": "babel-jest",
 	},

@@ -1,0 +1,122 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Toaster renders settings 1`] = `
+<div>
+  <h3>
+    Configure Toasts
+  </h3>
+  <p>
+    Toasts are notifications that pop up in the corner of your screen when things are happening.
+  </p>
+  <div
+    class="void-label-container"
+  >
+    <label
+      class="void-label-span"
+      for="0.12352"
+    >
+      Toast level
+    </label>
+    <div
+      class="void-select"
+      id="0.12352"
+    >
+      <div
+        class="void-option active"
+      >
+        info
+      </div>
+      <div
+        class="void-option"
+      >
+        success
+      </div>
+      <div
+        class="void-option"
+      >
+        warning
+      </div>
+      <div
+        class="void-option"
+      >
+        error
+      </div>
+    </div>
+  </div>
+  <div
+    class="void-label-container"
+  >
+    <label
+      class="void-label-span"
+      for="0.12352"
+    >
+      Toast location
+    </label>
+    <div
+      class="void-select"
+      id="0.12352"
+    >
+      <div
+        class="void-option"
+      >
+        top-left
+      </div>
+      <div
+        class="void-option"
+      >
+        top-right
+      </div>
+      <div
+        class="void-option active"
+      >
+        bottom-left
+      </div>
+      <div
+        class="void-option"
+      >
+        bottom-right
+      </div>
+    </div>
+  </div>
+  <div
+    class="void-label-container"
+  >
+    <label
+      class="void-label-span"
+      for="0.12352"
+    >
+      Toast duration
+    </label>
+    <div
+      class="void-select"
+      id="0.12352"
+    >
+      <div
+        class="void-option"
+      >
+        1s
+      </div>
+      <div
+        class="void-option"
+      >
+        3s
+      </div>
+      <div
+        class="void-option active"
+      >
+        5s
+      </div>
+      <div
+        class="void-option"
+      >
+        10s
+      </div>
+    </div>
+  </div>
+  <button
+    class="void-button"
+  >
+    Test Toasts
+  </button>
+</div>
+`;

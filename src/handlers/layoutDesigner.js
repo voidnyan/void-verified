@@ -338,8 +338,6 @@ export class LayoutDesigner {
 			0
 		);
 
-		console.log(this.#layouts.layoutsList);
-
 		if (this.#layouts.layoutsList.length === 0) {
 			this.#layouts.layoutsList.push(new Layout());
 		}

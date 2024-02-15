@@ -1,14 +1,14 @@
 import { DOM } from "../helpers/DOM";
 import { Select, Toast, Option, Button, Label } from "../components/components";
 
-const toastTypes = {
+export const toastTypes = {
 	info: "info",
 	success: "success",
 	warning: "warning",
 	error: "error",
 };
 
-const toastLevels = {
+export const toastLevels = {
 	info: 0,
 	success: 1,
 	warning: 2,
@@ -19,7 +19,7 @@ const toastDurations = [1, 3, 5, 10];
 
 const toastLocations = ["top-left", "top-right", "bottom-left", "bottom-right"];
 
-class ToasterConfig {
+export class ToasterConfig {
 	toastLevel;
 	duration;
 	location;
@@ -92,7 +92,6 @@ export class Toaster {
 		if (!this.#shouldToast(toastTypes.info)) {
 			return;
 		}
-
 		DOM.get("#void-toast-container").append(
 			new ToastInstance(
 				message,
