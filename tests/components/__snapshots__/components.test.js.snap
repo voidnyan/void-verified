@@ -185,3 +185,290 @@ exports[`Components "Toast" matches snapshot 1`] = `
   class="void-toast"
 />
 `;
+
+exports[`Components Pagination does not render with only one page 1`] = `
+<div
+  class="void-pagination-container"
+/>
+`;
+
+exports[`Components Pagination renders chevrons with more than three pages 1`] = `
+<div
+  class="void-pagination-container"
+>
+  <div
+    class="void-icon-button void-pagination-skip void-false"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+        
+      <path
+        d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      
+      
+    </svg>
+  </div>
+  <div
+    class="void-icon-button"
+  >
+    1
+  </div>
+  <div
+    class="void-icon-button void-active"
+  >
+    2
+  </div>
+  <div
+    class="void-icon-button"
+  >
+    3
+  </div>
+  <div
+    class="void-icon-button void-pagination-skip void-false"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+        
+      <path
+        d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      
+      
+    </svg>
+  </div>
+</div>
+`;
+
+exports[`Components Pagination renders correctly with 0 current page 1`] = `
+<div
+  class="void-pagination-container"
+>
+  <div
+    class="void-icon-button void-pagination-skip void-active"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+        
+      <path
+        d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      
+      
+    </svg>
+  </div>
+  <div
+    class="void-icon-button void-active"
+  >
+    1
+  </div>
+  <div
+    class="void-icon-button"
+  >
+    2
+  </div>
+  <div
+    class="void-icon-button"
+  >
+    3
+  </div>
+  <div
+    class="void-icon-button void-pagination-skip void-false"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+        
+      <path
+        d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      
+      
+    </svg>
+  </div>
+</div>
+`;
+
+exports[`Components Pagination renders correctly with 3 current page 1`] = `
+<div
+  class="void-pagination-container"
+>
+  <div
+    class="void-icon-button void-pagination-skip void-false"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+        
+      <path
+        d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      
+      
+    </svg>
+  </div>
+  <div
+    class="void-icon-button"
+  >
+    3
+  </div>
+  <div
+    class="void-icon-button void-active"
+  >
+    4
+  </div>
+  <div
+    class="void-icon-button"
+  >
+    5
+  </div>
+  <div
+    class="void-icon-button void-pagination-skip void-false"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+        
+      <path
+        d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      
+      
+    </svg>
+  </div>
+</div>
+`;
+
+exports[`Components Pagination renders correctly with 5 current page 1`] = `
+<div
+  class="void-pagination-container"
+>
+  <div
+    class="void-icon-button void-pagination-skip void-false"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+        
+      <path
+        d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      
+      
+    </svg>
+  </div>
+  <div
+    class="void-icon-button"
+  >
+    4
+  </div>
+  <div
+    class="void-icon-button"
+  >
+    5
+  </div>
+  <div
+    class="void-icon-button void-active"
+  >
+    6
+  </div>
+  <div
+    class="void-icon-button void-pagination-skip void-active"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+        
+      <path
+        d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      
+      
+    </svg>
+  </div>
+</div>
+`;
+
+exports[`Components Pagination renders with two pages 1`] = `
+<div
+  class="void-pagination-container"
+>
+  <div
+    class="void-icon-button void-active"
+  >
+    1
+  </div>
+  <div
+    class="void-icon-button"
+  >
+    2
+  </div>
+</div>
+`;

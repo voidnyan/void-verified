@@ -26,10 +26,37 @@ const simpleComponents = Object.entries(components)
 	});
 
 describe("Components", () => {
-	test.each([...simpleComponents])(
-		"%p matches snapshot",
-		(ree, component) => {
-			expect(component()).toMatchSnapshot();
-		}
-	);
+	test.each([...simpleComponents])("%p matches snapshot", (_, component) => {
+		expect(component()).toMatchSnapshot();
+	});
+
+	describe("Pagination", () => {
+		it("does not render with only one page", () => {
+			const pagination = components.Pagination(0, 0, () => {});
+			expect(pagination.children.length).toBe(0);
+			expect(pagination).toMatchSnapshot();
+		});
+
+		it("renders with two pages", () => {
+			const pagination = components.Pagination(0, 1, () => {});
+			expect(pagination).toMatchSnapshot();
+		});
+
+		it("renders chevrons with more than three pages", () => {
+			const pagination = components.Pagination(1, 3, () => {});
+			expect(pagination).toMatchSnapshot();
+		});
+
+		test.each([0, 3, 5])(
+			"renders correctly with %p current page",
+			(currentPage) => {
+				const pagination = components.Pagination(
+					currentPage,
+					5,
+					() => {}
+				);
+				expect(pagination).toMatchSnapshot();
+			}
+		);
+	});
 });

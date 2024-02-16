@@ -74,7 +74,7 @@ export const RangeField = (value, onChange, max, step = 1, min = 0, unit) => {
 	range.addEventListener("change", (event) => {
 		onChange(event);
 	});
-	range.addEventListener("input", () => {
+	range.addEventListener("input", (event) => {
 		display.replaceChildren(`${event.target.value}${unit ?? ""}`);
 	});
 	range.setAttribute("max", max);
@@ -256,7 +256,7 @@ export const Pagination = (currentPage, maxPage, onClick) => {
 	}
 
 	let displayedPages = [];
-	if (maxPage > 3) {
+	if (maxPage >= 3) {
 		container.append(
 			IconButton(
 				DoubleChevronLeftIcon(),
@@ -291,7 +291,7 @@ export const Pagination = (currentPage, maxPage, onClick) => {
 		);
 	}
 
-	if (maxPage > 3) {
+	if (maxPage >= 3) {
 		container.append(
 			IconButton(
 				DoubleChevronRightIcon(),
