@@ -41,6 +41,8 @@ export class Settings {
 		this.verifiedUsers =
 			JSON.parse(localStorage.getItem(this.localStorageUsers)) ?? [];
 
+		// add change to test pr unit tests
+
 		const settingsInLocalStorage =
 			JSON.parse(localStorage.getItem(this.localStorageSettings)) ?? {};
 
