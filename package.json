@@ -5,7 +5,7 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "build": "node build.js && node replaceHeader.js",
+        "build": "jest && node build.js && node replaceHeader.js",
         "dev": "nodemon build.js --ignore ./dist/",
         "test": "jest",
         "test-summary": "jest --coverage --coverageReporters='text-summary'"
