@@ -242,7 +242,10 @@ export const GifContainer = (imgElement, onLike, gifs) => {
 					event.target.classList.add("void-liked");
 				}
 			},
-			`gif-like ${gifs.includes(imgElement.src) && "liked"}`
+			transformClasses(
+				"gif-like",
+				gifs.includes(imgElement.src) && "liked"
+			)
 		)
 	);
 	return container;
@@ -308,7 +311,7 @@ export const Pagination = (currentPage, maxPage, onClick) => {
 
 const transformClasses = (base, additional) => {
 	let classes = base;
-	if (additional) {
+	if (additional && additional !== "") {
 		classes += ` ${additional}`;
 	}
 	return classes;

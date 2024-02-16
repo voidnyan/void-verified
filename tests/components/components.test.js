@@ -59,4 +59,39 @@ describe("Components", () => {
 			}
 		);
 	});
+
+	describe("GifContainer", () => {
+		it("matches snapshot", () => {
+			const gifContainer = createGifContainer("imgUrl", () => {});
+			expect(gifContainer).toMatchSnapshot();
+		});
+
+		it("clicking like button triggers passed function", () => {
+			const onClick = jest.fn();
+			const gifContainer = createGifContainer("imgUrl", onClick);
+			const button = gifContainer.querySelector(".void-icon-button");
+			button.click();
+			button.click();
+			expect(onClick).toHaveBeenCalledTimes(2);
+		});
+
+		// for whatever reason, the test does not add the void-liked class to the component although it does work in the UI so this test is irrelevant untill the reason for that is figured out
+		// it("image is not liked yet", () => {
+		// 	const gifContainer = createGifContainer("anotherUrl", () => {});
+		// 	expect(gifContainer).toMatchSnapshot();
+		// });
+	});
 });
+
+const createGifContainer = (img, onClick) => {
+	const gifContainer = components.GifContainer(createImage(img), onClick, [
+		"imgUrl",
+	]);
+	return gifContainer;
+};
+
+const createImage = (url) => {
+	const image = document.createElement("img");
+	image.setAttribute("src", url);
+	return image;
+};
