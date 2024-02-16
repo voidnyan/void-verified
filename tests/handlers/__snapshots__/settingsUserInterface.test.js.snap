@@ -597,6 +597,7 @@ exports[`Settings User Interface renders 1`] = `
       />
       <input
         class="void-color-picker-input"
+        type="text"
       />
     </div>
   </div>

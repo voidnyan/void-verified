@@ -1,154 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Components "ActionInputField" matches snapshot 1`] = `
+exports[`Components ActionInputField renders icon 1`] = `
 <div
   class="void-action-container"
 >
   <input
     class="void-input"
-  />
-  <div
-    class="void-icon-button"
-  />
-</div>
-`;
-
-exports[`Components "Button" matches snapshot 1`] = `
-<button
-  class="void-button"
-/>
-`;
-
-exports[`Components "Checkbox" matches snapshot 1`] = `
-<input
-  class="void-checkbox"
-  title="undefined"
-  type="checkbox"
-/>
-`;
-
-exports[`Components "ColorPicker" matches snapshot 1`] = `
-<div
-  class="void-color-picker-container"
->
-  <input
-    class="void-color-picker"
-    type="color"
-  />
-  <input
-    class="void-color-picker-input"
-  />
-</div>
-`;
-
-exports[`Components "GifKeyboard" matches snapshot 1`] = `
-<div
-  class="void-gif-keyboard-container"
->
-  undefined
-  <div
-    class="void-gif-keyboard-list-container"
-  >
-    <div
-      class="void-gif-keyboard-control-container"
-    />
-    <div
-      class="void-gif-keyboard-list"
-    />
-  </div>
-</div>
-`;
-
-exports[`Components "IconButton" matches snapshot 1`] = `
-<div
-  class="void-icon-button"
-/>
-`;
-
-exports[`Components "InputField" matches snapshot 1`] = `
-<input
-  class="void-input"
-/>
-`;
-
-exports[`Components "Link" matches snapshot 1`] = `
-<a
-  class="void-link"
-  href="undefined"
-  target="_blank"
-/>
-`;
-
-exports[`Components "Note" matches snapshot 1`] = `
-<div
-  class="void-notice"
-/>
-`;
-
-exports[`Components "Option" matches snapshot 1`] = `
-<div
-  class="void-option"
-/>
-`;
-
-exports[`Components "Pagination" matches snapshot 1`] = `
-<div
-  class="void-pagination-container"
-/>
-`;
-
-exports[`Components "RangeField" matches snapshot 1`] = `
-<div
-  class="void-range-container"
->
-  <input
-    class="void-range"
-    max="undefined"
-    min="0"
-    step="1"
-    type="range"
-    value="undefined"
-  />
-  <div
-    class="void-range-display"
-  >
-    undefined
-  </div>
-</div>
-`;
-
-exports[`Components "SecretField" matches snapshot 1`] = `
-<div
-  class="void-action-container"
->
-  <input
-    class="void-input"
-    type="password"
   />
   <div
     class="void-icon-button"
   >
     <svg
       class="w-6 h-6"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.5"
+      fill="currentColor"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
     >
       
                 
       <path
-        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      
-                
-      <path
-        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"
       />
       
             
@@ -157,41 +28,12 @@ exports[`Components "SecretField" matches snapshot 1`] = `
 </div>
 `;
 
-exports[`Components "Table" matches snapshot 1`] = `
-<table
-  class="void-table"
->
-  undefined
-  undefined
-</table>
-`;
-
-exports[`Components "TableBody" matches snapshot 1`] = `<tbody />`;
-
-exports[`Components "TableHead" matches snapshot 1`] = `
-<thead>
-  <tr />
-</thead>
-`;
-
-exports[`Components "TextArea" matches snapshot 1`] = `
-<textarea
-  class="void-textarea"
-/>
-`;
-
-exports[`Components "Toast" matches snapshot 1`] = `
-<div
-  class="void-toast"
-/>
-`;
-
-exports[`Components GifContainer matches snapshot 1`] = `
+exports[`Components GifContainer image is not liked yet 1`] = `
 <div
   class="void-gif-like-container"
 >
   <img
-    src="imgUrl"
+    src="http://localhost/anotherUrl"
   />
   <div
     class="void-icon-button void-gif-like"
@@ -211,6 +53,83 @@ exports[`Components GifContainer matches snapshot 1`] = `
             
     </svg>
   </div>
+</div>
+`;
+
+exports[`Components GifContainer matches snapshot 1`] = `
+<div
+  class="void-gif-like-container"
+>
+  <img
+    src="http://localhost/imgUrl"
+  />
+  <div
+    class="void-icon-button void-gif-like void-liked"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+                
+      <path
+        d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"
+      />
+      
+            
+    </svg>
+  </div>
+</div>
+`;
+
+exports[`Components GifItem matches snapshot 1`] = `
+<div
+  class="void-gif-keyboard-item"
+>
+  <div
+    class="void-gif-like-container"
+  >
+    <img
+      src="http://localhost/imgUrl"
+    />
+    <div
+      class="void-icon-button void-gif-like void-liked"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        
+                
+        <path
+          d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"
+        />
+        
+            
+      </svg>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Components Label matches snapshot 1`] = `
+<div
+  class="void-label-container"
+>
+  <label
+    class="void-label-span"
+    for="0.12352"
+  >
+    label text
+  </label>
+  <input
+    class="void-input"
+    id="0.12352"
+  />
 </div>
 `;
 
@@ -499,4 +418,305 @@ exports[`Components Pagination renders with two pages 1`] = `
     2
   </div>
 </div>
+`;
+
+exports[`Components SecretField clicking button switches type to text 1`] = `
+<div
+  class="void-action-container"
+>
+  <input
+    class="void-input"
+    type="text"
+  />
+  <div
+    class="void-icon-button"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+            
+      <path
+        d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      
+        
+    </svg>
+  </div>
+</div>
+`;
+
+exports[`Components SecretField clicking button twice switches type back to password 1`] = `
+<div
+  class="void-action-container"
+>
+  <input
+    class="void-input"
+    type="password"
+  />
+  <div
+    class="void-icon-button"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+                
+      <path
+        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      
+                
+      <path
+        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      
+            
+    </svg>
+  </div>
+</div>
+`;
+
+exports[`Components Select matches snapshot 1`] = `
+<div
+  class="void-select"
+>
+  <div
+    class="void-option"
+  >
+    option1
+  </div>
+  <div
+    class="void-option active"
+  >
+    option2
+  </div>
+  <div
+    class="void-option"
+  >
+    option3
+  </div>
+</div>
+`;
+
+exports[`Components SettingLabel matches snapshot 1`] = `
+<div
+  class="void-setting-label-container"
+>
+  <input
+    class="void-checkbox"
+    id="0.12352"
+    title="checkbox"
+    type="checkbox"
+  />
+  <label
+    class="void-setting-label"
+    for="0.12352"
+  >
+    settinglabel
+  </label>
+</div>
+`;
+
+exports[`Components SimpleComponentTests "ActionInputField" matches snapshot 1`] = `
+<div
+  class="void-action-container"
+>
+  <input
+    class="void-input"
+  />
+  <div
+    class="void-icon-button"
+  />
+</div>
+`;
+
+exports[`Components SimpleComponentTests "Button" matches snapshot 1`] = `
+<button
+  class="void-button"
+/>
+`;
+
+exports[`Components SimpleComponentTests "Checkbox" matches snapshot 1`] = `
+<input
+  class="void-checkbox"
+  title="undefined"
+  type="checkbox"
+/>
+`;
+
+exports[`Components SimpleComponentTests "ColorPicker" matches snapshot 1`] = `
+<div
+  class="void-color-picker-container"
+>
+  <input
+    class="void-color-picker"
+    type="color"
+  />
+  <input
+    class="void-color-picker-input"
+    type="text"
+  />
+</div>
+`;
+
+exports[`Components SimpleComponentTests "GifKeyboard" matches snapshot 1`] = `
+<div
+  class="void-gif-keyboard-container"
+>
+  undefined
+  <div
+    class="void-gif-keyboard-list-container"
+  >
+    <div
+      class="void-gif-keyboard-control-container"
+    />
+    <div
+      class="void-gif-keyboard-list"
+    />
+  </div>
+</div>
+`;
+
+exports[`Components SimpleComponentTests "IconButton" matches snapshot 1`] = `
+<div
+  class="void-icon-button"
+/>
+`;
+
+exports[`Components SimpleComponentTests "InputField" matches snapshot 1`] = `
+<input
+  class="void-input"
+/>
+`;
+
+exports[`Components SimpleComponentTests "Link" matches snapshot 1`] = `
+<a
+  class="void-link"
+  href="undefined"
+  target="_blank"
+/>
+`;
+
+exports[`Components SimpleComponentTests "Note" matches snapshot 1`] = `
+<div
+  class="void-notice"
+/>
+`;
+
+exports[`Components SimpleComponentTests "Option" matches snapshot 1`] = `
+<div
+  class="void-option"
+/>
+`;
+
+exports[`Components SimpleComponentTests "Pagination" matches snapshot 1`] = `
+<div
+  class="void-pagination-container"
+/>
+`;
+
+exports[`Components SimpleComponentTests "RangeField" matches snapshot 1`] = `
+<div
+  class="void-range-container"
+>
+  <input
+    class="void-range"
+    max="undefined"
+    min="0"
+    step="1"
+    type="range"
+    value="undefined"
+  />
+  <div
+    class="void-range-display"
+  >
+    undefined
+  </div>
+</div>
+`;
+
+exports[`Components SimpleComponentTests "SecretField" matches snapshot 1`] = `
+<div
+  class="void-action-container"
+>
+  <input
+    class="void-input"
+    type="password"
+  />
+  <div
+    class="void-icon-button"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      
+                
+      <path
+        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      
+                
+      <path
+        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      
+            
+    </svg>
+  </div>
+</div>
+`;
+
+exports[`Components SimpleComponentTests "Table" matches snapshot 1`] = `
+<table
+  class="void-table"
+>
+  undefined
+  undefined
+</table>
+`;
+
+exports[`Components SimpleComponentTests "TableBody" matches snapshot 1`] = `<tbody />`;
+
+exports[`Components SimpleComponentTests "TableHead" matches snapshot 1`] = `
+<thead>
+  <tr />
+</thead>
+`;
+
+exports[`Components SimpleComponentTests "TextArea" matches snapshot 1`] = `
+<textarea
+  class="void-textarea"
+/>
+`;
+
+exports[`Components SimpleComponentTests "Toast" matches snapshot 1`] = `
+<div
+  class="void-toast"
+/>
 `;

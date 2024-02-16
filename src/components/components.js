@@ -19,6 +19,7 @@ export const ColorPicker = (value, onChange) => {
 	container.append(colorPicker);
 	const inputField = DOM.create("input", "color-picker-input");
 	inputField.value = value ?? "#";
+	inputField.setAttribute("type", "text");
 	inputField.addEventListener("change", (event) => {
 		onChange(event);
 	});

@@ -7,7 +7,8 @@
     "scripts": {
         "build": "node build.js && node replaceHeader.js",
         "dev": "nodemon build.js --ignore ./dist/",
-        "test": "jest"
+        "test": "jest",
+        "test-summary": "jest --coverage --coverageReporters='text-summary'"
     },
     "repository": {
         "type": "git",
