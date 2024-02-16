@@ -11,7 +11,7 @@ import {
 	RangeField,
 	Select,
 } from "../components/components";
-import { DOM } from "../helpers/DOM";
+import { DOM } from "../utils/DOM";
 import { Toaster } from "../utils/toaster";
 
 const keyboardTabs = {

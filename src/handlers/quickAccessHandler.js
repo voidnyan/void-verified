@@ -1,7 +1,7 @@
 import { AnilistAPI } from "../api/anilistAPI";
 import { RefreshIcon } from "../assets/icons";
 import { IconButton } from "../components/components";
-import { DOM } from "../helpers/DOM";
+import { DOM } from "../utils/DOM";
 import { Toaster } from "../utils/toaster";
 
 export class QuickAccess {

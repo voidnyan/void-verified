@@ -5,7 +5,7 @@ import {
 	EyeIcon,
 	HeartIcon,
 } from "../assets/icons";
-import { DOM } from "../helpers/DOM";
+import { DOM } from "../utils/DOM";
 
 export const ColorPicker = (value, onChange) => {
 	const container = DOM.create("div", "color-picker-container");

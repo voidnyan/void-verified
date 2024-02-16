@@ -1,5 +1,5 @@
 import { ImageHostBase } from "./imageHostBase";
-import { DOM } from "../helpers/DOM";
+import { DOM } from "../utils/DOM";
 import { Label, Note, SecretField } from "../components/components";
 import { ImageHostService } from "./imageHostConfiguration";
 import { Toaster } from "../utils/toaster";

@@ -1,6 +1,6 @@
 import { GifIcon } from "../assets/icons";
 import { IconButton } from "../components/components";
-import { DOM } from "../helpers/DOM";
+import { DOM } from "../utils/DOM";
 
 export class ActivityHandler {
 	settings;

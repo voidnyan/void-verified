@@ -1,4 +1,4 @@
-import { DOM } from "../helpers/DOM";
+import { DOM } from "./DOM";
 import { Select, Toast, Option, Button, Label } from "../components/components";
 
 export const toastTypes = {

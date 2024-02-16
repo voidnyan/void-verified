@@ -1,4 +1,4 @@
-import { DOM } from "../helpers/DOM";
+import { DOM } from "../utils/DOM";
 import { ColorFunctions } from "../utils/colorFunctions";
 import {
 	Button,
