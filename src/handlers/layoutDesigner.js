@@ -138,10 +138,10 @@ export class LayoutDesigner {
 			return;
 		}
 
-		const avatarElement = DOM.get("img.avatar");
+		const avatarElement = document.querySelector("img.avatar");
 		avatarElement.src = avatar;
 
-		const avatarLinks = DOM.getAll(
+		const avatarLinks = document.querySelectorAll(
 			`a.avatar[href*="${this.#settings.anilistUser}"]`
 		);
 		for (const avatarLink of avatarLinks) {
@@ -154,7 +154,7 @@ export class LayoutDesigner {
 			return;
 		}
 
-		const bannerElement = DOM.get(".banner");
+		const bannerElement = document.querySelector(".banner");
 		bannerElement.style = `background-image: url(${banner})`;
 	}
 
@@ -166,7 +166,7 @@ export class LayoutDesigner {
 			return;
 		}
 
-		const pageContent = DOM.get(".page-content > .user");
+		const pageContent = document.querySelector(".page-content > .user");
 		pageContent.style.setProperty("--color-blue", color);
 		pageContent.style.setProperty("--color-blue-dim", color);
 	}
@@ -176,25 +176,23 @@ export class LayoutDesigner {
 			return;
 		}
 
-		const donatorBadge = DOM.get(".donator-badge");
+		const donatorBadge = document.querySelector(".donator-badge");
 		donatorBadge.innerText = donatorText;
 	}
 
 	#handleCss() {
 		if (this.#layouts.disableCss) {
-			DOM.get("#void-verified-user-css-styles")?.setAttribute(
+			DOM.get("#verified-user-css-styles")?.setAttribute(
 				"disabled",
 				true
 			);
 		} else {
-			DOM.get("#void-verified-user-css-styles")?.removeAttribute(
-				"disabled"
-			);
+			DOM.get("#verified-user-css-styles")?.removeAttribute("disabled");
 		}
 	}
 
 	#handleAbout(about) {
-		const aboutContainer = DOM.get(".about .markdown");
+		const aboutContainer = document.querySelector(".about .markdown");
 
 		if (!this.#originalHtml) {
 			this.#originalHtml = aboutContainer.innerHTML;

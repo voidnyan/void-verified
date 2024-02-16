@@ -52,9 +52,10 @@ export class SettingsUserInterface {
 
 	renderSettingsUi() {
 		this.#checkAuthFromUrl();
-		const container = DOM.get(".settings.container > .content");
-		const settingsContainerExists =
-			DOM.get("#void-verified-settings") !== null;
+		const container = document.querySelector(
+			".settings.container > .content"
+		);
+		const settingsContainerExists = DOM.get("#verified-settings") !== null;
 		if (!settingsContainerExists) {
 			const settingsContainer = DOM.create(
 				"div",
@@ -74,7 +75,7 @@ export class SettingsUserInterface {
 		this.#renderOptions(settingsContainer);
 		this.#handleSubcategories(settingsContainer);
 
-		DOM.get("#void-verified-settings").replaceChildren(settingsContainer);
+		DOM.get("#verified-settings").replaceChildren(settingsContainer);
 	}
 
 	#handleSubcategories(settingsContainer) {
@@ -463,7 +464,7 @@ export class SettingsUserInterface {
 	async #handleVerifyUserForm(event, settings) {
 		event.preventDefault();
 
-		const usernameInput = DOM.get("#void-verified-add-user");
+		const usernameInput = DOM.get("#verified-add-user");
 		const username = usernameInput.value;
 		await settings.verifyUser(username);
 		usernameInput.value = "";

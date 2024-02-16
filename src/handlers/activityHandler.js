@@ -13,7 +13,7 @@ export class ActivityHandler {
 			return;
 		}
 
-		const subscribeButtons = DOM.getAll(
+		const subscribeButtons = document.querySelectorAll(
 			"span[label='Unsubscribe'], span[label='Subscribe']"
 		);
 		for (const subscribeButton of subscribeButtons) {
@@ -32,7 +32,7 @@ export class ActivityHandler {
 			return;
 		}
 
-		const anilistLinks = DOM.getAll(
+		const anilistLinks = document.querySelectorAll(
 			"a:not(.void-link)[href^='https://anilist.co'][target='_blank']"
 		);
 

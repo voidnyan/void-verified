@@ -66,7 +66,7 @@ export class GifKeyboardHandler {
 			return;
 		}
 
-		const gifs = DOM.getAll(
+		const gifs = document.querySelectorAll(
 			":is(.activity-markdown, .reply-markdown) .markdown img[src$='.gif']"
 		);
 		for (const gif of gifs) {
@@ -75,7 +75,7 @@ export class GifKeyboardHandler {
 
 		const images = ImageFormats.map((format) => {
 			return [
-				...DOM.getAll(
+				...document.querySelectorAll(
 					`:is(.activity-markdown, .reply-markdown) .markdown img[src$='.${format}']`
 				),
 			];
@@ -124,7 +124,7 @@ export class GifKeyboardHandler {
 			return;
 		}
 
-		const markdownEditors = DOM.getAll(".markdown-editor");
+		const markdownEditors = document.querySelectorAll(".markdown-editor");
 		for (const markdownEditor of markdownEditors) {
 			if (markdownEditor.querySelector(".void-gif-button")) {
 				continue;
@@ -157,7 +157,7 @@ export class GifKeyboardHandler {
 	}
 
 	#refreshKeyboards() {
-		const keyboards = DOM.getAll(".void-gif-keyboard-container");
+		const keyboards = DOM.getAll("gif-keyboard-container");
 		for (const keyboard of keyboards) {
 			this.#refreshKeyboard(keyboard);
 		}

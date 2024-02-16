@@ -30,10 +30,24 @@ export class DOM {
 	}
 
 	static get(selector) {
-		return document.querySelector(selector);
+		const convertedSelector = this.#convertSelector(selector);
+		return document.querySelector(convertedSelector);
 	}
 
 	static getAll(selector) {
-		return document.querySelectorAll(selector);
+		const convertedSelector = this.#convertSelector(selector);
+		return document.querySelectorAll(convertedSelector);
+	}
+
+	static #convertSelector(selector) {
+		let results = [];
+		for (const className of selector?.split(" ")) {
+			if (className.startsWith("#")) {
+				results.push(`#void-${className.slice(1)}`);
+				continue;
+			}
+			results.push(`.void-${className}`);
+		}
+		return results.join(" ");
 	}
 }

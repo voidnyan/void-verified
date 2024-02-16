@@ -76,7 +76,7 @@ export class QuickAccess {
 
 		quickAccessContainer.replaceChildren(sectionHeader, quickAccessBody);
 
-		if (DOM.get("#void-quick-access")) {
+		if (DOM.get("#quick-access")) {
 			return;
 		}
 		section.insertBefore(quickAccessContainer, section.firstChild);
@@ -86,7 +86,7 @@ export class QuickAccess {
 		if (!this.settings.options.quickAccessTimer.getValue()) {
 			return;
 		}
-		const timer = DOM.get(".void-quick-access-timer");
+		const timer = DOM.get("quick-access-timer");
 		const nextQuery = new Date(
 			this.#lastFetched.getTime() + this.#apiQueryTimeout
 		);

@@ -92,7 +92,7 @@ export class Toaster {
 		if (!this.#shouldToast(toastTypes.info)) {
 			return;
 		}
-		DOM.get("#void-toast-container").append(
+		DOM.get("#toast-container").append(
 			new ToastInstance(
 				message,
 				toastTypes.info,
@@ -106,7 +106,7 @@ export class Toaster {
 			return;
 		}
 
-		DOM.get("#void-toast-container").append(
+		DOM.get("#toast-container").append(
 			new ToastInstance(
 				message,
 				toastTypes.success,
@@ -120,7 +120,7 @@ export class Toaster {
 			return;
 		}
 
-		DOM.get("#void-toast-container").append(
+		DOM.get("#toast-container").append(
 			new ToastInstance(
 				message,
 				toastTypes.warning,
@@ -134,7 +134,7 @@ export class Toaster {
 			return;
 		}
 
-		DOM.get("#void-toast-container").append(
+		DOM.get("#toast-container").append(
 			new ToastInstance(
 				message,
 				toastTypes.error,
@@ -144,7 +144,7 @@ export class Toaster {
 	}
 
 	static critical(message) {
-		DOM.get("#void-toast-container").append(
+		DOM.get("#toast-container").append(
 			new ToastInstance(message, toastTypes.error, 8).toast()
 		);
 	}
@@ -216,7 +216,7 @@ export class Toaster {
 		this.#config.location = location;
 		this.#saveConfig();
 
-		const container = DOM.get("#void-toast-container");
+		const container = DOM.get("#toast-container");
 		for (const className of container.classList) {
 			container.classList.remove(className);
 		}
