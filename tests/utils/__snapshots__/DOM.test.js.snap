@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Getters getAll gets all elements 1`] = `
+NodeList [
+  <div
+    class="void-test"
+  >
+    1
+  </div>,
+  <div
+    class="void-test"
+  >
+    2
+  </div>,
+  <div
+    class="void-test"
+  >
+    3
+  </div>,
+  <div
+    class="void-test"
+  >
+    4
+  </div>,
+  <div
+    class="void-test"
+  >
+    5
+  </div>,
+]
+`;
+
+exports[`Getters getOrCreate creates a new element 1`] = `
+<div
+  id="void-test"
+/>
+`;
+
+exports[`Getters getOrCreate gets existing element 1`] = `
+<div
+  id="void-test"
+>
+  this exists in the body
+</div>
+`;
+
+exports[`create creates an element 1`] = `<div />`;
+
+exports[`create creates an element with a child element 1`] = `
+<div
+  class="void-parent"
+>
+  <div
+    class="void-child"
+  />
+</div>
+`;
+
+exports[`create creates an element with a class 1`] = `
+<div
+  class="void-test"
+/>
+`;
+
+exports[`create creates an element with an array of children 1`] = `
+<div
+  class="void-parent"
+>
+  <div
+    class="void-child"
+  >
+    1
+  </div>
+  <div
+    class="void-child"
+  >
+    2
+  </div>
+  <div
+    class="void-child"
+  >
+    3
+  </div>
+  <div
+    class="void-child"
+  >
+    4
+  </div>
+  <div
+    class="void-child"
+  >
+    5
+  </div>
+</div>
+`;
+
+exports[`create creates an element with an id 1`] = `
+<div
+  id="void-test"
+/>
+`;
+
+exports[`create creates an element with an id and multiple classes 1`] = `
+<div
+  class="void-test void-test2"
+  id="void-test"
+/>
+`;
