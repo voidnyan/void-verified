@@ -171,4 +171,9 @@ export const defaultSettings = {
 		description: "Add like buttons to add media to GIF keyboard.",
 		category: categories.paste,
 	},
+	changeLogEnabled: {
+		defaultValue: true,
+		description: "Display a changelog when a new version is detected.",
+		category: categories.misc,
+	},
 };

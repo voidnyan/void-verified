@@ -622,6 +622,83 @@ export const styles = /* css */ `
         cursor: wait !important;
     }
 
+    body:has(.void-modal-background[open]) {
+        overflow: hidden;
+    }
+
+    .void-modal-background[open] {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+        backdrop-filter: brightness(50%);
+        background: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .void-modal {
+        background: rgb(var(--color-foreground));
+        color: rgb(var(--color-text));
+        border-radius: 4px;
+        min-width: 500px;
+        padding: 0;
+        margin: 0;
+        border-width: 0px;
+    }
+
+    .void-modal-header {
+        width: 100%;
+        background: rgb(var(--color-background));
+        padding: 12px;
+        border-radius: 4px 4px 0px 0px;
+        display: flex;
+        justify-content: space-between;
+        font-weight: 700;
+    }
+
+    .void-modal-header .void-icon-button {
+        color: rgb(var(--color-red));
+        height: 20px;
+    }
+
+    .void-modal-content {
+        padding: 12px;
+        max-height: 500px;
+        overflow-y: scroll;
+    }
+
+    .void-change-log-header {
+        margin: 4px 0px;
+    }
+
+    .void-change-log-note {
+        margin-bottom: 16px;
+    }
+
+    .void-change-log-list {
+        list-style: none;
+        gap: 5px;
+        padding-left: 20px;
+    }
+
+    .void-change-log-list li:not(:last-child) { 
+        margin-bottom: 4px;  
+    }
+
+    .void-change-log-list-item span:first-child {
+        text-align: center;
+        width: 13px;
+        display: inline-block;
+    }
+
+    .void-change-log-list-item span:last-child {
+        margin-left: 6px;
+    }
+
     #void-toast-container {
         position: fixed;
         display: flex;

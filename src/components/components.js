@@ -1,4 +1,5 @@
 import {
+	CloseIcon,
 	DoubleChevronLeftIcon,
 	DoubleChevronRightIcon,
 	EyeClosedIcon,
@@ -312,6 +313,27 @@ export const Pagination = (currentPage, maxPage, onClick) => {
 	}
 
 	return container;
+};
+
+export const Modal = (content, onClose) => {
+	const background = DOM.create("dialog", "modal-background");
+	const container = DOM.create("div", "modal");
+
+	const closeButton = IconButton(CloseIcon(), (event) => {
+		background.close();
+		onClose(event);
+	});
+
+	const header = DOM.create("div", "modal-header", "VoidVerified");
+	header.append(closeButton);
+	container.append(header);
+
+	const contentContainer = DOM.create("div", "modal-content", content);
+	container.append(contentContainer);
+	background.append(container);
+
+	background.setAttribute("open", true);
+	return background;
 };
 
 const transformClasses = (base, additional) => {

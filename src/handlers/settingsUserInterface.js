@@ -23,6 +23,7 @@ import { GlobalCSS } from "./globalCSS";
 import { DOM } from "../utils/DOM";
 import { Toaster } from "../utils/toaster";
 import { RefreshIcon } from "../assets/icons";
+import { ChangeLog } from "../utils/changeLog";
 
 const subCategories = {
 	users: "users",
@@ -155,7 +156,11 @@ export class SettingsUserInterface {
 			Link("voidnyan", "https://anilist.co/user/voidnyan/"),
 		]);
 
-		headerContainer.append(header, versionInfo, author);
+		const changeLogButton = Button("View Changelog", () => {
+			new ChangeLog(this.settings).renderChangeLog(true);
+		});
+
+		headerContainer.append(header, versionInfo, author, changeLogButton);
 
 		settingsContainer.append(headerContainer);
 	}
