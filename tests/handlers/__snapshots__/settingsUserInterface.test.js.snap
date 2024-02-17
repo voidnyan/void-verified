@@ -28,6 +28,11 @@ exports[`Settings User Interface renders 1`] = `
           voidnyan
         </a>
       </p>
+      <button
+        class="void-button"
+      >
+        View Changelog
+      </button>
     </div>
     <nav
       class="void-nav"
@@ -527,6 +532,22 @@ exports[`Settings User Interface renders 1`] = `
           for="0.12352"
         >
           Add like buttons to add media to GIF keyboard.
+        </label>
+      </div>
+      <div
+        class="void-setting-label-container"
+      >
+        <input
+          class="void-checkbox"
+          id="0.12352"
+          title="undefined"
+          type="checkbox"
+        />
+        <label
+          class="void-setting-label"
+          for="0.12352"
+        >
+          Display a changelog when a new version is detected.
         </label>
       </div>
     </div>

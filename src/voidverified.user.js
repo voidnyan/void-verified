@@ -6,6 +6,7 @@ import { styles } from "./assets/styles";
 import { ImgurAPI } from "./api/imgurAPI";
 import { ImageHostService, imageHosts } from "./api/imageHostConfiguration";
 import { Toaster } from "./utils/toaster";
+import { ChangeLog } from "./utils/changeLog";
 
 const settings = new Settings();
 Toaster.initializeToaster(settings);
@@ -30,6 +31,8 @@ try {
 		"A critical error has occured setting up pasteHandler. Please check developer console and contact voidnyan."
 	);
 }
+
+new ChangeLog(settings).renderChangeLog();
 
 styleHandler.createStyleLink(styles, "script");
 
