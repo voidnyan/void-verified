@@ -16,6 +16,7 @@ import {
 	TextArea,
 	ColorPicker,
 	IconButton,
+	Button,
 } from "../components/components";
 import { categories } from "../assets/defaultSettings";
 import { GlobalCSS } from "./globalCSS";
@@ -540,38 +541,39 @@ export class SettingsUserInterface {
 			notice.style.fontSize = "11px";
 			container.append(notice);
 		} else {
-			const publishButton = DOM.create("button", null, "Publish");
-			publishButton.classList.add("button");
-			publishButton.addEventListener("click", (event) =>
-				this.#handlePublishCss(event, cssHandler)
+			const resetButton = Button(
+				"Reset CSS",
+				() => {
+					if (window.confirm("Your changes will be lost.")) {
+						cssHandler.getAuthUserCss().then(() => {
+							textarea.value = cssHandler.css;
+						});
+					}
+				},
+				"error"
 			);
 
-			const previewButton = DOM.create(
-				"button",
-				null,
-				cssHandler.preview ? "Disable Preview" : "Enable Preview"
+			const publishButton = Button(
+				"Publish CSS",
+				(event) => {
+					this.#handlePublishCss(event, cssHandler);
+				},
+				"success"
 			);
-			previewButton.classList.add("button");
-			previewButton.addEventListener("click", () => {
-				cssHandler.togglePreview();
-				previewButton.innerText = cssHandler.preview
-					? "Disable Preview"
-					: "Enable Preview";
-			});
 
-			const resetButton = DOM.create("button", null, "Reset");
-			resetButton.classList.add("button");
-			resetButton.addEventListener("click", () => {
-				if (window.confirm("Your changes will be lost.")) {
-					cssHandler.getAuthUserCss().then(() => {
-						textarea.value = cssHandler.css;
-					});
+			const previewButton = Button(
+				cssHandler.preview ? "Disable Preview" : "Enable Preview",
+				() => {
+					cssHandler.togglePreview();
+					previewButton.innerText = cssHandler.preview
+						? "Disable Preview"
+						: "Enable Preview";
 				}
-			});
+			);
 
+			container.append(resetButton);
 			container.append(publishButton);
 			container.append(previewButton);
-			container.append(resetButton);
 		}
 
 		settingsContainer.append(container);

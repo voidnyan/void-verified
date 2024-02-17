@@ -250,9 +250,13 @@ export class LayoutDesigner {
 			}
 		);
 
-		const getAboutButton = Button("Reset About", () => {
-			this.#getUserAbout(settingsUi);
-		});
+		const getAboutButton = Button(
+			"Reset About",
+			() => {
+				this.#getUserAbout(settingsUi);
+			},
+			"error"
+		);
 
 		container.append(
 			header,
@@ -270,9 +274,13 @@ export class LayoutDesigner {
 		container.append(this.#createAboutSection(settingsUi), getAboutButton);
 
 		if (this.#settings.auth?.token) {
-			const saveAboutButton = Button("Publish About", (event) => {
-				this.#publishAbout(event, settingsUi);
-			});
+			const saveAboutButton = Button(
+				"Publish About",
+				(event) => {
+					this.#publishAbout(event, settingsUi);
+				},
+				"success"
+			);
 			container.append(saveAboutButton);
 		}
 
