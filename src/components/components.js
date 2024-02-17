@@ -86,8 +86,12 @@ export const RangeField = (value, onChange, max, step = 1, min = 0, unit) => {
 	return container;
 };
 
-export const Button = (text, onClick) => {
-	const button = DOM.create("button", "button", text);
+export const Button = (text, onClick, classes) => {
+	const button = DOM.create(
+		"button",
+		transformClasses("button", classes),
+		text
+	);
 	button.addEventListener("click", (event) => {
 		onClick(event);
 	});
