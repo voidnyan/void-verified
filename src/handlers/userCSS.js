@@ -178,6 +178,7 @@ export class UserCSS {
 			about = await anilistAPI.getUserAbout(username);
 		} catch (error) {
 			Toaster.error("Failed to get current about for merging new CSS.");
+			return;
 		}
 		if (!about) {
 			about = "";
