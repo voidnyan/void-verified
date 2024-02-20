@@ -15,6 +15,7 @@ const componentBlackList = [
 	"Label",
 	"Select",
 	"SettingLabel",
+	"Tooltip",
 ];
 
 const simpleComponents = Object.entries(components)
@@ -139,12 +140,7 @@ describe("Components", () => {
 
 	describe("Checkbox", () => {
 		it("is disabled", () => {
-			const checkbox = components.Checkbox(
-				false,
-				() => {},
-				"checkboxTitle",
-				true
-			);
+			const checkbox = components.Checkbox(false, () => {}, true);
 			expect(checkbox.disabled).toBeTruthy();
 		});
 	});
@@ -269,7 +265,7 @@ describe("Components", () => {
 		it("matches snapshot", () => {
 			const settingLabel = components.SettingLabel(
 				"settinglabel",
-				components.Checkbox(true, () => {}, "checkbox")
+				components.Checkbox(true, () => {})
 			);
 			expect(settingLabel).toMatchSnapshot();
 		});

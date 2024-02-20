@@ -522,7 +522,6 @@ exports[`Components SettingLabel matches snapshot 1`] = `
   <input
     class="void-checkbox"
     id="0.12352"
-    title="checkbox"
     type="checkbox"
   />
   <label
@@ -556,7 +555,6 @@ exports[`Components SimpleComponentTests "Button" matches snapshot 1`] = `
 exports[`Components SimpleComponentTests "Checkbox" matches snapshot 1`] = `
 <input
   class="void-checkbox"
-  title="undefined"
   type="checkbox"
 />
 `;

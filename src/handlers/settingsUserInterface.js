@@ -17,6 +17,7 @@ import {
 	ColorPicker,
 	IconButton,
 	Button,
+	Tooltip,
 } from "../components/components";
 import { categories } from "../assets/defaultSettings";
 import { GlobalCSS } from "./globalCSS";
@@ -447,14 +448,9 @@ export class SettingsUserInterface {
 			this.#updateUserOption(username, settingKey, event.target.checked);
 			this.renderSettingsUiContent();
 		};
-		const checkbox = Checkbox(
-			isChecked,
-			onChange,
-			this.settings.options[settingKey].description,
-			disabled,
-			true
-		);
-		return checkbox;
+		const description = this.settings.options[settingKey].description;
+		const checkbox = Checkbox(isChecked, onChange, disabled, true);
+		return Tooltip(description, checkbox);
 	}
 
 	#handleUserColorReset(username) {
