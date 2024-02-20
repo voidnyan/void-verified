@@ -185,7 +185,7 @@ export const TableBody = (rows) => {
 	return tableBody;
 };
 
-export const Checkbox = (checked, onChange, title, disabled = false) => {
+export const Checkbox = (checked, onChange, disabled = false) => {
 	const checkbox = DOM.create("input", "checkbox");
 	checkbox.setAttribute("type", "checkbox");
 	checkbox.checked = checked;
@@ -195,7 +195,6 @@ export const Checkbox = (checked, onChange, title, disabled = false) => {
 	}
 
 	checkbox.addEventListener("change", onChange);
-	checkbox.title = title;
 	return checkbox;
 };
 
@@ -334,6 +333,14 @@ export const Modal = (content, onClose) => {
 
 	background.setAttribute("open", true);
 	return background;
+};
+
+export const Tooltip = (text, child) => {
+	const tooltipContainer = DOM.create("div", "tooltip-container");
+	const tooltip = DOM.create("div", "tooltip", text);
+	tooltipContainer.append(tooltip);
+	tooltipContainer.append(child);
+	return tooltipContainer;
 };
 
 const transformClasses = (base, additional) => {

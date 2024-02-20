@@ -699,6 +699,45 @@ export const styles = /* css */ `
         margin-left: 6px;
     }
 
+    .void-tooltip-container:has(input) {
+        display: inline-block;
+    }
+
+    .void-tooltip-container {
+        position: relative;
+    }
+
+    .void-tooltip {
+        position: absolute;
+        text-align: center;
+        top: -8px;
+        left: 50%;
+        transform: translate(-50%, -100%);
+        font-size: 12px;
+        padding: 4px 6px;
+        background: rgb(var(--color-foreground-blue));
+        border-radius: 4px;
+        width: max-content;
+        max-width: 200px;
+        visibility: hidden;
+        z-index: 3000;
+    }
+
+    .void-tooltip-container:hover .void-tooltip {
+        visibility: visible;
+    }
+
+    .void-tooltip-container:hover .void-tooltip:after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: rgb(var(--color-foreground-blue)) transparent transparent transparent;
+        }
+
     #void-toast-container {
         position: fixed;
         display: flex;
