@@ -736,7 +736,15 @@ export const styles = /* css */ `
         border-width: 5px;
         border-style: solid;
         border-color: rgb(var(--color-foreground-blue)) transparent transparent transparent;
-        }
+    }
+
+    .void-button.void-self-message {
+        margin-top: 0;
+        margin-right: 0;
+        margin-left: 18px;
+        font-family: inherit;
+        font-weight: 900;
+    }
 
     #void-toast-container {
         position: fixed;

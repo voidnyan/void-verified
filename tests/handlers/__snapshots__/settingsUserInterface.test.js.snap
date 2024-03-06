@@ -522,6 +522,21 @@ exports[`Settings User Interface renders 1`] = `
           Display a changelog when a new version is detected.
         </label>
       </div>
+      <div
+        class="void-setting-label-container"
+      >
+        <input
+          class="void-checkbox"
+          id="0.12352"
+          type="checkbox"
+        />
+        <label
+          class="void-setting-label"
+          for="0.12352"
+        >
+          Enable a self-message button on your profile (requires authentication).
+        </label>
+      </div>
     </div>
     <nav
       class="void-nav"

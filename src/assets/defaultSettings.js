@@ -176,4 +176,11 @@ export const defaultSettings = {
 		description: "Display a changelog when a new version is detected.",
 		category: categories.misc,
 	},
+	selfMessageEnabled: {
+		defaultValue: false,
+		description:
+			"Enable a self-message button on your profile (requires authentication).",
+		category: categories.misc,
+		authRequired: true,
+	},
 };

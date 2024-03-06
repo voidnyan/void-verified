@@ -1,6 +1,8 @@
+import { AnilistAPI } from "../api/anilistAPI";
 import { GifIcon } from "../assets/icons";
-import { IconButton } from "../components/components";
+import { Button, IconButton } from "../components/components";
 import { DOM } from "../utils/DOM";
+import { Toaster } from "../utils/toaster";
 
 export class ActivityHandler {
 	settings;
@@ -24,6 +26,59 @@ export class ActivityHandler {
 			const container = subscribeButton.parentNode.parentNode;
 			const actions = container.querySelector(".actions");
 			actions.append(subscribeButton);
+		}
+	}
+
+	addSelfMessageButton() {
+		if (!this.settings.options.selfMessageEnabled.getValue()) {
+			return;
+		}
+
+		if (
+			!window.location.pathname.startsWith(
+				`/user/${this.settings.anilistUser}`
+			)
+		) {
+			return;
+		}
+
+		const activityEditActions = document.querySelector(
+			".activity-feed-wrap > .activity-edit > .actions"
+		);
+		if (
+			!activityEditActions ||
+			activityEditActions?.querySelector(".void-self-message")
+		) {
+			return;
+		}
+
+		activityEditActions.append(
+			Button(
+				"Message Self",
+				() => {
+					this.#handleSelfMessage(this.settings);
+				},
+				"self-message"
+			)
+		);
+	}
+
+	async #handleSelfMessage(settings) {
+		const anilistAPI = new AnilistAPI(settings);
+		const message = document.querySelector(
+			".activity-feed-wrap > .activity-edit textarea"
+		).value;
+		try {
+			Toaster.debug("Self-publishing a message.");
+			const response = await anilistAPI.selfMessage(message);
+			Toaster.success("Message self-published.");
+			console.log(response);
+			window.location.replace(
+				`https://anilist.co/activity/${response.id}`
+			);
+		} catch (err) {
+			console.error(err);
+			Toaster.error("There was an error self-publishing a message.");
 		}
 	}
 

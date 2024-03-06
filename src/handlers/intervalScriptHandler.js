@@ -53,6 +53,7 @@ export class IntervalScriptHandler {
 		const path = window.location.pathname;
 
 		intervalScriptHandler.activityHandler.moveAndDisplaySubscribeButton();
+		intervalScriptHandler.activityHandler.addSelfMessageButton();
 		intervalScriptHandler.activityHandler.removeBlankFromAnilistLinks();
 		intervalScriptHandler.gifKeyboard.handleGifKeyboard();
 		intervalScriptHandler.globalCSS.clearCssForProfile();
