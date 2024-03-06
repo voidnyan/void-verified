@@ -153,6 +153,26 @@ export class AnilistAPI {
 		}
 	}
 
+	async selfMessage(message) {
+		const variables = { message, recipientId: this.#userId };
+		const query = `
+            mutation($recipientId: Int, $message: String) {
+                SaveMessageActivity(message: $message, private: true, recipientId: $recipientId) {
+                    id
+                }
+            }
+        `;
+
+		const options = this.#getMutationOptions(query, variables);
+
+		try {
+			const data = await this.#elevatedFetch(options);
+			return data.SaveMessageActivity;
+		} catch (error) {
+			throw new Error("Failed to publish a self-message");
+		}
+	}
+
 	async #elevatedFetch(options) {
 		const runElevated = this.settings.options.useElevatedFetch.getValue();
 		if (runElevated && GM.xmlHttpRequest) {

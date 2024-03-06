@@ -22,6 +22,14 @@ export const changeLog = [
 			"added a change log to introduce new features",
 			"changeLogEnabled"
 		),
+		new Feature(
+			"added a self-message button to user's own profile",
+			"selfMessageEnabled"
+		),
+		new Feature("color coded Layout Designer and CSS action buttons"),
+		new Feature(
+			"fixed a bug where an API error when publishing CSS could lead to user's about being removed"
+		),
 	]),
 	new Version("1.9", [
 		new Feature(
