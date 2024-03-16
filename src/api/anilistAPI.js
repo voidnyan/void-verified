@@ -157,7 +157,7 @@ export class AnilistAPI {
 		const variables = { message, recipientId: this.#userId };
 		const query = `
             mutation($recipientId: Int, $message: String) {
-                SaveMessageActivity(message: $message, private: true, recipientId: $recipientId) {
+                SaveMessageActivity(message: $message, private: false, recipientId: $recipientId) {
                     id
                 }
             }
