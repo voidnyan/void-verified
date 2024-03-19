@@ -183,4 +183,10 @@ export const defaultSettings = {
 		category: categories.misc,
 		authRequired: true,
 	},
+	hideMessagesFromListFeed: {
+		defaultValue: false,
+		description:
+			"Fix AniList bug where private messages are displayed in List activity feed.",
+		category: categories.misc,
+	},
 };

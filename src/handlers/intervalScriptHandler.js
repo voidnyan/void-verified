@@ -8,6 +8,7 @@ import { LayoutDesigner } from "./layoutDesigner.js";
 import { Toaster } from "../utils/toaster.js";
 import { Link } from "../components/components.js";
 import { GifKeyboardHandler } from "./gifKeyboardHandler.js";
+import { AnilistFeedFixHandler } from "./anilistFeedFixHandler.js";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -19,6 +20,7 @@ export class IntervalScriptHandler {
 	userCSS;
 	layoutDesigner;
 	gifKeyboard;
+	anilistFeedFixHandler;
 	constructor(settings) {
 		this.settings = settings;
 
@@ -37,6 +39,7 @@ export class IntervalScriptHandler {
 		);
 		this.activityHandler = new ActivityHandler(settings);
 		this.quickAccess = new QuickAccess(settings);
+		this.anilistFeedFixHandler = new AnilistFeedFixHandler(settings);
 	}
 
 	currentPath = "";
@@ -58,6 +61,7 @@ export class IntervalScriptHandler {
 		intervalScriptHandler.gifKeyboard.handleGifKeyboard();
 		intervalScriptHandler.globalCSS.clearCssForProfile();
 		intervalScriptHandler.layoutDesigner.renderLayoutPreview();
+		intervalScriptHandler.anilistFeedFixHandler.handleFix();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();
@@ -76,6 +80,7 @@ export class IntervalScriptHandler {
 			intervalScriptHandler.userCSS.checkUserCss();
 			intervalScriptHandler.quickAccess.clearBadge();
 			intervalScriptHandler.styleHandler.verifyProfile();
+			intervalScriptHandler.anilistFeedFixHandler.handleFilters();
 		} else {
 			intervalScriptHandler.styleHandler.clearStyles("profile");
 		}

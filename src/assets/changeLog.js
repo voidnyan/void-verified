@@ -17,6 +17,12 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.11", [
+		new Feature(
+			"Fix AniList bug where private messages are displayed in List activity feed.",
+			"hideMessagesFromListFeed"
+		),
+	]),
 	new Version("1.10", [
 		new Feature(
 			"added a change log to introduce new features",
