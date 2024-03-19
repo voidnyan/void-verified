@@ -112,7 +112,12 @@ export class LayoutDesigner {
 
 	#handlePreviewToggleMessage(preview) {
 		this.#layouts.preview = preview;
-		if (preview) {
+		if (
+			preview ||
+			!window.location.pathname.startsWith(
+				`/user/${this.#settings.anilistUser}/`
+			)
+		) {
 			return;
 		}
 
