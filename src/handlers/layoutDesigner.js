@@ -194,6 +194,10 @@ export class LayoutDesigner {
 	#handleAbout(about) {
 		const aboutContainer = document.querySelector(".about .markdown");
 
+		if (!aboutContainer) {
+			return;
+		}
+
 		if (!this.#originalHtml) {
 			this.#originalHtml = aboutContainer.innerHTML;
 		}
