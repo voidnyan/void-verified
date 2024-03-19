@@ -22,6 +22,12 @@ export const changeLog = [
 			"Fix AniList bug where private messages are displayed in List activity feed.",
 			"hideMessagesFromListFeed"
 		),
+		new Feature(
+			"Fix layout designer preview crashing the script when viewing a tab other than overview."
+		),
+		new Feature(
+			"Fix a bug where disabling layout preview would change another user's layout."
+		),
 	]),
 	new Version("1.10", [
 		new Feature(
