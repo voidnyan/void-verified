@@ -107,6 +107,9 @@ export class SettingsUserInterface {
 						this.userCSS
 					);
 				}
+				if (this.settings.options.csspyEnabled.getValue()) {
+					settingsContainer.append(this.userCSS.renderCSSpy(this));
+				}
 				break;
 			case subCategories.globalCss:
 				if (this.settings.options.globalCssEnabled.getValue()) {
@@ -231,10 +234,11 @@ export class SettingsUserInterface {
 				return this.settings.options.pasteImagesToHostService.getValue();
 			case subCategories.layout:
 				return (
-					this.settings.auth?.token &&
-					(this.settings.options.profileCssEnabled.getValue() ||
-						this.settings.options.activityCssEnabled.getValue() ||
-						this.settings.options.layoutDesignerEnabled.getValue())
+					(this.settings.auth?.token &&
+						(this.settings.options.profileCssEnabled.getValue() ||
+							this.settings.options.activityCssEnabled.getValue())) ||
+					this.settings.options.layoutDesignerEnabled.getValue() ||
+					this.settings.options.csspyEnabled.getValue()
 				);
 			case subCategories.globalCss:
 				return this.settings.options.globalCssEnabled.getValue();

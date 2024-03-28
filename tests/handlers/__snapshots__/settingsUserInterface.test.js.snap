@@ -552,6 +552,21 @@ exports[`Settings User Interface renders 1`] = `
           Fix AniList bug where private messages are displayed in List activity feed.
         </label>
       </div>
+      <div
+        class="void-setting-label-container"
+      >
+        <input
+          class="void-checkbox"
+          id="0.12352"
+          type="checkbox"
+        />
+        <label
+          class="void-setting-label"
+          for="0.12352"
+        >
+          Enable CSSpy in CSS & Layouts tab.
+        </label>
+      </div>
     </div>
     <nav
       class="void-nav"

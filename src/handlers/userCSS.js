@@ -3,6 +3,9 @@ import { ColorFunctions } from "../utils/colorFunctions";
 import { StyleHandler } from "./styleHandler";
 import LZString from "../libraries/lz-string";
 import { Toaster } from "../utils/toaster";
+import { DOM } from "../utils/DOM";
+import { ActionInputField, Link, TextArea } from "../components/components";
+import { SearchDocumentIcon } from "../assets/icons";
 
 export class UserCSS {
 	#settings;
@@ -12,6 +15,10 @@ export class UserCSS {
 	preview = false;
 	cssInLocalStorage = "void-verified-user-css";
 	broadcastChannel;
+	#csspy = {
+		username: "",
+		css: "",
+	};
 
 	constructor(settings) {
 		this.#settings = settings;
@@ -229,6 +236,69 @@ export class UserCSS {
 			return css;
 		} catch (error) {
 			Toaster.error("Failed to query account user CSS.");
+		}
+	}
+
+	renderCSSpy(settingsUi) {
+		const container = DOM.create("div");
+		container.append(DOM.create("h3", null, "CSSpy"));
+
+		const usernameInput = ActionInputField(
+			"",
+			(_, inputField) => {
+				this.#handleSpy(inputField, settingsUi);
+			},
+			SearchDocumentIcon()
+		);
+
+		container.append(usernameInput);
+
+		if (this.#csspy.css === "") {
+			return container;
+		}
+
+		const cssContainer = TextArea(this.#csspy.css);
+		cssContainer.setAttribute("readonly", true);
+		const header = DOM.create("h5", "layout-header", [
+			Link(
+				this.#csspy.username,
+				`https://anilist.co/user/${this.#csspy.username}/`
+			),
+			`'s CSS`,
+		]);
+
+		container.append(header);
+		container.append(cssContainer);
+
+		return container;
+	}
+
+	async #handleSpy(inputField, settingsUi) {
+		const username = inputField.value;
+		if (username === "") {
+			return;
+		}
+
+		try {
+			Toaster.debug(`Spying CSS from ${username}.`);
+			const about = await new AnilistAPI(this.#settings).getUserAbout(
+				username
+			);
+			const css = this.#decodeAbout(about)?.customCSS;
+			if (css) {
+				this.#csspy.css = css;
+				this.#csspy.username = username;
+				settingsUi.renderSettingsUiContent();
+			} else {
+				this.#csspy.css = "";
+				this.#csspy.username = "";
+				Toaster.debug("User has no custom CSS.");
+			}
+		} catch (error) {
+			this.#csspy.css = "";
+			this.#csspy.username = "";
+			Toaster.error(`There was an error getting CSS for ${username}`);
+			console.error(error);
 		}
 	}
 
