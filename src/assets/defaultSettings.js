@@ -189,4 +189,9 @@ export const defaultSettings = {
 			"Fix AniList bug where private messages are displayed in List activity feed.",
 		category: categories.misc,
 	},
+	csspyEnabled: {
+		defaultValue: false,
+		description: "Enable CSSpy in CSS & Layouts tab.",
+		category: categories.css,
+	},
 };

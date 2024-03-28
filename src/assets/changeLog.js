@@ -17,6 +17,9 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.12", [
+		new Feature("Enable CSSpy in CSS & Layouts tab.", "csspyEnabled"),
+	]),
 	new Version("1.11", [
 		new Feature(
 			"Fix AniList bug where private messages are displayed in List activity feed.",
