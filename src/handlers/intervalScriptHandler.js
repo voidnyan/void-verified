@@ -9,6 +9,7 @@ import { Toaster } from "../utils/toaster.js";
 import { Link } from "../components/components.js";
 import { GifKeyboardHandler } from "./gifKeyboardHandler.js";
 import { AnilistFeedFixHandler } from "./anilistFeedFixHandler.js";
+import { NotificationHandler } from "./notificationHandler.js";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -21,6 +22,7 @@ export class IntervalScriptHandler {
 	layoutDesigner;
 	gifKeyboard;
 	anilistFeedFixHandler;
+	notificationHandler;
 	constructor(settings) {
 		this.settings = settings;
 
@@ -40,6 +42,7 @@ export class IntervalScriptHandler {
 		this.activityHandler = new ActivityHandler(settings);
 		this.quickAccess = new QuickAccess(settings);
 		this.anilistFeedFixHandler = new AnilistFeedFixHandler(settings);
+		this.notificationHandler = new NotificationHandler(settings);
 	}
 
 	currentPath = "";
@@ -66,6 +69,9 @@ export class IntervalScriptHandler {
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();
 			intervalScriptHandler.quickAccess.renderQuickAccess();
+			intervalScriptHandler.notificationHandler.renderNotifications();
+		} else {
+			intervalScriptHandler.notificationHandler.resetShouldRender();
 		}
 
 		if (!path.startsWith("/settings/developer")) {

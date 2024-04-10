@@ -173,6 +173,65 @@ export class AnilistAPI {
 		}
 	}
 
+	async getNotifications(notificationTypes) {
+		const query = `
+        query($notificationTypes: [NotificationType]) {
+            User(id: ${this.#userId}) {unreadNotificationCount}
+            Page(page: 1) {
+                notifications(type_in: $notificationTypes) {
+                    ... on ActivityMessageNotification {${activityQuery}}
+                    ... on ActivityReplyNotification {${activityQuery}}
+                    ... on ActivityMentionNotification{${activityQuery}}
+                    ... on ActivityReplySubscribedNotification{${activityQuery}}
+                    ... on ActivityLikeNotification{${activityQuery}}
+                    ... on ActivityReplyLikeNotification{${activityQuery}}
+                    ... on FollowingNotification{${followingQuery}}
+                    ... on AiringNotification{${airingQuery}}
+                    ... on RelatedMediaAdditionNotification{${relatedMediaQuery}}
+                    ... on ThreadCommentMentionNotification{${threadCommentQuery}}
+                    ... on ThreadCommentReplyNotification{${threadCommentQuery}}
+                    ... on ThreadCommentSubscribedNotification{${threadCommentQuery}}
+                    ... on ThreadCommentLikeNotification{${threadCommentQuery}}
+                    ... on ThreadLikeNotification{${threadQuery}}
+                    ... on MediaDataChangeNotification{${mediaDataChange}}
+                    ... on MediaDeletionNotification{${mediaDeleted}}
+                }
+            }
+        }`;
+
+		const variables = {
+			notificationTypes,
+		};
+		const options = this.#getMutationOptions(query, variables);
+		try {
+			const data = await this.#elevatedFetch(options);
+			return [data.Page.notifications, data.User.unreadNotificationCount];
+		} catch (error) {
+			console.error(error);
+			throw new Error("Failed to query notifications.");
+		}
+	}
+
+	async resetNotificationCount() {
+		const query = `query {
+            Page(page: 1, perPage: 1) {
+                notifications(resetNotificationCount: true) {
+                    __typename
+                }
+            }
+        }`;
+
+		const options = this.#getMutationOptions(query, {});
+		try {
+			const data = await this.#elevatedFetch(options);
+			console.log(data);
+			return data;
+		} catch (error) {
+			console.error(error);
+			throw new Error("Failed to reset notification count.");
+		}
+	}
+
 	async #elevatedFetch(options) {
 		const runElevated = this.settings.options.useElevatedFetch.getValue();
 		if (runElevated && GM.xmlHttpRequest) {
@@ -186,7 +245,7 @@ export class AnilistAPI {
 				const data = JSON.parse(response.response);
 				return data.data;
 			} catch (error) {
-				if (error.error.includes("Request was blocked by the user")) {
+				if (error.error?.includes("Request was blocked by the user")) {
 					Toaster.warning(
 						"Elevated access has been enabled in the userscript settings but user has refused permissions to run it. Using regular fetch."
 					);
@@ -281,3 +340,82 @@ export class AnilistAPI {
 		return queryOptions;
 	}
 }
+
+const userQuery = `user {
+    name
+    avatar {
+        large
+    }
+}`;
+
+const mediaQuery = `media {
+    title {
+        userPreferred
+    }
+    coverImage {
+        large
+    }
+    id
+    type
+}`;
+
+const activityMediaQuery = `activity {
+    ... on ListActivity {media {
+        coverImage {large}
+        id
+        type
+    }}
+}`;
+const activityQuery = `activityId
+    type
+    ${userQuery}
+    createdAt
+    context`;
+
+const followingQuery = `type
+    context
+    createdAt
+    ${userQuery}
+    `;
+
+const airingQuery = `type
+    contexts
+    createdAt
+    ${mediaQuery}
+    episode
+    `;
+
+const relatedMediaQuery = `type
+    ${mediaQuery}
+    context
+    createdAt`;
+
+const threadQuery = `type
+    context
+    threadId
+    thread {title}
+    ${userQuery}
+    createdAt`;
+
+const threadCommentQuery = `type
+    context
+    thread {
+        id
+        title
+    }
+    commentId
+    ${userQuery}
+    createdAt`;
+
+const mediaDataChange = `type
+    context
+    ${mediaQuery}
+    reason
+    createdAt
+    `;
+
+const mediaDeleted = `type
+    context
+    reason
+    deletedMediaTitle
+    createdAt`;

@@ -343,6 +343,11 @@ export const Tooltip = (text, child) => {
 	return tooltipContainer;
 };
 
+export const Chip = (text) => {
+	const chip = DOM.create("span", "chip", text);
+	return chip;
+};
+
 const transformClasses = (base, additional) => {
 	let classes = base;
 	if (additional && additional !== "") {

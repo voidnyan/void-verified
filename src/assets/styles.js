@@ -103,7 +103,7 @@ export const styles = /* css */ `
     }
 
     .void-setting-label {
-        margin-left: 6px;
+        padding-left: 6px;
         vertical-align: middle;
         cursor: pointer;
     }
@@ -125,7 +125,7 @@ export const styles = /* css */ `
     }
 
     .void-settings .void-settings-list label {
-        margin-left: 8px;
+        padding-left: 8px;
     }
 
     .void-settings .void-css-editor label {
@@ -178,13 +178,10 @@ export const styles = /* css */ `
         border-radius: 4px;
     }
 
-
-
     .void-layout-image-display.void-banner {
         width: 100%;
         background-size: cover;
         background-position: 50% 50%;
-        background-size: 
     }
 
     .void-layout-image-display.void-avatar {
@@ -513,6 +510,11 @@ export const styles = /* css */ `
     .void-pagination-container .void-icon-button.void-pagination-skip {
         vertical-align: top;
     }
+
+    .void-quick-access {
+        display: flex;
+        flex-direction: column;
+    }
     
     .void-quick-access .void-quick-access-wrap {
         background: rgb(var(--color-foreground));
@@ -522,6 +524,41 @@ export const styles = /* css */ `
         gap: 15px;
         padding: 15px;
         margin-bottom: 25px;
+        border-radius: 4px;
+    }
+
+    .void-quick-access .void-quick-access-notifications-wrapper {
+        order: 2;
+        margin-bottom: 25px;
+    }
+
+    .void-quick-access .void-quick-access-notifications {
+        background: rgb(var(--color-foreground));
+        overflow-y: auto;
+        max-height: 300px;
+        scrollbar-width: thin;
+        scrollbar-color: rgb(var(--color-blue)) rgba(0, 0, 0, 0);
+        border-radius: 4px;
+        transition: max-height 0.5s;
+    }
+
+    .void-notifications-config-wrapper {
+        padding: 15px;
+    }
+
+    .void-notifications-list {
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .void-quick-access-notifications[collapsed="true"] {
+        max-height: 0px;
+    }
+
+    .void-quick-access-notifications-wrapper .section-header h2 {
+        cursor: pointer;
     }
     
     .void-quick-access .section-header {
@@ -562,6 +599,7 @@ export const styles = /* css */ `
     .void-quick-access-badge::after {
         content: "New";
         background: rgb(var(--color-blue));
+        border: 3px solid rgb(var(--color-foreground));
         border-radius: 10px;
         padding: 2px 4px;
         font-size: 9px;
@@ -569,6 +607,117 @@ export const styles = /* css */ `
         top: 2px;
         right: -10px;
         color: white;
+    }
+
+    .void-notification-wrapper {
+        display: flex;
+        gap: 6px;
+    }
+
+    .void-notification-wrapper .void-notification-preview {
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        margin-right: 6px;
+        border-radius: 4px;
+        position: relative;
+    }
+
+    .void-notification-wrapper .void-notification-preview.void-notification-preview-media {
+        width: 22px;
+        height: 30px;
+        background-size: cover;
+    }
+
+    .void-notification-wrapper .void-notification-preview[data-count]::after {
+        content: attr(data-count);
+        background: rgb(var(--color-blue));
+        border: 3px solid rgb(var(--color-foreground));
+        border-radius: 10px;
+        padding: 2px 4px;
+        font-size: 9px;
+        position: absolute;
+        top: -6px;
+        right: -10px;
+        color: white;
+    }
+
+    .void-notification-preview-wrapper {
+        position: relative;
+    }
+    
+    .void-notification-preview-wrapper:hover .void-notification-group,
+    .void-notification-group:hover {
+        display: flex;
+    }
+
+    .void-notification-group {
+        display: none;
+        position: absolute;
+        top: -30px;
+        z-index: 20;
+        background: rgb(var(--color-foreground));
+        border-radius: 4px;
+    }
+
+    .void-notification-wrapper:first-child .void-notification-group {
+        top: unset;
+        bottom: -30px;
+    }
+
+    .void-notification-group .void-notification-group-item {
+        display: block;
+        width: 30px;
+        height: 30px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        z-index: 20;
+    }
+
+    .void-notification-wrapper {
+        display: flex;
+        align-items: center;
+    }
+
+    .void-notification-wrapper .void-notification-context .void-notification-context-actor {
+        color: rgb(var(--color-blue));
+    }
+
+    .void-notification-context-reason {
+        font-size: 12px;
+        padding-top: 2px;
+    }
+
+    .void-notification-wrapper .void-notification-timestamp {
+        font-size: 10px;
+        margin-left: auto;
+        align-self: start;
+        min-width: fit-content;
+    }
+
+    .void-notification-settings-header {
+        margin-bottom: 8px;
+    }
+
+    .void-notification-type-list-header {
+        font-size: 16px;
+        margin: 8px 0 4px 0;
+    }
+
+    .void-chip {
+        background: rgb(var(--color-blue));
+        border-radius: 9999px;
+        display: inline-block;
+        padding: 2px 4px;
+        font-size: 9px;
+        color: white;
+        margin: 0px 4px;
+        vertical-align: top;
+        user-select: none;
     }
 
     .void-notice {

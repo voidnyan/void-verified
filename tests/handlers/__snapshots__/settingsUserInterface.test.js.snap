@@ -355,6 +355,21 @@ exports[`Settings User Interface renders 1`] = `
           class="void-setting-label"
           for="0.12352"
         >
+          Display quick access of notifications in home page.
+        </label>
+      </div>
+      <div
+        class="void-setting-label-container"
+      >
+        <input
+          class="void-checkbox"
+          id="0.12352"
+          type="checkbox"
+        />
+        <label
+          class="void-setting-label"
+          for="0.12352"
+        >
           Display a badge on quick access when changes are detected on user's layout.
         </label>
       </div>
@@ -564,7 +579,7 @@ exports[`Settings User Interface renders 1`] = `
           class="void-setting-label"
           for="0.12352"
         >
-          Enable CSSpy in CSS & Layouts tab.
+          Enable CSSpy in Layout & CSS tab.
         </label>
       </div>
     </div>

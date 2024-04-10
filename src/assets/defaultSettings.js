@@ -112,6 +112,11 @@ export const defaultSettings = {
 		description: "Display quick access of users in home page.",
 		category: categories.users,
 	},
+	quickAccessNotificationsEnabled: {
+		defaultValue: false,
+		description: "Display quick access of notifications in home page.",
+		category: categories.misc,
+	},
 	quickAccessBadge: {
 		defaultValue: false,
 		description:
@@ -191,7 +196,7 @@ export const defaultSettings = {
 	},
 	csspyEnabled: {
 		defaultValue: false,
-		description: "Enable CSSpy in CSS & Layouts tab.",
+		description: "Enable CSSpy in Layout & CSS tab.",
 		category: categories.css,
 	},
 };
