@@ -17,8 +17,14 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.13", [
+		new Feature(
+			"Display quick access of notifications in home page.",
+			"quickAccessNotificationsEnabled"
+		),
+	]),
 	new Version("1.12", [
-		new Feature("Enable CSSpy in CSS & Layouts tab.", "csspyEnabled"),
+		new Feature("Enable CSSpy in Layout & CSS tab.", "csspyEnabled"),
 	]),
 	new Version("1.11", [
 		new Feature(

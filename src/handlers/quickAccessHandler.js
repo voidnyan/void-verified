@@ -45,10 +45,21 @@ export class QuickAccess {
 			"#quick-access quick-access"
 		);
 
+		const container = DOM.create("div", "quick-access-users-wrap");
+
+		const sectionHeader = this.#renderHeader();
+		const users = this.#renderUsers();
+
+		container.append(sectionHeader, users);
+
+		this.#insertIntoDOM(quickAccessContainer, container);
+	}
+
+	#renderHeader() {
 		const sectionHeader = document.createElement("div");
 		sectionHeader.setAttribute("class", "section-header");
 		const title = document.createElement("h2");
-		title.append("Quick Access");
+		title.append("Users");
 		title.setAttribute(
 			"title",
 			`Last updated at ${this.#lastFetched.toLocaleTimeString()}`
@@ -63,6 +74,10 @@ export class QuickAccess {
 
 		sectionHeader.append(DOM.create("div", null, [timer, refreshButton]));
 
+		return sectionHeader;
+	}
+
+	#renderUsers() {
 		const quickAccessBody = document.createElement("div");
 		quickAccessBody.setAttribute("class", "void-quick-access-wrap");
 
@@ -70,16 +85,7 @@ export class QuickAccess {
 			quickAccessBody.append(this.#createQuickAccessLink(user));
 		}
 
-		const section = document.querySelector(
-			".container > .home > div:nth-child(2)"
-		);
-
-		quickAccessContainer.replaceChildren(sectionHeader, quickAccessBody);
-
-		if (DOM.get("#quick-access")) {
-			return;
-		}
-		section.insertBefore(quickAccessContainer, section.firstChild);
+		return quickAccessBody;
 	}
 
 	#updateTimer() {
@@ -172,7 +178,7 @@ export class QuickAccess {
 	}
 
 	#quickAccessRendered() {
-		const quickAccess = document.getElementById(this.#quickAccessId);
+		const quickAccess = DOM.get("quick-access-wrap");
 		return quickAccess !== null;
 	}
 
@@ -184,5 +190,24 @@ export class QuickAccess {
 		return this.settings.verifiedUsers.filter(
 			(user) => user.quickAccessEnabled
 		);
+	}
+
+	#insertIntoDOM(quickAccessContainer, container) {
+		if (
+			quickAccessContainer.querySelector(".void-quick-access-users-wrap")
+		) {
+			const oldUsers = DOM.get("quick-access-users-wrap");
+			quickAccessContainer.replaceChild(container, oldUsers);
+		} else {
+			quickAccessContainer.append(container);
+		}
+
+		if (DOM.get("#quick-access")) {
+			return;
+		}
+		const section = document.querySelector(
+			".container > .home > div:nth-child(2)"
+		);
+		section.insertBefore(quickAccessContainer, section.firstChild);
 	}
 }

@@ -559,6 +559,12 @@ exports[`Components SimpleComponentTests "Checkbox" matches snapshot 1`] = `
 />
 `;
 
+exports[`Components SimpleComponentTests "Chip" matches snapshot 1`] = `
+<span
+  class="void-chip"
+/>
+`;
+
 exports[`Components SimpleComponentTests "ColorPicker" matches snapshot 1`] = `
 <div
   class="void-color-picker-container"
