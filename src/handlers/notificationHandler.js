@@ -33,9 +33,7 @@ const notificationTypes = [
 
 class NotificationConfig {
 	groupNotifications;
-	displayUnreadCount;
 	notificationTypes;
-	hideDefaultNotificationDot;
 
 	#configInLocalStorage = "void-verified-notifications-config";
 	constructor() {
@@ -43,10 +41,7 @@ class NotificationConfig {
 			localStorage.getItem(this.#configInLocalStorage)
 		);
 		this.groupNotifications = config?.groupNotifications ?? true;
-		this.displayUnreadCount = config?.displayUnreadCount ?? true;
 		this.notificationTypes = config?.notificationTypes ?? notificationTypes;
-		this.hideDefaultNotificationDot =
-			config?.hideDefaultNotificationDot ?? false;
 	}
 
 	save() {
@@ -60,7 +55,6 @@ export class NotificationHandler {
 	#shouldRender = true;
 	#notifications;
 	#timeout = null;
-	#unreadNotificationsCount = 0;
 	#config;
 	#configOpen = false;
 	#shouldQueryAfterConfigClose = false;
@@ -127,13 +121,6 @@ export class NotificationHandler {
 			container.setAttribute("collapsed", this.#collapsed);
 		});
 
-		if (
-			this.#unreadNotificationsCount > 0 &&
-			this.#config.displayUnreadCount
-		) {
-			header.append(Chip(this.#unreadNotificationsCount));
-		}
-
 		const headerWrapper = DOM.create("div", null, header);
 		headerWrapper.classList.add("section-header");
 
@@ -153,10 +140,6 @@ export class NotificationHandler {
 		this.#shouldQuery = true;
 		clearTimeout(this.#timeout);
 		this.#timeout = null;
-		const dot = document.body.querySelector(".user .notification-dot");
-		if (dot) {
-			dot.style.display = "block";
-		}
 	}
 
 	async #queryNotifications() {
@@ -165,19 +148,22 @@ export class NotificationHandler {
 			this.#shouldQuery = true;
 		}, 3 * 60 * 1000);
 		try {
-			Toaster.debug("Querying notifications.");
-			const [notifications, unreadNotificationsCount] =
-				await new AnilistAPI(this.#settings).getNotifications(
-					this.#config.notificationTypes.length > 0
-						? this.#config.notificationTypes
-						: notificationTypes
-				);
-			this.#unreadNotificationsCount = unreadNotificationsCount;
+			Toaster.debug("Querying quick access notifications.");
+			const notifications = await new AnilistAPI(
+				this.#settings
+			).getNotifications(
+				this.#config.notificationTypes.length > 0
+					? this.#config.notificationTypes
+					: notificationTypes
+			);
 			this.#notifications = notifications;
 			this.#shouldRender = true;
+			Toaster.success("Quick access notifications queried.");
 		} catch (error) {
 			console.error(error);
-			Toaster.error("There was an error querying notifications.");
+			Toaster.error(
+				"There was an error querying quick access notifications."
+			);
 		}
 	}
 
@@ -217,11 +203,11 @@ export class NotificationHandler {
 			try {
 				Toaster.debug("Resetting notification count.");
 				await new AnilistAPI(this.#settings).resetNotificationCount();
-				this.#unreadNotificationsCount = 0;
 				document.body
 					.querySelector(".user .notification-dot")
 					?.remove();
 				this.#shouldRender = true;
+				Toaster.success("Notifications count reset.");
 			} catch (error) {
 				Toaster.error(
 					"There was an error resetting notification count."
