@@ -176,7 +176,6 @@ export class AnilistAPI {
 	async getNotifications(notificationTypes) {
 		const query = `
         query($notificationTypes: [NotificationType]) {
-            User(id: ${this.#userId}) {unreadNotificationCount}
             Page(page: 1) {
                 notifications(type_in: $notificationTypes) {
                     ... on ActivityMessageNotification {${activityQuery}}
@@ -205,7 +204,7 @@ export class AnilistAPI {
 		const options = this.#getMutationOptions(query, variables);
 		try {
 			const data = await this.#elevatedFetch(options);
-			return [data.Page.notifications, data.User.unreadNotificationCount];
+			return data.Page.notifications;
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to query notifications.");

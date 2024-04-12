@@ -550,7 +550,7 @@ export const styles = /* css */ `
         padding: 15px;
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: 8px;
     }
 
     .void-quick-access-notifications[collapsed="true"] {
@@ -893,6 +893,10 @@ export const styles = /* css */ `
         margin-left: 18px;
         font-family: inherit;
         font-weight: 900;
+    }
+
+    .activity-edit .rules-notice {
+        display: block;
     }
 
     #void-toast-container {
