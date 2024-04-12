@@ -19,6 +19,10 @@ class Feature {
 export const changeLog = [
 	new Version("1.13", [
 		new Feature(
+			"Replace AniList notification system.",
+			"replaceNotifications"
+		),
+		new Feature(
 			"Display quick access of notifications in home page.",
 			"quickAccessNotificationsEnabled"
 		),

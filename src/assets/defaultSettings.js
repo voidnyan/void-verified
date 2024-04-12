@@ -107,15 +107,20 @@ export const defaultSettings = {
 		category: categories.misc,
 		authRequired: true,
 	},
-	quickAccessEnabled: {
+	replaceNotifications: {
 		defaultValue: false,
-		description: "Display quick access of users in home page.",
-		category: categories.users,
+		description: "Replace AniList notification system.",
+		category: categories.misc,
 	},
 	quickAccessNotificationsEnabled: {
 		defaultValue: false,
 		description: "Display quick access of notifications in home page.",
 		category: categories.misc,
+	},
+	quickAccessEnabled: {
+		defaultValue: false,
+		description: "Display quick access of users in home page.",
+		category: categories.users,
 	},
 	quickAccessBadge: {
 		defaultValue: false,

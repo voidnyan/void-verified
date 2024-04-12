@@ -173,10 +173,10 @@ export class AnilistAPI {
 		}
 	}
 
-	async getNotifications(notificationTypes) {
+	async getNotifications(notificationTypes, page = 1) {
 		const query = `
-        query($notificationTypes: [NotificationType]) {
-            Page(page: 1) {
+        query($notificationTypes: [NotificationType], $page: Int) {
+            Page(page: $page) {
                 notifications(type_in: $notificationTypes) {
                     ... on ActivityMessageNotification {${activityQuery}}
                     ... on ActivityReplyNotification {${activityQuery}}
@@ -195,16 +195,21 @@ export class AnilistAPI {
                     ... on MediaDataChangeNotification{${mediaDataChange}}
                     ... on MediaDeletionNotification{${mediaDeleted}}
                 }
+                pageInfo {
+                    currentPage
+                    hasNextPage
+                }
             }
         }`;
 
 		const variables = {
 			notificationTypes,
+			page,
 		};
 		const options = this.#getMutationOptions(query, variables);
 		try {
 			const data = await this.#elevatedFetch(options);
-			return data.Page.notifications;
+			return [data.Page.notifications, data.Page.pageInfo];
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to query notifications.");
