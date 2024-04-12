@@ -69,6 +69,10 @@ const createPreview = (notification) => {
 		previewWrapper.append(group);
 	}
 
+	previewWrapper.addEventListener("click", (event) => {
+		event.stopPropagation();
+	});
+
 	return previewWrapper;
 };
 
@@ -122,7 +126,8 @@ const createContext = (notification) => {
 	}
 
 	context.setAttribute("href", getNotificationUrl(notification));
-	context.addEventListener("click", () => {
+	context.addEventListener("click", (event) => {
+		event.stopPropagation();
 		markAsRead(notification);
 	});
 
@@ -182,7 +187,8 @@ const createMediaContext = (notification) => {
 		);
 		context.append(reason);
 	}
-	context.addEventListener("click", () => {
+	context.addEventListener("click", (event) => {
+		event.stopPropagation();
 		markAsRead(notification);
 	});
 	return context;
