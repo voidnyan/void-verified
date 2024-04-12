@@ -701,6 +701,11 @@ export const styles = /* css */ `
         min-width: fit-content;
     }
 
+    .void-unread-notification {
+        margin-left: -5px;
+        border-left: 5px solid rgb(var(--color-blue));
+    }
+
     .void-notification-settings-header {
         margin-bottom: 8px;
     }
@@ -796,6 +801,31 @@ export const styles = /* css */ `
         display: block;
         width: 100%;
         font-weight: 650;
+    }
+
+    .void-notification-dot {
+        background:rgb(var(--color-peach));
+        border-radius:50%;
+        bottom:0;
+        color:#fff2f2;
+        display:block;
+        font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+        font-size:1.2rem;
+        font-weight:500;
+        height:20px;
+        left:10px;
+        line-height:20px;
+        overflow:hidden;
+        padding-right:1px;
+        position:relative;
+        text-align:center;
+        transition:.2s;
+        width:20px
+    }
+
+    .void-notification-dot:visited,
+    .void-notification-dot:hover {
+        color:#fff2f2;
     }
 
     .void-chip {

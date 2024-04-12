@@ -72,7 +72,6 @@ export class ActivityHandler {
 			Toaster.debug("Self-publishing a message.");
 			const response = await anilistAPI.selfMessage(message);
 			Toaster.success("Message self-published.");
-			console.log(response);
 			window.location.replace(
 				`https://anilist.co/activity/${response.id}`
 			);

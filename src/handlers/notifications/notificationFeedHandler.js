@@ -2,6 +2,7 @@ import { AnilistAPI } from "../../api/anilistAPI";
 import { Button, Checkbox, SettingLabel } from "../../components/components";
 import { Loader } from "../../components/loader";
 import { NotificationWrapper } from "../../components/notificationWrapper";
+import { ReadNotifications } from "../../components/readNotifications";
 import { DOM } from "../../utils/DOM";
 import { Toaster } from "../../utils/toaster";
 import { StyleHandler } from "../styleHandler";
@@ -27,6 +28,10 @@ export class NotificationFeedHandler {
 				notificationReplacementStyles,
 				"notifications"
 			);
+			this.#handleUnreadNotificationsCount(this);
+			setInterval(() => {
+				this.#handleUnreadNotificationsCount(this);
+			}, 3 * 60 * 1000);
 		}
 	}
 
@@ -36,6 +41,7 @@ export class NotificationFeedHandler {
 		}
 
 		if (!window.location.pathname.startsWith("/notifications")) {
+			this.#pageInfo = { currentPage: 0, hasNextPage: false };
 			return;
 		}
 
@@ -56,10 +62,43 @@ export class NotificationFeedHandler {
 		this.#createNotifications();
 	}
 
+	async #handleUnreadNotificationsCount(notificationFeedHandler) {
+		try {
+			const [notifications] = await new AnilistAPI(
+				notificationFeedHandler.#settings
+			).getNotifications(
+				notificationFeedHandler.#config.notificationTypes
+			);
+
+			const unreadNotificationsCount =
+				ReadNotifications.getUnreadNotificationsCount(notifications);
+			document
+				.querySelector(".nav .user .void-notification-dot")
+				?.remove();
+			if (unreadNotificationsCount === 0) {
+				return;
+			}
+			const notificationDot = DOM.create(
+				"a",
+				"notification-dot",
+				unreadNotificationsCount
+			);
+			notificationDot.setAttribute(
+				"href",
+				"https://anilist.co/notifications"
+			);
+
+			document.querySelector(".nav .user")?.append(notificationDot);
+		} catch (error) {
+			console.error(error);
+			Toaster.error("There was an error querying unread notifications");
+		}
+	}
+
 	#createSideBar() {
 		const container = DOM.create("div", "notifications-feed-sidebar");
 		container.append(this.#createFilters());
-		container.append(this.#createUnreadButton());
+		container.append(this.#createReadAllButton());
 		container.append(this.#createConfigurationContainer());
 		return container;
 	}
@@ -101,10 +140,20 @@ export class NotificationFeedHandler {
 		return container;
 	}
 
-	#createUnreadButton = () => {
+	#createReadAllButton = () => {
 		const button = Button(
 			"Mark all as read",
-			() => {},
+			() => {
+				ReadNotifications.markAllAsRead();
+				document
+					.querySelectorAll(".void-unread-notification")
+					.forEach((notification) => {
+						notification.classList.remove(
+							"void-unread-notification"
+						);
+					});
+				document.querySelector(".void-notification-dot")?.remove();
+			},
 			"notification-all-read-button"
 		);
 		return button;
@@ -205,7 +254,11 @@ export class NotificationFeedHandler {
 		}
 
 		for (const notification of this.#groupNotifications(notifications)) {
-			notificationElements.push(NotificationWrapper(notification));
+			const notificationElement = NotificationWrapper(notification, true);
+			if (!ReadNotifications.isRead(notification.id)) {
+				notificationElement.classList.add("void-unread-notification");
+			}
+			notificationElements.push(notificationElement);
 		}
 
 		if (notifications.length === 0) {
@@ -311,7 +364,11 @@ export class NotificationFeedHandler {
 				prevNotification.activityId === notification.activityId &&
 				notification.user
 			) {
-				prevNotification.group.push(notification.user);
+				const groupItem = {
+					...notification.user,
+					notificationId: notification.id,
+				};
+				prevNotification.group.push(groupItem);
 				notificationsToRemove.push(i);
 			} else {
 				prevNotification = { ...notification };

@@ -12,6 +12,7 @@ const settings = new Settings();
 Toaster.initializeToaster(settings);
 const styleHandler = new StyleHandler(settings);
 styleHandler.refreshStyles();
+styleHandler.createStyleLink(styles, "script");
 
 try {
 	const intervalScriptHandler = new IntervalScriptHandler(settings);
@@ -33,8 +34,6 @@ try {
 }
 
 new ChangeLog(settings).renderChangeLog();
-
-styleHandler.createStyleLink(styles, "script");
 
 new ImgurAPI(
 	new ImageHostService().getImageHostConfiguration(imageHosts.imgur)
