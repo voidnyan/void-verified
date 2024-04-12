@@ -228,7 +228,6 @@ export class AnilistAPI {
 		const options = this.#getMutationOptions(query, {});
 		try {
 			const data = await this.#elevatedFetch(options);
-			console.log(data);
 			return data;
 		} catch (error) {
 			console.error(error);
@@ -372,17 +371,20 @@ const activityMediaQuery = `activity {
 }`;
 const activityQuery = `activityId
     type
+    id
     ${userQuery}
     createdAt
     context`;
 
 const followingQuery = `type
+    id
     context
     createdAt
     ${userQuery}
     `;
 
 const airingQuery = `type
+    id
     contexts
     createdAt
     ${mediaQuery}
@@ -390,11 +392,13 @@ const airingQuery = `type
     `;
 
 const relatedMediaQuery = `type
+    id
     ${mediaQuery}
     context
     createdAt`;
 
 const threadQuery = `type
+    id
     context
     threadId
     thread {title}
@@ -402,6 +406,7 @@ const threadQuery = `type
     createdAt`;
 
 const threadCommentQuery = `type
+    id
     context
     thread {
         id
@@ -412,6 +417,7 @@ const threadCommentQuery = `type
     createdAt`;
 
 const mediaDataChange = `type
+    id
     context
     ${mediaQuery}
     reason
@@ -419,6 +425,7 @@ const mediaDataChange = `type
     `;
 
 const mediaDeleted = `type
+    id
     context
     reason
     deletedMediaTitle

@@ -1,7 +1,8 @@
 import { DOM } from "../utils/DOM";
 import { Link, Tooltip } from "./components";
+import { ReadNotifications } from "./readNotifications";
 
-export const NotificationWrapper = (notification) => {
+export const NotificationWrapper = (notification, addReadListener = false) => {
 	const wrapper = DOM.create("div", "notification-wrapper");
 	const previewWrapper = createPreview(notification);
 	const context = createContext(notification);
@@ -13,7 +14,21 @@ export const NotificationWrapper = (notification) => {
 	);
 
 	wrapper.append(previewWrapper, context, timestamp);
+	if (addReadListener) {
+		wrapper.addEventListener("click", () => {
+			markAsRead(notification);
+		});
+	}
 	return wrapper;
+};
+
+const markAsRead = (notification) => {
+	const notifications = [
+		notification.id,
+		...notification.group?.map((item) => item.notificationId),
+	];
+	ReadNotifications.markMultipleAsRead(notifications);
+	wrapper.classList.remove("void-unread-notification");
 };
 
 const createPreview = (notification) => {
@@ -94,6 +109,9 @@ const createContext = (notification) => {
 	}
 
 	context.setAttribute("href", getNotificationUrl(notification));
+	context.addEventListener("click", () => {
+		markAsRead(notification);
+	});
 
 	return context;
 };
@@ -151,6 +169,9 @@ const createMediaContext = (notification) => {
 		);
 		context.append(reason);
 	}
+	context.addEventListener("click", () => {
+		markAsRead(notification);
+	});
 	return context;
 };
 

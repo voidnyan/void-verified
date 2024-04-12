@@ -6,6 +6,7 @@ import {
 	SettingLabel,
 } from "../../components/components";
 import { NotificationWrapper } from "../../components/notificationWrapper";
+import { ReadNotifications } from "../../components/readNotifications";
 import { DOM } from "../../utils/DOM";
 import { Toaster } from "../../utils/toaster";
 import { NotificationConfig } from "./notificationConfig";
@@ -167,19 +168,26 @@ export class NotificationQuickAccessHandler {
 
 	#clearButton = () => {
 		const clearButton = IconButton(CheckBadgeIcon(), async () => {
-			try {
-				Toaster.debug("Resetting notification count.");
-				await new AnilistAPI(this.#settings).resetNotificationCount();
-				document.body
-					.querySelector(".user .notification-dot")
-					?.remove();
-				this.#shouldRender = true;
-				Toaster.success("Notifications count reset.");
-			} catch (error) {
-				Toaster.error(
-					"There was an error resetting notification count."
-				);
-				console.error(error);
+			if (this.#settings.options.replaceNotifications.getValue()) {
+				ReadNotifications.markAllAsRead();
+				document.querySelector(".void-notification-dot")?.remove();
+			} else {
+				try {
+					Toaster.debug("Resetting notification count.");
+					await new AnilistAPI(
+						this.#settings
+					).resetNotificationCount();
+					document.body
+						.querySelector(".user .notification-dot")
+						?.remove();
+					this.#shouldRender = true;
+					Toaster.success("Notifications count reset.");
+				} catch (error) {
+					Toaster.error(
+						"There was an error resetting notification count."
+					);
+					console.error(error);
+				}
 			}
 		});
 		clearButton.setAttribute("title", "Mark all as read");
