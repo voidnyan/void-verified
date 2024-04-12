@@ -16,7 +16,13 @@ export const NotificationWrapper = (notification, addReadListener = false) => {
 	wrapper.append(previewWrapper, context, timestamp);
 	if (addReadListener) {
 		wrapper.addEventListener("click", () => {
-			markAsRead(notification);
+			if (wrapper.classList.contains("void-unread-notification")) {
+				markAsRead(notification);
+				wrapper.classList.remove("void-unread-notification");
+			} else {
+				markAsUnread(notification);
+				wrapper.classList.add("void-unread-notification");
+			}
 		});
 	}
 	return wrapper;
@@ -28,7 +34,14 @@ const markAsRead = (notification) => {
 		...notification.group?.map((item) => item.notificationId),
 	];
 	ReadNotifications.markMultipleAsRead(notifications);
-	wrapper.classList.remove("void-unread-notification");
+};
+
+const markAsUnread = (notification) => {
+	const notifications = [
+		notification.id,
+		...notification.group?.map((item) => item.notificationId),
+	];
+	ReadNotifications.markMultipleAsUnread(notifications);
 };
 
 const createPreview = (notification) => {

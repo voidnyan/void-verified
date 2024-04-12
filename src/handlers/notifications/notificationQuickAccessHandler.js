@@ -113,7 +113,6 @@ export class NotificationQuickAccessHandler {
 			this.#shouldQuery = true;
 		}, 3 * 60 * 1000);
 		try {
-			Toaster.debug("Querying quick access notifications.");
 			const [notifications] = await new AnilistAPI(
 				this.#settings
 			).getNotifications(
@@ -123,7 +122,6 @@ export class NotificationQuickAccessHandler {
 			);
 			this.#notifications = notifications;
 			this.#shouldRender = true;
-			Toaster.success("Quick access notifications queried.");
 		} catch (error) {
 			console.error(error);
 			Toaster.error(
@@ -171,23 +169,19 @@ export class NotificationQuickAccessHandler {
 			if (this.#settings.options.replaceNotifications.getValue()) {
 				ReadNotifications.markAllAsRead();
 				document.querySelector(".void-notification-dot")?.remove();
-			} else {
-				try {
-					Toaster.debug("Resetting notification count.");
-					await new AnilistAPI(
-						this.#settings
-					).resetNotificationCount();
-					document.body
-						.querySelector(".user .notification-dot")
-						?.remove();
-					this.#shouldRender = true;
-					Toaster.success("Notifications count reset.");
-				} catch (error) {
-					Toaster.error(
-						"There was an error resetting notification count."
-					);
-					console.error(error);
-				}
+			}
+			try {
+				Toaster.debug("Resetting notification count.");
+				await new AnilistAPI(this.#settings).resetNotificationCount();
+				document.body
+					.querySelector(".user .notification-dot")
+					?.remove();
+				Toaster.success("Notifications count reset.");
+			} catch (error) {
+				Toaster.error(
+					"There was an error resetting notification count."
+				);
+				console.error(error);
 			}
 		});
 		clearButton.setAttribute("title", "Mark all as read");
