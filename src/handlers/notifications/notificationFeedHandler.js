@@ -42,6 +42,7 @@ export class NotificationFeedHandler {
 
 		if (!window.location.pathname.startsWith("/notifications")) {
 			this.#pageInfo = { currentPage: 0, hasNextPage: false };
+			this.#filter = "custom";
 			return;
 		}
 
@@ -118,6 +119,7 @@ export class NotificationFeedHandler {
 				}
 				filterButton.addEventListener("click", () => {
 					this.#filter = filter;
+					ReadNotifications.resetUnreadNotificationsFeed();
 					document
 						.querySelector(
 							".void-notifications-feed-filter.void-active"
@@ -143,7 +145,7 @@ export class NotificationFeedHandler {
 	#createReadAllButton = () => {
 		const button = Button(
 			"Mark all as read",
-			() => {
+			async () => {
 				ReadNotifications.markAllAsRead();
 				document
 					.querySelectorAll(".void-unread-notification")
@@ -153,6 +155,21 @@ export class NotificationFeedHandler {
 						);
 					});
 				document.querySelector(".void-notification-dot")?.remove();
+				try {
+					Toaster.debug("Resetting notification count.");
+					await new AnilistAPI(
+						this.#settings
+					).resetNotificationCount();
+					document.body
+						.querySelector(".user .notification-dot")
+						?.remove();
+					Toaster.success("Notifications count reset.");
+				} catch (error) {
+					Toaster.error(
+						"There was an error resetting notification count."
+					);
+					console.error(error);
+				}
 			},
 			"notification-all-read-button"
 		);

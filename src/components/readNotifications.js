@@ -1,31 +1,30 @@
 export class ReadNotifications {
 	static #notificationsInLocalStorage = "void-verified-read-notifications";
-	static #unreadNotifications = new Set();
+	static #unreadNotificationsFeed = new Set();
+	static #unreadNotificationsCount = new Set();
 	static getUnreadNotificationsCount(notifications) {
 		const readNotifications = this.#getReadNotifications();
 		let unreadNotificationsCount = 0;
+		this.#unreadNotificationsCount = new Set();
 		for (const notification of notifications) {
 			if (!readNotifications.has(notification.id)) {
 				unreadNotificationsCount++;
-				this.#unreadNotifications.add(notification.id);
+				this.#unreadNotificationsCount.add(notification.id);
 			}
 		}
 		return unreadNotificationsCount;
 	}
 
-	static markAsRead(notificationId) {
-		const readNotifications = this.#getReadNotifications();
-		readNotifications.add(notificationId);
-		this.#unreadNotifications.delete(notificationId);
-		this.#saveReadNotifications(readNotifications);
-	}
-
 	static markAllAsRead() {
 		const readNotifications = this.#getReadNotifications();
-		this.#unreadNotifications.forEach((notification) => {
+		this.#unreadNotificationsFeed.forEach((notification) => {
 			readNotifications.add(notification);
 		});
-		this.#unreadNotifications = new Set();
+		this.#unreadNotificationsCount.forEach((notification) => {
+			readNotifications.add(notification);
+		});
+		this.#unreadNotificationsCount = new Set();
+		this.#unreadNotificationsFeed = new Set();
 		this.#saveReadNotifications(readNotifications);
 	}
 
@@ -37,13 +36,25 @@ export class ReadNotifications {
 		this.#saveReadNotifications(readNotifications);
 	}
 
+	static markMultipleAsUnread(notifications) {
+		const readNotifications = this.#getReadNotifications();
+		notifications.forEach((notification) => {
+			readNotifications.delete(notification);
+		});
+		this.#saveReadNotifications(readNotifications);
+	}
+
 	static isRead(notificationId) {
 		const readNotifications = this.#getReadNotifications();
 		const isRead = readNotifications.has(notificationId);
 		if (!isRead) {
-			this.#unreadNotifications.add(notificationId);
+			this.#unreadNotificationsFeed.add(notificationId);
 		}
 		return isRead;
+	}
+
+	static resetUnreadNotificationsFeed() {
+		this.#unreadNotificationsFeed = new Set();
 	}
 
 	static #getReadNotifications() {
