@@ -1,55 +1,17 @@
-import { AnilistAPI } from "../api/anilistAPI";
-import { CheckBadgeIcon, CogIcon } from "../assets/icons";
+import { AnilistAPI } from "../../api/anilistAPI";
+import { CheckBadgeIcon, CogIcon } from "../../assets/icons";
 import {
 	Checkbox,
-	Chip,
 	IconButton,
 	SettingLabel,
-} from "../components/components";
-import { NotificationWrapper } from "../components/notificationWrapper";
-import { DOM } from "../utils/DOM";
-import { Toaster } from "../utils/toaster";
+} from "../../components/components";
+import { NotificationWrapper } from "../../components/notificationWrapper";
+import { DOM } from "../../utils/DOM";
+import { Toaster } from "../../utils/toaster";
+import { NotificationConfig } from "./notificationConfig";
+import { notificationTypes } from "./notificationTypes";
 
-const notificationTypes = [
-	"AIRING",
-	"ACTIVITY_LIKE",
-	"ACTIVITY_MENTION",
-	"ACTIVITY_MESSAGE",
-	"ACTIVITY_REPLY",
-	"ACTIVITY_REPLY_LIKE",
-	"ACTIVITY_REPLY_SUBSCRIBED",
-	"FOLLOWING",
-	"RELATED_MEDIA_ADDITION",
-	"THREAD_COMMENT_LIKE",
-	"THREAD_COMMENT_MENTION",
-	"THREAD_COMMENT_REPLY",
-	"THREAD_LIKE",
-	"THREAD_SUBSCRIBED",
-	"MEDIA_DATA_CHANGE",
-	"MEDIA_DELETION",
-	// not implemented
-	// "MEDIA_MERGE",
-];
-
-class NotificationConfig {
-	groupNotifications;
-	notificationTypes;
-
-	#configInLocalStorage = "void-verified-notifications-config";
-	constructor() {
-		const config = JSON.parse(
-			localStorage.getItem(this.#configInLocalStorage)
-		);
-		this.groupNotifications = config?.groupNotifications ?? true;
-		this.notificationTypes = config?.notificationTypes ?? notificationTypes;
-	}
-
-	save() {
-		localStorage.setItem(this.#configInLocalStorage, JSON.stringify(this));
-	}
-}
-
-export class NotificationHandler {
+export class NotificationQuickAccessHandler {
 	#settings;
 	#shouldQuery = true;
 	#shouldRender = true;
@@ -61,7 +23,9 @@ export class NotificationHandler {
 	#collapsed = false;
 	constructor(settings) {
 		this.#settings = settings;
-		this.#config = new NotificationConfig();
+		this.#config = new NotificationConfig(
+			"void-verified-quick-access-notifications-config"
+		);
 	}
 
 	async renderNotifications() {
@@ -149,7 +113,7 @@ export class NotificationHandler {
 		}, 3 * 60 * 1000);
 		try {
 			Toaster.debug("Querying quick access notifications.");
-			const notifications = await new AnilistAPI(
+			const [notifications] = await new AnilistAPI(
 				this.#settings
 			).getNotifications(
 				this.#config.notificationTypes.length > 0
@@ -168,6 +132,9 @@ export class NotificationHandler {
 	}
 
 	#handleNotifications(notifications) {
+		if (!notifications) {
+			return [];
+		}
 		if (!this.#config.groupNotifications || notifications.length === 0) {
 			return notifications.map((notification) => {
 				notification.group = undefined;
@@ -257,23 +224,7 @@ export class NotificationHandler {
 				this.#config.save();
 			})
 		);
-		const unreadOption = SettingLabel(
-			"Display unread notifications count.",
-			Checkbox(this.#config.displayUnreadCount, () => {
-				this.#config.displayUnreadCount =
-					!this.#config.displayUnreadCount;
-				this.#config.save();
-			})
-		);
-		const hideDefaultDotOption = SettingLabel(
-			"Hide default notification dot when on home feed.",
-			Checkbox(this.#config.hideDefaultNotificationDot, () => {
-				this.#config.hideDefaultNotificationDot =
-					!this.#config.hideDefaultNotificationDot;
-				this.#config.save();
-			})
-		);
-		container.append(groupOption, unreadOption, hideDefaultDotOption);
+		container.append(groupOption);
 		return container;
 	};
 

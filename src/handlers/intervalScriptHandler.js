@@ -9,7 +9,8 @@ import { Toaster } from "../utils/toaster.js";
 import { Link } from "../components/components.js";
 import { GifKeyboardHandler } from "./gifKeyboardHandler.js";
 import { AnilistFeedFixHandler } from "./anilistFeedFixHandler.js";
-import { NotificationHandler } from "./notificationHandler.js";
+import { NotificationQuickAccessHandler } from "./notifications/notificationQuickAccessHandler.js";
+import { NotificationFeedHandler } from "./notifications/notificationFeedHandler.js";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -22,7 +23,8 @@ export class IntervalScriptHandler {
 	layoutDesigner;
 	gifKeyboard;
 	anilistFeedFixHandler;
-	notificationHandler;
+	notificationQuickAccessHandler;
+	notificationFeedHandler;
 	constructor(settings) {
 		this.settings = settings;
 
@@ -42,7 +44,9 @@ export class IntervalScriptHandler {
 		this.activityHandler = new ActivityHandler(settings);
 		this.quickAccess = new QuickAccess(settings);
 		this.anilistFeedFixHandler = new AnilistFeedFixHandler(settings);
-		this.notificationHandler = new NotificationHandler(settings);
+		this.notificationQuickAccessHandler =
+			new NotificationQuickAccessHandler(settings);
+		this.notificationFeedHandler = new NotificationFeedHandler(settings);
 	}
 
 	currentPath = "";
@@ -65,13 +69,14 @@ export class IntervalScriptHandler {
 		intervalScriptHandler.globalCSS.clearCssForProfile();
 		intervalScriptHandler.layoutDesigner.renderLayoutPreview();
 		intervalScriptHandler.anilistFeedFixHandler.handleFix();
+		intervalScriptHandler.notificationFeedHandler.renderNotificationsFeed();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();
 			intervalScriptHandler.quickAccess.renderQuickAccess();
-			intervalScriptHandler.notificationHandler.renderNotifications();
+			intervalScriptHandler.notificationQuickAccessHandler.renderNotifications();
 		} else {
-			intervalScriptHandler.notificationHandler.resetShouldRender();
+			intervalScriptHandler.notificationQuickAccessHandler.resetShouldRender();
 		}
 
 		if (!path.startsWith("/settings/developer")) {
