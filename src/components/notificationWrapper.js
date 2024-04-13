@@ -73,7 +73,38 @@ const createPreview = (notification) => {
 		event.stopPropagation();
 	});
 
+	if (notification.activity) {
+		previewWrapper.append(createActivityRelation(notification.activity));
+	}
+
 	return previewWrapper;
+};
+
+const createActivityRelation = (activity) => {
+	let url;
+	let image;
+	console.log(activity);
+	switch (activity.type) {
+		case "ANIME_LIST":
+			url = `https://anilist.co/anime/${activity.media.id}`;
+			image = activity.media.coverImage.large;
+			break;
+		case "MANGA_LIST":
+			url = `https://anilist.co/manga/${activity.media.id}`;
+			image = activity.media.coverImage.large;
+			break;
+		case "TEXT":
+			url = `https://anilist.co/user/${activity.user.name}`;
+			image = activity.user.avatar.large;
+			break;
+		case "MESSAGE":
+			url = `https://anilist.co/user/${activity.recipient.name}`;
+			image = activity.recipient.avatar.large;
+			break;
+	}
+	const activityRelation = Link("", url, "", "notification-preview-relation");
+	activityRelation.style.backgroundImage = `url(${image})`;
+	return activityRelation;
 };
 
 const createGroup = (notification) => {

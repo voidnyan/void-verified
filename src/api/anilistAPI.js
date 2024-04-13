@@ -173,11 +173,16 @@ export class AnilistAPI {
 		}
 	}
 
-	async getNotifications(notificationTypes, page = 1) {
+	async getNotifications(
+		notificationTypes,
+		page = 1,
+		resetNotificationCount = false
+	) {
 		const query = `
-        query($notificationTypes: [NotificationType], $page: Int) {
+        query($notificationTypes: [NotificationType], $page: Int, $resetNotificationCount: Boolean) {
             Page(page: $page) {
-                notifications(type_in: $notificationTypes) {
+                notifications(type_in: $notificationTypes, 
+                    resetNotificationCount: $resetNotificationCount) {
                     ... on ActivityMessageNotification {${activityQuery}}
                     ... on ActivityReplyNotification {${activityQuery}}
                     ... on ActivityMentionNotification{${activityQuery}}
@@ -205,6 +210,7 @@ export class AnilistAPI {
 		const variables = {
 			notificationTypes,
 			page,
+			resetNotificationCount,
 		};
 		const options = this.#getMutationOptions(query, variables);
 		try {
@@ -213,6 +219,49 @@ export class AnilistAPI {
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to query notifications.");
+		}
+	}
+
+	async getActivityNotificationRelations(activityIds) {
+		const userQuery = `
+            name
+            avatar {
+                large
+            }`;
+		const query = `query($activityIds: [Int]) {
+            Page(page: 1) {
+                activities(id_in: $activityIds, isFollowing: true) {
+                    ... on ListActivity {
+                        id
+                        type
+                        media {
+                            coverImage {large}
+                            id
+                            type
+                        }
+                    }
+                    ... on TextActivity {
+                        id
+                        type
+                        user {${userQuery}}
+                    }
+                    ... on MessageActivity {
+                        id
+                        type
+                        recipient {${userQuery}}
+                    }
+                }
+            }
+        }`;
+
+		const variables = { activityIds };
+		const options = this.#getMutationOptions(query, variables);
+		try {
+			const data = await this.#elevatedFetch(options);
+			return data.Page.activities;
+		} catch (error) {
+			console.error(error);
+			throw new Error("Failed to query activities.");
 		}
 	}
 
@@ -362,13 +411,6 @@ const mediaQuery = `media {
     type
 }`;
 
-const activityMediaQuery = `activity {
-    ... on ListActivity {media {
-        coverImage {large}
-        id
-        type
-    }}
-}`;
 const activityQuery = `activityId
     type
     id
