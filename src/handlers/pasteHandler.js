@@ -42,7 +42,6 @@ export class PasteHandler {
 				)}))\\b(?!.*?\\))`,
 				"gi"
 			);
-			console.log(regex);
 			const result = clipboard.replace(
 				regex,
 				(match) =>
