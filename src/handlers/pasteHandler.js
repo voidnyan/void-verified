@@ -23,25 +23,29 @@ export class PasteHandler {
 		}
 
 		const clipboard = event.clipboardData.getData("text/plain").trim();
-		let result = [];
 
 		const file = event.clipboardData.items[0]?.getAsFile();
 		if (file && this.settings.options.pasteImagesToHostService.getValue()) {
 			event.preventDefault();
-			result = await this.#handleImages(event);
+			const result = await this.#handleImages(event);
+			const transformedClipboard = result.join("\n\n");
+			window.document.execCommand(
+				"insertText",
+				false,
+				transformedClipboard
+			);
 		} else if (this.settings.options.pasteEnabled.getValue()) {
 			event.preventDefault();
-			const rows = clipboard.split("\n");
-
-			for (let row of rows) {
-				result.push(this.#handleRow(row, event));
-			}
-		} else {
+			const regex =
+				/(?<!\()\b(https?:\/\/\S+\.(?:png|jpg|jpeg|gif))\b(?!.*?\))/gi;
+			const result = clipboard.replace(
+				regex,
+				(match) =>
+					`img${this.settings.options.pasteImageWidth.getValue()}(${match})`
+			);
+			window.document.execCommand("insertText", false, result);
 			return;
 		}
-
-		const transformedClipboard = result.join("\n\n");
-		window.document.execCommand("insertText", false, transformedClipboard);
 	}
 
 	async #handleImages(event) {
