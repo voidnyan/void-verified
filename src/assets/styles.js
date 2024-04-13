@@ -753,7 +753,7 @@ export const styles = /* css */ `
         max-height: 0px;
     }
 
-    .notifications-feed.container {
+    .notifications-feed.container:has(#void-notifications-feed-container) {
         display: block;
     }
 
