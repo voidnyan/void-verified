@@ -144,13 +144,17 @@ export class LayoutDesigner {
 		}
 
 		const avatarElement = document.querySelector("img.avatar");
-		avatarElement.src = avatar;
+		if (avatarElement.src !== avatar) {
+			avatarElement.src = avatar;
+		}
 
 		const avatarLinks = document.querySelectorAll(
 			`a.avatar[href*="${this.#settings.anilistUser}"]`
 		);
 		for (const avatarLink of avatarLinks) {
-			avatarLink.style = `background-image: url(${avatar})`;
+			if (avatarLink.style !== `background-image: url(${avatar})`) {
+				avatarLink.style = `background-image: url(${avatar})`;
+			}
 		}
 	}
 
@@ -160,7 +164,9 @@ export class LayoutDesigner {
 		}
 
 		const bannerElement = document.querySelector(".banner");
-		bannerElement.style = `background-image: url(${banner})`;
+		if (bannerElement.style !== `background-image: url(${banner})`) {
+			bannerElement.style = `background-image: url(${banner})`;
+		}
 	}
 
 	#handleColor(value) {
@@ -182,7 +188,9 @@ export class LayoutDesigner {
 		}
 
 		const donatorBadge = document.querySelector(".donator-badge");
-		donatorBadge.innerText = donatorText;
+		if (donatorBadge.innerText !== donatorText) {
+			donatorBadge.innerText = donatorText;
+		}
 	}
 
 	#handleCss() {
