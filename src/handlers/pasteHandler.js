@@ -36,8 +36,13 @@ export class PasteHandler {
 			);
 		} else if (this.settings.options.pasteEnabled.getValue()) {
 			event.preventDefault();
-			const regex =
-				/(?<!\()\b(https?:\/\/\S+\.(?:png|jpg|jpeg|gif))\b(?!.*?\))/gi;
+			const regex = new RegExp(
+				`(?<!\\()\\b(https?:\/\/\\S+\\.(?:${ImageFormats.join(
+					"|"
+				)}))\\b(?!.*?\\))`,
+				"gi"
+			);
+			console.log(regex);
 			const result = clipboard.replace(
 				regex,
 				(match) =>
