@@ -26,6 +26,12 @@ export const changeLog = [
 			"Display quick access of notifications in home page.",
 			"quickAccessNotificationsEnabled"
 		),
+		new Feature(
+			"Fixed a bug where pasting text with line breaks inserted extra line breaks."
+		),
+		new Feature(
+			"Fixed a layout designer bug where a GIF did not loop correctly while previewing."
+		),
 	]),
 	new Version("1.12", [
 		new Feature("Enable CSSpy in Layout & CSS tab.", "csspyEnabled"),
