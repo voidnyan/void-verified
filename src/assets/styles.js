@@ -108,6 +108,10 @@ export const styles = /* css */ `
         cursor: pointer;
     }
 
+    .void-setting-label-container.void-auth-required .void-setting-label {
+        color: rgb(var(--color-peach));
+    }
+
     .void-setting-label-container .void-checkbox {
         vertical-align: middle;
     }
@@ -783,10 +787,14 @@ export const styles = /* css */ `
         padding: 8px;
     }
 
-    .void-notifications-feed-list .void-notification-preview,
-    .void-notifications-feed-list .void-notification-group-item {
+    .void-notifications-feed-list .void-notification-preview{
         width: 50px;
         height: 50px;
+    }
+
+    .void-notifications-feed-list .void-notification-group-item {
+        width: 40px;
+        height: 40px;
     }
 
     .void-notifications-feed-list .void-notification-preview.void-notification-preview-media {
@@ -795,7 +803,7 @@ export const styles = /* css */ `
 
     .void-notifications-feed-list .void-notification-group,
     .void-notifications-feed-list .void-notification-wrapper:first-child .void-notification-group {
-        top: -50px;
+        top: -40px;
         bottom: unset;
     }
 

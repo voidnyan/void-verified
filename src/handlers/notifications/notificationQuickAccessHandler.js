@@ -30,7 +30,8 @@ export class NotificationQuickAccessHandler {
 
 	async renderNotifications() {
 		if (
-			!this.#settings.options.quickAccessNotificationsEnabled.getValue()
+			!this.#settings.options.quickAccessNotificationsEnabled.getValue() ||
+			!this.#settings.isAuthorized()
 		) {
 			return;
 		}
