@@ -269,7 +269,7 @@ exports[`Settings User Interface renders 1`] = `
         </label>
       </div>
       <div
-        class="void-setting-label-container"
+        class="void-setting-label-container void-auth-required"
       >
         <input
           class="void-checkbox"
@@ -284,7 +284,7 @@ exports[`Settings User Interface renders 1`] = `
         </label>
       </div>
       <div
-        class="void-setting-label-container"
+        class="void-setting-label-container void-auth-required"
       >
         <input
           class="void-checkbox"
@@ -314,7 +314,7 @@ exports[`Settings User Interface renders 1`] = `
         </label>
       </div>
       <div
-        class="void-setting-label-container"
+        class="void-setting-label-container void-auth-required"
       >
         <input
           class="void-checkbox"
@@ -329,7 +329,7 @@ exports[`Settings User Interface renders 1`] = `
         </label>
       </div>
       <div
-        class="void-setting-label-container"
+        class="void-setting-label-container void-auth-required"
       >
         <input
           class="void-checkbox"
@@ -344,7 +344,7 @@ exports[`Settings User Interface renders 1`] = `
         </label>
       </div>
       <div
-        class="void-setting-label-container"
+        class="void-setting-label-container void-auth-required"
       >
         <input
           class="void-checkbox"
@@ -553,7 +553,7 @@ exports[`Settings User Interface renders 1`] = `
         </label>
       </div>
       <div
-        class="void-setting-label-container"
+        class="void-setting-label-container void-auth-required"
       >
         <input
           class="void-checkbox"
