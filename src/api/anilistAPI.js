@@ -228,29 +228,32 @@ export class AnilistAPI {
             avatar {
                 large
             }`;
-		const query = `query($activityIds: [Int]) {
-            Page(page: 1) {
-                activities(id_in: $activityIds, isFollowing: true) {
-                    ... on ListActivity {
-                        id
-                        type
-                        media {
-                            coverImage {large}
-                            id
-                            type
-                        }
-                    }
-                    ... on TextActivity {
-                        id
-                        type
-                        user {${userQuery}}
-                    }
-                    ... on MessageActivity {
-                        id
-                        type
-                        recipient {${userQuery}}
-                    }
+
+		const activitiesQuery = ` ... on ListActivity {
+                id
+                type
+                media {
+                    coverImage {large}
+                    id
+                    type
                 }
+            }
+            ... on TextActivity {
+                id
+                type
+                user {${userQuery}}
+            }
+            ... on MessageActivity {
+                id
+                type
+                recipient {${userQuery}}
+            }`;
+		const query = `query($activityIds: [Int]) {
+            public: Page(page: 1) {
+                activities(id_in: $activityIds, isFollowing: true) {${activitiesQuery}}
+            }
+            following: Page(page: 1) {
+                activities(id_in: $activityIds, isFollowing: false) {${activitiesQuery}}
             }
         }`;
 
@@ -258,7 +261,11 @@ export class AnilistAPI {
 		const options = this.#getMutationOptions(query, variables);
 		try {
 			const data = await this.#elevatedFetch(options);
-			return data.Page.activities;
+			const activities = new Set([
+				...data.public.activities,
+				...data.following.activities,
+			]);
+			return Array.from(activities);
 		} catch (error) {
 			console.error(error);
 			throw new Error("Failed to query activities.");
