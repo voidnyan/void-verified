@@ -83,7 +83,6 @@ const createPreview = (notification) => {
 const createActivityRelation = (activity) => {
 	let url;
 	let image;
-	console.log(activity);
 	switch (activity.type) {
 		case "ANIME_LIST":
 			url = `https://anilist.co/anime/${activity.media.id}`;
