@@ -111,11 +111,13 @@ export const defaultSettings = {
 		defaultValue: false,
 		description: "Replace AniList notification system.",
 		category: categories.misc,
+		authRequired: true,
 	},
 	quickAccessNotificationsEnabled: {
 		defaultValue: false,
 		description: "Display quick access of notifications in home page.",
 		category: categories.misc,
+		authRequired: true,
 	},
 	quickAccessEnabled: {
 		defaultValue: false,

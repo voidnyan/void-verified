@@ -62,6 +62,11 @@ export class Settings {
 		this.anilistUser = auth?.name;
 	}
 
+	isAuthorized() {
+		const isAuthorized = this.auth?.token != null;
+		return isAuthorized;
+	}
+
 	async verifyUser(username) {
 		if (
 			this.verifiedUsers.find(

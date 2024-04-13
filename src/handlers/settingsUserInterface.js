@@ -510,7 +510,13 @@ export class SettingsUserInterface {
 		}
 		input.setAttribute("id", settingKey);
 
-		settingsContainer.append(SettingLabel(setting.description, input));
+		const settingLabel = SettingLabel(setting.description, input);
+
+		if (setting.authRequired) {
+			settingLabel.classList.add("void-auth-required");
+		}
+
+		settingsContainer.append(settingLabel);
 	}
 
 	#handleOption(event, settingKey, type) {

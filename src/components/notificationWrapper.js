@@ -120,8 +120,7 @@ const createGroup = (notification) => {
 			"notification-group-item"
 		);
 		groupItem.style.backgroundImage = `url(${user.avatar.large})`;
-		const tooltip = Tooltip(user.name, groupItem);
-		group.append(tooltip);
+		group.append(groupItem);
 	}
 	return group;
 };

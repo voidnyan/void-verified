@@ -23,7 +23,10 @@ export class NotificationFeedHandler {
 			"void-verified-notifications-config"
 		);
 
-		if (this.#settings.options.replaceNotifications.getValue()) {
+		if (
+			this.#settings.options.replaceNotifications.getValue() &&
+			this.#settings.isAuthorized()
+		) {
 			new StyleHandler().createStyleLink(
 				notificationReplacementStyles,
 				"notifications"
@@ -36,7 +39,10 @@ export class NotificationFeedHandler {
 	}
 
 	renderNotificationsFeed() {
-		if (!this.#settings.options.replaceNotifications.getValue()) {
+		if (
+			!this.#settings.options.replaceNotifications.getValue() ||
+			!this.#settings.isAuthorized()
+		) {
 			return;
 		}
 
@@ -64,6 +70,13 @@ export class NotificationFeedHandler {
 	}
 
 	async #handleUnreadNotificationsCount(notificationFeedHandler) {
+		if (
+			!this.#settings.options.replaceNotifications.getValue() ||
+			!this.#settings.isAuthorized()
+		) {
+			return;
+		}
+
 		try {
 			let [notifications] = await new AnilistAPI(
 				notificationFeedHandler.#settings
