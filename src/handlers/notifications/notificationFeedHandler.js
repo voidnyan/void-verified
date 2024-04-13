@@ -65,10 +65,12 @@ export class NotificationFeedHandler {
 
 	async #handleUnreadNotificationsCount(notificationFeedHandler) {
 		try {
-			const [notifications] = await new AnilistAPI(
+			let [notifications] = await new AnilistAPI(
 				notificationFeedHandler.#settings
 			).getNotifications(
-				notificationFeedHandler.#config.notificationTypes
+				notificationFeedHandler.#config.notificationTypes,
+				1,
+				this.#config.resetDefaultNotifications
 			);
 
 			const unreadNotificationsCount =
@@ -155,20 +157,22 @@ export class NotificationFeedHandler {
 						);
 					});
 				document.querySelector(".void-notification-dot")?.remove();
-				try {
-					Toaster.debug("Resetting notification count.");
-					await new AnilistAPI(
-						this.#settings
-					).resetNotificationCount();
-					document.body
-						.querySelector(".user .notification-dot")
-						?.remove();
-					Toaster.success("Notifications count reset.");
-				} catch (error) {
-					Toaster.error(
-						"There was an error resetting notification count."
-					);
-					console.error(error);
+				if (!this.#config.resetDefaultNotifications) {
+					try {
+						Toaster.debug("Resetting notification count.");
+						await new AnilistAPI(
+							this.#settings
+						).resetNotificationCount();
+						document.body
+							.querySelector(".user .notification-dot")
+							?.remove();
+						Toaster.success("Notifications count reset.");
+					} catch (error) {
+						Toaster.error(
+							"There was an error resetting notification count."
+						);
+						console.error(error);
+					}
 				}
 			},
 			"notification-all-read-button"
@@ -213,7 +217,23 @@ export class NotificationFeedHandler {
 				this.#config.save();
 			})
 		);
-		container.append(groupOption);
+		const relationOption = SettingLabel(
+			"Add relation to activity notifications.",
+			Checkbox(this.#config.addActivityRelation, () => {
+				this.#config.addActivityRelation =
+					!this.#config.addActivityRelation;
+				this.#config.save();
+			})
+		);
+		const resetOption = SettingLabel(
+			"Reset AniList's notification count when querying notifications.",
+			Checkbox(this.#config.resetDefaultNotifications, () => {
+				this.#config.resetDefaultNotifications =
+					!this.#config.resetDefaultNotifications;
+				this.#config.save();
+			})
+		);
+		container.append(groupOption, relationOption, resetOption);
 		return container;
 	};
 
@@ -255,19 +275,45 @@ export class NotificationFeedHandler {
 		const notificationElements = [];
 		let notifications = [];
 
+		const anilistAPI = new AnilistAPI(this.#settings);
+
 		try {
 			Toaster.debug("Querying notification feed.");
-			const [notifs, pageInfo] = await new AnilistAPI(
-				this.#settings
-			).getNotifications(
+			const [notifs, pageInfo] = await anilistAPI.getNotifications(
 				this.#getNotificationTypes(),
-				this.#pageInfo.currentPage + 1
+				this.#pageInfo.currentPage + 1,
+				this.#config.resetDefaultNotifications
 			);
 			notifications = notifs;
 			this.#pageInfo = pageInfo;
 		} catch (error) {
 			console.error(error);
 			Toaster.error("There was an error querying notification feed.");
+		}
+
+		const activityIds = new Set(
+			notifications
+				.filter((x) => x.activityId)
+				.filter((x) => x.type !== "ACTIVITY_MESSAGE")
+				.map((x) => x.activityId)
+		);
+
+		if (activityIds.size > 0 && this.#config.addActivityRelation) {
+			try {
+				const relations =
+					await anilistAPI.getActivityNotificationRelations(
+						Array.from(activityIds)
+					);
+				notifications = notifications.map((notification) => {
+					notification.activity = relations.find(
+						(relation) => notification.activityId === relation.id
+					);
+					return notification;
+				});
+			} catch (error) {
+				console.error(error);
+				Toaster.error("Failed to get activity notification relations.");
+			}
 		}
 
 		for (const notification of this.#groupNotifications(notifications)) {

@@ -717,9 +717,16 @@ export const styles = /* css */ `
 
     #void-notifications-feed-container {
         display: grid;
-        grid-template-columns: max-content auto;
+        grid-template-columns: fit-content(200px) auto;
         gap: 20px;
     }
+    
+    @media screen and (max-width: 800px) {
+        #void-notifications-feed-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
 
     .void-notifications-feed-settings {
         margin-top: 25px;
@@ -790,6 +797,19 @@ export const styles = /* css */ `
     .void-notifications-feed-list .void-notification-wrapper:first-child .void-notification-group {
         top: -50px;
         bottom: unset;
+    }
+
+    
+    .void-notification-preview-relation {
+        height: 30px;
+        aspect-ratio: 1 / 1;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        border-radius: 4px;
+        position: absolute;
+        bottom: -3px;
+        right: -3px;
     }
 
     .void-notifications-feed-empty-notice {

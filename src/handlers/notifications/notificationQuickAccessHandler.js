@@ -21,7 +21,6 @@ export class NotificationQuickAccessHandler {
 	#config;
 	#configOpen = false;
 	#shouldQueryAfterConfigClose = false;
-	#collapsed = false;
 	constructor(settings) {
 		this.#settings = settings;
 		this.#config = new NotificationConfig(
@@ -80,10 +79,11 @@ export class NotificationQuickAccessHandler {
 		);
 
 		const header = DOM.create("h2", null, ["Notifications"]);
-		container.setAttribute("collapsed", this.#collapsed);
+		container.setAttribute("collapsed", this.#config.collapsed);
 		header.addEventListener("click", () => {
-			this.#collapsed = !this.#collapsed;
-			container.setAttribute("collapsed", this.#collapsed);
+			this.#config.collapsed = !this.#config.collapsed;
+			this.#config.save();
+			container.setAttribute("collapsed", this.#config.collapsed);
 		});
 
 		const headerWrapper = DOM.create("div", null, header);
@@ -171,12 +171,10 @@ export class NotificationQuickAccessHandler {
 				document.querySelector(".void-notification-dot")?.remove();
 			}
 			try {
-				Toaster.debug("Resetting notification count.");
 				await new AnilistAPI(this.#settings).resetNotificationCount();
 				document.body
 					.querySelector(".user .notification-dot")
 					?.remove();
-				Toaster.success("Notifications count reset.");
 			} catch (error) {
 				Toaster.error(
 					"There was an error resetting notification count."

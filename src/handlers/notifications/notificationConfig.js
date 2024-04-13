@@ -3,7 +3,9 @@ import { notificationTypes } from "./notificationTypes";
 export class NotificationConfig {
 	groupNotifications;
 	notificationTypes;
-
+	collapsed;
+	resetDefaultNotifications;
+	addActivityRelation;
 	#configInLocalStorage;
 	constructor(locaStorageString) {
 		this.#configInLocalStorage = locaStorageString;
@@ -12,6 +14,10 @@ export class NotificationConfig {
 		);
 		this.groupNotifications = config?.groupNotifications ?? true;
 		this.notificationTypes = config?.notificationTypes ?? notificationTypes;
+		this.collapsed = config?.collapsed ?? false;
+		this.resetDefaultNotifications =
+			config?.resetDefaultNotifications ?? true;
+		this.addActivityRelation = config?.addActivityRelation ?? false;
 	}
 
 	save() {
