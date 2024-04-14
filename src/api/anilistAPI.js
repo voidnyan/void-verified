@@ -292,34 +292,24 @@ export class AnilistAPI {
 	}
 
 	async #elevatedFetch(options) {
-		const runElevated = this.settings.options.useElevatedFetch.getValue();
-		if (runElevated && GM.xmlHttpRequest) {
-			try {
-				const response = await GM.xmlHttpRequest({
-					method: "POST",
-					url: this.#url,
-					data: options.body,
-					headers: options.headers,
-				});
-				const data = JSON.parse(response.response);
-				return data.data;
-			} catch (error) {
-				if (error.error?.includes("Request was blocked by the user")) {
-					Toaster.warning(
-						"Elevated access has been enabled in the userscript settings but user has refused permissions to run it. Using regular fetch."
-					);
-				} else {
-					Toaster.debug(
-						"Could not query AniList API with elevated access. Using regular fetch."
-					);
-				}
-				console.error(error);
+		try {
+			const response = await fetch(this.#url, options);
+			this.#setApiLimitRemaining(response);
+			const data = await response.json();
+			return data.data;
+		} catch (error) {
+			if (error instanceof TypeError) {
+				console.log("reset:", error.headers?.get("X-RateLimit-Reset"));
+				Toaster.warning(
+					`Preflight check failed. This might be caused by too many requests. Last successful query returned ${this.#getApiLimitRemaining()} queries remaining.`
+				);
+				console.error("Network error occured: ", error.message);
+				console.log(
+					`Last successful query by VoidVerified returned ${this.#getApiLimitRemaining()} queries remaining.`
+				);
 			}
+			throw new error();
 		}
-
-		const response = await fetch(this.#url, options);
-		const data = await response.json();
-		return data.data;
 	}
 
 	async #queryUsers(page) {
@@ -397,6 +387,17 @@ export class AnilistAPI {
 		}
 		let queryOptions = this.#getQueryOptions(query, variables);
 		return queryOptions;
+	}
+
+	#setApiLimitRemaining(response) {
+		sessionStorage.setItem(
+			"void-verified-api-limit-remaining",
+			response.headers.get("X-RateLimit-Remaining")
+		);
+	}
+
+	#getApiLimitRemaining() {
+		return sessionStorage.getItem("void-verified-api-limit-remaining");
 	}
 }
 
