@@ -172,6 +172,8 @@ const getNotificationUrl = (notification) => {
 			return `https://anilist.co/forum/thread/${notification.thread.id}/comment/${notification.commentId}`;
 		case "THREAD_LIKE":
 			return `https://anilist.co/forum/thread/${notification.threadId}/`;
+		case "FOLLOWING":
+			return `https://anilist.co/user/${notification.user.name}/`;
 		default:
 			return `https://anilist.co/activity/${notification.activityId}`;
 	}
