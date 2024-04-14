@@ -8,6 +8,7 @@ import { Toaster } from "../../utils/toaster";
 import { StyleHandler } from "../styleHandler";
 import { NotificationConfig } from "./notificationConfig";
 import { notificationTypes } from "./notificationTypes";
+import { NotificationsCache } from "./notificationsCache";
 
 export class NotificationFeedHandler {
 	#settings;
@@ -312,21 +313,34 @@ export class NotificationFeedHandler {
 		);
 
 		if (activityIds.size > 0 && this.#config.addActivityRelation) {
-			try {
-				const relations =
-					await anilistAPI.getActivityNotificationRelations(
-						Array.from(activityIds)
+			const [relations, missingIds] =
+				NotificationsCache.getCachedRelations(Array.from(activityIds));
+			const nonDeadIds = NotificationsCache.filterDeadLinks(missingIds);
+			if (nonDeadIds.length > 0) {
+				try {
+					const rels =
+						await anilistAPI.getActivityNotificationRelations(
+							Array.from(nonDeadIds)
+						);
+					relations.push(...rels);
+					NotificationsCache.cacheRelations(rels);
+					const foundIds = rels.map((relation) => relation.id);
+					NotificationsCache.cacheDeadLinks(
+						missingIds.filter((id) => !foundIds.includes(id))
 					);
-				notifications = notifications.map((notification) => {
-					notification.activity = relations.find(
-						(relation) => notification.activityId === relation.id
+				} catch (error) {
+					console.error(error);
+					Toaster.error(
+						"Failed to get activity notification relations."
 					);
-					return notification;
-				});
-			} catch (error) {
-				console.error(error);
-				Toaster.error("Failed to get activity notification relations.");
+				}
 			}
+			notifications = notifications.map((notification) => {
+				notification.activity = relations.find(
+					(relation) => notification.activityId === relation.id
+				);
+				return notification;
+			});
 		}
 
 		for (const notification of this.#groupNotifications(notifications)) {

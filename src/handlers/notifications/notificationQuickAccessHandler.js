@@ -11,6 +11,7 @@ import { DOM } from "../../utils/DOM";
 import { Toaster } from "../../utils/toaster";
 import { NotificationConfig } from "./notificationConfig";
 import { notificationTypes } from "./notificationTypes";
+import { NotificationsCache } from "./notificationsCache";
 
 export class NotificationQuickAccessHandler {
 	#settings;
@@ -113,15 +114,15 @@ export class NotificationQuickAccessHandler {
 		this.#timeout = setTimeout(() => {
 			this.#shouldQuery = true;
 		}, 3 * 60 * 1000);
+		let notifications = [];
+		const anilistAPI = new AnilistAPI(this.#settings);
 		try {
-			const [notifications] = await new AnilistAPI(
-				this.#settings
-			).getNotifications(
+			const [notifs] = await anilistAPI.getNotifications(
 				this.#config.notificationTypes.length > 0
 					? this.#config.notificationTypes
 					: notificationTypes
 			);
-			this.#notifications = notifications;
+			notifications = notifs;
 			this.#shouldRender = true;
 		} catch (error) {
 			console.error(error);
@@ -129,6 +130,45 @@ export class NotificationQuickAccessHandler {
 				"There was an error querying quick access notifications."
 			);
 		}
+
+		const activityIds = new Set(
+			notifications
+				.filter((x) => x.activityId)
+				.filter((x) => x.type !== "ACTIVITY_MESSAGE")
+				.map((x) => x.activityId)
+		);
+
+		if (activityIds.size > 0 && this.#config.addActivityRelation) {
+			const [relations, missingIds] =
+				NotificationsCache.getCachedRelations(Array.from(activityIds));
+			const nonDeadIds = NotificationsCache.filterDeadLinks(missingIds);
+			if (nonDeadIds.length > 0) {
+				try {
+					const rels =
+						await anilistAPI.getActivityNotificationRelations(
+							Array.from(nonDeadIds)
+						);
+					relations.push(...rels);
+					NotificationsCache.cacheRelations(rels);
+					const foundIds = rels.map((relation) => relation.id);
+					NotificationsCache.cacheDeadLinks(
+						missingIds.filter((id) => !foundIds.includes(id))
+					);
+				} catch (error) {
+					console.error(error);
+					Toaster.error(
+						"Failed to get activity notification relations."
+					);
+				}
+			}
+			notifications = notifications.map((notification) => {
+				notification.activity = relations.find(
+					(relation) => notification.activityId === relation.id
+				);
+				return notification;
+			});
+		}
+		this.#notifications = notifications;
 	}
 
 	#handleNotifications(notifications) {
@@ -225,7 +265,15 @@ export class NotificationQuickAccessHandler {
 				this.#config.save();
 			})
 		);
-		container.append(groupOption);
+		const relationOption = SettingLabel(
+			"Add relation to activity notifications.",
+			Checkbox(this.#config.addActivityRelation, () => {
+				this.#config.addActivityRelation =
+					!this.#config.addActivityRelation;
+				this.#config.save();
+			})
+		);
+		container.append(groupOption, relationOption);
 		return container;
 	};
 

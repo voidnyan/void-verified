@@ -820,6 +820,10 @@ export const styles = /* css */ `
         right: -3px;
     }
 
+    .void-quick-access-notifications-wrapper .void-notification-preview-relation {
+        height: 18px;
+    }
+
     .void-notifications-feed-empty-notice {
         text-align: center;
     }
