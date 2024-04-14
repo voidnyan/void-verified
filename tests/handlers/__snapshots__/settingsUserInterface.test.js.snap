@@ -489,21 +489,6 @@ exports[`Settings User Interface renders 1`] = `
           class="void-setting-label"
           for="0.12352"
         >
-          Query AniList API with elevated browser access (this might solve some API issues).
-        </label>
-      </div>
-      <div
-        class="void-setting-label-container"
-      >
-        <input
-          class="void-checkbox"
-          id="0.12352"
-          type="checkbox"
-        />
-        <label
-          class="void-setting-label"
-          for="0.12352"
-        >
           Open AniList links in the same tab.
         </label>
       </div>
