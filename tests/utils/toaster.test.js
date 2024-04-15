@@ -52,7 +52,7 @@ describe("Toaster", () => {
 			} else {
 				expect(toast).toBeNull();
 			}
-		}
+		},
 	);
 
 	test.each(toastCases)(
@@ -63,7 +63,7 @@ describe("Toaster", () => {
 
 			const toast = document.querySelector(".void-toast");
 			expect(toast).toBeNull();
-		}
+		},
 	);
 
 	it("renders critical error", () => {
@@ -80,7 +80,7 @@ describe("Toaster", () => {
 		const toasterConfig = new ToasterConfig();
 		localStorage.setItem(
 			"void-verified-toaster-config",
-			JSON.stringify(toasterConfig)
+			JSON.stringify(toasterConfig),
 		);
 		Toaster.initializeToaster(settings);
 
@@ -115,7 +115,7 @@ const configureToaster = (toastLevel, enabled = true) => {
 	const toasterConfig = new ToasterConfig({ toastLevel });
 	localStorage.setItem(
 		"void-verified-toaster-config",
-		JSON.stringify(toasterConfig)
+		JSON.stringify(toasterConfig),
 	);
 	Toaster.initializeToaster(settings);
 };

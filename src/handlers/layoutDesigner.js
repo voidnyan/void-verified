@@ -54,16 +54,16 @@ export class LayoutDesigner {
 
 		this.#broadcastChannel = new BroadcastChannel("void-layouts");
 		this.#broadcastChannel.addEventListener("message", (event) =>
-			this.#handleBroadcastMessage(event)
+			this.#handleBroadcastMessage(event),
 		);
 
 		const layouts = JSON.parse(
-			localStorage.getItem(this.#layoutsInLocalStorage)
+			localStorage.getItem(this.#layoutsInLocalStorage),
 		);
 		if (layouts) {
 			this.#layouts = layouts;
 			this.#layouts.layoutsList = layouts.layoutsList.map(
-				(layout) => new Layout(layout)
+				(layout) => new Layout(layout),
 			);
 		}
 
@@ -115,7 +115,7 @@ export class LayoutDesigner {
 		if (
 			preview ||
 			!window.location.pathname.startsWith(
-				`/user/${this.#settings.anilistUser}/`
+				`/user/${this.#settings.anilistUser}/`,
 			)
 		) {
 			return;
@@ -149,7 +149,7 @@ export class LayoutDesigner {
 		}
 
 		const avatarLinks = document.querySelectorAll(
-			`a.avatar[href*="${this.#settings.anilistUser}"]`
+			`a.avatar[href*="${this.#settings.anilistUser}"]`,
 		);
 		for (const avatarLink of avatarLinks) {
 			if (avatarLink.style !== `background-image: url(${avatar})`) {
@@ -197,7 +197,7 @@ export class LayoutDesigner {
 		if (this.#layouts.disableCss) {
 			DOM.get("#verified-user-css-styles")?.setAttribute(
 				"disabled",
-				true
+				true,
 			);
 		} else {
 			DOM.get("#verified-user-css-styles")?.removeAttribute("disabled");
@@ -232,20 +232,20 @@ export class LayoutDesigner {
 		const imageSection = DOM.create("div");
 
 		imageSection.append(
-			this.#createImageField("avatar", this.#layout.avatar, settingsUi)
+			this.#createImageField("avatar", this.#layout.avatar, settingsUi),
 		);
 
 		imageSection.append(
-			this.#createImageField("banner", this.#layout.banner, settingsUi)
+			this.#createImageField("banner", this.#layout.banner, settingsUi),
 		);
 
 		const imageUploadNote = Note(
-			"You can preview avatar & banner by providing a link to an image. If you have configured a image host, you can upload images by pasting them to the fields. "
+			"You can preview avatar & banner by providing a link to an image. If you have configured a image host, you can upload images by pasting them to the fields. ",
 		);
 
 		imageUploadNote.append(
 			DOM.create("br"),
-			"Unfortunately AniList API does not support third parties uploading new avatars or banners. You have to upload them separately."
+			"Unfortunately AniList API does not support third parties uploading new avatars or banners. You have to upload them separately.",
 		);
 
 		const colorSelection = this.#createColorSelection(settingsUi);
@@ -254,7 +254,7 @@ export class LayoutDesigner {
 			this.#layouts.preview ? "Disable Preview" : "Enable Preview",
 			() => {
 				this.#togglePreview(settingsUi);
-			}
+			},
 		);
 
 		const cssButton = Button(
@@ -264,7 +264,7 @@ export class LayoutDesigner {
 				cssButton.innerText = this.#layouts.disableCss
 					? "Enable Css"
 					: "Disable Css";
-			}
+			},
 		);
 
 		const getAboutButton = Button(
@@ -272,7 +272,7 @@ export class LayoutDesigner {
 			() => {
 				this.#getUserAbout(settingsUi);
 			},
-			"error"
+			"error",
 		);
 
 		container.append(
@@ -281,7 +281,7 @@ export class LayoutDesigner {
 			layoutInfoSection,
 			imageSection,
 			imageUploadNote,
-			colorSelection
+			colorSelection,
 		);
 
 		if (this.#donatorTier >= 3) {
@@ -296,7 +296,7 @@ export class LayoutDesigner {
 				(event) => {
 					this.#publishAbout(event, settingsUi);
 				},
-				"success"
+				"success",
 			);
 			container.append(saveAboutButton);
 		}
@@ -315,7 +315,7 @@ export class LayoutDesigner {
 			IconButton(AddIcon(), () => {
 				this.#addLayout();
 				settingsUi.renderSettingsUiContent();
-			})
+			}),
 		);
 		const options = this.#layouts.layoutsList.map((layout, index) =>
 			Option(
@@ -324,8 +324,8 @@ export class LayoutDesigner {
 				() => {
 					this.#switchLayout(index);
 					settingsUi.renderSettingsUiContent();
-				}
-			)
+				},
+			),
 		);
 
 		container.append(Select(options));
@@ -345,7 +345,7 @@ export class LayoutDesigner {
 		this.#layouts.layoutsList.push(layout);
 		this.#layouts.selectedLayout = Math.max(
 			this.#layouts.layoutsList.length - 1,
-			0
+			0,
 		);
 		this.#saveToLocalStorage();
 		this.#broadcastLayoutChange();
@@ -358,7 +358,7 @@ export class LayoutDesigner {
 		this.#layouts.layoutsList.splice(this.#layouts.selectedLayout, 1);
 		this.#layouts.selectedLayout = Math.max(
 			this.#layouts.selectedLayout - 1,
-			0
+			0,
 		);
 
 		if (this.#layouts.layoutsList.length === 0) {
@@ -375,14 +375,14 @@ export class LayoutDesigner {
 			"Layout name",
 			InputField(this.#layout?.name, (event) => {
 				this.#updateOption("name", event.target.value, settingsUi);
-			})
+			}),
 		);
 
 		container.append(
 			IconButton(TrashcanIcon(), () => {
 				this.#deleteLayout();
 				settingsUi.renderSettingsUiContent();
-			})
+			}),
 		);
 		return container;
 	}
@@ -410,7 +410,7 @@ export class LayoutDesigner {
 		const donatorHeader = DOM.create(
 			"h5",
 			"layout-header",
-			"Donator Badge"
+			"Donator Badge",
 		);
 		const donatorInput = InputField(this.#layout.donatorBadge, (event) => {
 			this.#updateOption("donatorBadge", event.target.value, settingsUi);
@@ -445,14 +445,14 @@ export class LayoutDesigner {
 
 		if (this.#donatorTier >= 2) {
 			const isDefaultColor = ColorFunctions.defaultColors.some(
-				(color) => color === this.#layout.color
+				(color) => color === this.#layout.color,
 			);
 
 			const colorInput = ColorPicker(
 				isDefaultColor ? "" : this.#layout.color,
 				(event) => {
 					this.#updateOption("color", event.target.value, settingsUi);
-				}
+				},
 			);
 			if (!isDefaultColor && this.#layout.color !== "") {
 				colorInput.classList.add("active");
@@ -482,7 +482,7 @@ export class LayoutDesigner {
 			this.#updateOption("bio", event.target.value, settingsUi);
 		});
 		const note = Note(
-			"Please note that VoidVerified does not have access to AniList's markdown parser. AniList specific features might not be available while previewing. Recommended to be used for smaller changes like previewing a different image for a layout."
+			"Please note that VoidVerified does not have access to AniList's markdown parser. AniList specific features might not be available while previewing. Recommended to be used for smaller changes like previewing a different image for a layout.",
 		);
 
 		container.append(aboutHeader, aboutInput, note);
@@ -496,7 +496,7 @@ export class LayoutDesigner {
 		try {
 			const anilistAPI = new AnilistAPI(this.#settings);
 			let currentAbout = await anilistAPI.getUserAbout(
-				this.#settings.anilistUser
+				this.#settings.anilistUser,
 			);
 			if (!currentAbout) {
 				currentAbout = "";
@@ -565,7 +565,7 @@ export class LayoutDesigner {
 		if (
 			this.#layout.bio !== "" &&
 			!window.confirm(
-				"Are you sure you want to reset about? Any changes will be lost."
+				"Are you sure you want to reset about? Any changes will be lost.",
 			)
 		) {
 			return;
@@ -575,7 +575,7 @@ export class LayoutDesigner {
 			Toaster.debug("Querying user about.");
 			const anilistAPI = new AnilistAPI(this.#settings);
 			const about = await anilistAPI.getUserAbout(
-				this.#settings.anilistUser
+				this.#settings.anilistUser,
 			);
 			const clearedAbout = this.#removeJson(about);
 
@@ -593,7 +593,7 @@ export class LayoutDesigner {
 	#createColorButton(anilistColor, settingsUi) {
 		const button = DOM.create("div", "color-button");
 		button.style.backgroundColor = `rgb(${ColorFunctions.handleAnilistColor(
-			anilistColor
+			anilistColor,
 		)})`;
 
 		button.addEventListener("click", () => {
@@ -655,7 +655,7 @@ export class LayoutDesigner {
 	#saveToLocalStorage() {
 		localStorage.setItem(
 			this.#layoutsInLocalStorage,
-			JSON.stringify(this.#layouts)
+			JSON.stringify(this.#layouts),
 		);
 	}
 }

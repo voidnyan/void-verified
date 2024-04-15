@@ -176,7 +176,7 @@ export class AnilistAPI {
 	async getNotifications(
 		notificationTypes,
 		page = 1,
-		resetNotificationCount = false
+		resetNotificationCount = false,
 	) {
 		const query = `
         query($notificationTypes: [NotificationType], $page: Int, $resetNotificationCount: Boolean) {
@@ -301,11 +301,11 @@ export class AnilistAPI {
 			if (error instanceof TypeError) {
 				console.log("reset:", error.headers?.get("X-RateLimit-Reset"));
 				Toaster.warning(
-					`Preflight check failed. This might be caused by too many requests. Last successful query returned ${this.#getApiLimitRemaining()} queries remaining.`
+					`Preflight check failed. This might be caused by too many requests. Last successful query returned ${this.#getApiLimitRemaining()} queries remaining.`,
 				);
 				console.error("Network error occured: ", error.message);
 				console.log(
-					`Last successful query by VoidVerified returned ${this.#getApiLimitRemaining()} queries remaining.`
+					`Last successful query by VoidVerified returned ${this.#getApiLimitRemaining()} queries remaining.`,
 				);
 			}
 			throw new error();
@@ -381,7 +381,7 @@ export class AnilistAPI {
 	#getMutationOptions(query, variables) {
 		if (!this.settings.auth?.token) {
 			Toaster.error(
-				"Tried to make API query without authorizing VoidVerified. You can do so in the settings."
+				"Tried to make API query without authorizing VoidVerified. You can do so in the settings.",
 			);
 			throw new Error("VoidVerified is missing auth token.");
 		}
@@ -392,7 +392,7 @@ export class AnilistAPI {
 	#setApiLimitRemaining(response) {
 		sessionStorage.setItem(
 			"void-verified-api-limit-remaining",
-			response.headers.get("X-RateLimit-Remaining")
+			response.headers.get("X-RateLimit-Remaining"),
 		);
 	}
 

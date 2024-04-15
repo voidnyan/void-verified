@@ -32,20 +32,20 @@ export class PasteHandler {
 			window.document.execCommand(
 				"insertText",
 				false,
-				transformedClipboard
+				transformedClipboard,
 			);
 		} else if (this.settings.options.pasteEnabled.getValue()) {
 			event.preventDefault();
 			const regex = new RegExp(
 				`(?<!\\()\\b(https?:\/\/\\S+\\.(?:${ImageFormats.join(
-					"|"
+					"|",
 				)}))\\b(?!.*?\\))`,
-				"gi"
+				"gi",
 			);
 			const result = clipboard.replace(
 				regex,
 				(match) =>
-					`img${this.settings.options.pasteImageWidth.getValue()}(${match})`
+					`img${this.settings.options.pasteImageWidth.getValue()}(${match})`,
 			);
 			window.document.execCommand("insertText", false, result);
 			return;
@@ -67,7 +67,7 @@ export class PasteHandler {
 
 		try {
 			const results = await Promise.all(
-				images.map((image) => imageApi.uploadImage(image))
+				images.map((image) => imageApi.uploadImage(image)),
 			);
 			return results
 				.filter((url) => url !== null)

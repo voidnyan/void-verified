@@ -16,7 +16,7 @@ export class ActivityHandler {
 		}
 
 		const subscribeButtons = document.querySelectorAll(
-			"span[label='Unsubscribe'], span[label='Subscribe']"
+			"span[label='Unsubscribe'], span[label='Subscribe']",
 		);
 		for (const subscribeButton of subscribeButtons) {
 			if (subscribeButton.parentNode.classList.contains("actions")) {
@@ -36,14 +36,14 @@ export class ActivityHandler {
 
 		if (
 			!window.location.pathname.startsWith(
-				`/user/${this.settings.anilistUser}`
+				`/user/${this.settings.anilistUser}`,
 			)
 		) {
 			return;
 		}
 
 		const activityEditActions = document.querySelector(
-			".activity-feed-wrap > .activity-edit > .actions"
+			".activity-feed-wrap > .activity-edit > .actions",
 		);
 		if (
 			!activityEditActions ||
@@ -58,22 +58,22 @@ export class ActivityHandler {
 				() => {
 					this.#handleSelfMessage(this.settings);
 				},
-				"self-message"
-			)
+				"self-message",
+			),
 		);
 	}
 
 	async #handleSelfMessage(settings) {
 		const anilistAPI = new AnilistAPI(settings);
 		const message = document.querySelector(
-			".activity-feed-wrap > .activity-edit textarea"
+			".activity-feed-wrap > .activity-edit textarea",
 		).value;
 		try {
 			Toaster.debug("Self-publishing a message.");
 			const response = await anilistAPI.selfMessage(message);
 			Toaster.success("Message self-published.");
 			window.location.replace(
-				`https://anilist.co/activity/${response.id}`
+				`https://anilist.co/activity/${response.id}`,
 			);
 		} catch (err) {
 			console.error(err);
@@ -87,7 +87,7 @@ export class ActivityHandler {
 		}
 
 		const anilistLinks = document.querySelectorAll(
-			"a:not(.void-link)[href^='https://anilist.co'][target='_blank']"
+			"a:not(.void-link)[href^='https://anilist.co'][target='_blank']",
 		);
 
 		for (const link of anilistLinks) {

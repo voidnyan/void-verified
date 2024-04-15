@@ -1,33 +1,47 @@
 {
     "name": "void-verified",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "type": "module",
+    "description": "Social enhancements for AniLiist",
+    "version": "1.14.0",
+    "author": {
+        "name": "voidnyan"
+    },
     "scripts": {
-        "build": "jest && node build.js && node replaceHeader.js",
-        "dev": "nodemon build.js --ignore ./dist/",
-        "test": "jest",
-        "test-summary": "jest --coverage --coverageReporters='text-summary'"
+        "format": "prettier -w ./",
+        "analize": "cross-env npm_config_report=true npm run build --plugins @babel/plugin-transform-react-jsx script.js",
+        "build": "webpack --config config/webpack.config.prod.cjs",
+        "dev": "webpack --config config/webpack.config.dev.cjs",
+        "prepare": "husky install",
+        "lint-staged": "lint-staged"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/voidnyan/void-verified.git"
+        "url": "https://github.com/voidnyan/void-verified"
     },
-    "author": "voidnyan",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/voidnyan/void-verified/issues"
+    "private": true,
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx,json}": [
+            "prettier --ignore-path ./.prettierignore --write "
+        ]
     },
-    "homepage": "https://github.com/voidnyan/void-verified#readme",
     "devDependencies": {
-        "@kellnerd/userscript-bundler": "github:kellnerd/userscript-bundler",
-        "jest": "^29.7.0",
-        "jest-environment-jsdom": "^29.7.0",
-        "nodemon": "^3.0.1"
-    },
-    "dependencies": {
-        "@babel/core": "^7.23.9",
-        "@babel/preset-env": "^7.23.9"
+        "@types/greasemonkey": "^4.0.7",
+        "@types/node": "^20.12.2",
+        "browserslist": "^4.23.0",
+        "cross-env": "^7.0.3",
+        "css-loader": "^6.10.0",
+        "less": "^4.2.0",
+        "less-loader": "^12.2.0",
+        "lint-staged": "^15.2.2",
+        "prettier": "^3.2.5",
+        "style-loader": "^3.3.4",
+        "ts-loader": "^9.5.1",
+        "typescript": "^5.4.3",
+        "userscript-metadata-webpack-plugin": "^0.4.0",
+        "webpack": "^5.91.0",
+        "webpack-bundle-analyzer": "^4.10.1",
+        "webpack-cli": "^5.1.4",
+        "webpack-livereload-plugin": "^3.0.2",
+        "webpack-merge": "^5.10.0",
+        "webpack-sources": "^3.2.3"
     }
 }

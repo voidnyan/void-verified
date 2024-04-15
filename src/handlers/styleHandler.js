@@ -67,11 +67,11 @@ export class StyleHandler {
 			) {
 				this.createHighlightCSS(
 					user,
-					`div.wrap:has( div.header > a.name[href*="/${user.username}/" i] )`
+					`div.wrap:has( div.header > a.name[href*="/${user.username}/" i] )`,
 				);
 				this.createHighlightCSS(
 					user,
-					`div.wrap:has( div.details > a.name[href*="/${user.username}/" i] )`
+					`div.wrap:has( div.details > a.name[href*="/${user.username}/" i] )`,
 				);
 			}
 
@@ -81,7 +81,7 @@ export class StyleHandler {
 			) {
 				this.createHighlightCSS(
 					user,
-					`div.reply:has( a.name[href*="/${user.username}/" i] )`
+					`div.reply:has( a.name[href*="/${user.username}/" i] )`,
 				);
 			}
 
@@ -142,8 +142,9 @@ export class StyleHandler {
                 ${selector} {
                     margin-right: -${this.settings.options.highlightSize.getValue()};
                     border-right: ${this.settings.options.highlightSize.getValue()} solid ${
-			this.getUserColor(user) ?? this.getDefaultHighlightColor()
-		};
+						this.getUserColor(user) ??
+						this.getDefaultHighlightColor()
+					};
                     border-radius: 5px;
                 }
                 `;
@@ -180,7 +181,7 @@ export class StyleHandler {
 			window.location.pathname.match(/^\/user\/([^/]*)\/?/)[1];
 
 		const user = this.settings.verifiedUsers.find(
-			(u) => u.username.toLowerCase() === username.toLowerCase()
+			(u) => u.username.toLowerCase() === username.toLowerCase(),
 		);
 
 		if (!user) {
@@ -207,7 +208,7 @@ export class StyleHandler {
 		const usernameHeader = document.querySelector("h1.name");
 		const username = usernameHeader.innerHTML.trim();
 		const user = this.settings.verifiedUsers.find(
-			(u) => u.username === username
+			(u) => u.username === username,
 		);
 
 		if (!user) {
@@ -255,7 +256,7 @@ export class StyleHandler {
 		link.setAttribute("type", "text/css");
 		link.setAttribute(
 			"href",
-			"data:text/css;charset=UTF-8," + encodeURIComponent(styles)
+			"data:text/css;charset=UTF-8," + encodeURIComponent(styles),
 		);
 		document.head?.append(link);
 		oldLink?.remove();

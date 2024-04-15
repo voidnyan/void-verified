@@ -26,7 +26,7 @@ describe("Settings User Interface", () => {
 			styleHandler,
 			globalCSS,
 			userCSS,
-			layoutDesigner
+			layoutDesigner,
 		);
 
 		const settingsContainer = document.createElement("div");
@@ -41,7 +41,7 @@ describe("Settings User Interface", () => {
 		settingsUserInterface.renderSettingsUi();
 
 		const settingsUserInterfaceDOM = document.querySelector(
-			"#void-verified-settings"
+			"#void-verified-settings",
 		);
 
 		expect(settingsUserInterfaceDOM).not.toBeNull();

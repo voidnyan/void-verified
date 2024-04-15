@@ -36,7 +36,7 @@ export const RefreshIcon = () => {
                 d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
             />
         </svg>`,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };
@@ -63,7 +63,7 @@ export const EyeIcon = () => {
                 />
             </svg>;
       `,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };
@@ -85,7 +85,7 @@ export const EyeClosedIcon = () => {
             />
         </svg>;
       `,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };
@@ -107,7 +107,7 @@ export const TrashcanIcon = () => {
             />
         </svg>;
       `,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };
@@ -129,7 +129,7 @@ export const AddIcon = () => {
             />
         </svg>;
       `,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };
@@ -150,7 +150,7 @@ export const GifIcon = () => {
             />
         </svg>;    
       `,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };
@@ -165,7 +165,7 @@ export const HeartIcon = () => {
                 <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
             </svg>;
       `,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };
@@ -175,7 +175,7 @@ export const DoubleChevronLeftIcon = () => {
         <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
       </svg>      
       `,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };
@@ -185,7 +185,7 @@ export const DoubleChevronRightIcon = () => {
         <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
       </svg>
       `,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };
@@ -197,7 +197,7 @@ export const CloseIcon = () => {
       </svg>
       
       `,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };
@@ -209,7 +209,7 @@ export const CogIcon = () => {
         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
       </svg>
       `,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };
@@ -221,7 +221,7 @@ export const PensilSquareIcon = () => {
       </svg>
       
       `,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };
@@ -231,7 +231,7 @@ export const CheckBadgeIcon = () => {
 		`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
       </svg>`,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };
@@ -242,7 +242,7 @@ export const SearchDocumentIcon = () => {
         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Zm3.75 11.625a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
       </svg>      
       `,
-		"text/html"
+		"text/html",
 	).body.childNodes[0];
 	return icon;
 };

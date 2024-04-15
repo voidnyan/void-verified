@@ -63,12 +63,12 @@ export class CatboxAPI extends ImageHostBase {
 				"Userhash",
 				SecretField(this.#configuration.userHash, (event) => {
 					this.#updateUserhash(event, this.#configuration);
-				})
-			)
+				}),
+			),
 		);
 
 		const p = Note(
-			"Catbox.moe works out of the box, but you can provide your userhash to upload images to your account. Your userscript manager should promt you to allow xmlHttpRequest. This is required to upload images to Catbox on AniList."
+			"Catbox.moe works out of the box, but you can provide your userhash to upload images to your account. Your userscript manager should promt you to allow xmlHttpRequest. This is required to upload images to Catbox on AniList.",
 		);
 		container.append(p);
 		return container;

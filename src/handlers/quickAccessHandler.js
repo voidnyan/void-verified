@@ -42,7 +42,7 @@ export class QuickAccess {
 
 		const quickAccessContainer = DOM.getOrCreate(
 			"div",
-			"#quick-access quick-access"
+			"#quick-access quick-access",
 		);
 
 		const container = DOM.create("div", "quick-access-users-wrap");
@@ -62,7 +62,7 @@ export class QuickAccess {
 		title.append("Users");
 		title.setAttribute(
 			"title",
-			`Last updated at ${this.#lastFetched.toLocaleTimeString()}`
+			`Last updated at ${this.#lastFetched.toLocaleTimeString()}`,
 		);
 		sectionHeader.append(title);
 
@@ -94,7 +94,7 @@ export class QuickAccess {
 		}
 		const timer = DOM.get("quick-access-timer");
 		const nextQuery = new Date(
-			this.#lastFetched.getTime() + this.#apiQueryTimeout
+			this.#lastFetched.getTime() + this.#apiQueryTimeout,
 		);
 		const timeLeftInSeconds = Math.floor((nextQuery - new Date()) / 1000);
 		const timeLeftInMinutes = timeLeftInSeconds / 60;
@@ -128,7 +128,7 @@ export class QuickAccess {
 				this.#lastFetched = new Date();
 				localStorage.setItem(
 					this.#lastFetchedLocalStorage,
-					this.#lastFetched
+					this.#lastFetched,
 				);
 				this.#queryInProgress = false;
 				return true;
@@ -144,7 +144,7 @@ export class QuickAccess {
 		this.settings.updateUserOption(
 			username,
 			"quickAccessBadgeDisplay",
-			false
+			false,
 		);
 	}
 
@@ -153,7 +153,7 @@ export class QuickAccess {
 		container.setAttribute("class", "void-quick-access-item");
 		container.setAttribute(
 			"href",
-			`https://anilist.co/user/${user.username}/`
+			`https://anilist.co/user/${user.username}/`,
 		);
 
 		const image = document.createElement("div");
@@ -188,7 +188,7 @@ export class QuickAccess {
 		}
 
 		return this.settings.verifiedUsers.filter(
-			(user) => user.quickAccessEnabled
+			(user) => user.quickAccessEnabled,
 		);
 	}
 
@@ -206,7 +206,7 @@ export class QuickAccess {
 			return;
 		}
 		const section = document.querySelector(
-			".container > .home > div:nth-child(2)"
+			".container > .home > div:nth-child(2)",
 		);
 		section.insertBefore(quickAccessContainer, section.firstChild);
 	}

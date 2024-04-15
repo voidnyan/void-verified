@@ -91,7 +91,7 @@ export const Button = (text, onClick, classes) => {
 	const button = DOM.create(
 		"button",
 		transformClasses("button", classes),
-		text
+		text,
 	);
 	button.addEventListener("click", (event) => {
 		onClick(event);
@@ -103,7 +103,7 @@ export const IconButton = (text, onClick, classes) => {
 	const button = DOM.create(
 		"div",
 		transformClasses("icon-button", classes),
-		text
+		text,
 	);
 	button.addEventListener("click", (event) => {
 		onClick(event);
@@ -127,7 +127,7 @@ export const TextArea = (text, onChange, classes) => {
 	const textArea = DOM.create(
 		"textarea",
 		transformClasses("textarea", classes),
-		text
+		text,
 	);
 	textArea.addEventListener("change", (event) => {
 		onChange(event);
@@ -214,7 +214,7 @@ export const GifKeyboard = (header) => {
 	const gifList = DOM.create("div", "gif-keyboard-list");
 	const controls = DOM.create("div", "gif-keyboard-control-container");
 	container.append(
-		DOM.create("div", "gif-keyboard-list-container", [controls, gifList])
+		DOM.create("div", "gif-keyboard-list-container", [controls, gifList]),
 	);
 
 	return container;
@@ -249,9 +249,9 @@ export const GifContainer = (imgElement, onLike, gifs) => {
 			},
 			transformClasses(
 				"gif-like",
-				gifs.includes(imgElement.src) && "liked"
-			)
-		)
+				gifs.includes(imgElement.src) && "liked",
+			),
+		),
 	);
 	return container;
 };
@@ -271,8 +271,8 @@ export const Pagination = (currentPage, maxPage, onClick) => {
 				() => {
 					onClick(0);
 				},
-				`pagination-skip ${currentPage === 0 && "active"}`
-			)
+				`pagination-skip ${currentPage === 0 && "active"}`,
+			),
 		);
 		if (currentPage >= maxPage - 1) {
 			displayedPages.push(maxPage - 2, maxPage - 1, maxPage);
@@ -294,8 +294,8 @@ export const Pagination = (currentPage, maxPage, onClick) => {
 				() => {
 					onClick(page);
 				},
-				currentPage === page && "active"
-			)
+				currentPage === page && "active",
+			),
 		);
 	}
 
@@ -306,8 +306,8 @@ export const Pagination = (currentPage, maxPage, onClick) => {
 				() => {
 					onClick(maxPage);
 				},
-				`pagination-skip ${currentPage === maxPage && "active"}`
-			)
+				`pagination-skip ${currentPage === maxPage && "active"}`,
+			),
 		);
 	}
 

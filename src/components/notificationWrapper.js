@@ -10,7 +10,7 @@ export const NotificationWrapper = (notification, addReadListener = false) => {
 	const timestamp = DOM.create(
 		"div",
 		"notification-timestamp",
-		timeAgo(notification.createdAt)
+		timeAgo(notification.createdAt),
 	);
 
 	wrapper.append(previewWrapper, context, timestamp);
@@ -53,7 +53,7 @@ const createPreview = (notification) => {
 		? `https://anilist.co/user/${notification.user.name}/`
 		: `https://anilist.co/${notification.media?.type.toLowerCase()}/${
 				notification.media?.id
-		  }`;
+			}`;
 	const preview = Link("", linkUrl, "", "notification-preview");
 	if (notification.media) {
 		preview.classList.add("void-notification-preview-media");
@@ -110,13 +110,13 @@ const createGroup = (notification) => {
 	const group = DOM.create("div", "notification-group");
 	for (const user of notification.group.slice(
 		0,
-		Math.min(10, notification.group.length)
+		Math.min(10, notification.group.length),
 	)) {
 		const groupItem = Link(
 			"",
 			`https://anilist.co/user/${user.name}/`,
 			"",
-			"notification-group-item"
+			"notification-group-item",
 		);
 		groupItem.style.backgroundImage = `url(${user.avatar.large})`;
 		group.append(groupItem);
@@ -137,7 +137,7 @@ const createContext = (notification) => {
 	const highlight = DOM.create(
 		"span",
 		"notification-context-actor",
-		notification.user.name
+		notification.user.name,
 	);
 
 	const context = DOM.create("a", "notification-context", [
@@ -149,7 +149,7 @@ const createContext = (notification) => {
 		const thread = DOM.create(
 			"span",
 			"notification-context-actor",
-			`\u00A0${notification.thread.title}`
+			`\u00A0${notification.thread.title}`,
 		);
 		context.append(thread);
 	}
@@ -184,7 +184,7 @@ const createMediaContext = (notification) => {
 		"span",
 		"notification-context-actor",
 		notification.media?.title?.userPreferred ??
-			notification.deletedMediaTitle
+			notification.deletedMediaTitle,
 	);
 	let context;
 	if (notification.type === "AIRING") {
@@ -206,7 +206,7 @@ const createMediaContext = (notification) => {
 			"href",
 			`https://anilist.co/${notification.media.type.toLowerCase()}/${
 				notification.media.id
-			}`
+			}`,
 		);
 	}
 
@@ -214,7 +214,7 @@ const createMediaContext = (notification) => {
 		const reason = DOM.create(
 			"div",
 			"notification-context-reason",
-			notification.reason
+			notification.reason,
 		);
 		context.append(reason);
 	}

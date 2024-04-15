@@ -19,7 +19,7 @@ try {
 	intervalScriptHandler.enableScriptIntervalHandling();
 } catch (error) {
 	Toaster.critical(
-		"A critical error has occured setting up intervalScriptHandler. Please check developer console and contact voidnyan."
+		"A critical error has occured setting up intervalScriptHandler. Please check developer console and contact voidnyan.",
 	);
 	console.error(error);
 }
@@ -29,14 +29,14 @@ try {
 	pasteHandler.setup();
 } catch (error) {
 	Toaster.critical(
-		"A critical error has occured setting up pasteHandler. Please check developer console and contact voidnyan."
+		"A critical error has occured setting up pasteHandler. Please check developer console and contact voidnyan.",
 	);
 }
 
 new ChangeLog(settings).renderChangeLog();
 
 new ImgurAPI(
-	new ImageHostService().getImageHostConfiguration(imageHosts.imgur)
+	new ImageHostService().getImageHostConfiguration(imageHosts.imgur),
 ).refreshAuthToken();
 
 console.log(`VoidVerified ${settings.version} loaded.`);

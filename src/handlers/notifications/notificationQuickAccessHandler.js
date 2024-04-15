@@ -25,7 +25,7 @@ export class NotificationQuickAccessHandler {
 	constructor(settings) {
 		this.#settings = settings;
 		this.#config = new NotificationConfig(
-			"void-verified-quick-access-notifications-config"
+			"void-verified-quick-access-notifications-config",
 		);
 	}
 
@@ -57,7 +57,7 @@ export class NotificationQuickAccessHandler {
 
 		const quickAccessContainer = DOM.getOrCreate(
 			"div",
-			"#quick-access quick-access"
+			"#quick-access quick-access",
 		);
 
 		const container = DOM.create("div", "quick-access-notifications");
@@ -65,7 +65,7 @@ export class NotificationQuickAccessHandler {
 		if (!this.#configOpen) {
 			const notifications = DOM.create("div", "notifications-list");
 			for (const notification of this.#handleNotifications(
-				this.#notifications
+				this.#notifications,
 			)) {
 				notifications.append(NotificationWrapper(notification));
 			}
@@ -77,7 +77,7 @@ export class NotificationQuickAccessHandler {
 
 		const containerWrapper = DOM.create(
 			"div",
-			"quick-access-notifications-wrapper"
+			"quick-access-notifications-wrapper",
 		);
 
 		const header = DOM.create("h2", null, ["Notifications"]);
@@ -94,7 +94,7 @@ export class NotificationQuickAccessHandler {
 		const clearButton = this.#clearButton();
 		const configButton = this.#configOpenButton();
 		headerWrapper.append(
-			DOM.create("span", null, [clearButton, configButton])
+			DOM.create("span", null, [clearButton, configButton]),
 		);
 
 		containerWrapper.append(headerWrapper, container);
@@ -111,23 +111,26 @@ export class NotificationQuickAccessHandler {
 
 	async #queryNotifications() {
 		this.#shouldQuery = false;
-		this.#timeout = setTimeout(() => {
-			this.#shouldQuery = true;
-		}, 3 * 60 * 1000);
+		this.#timeout = setTimeout(
+			() => {
+				this.#shouldQuery = true;
+			},
+			3 * 60 * 1000,
+		);
 		let notifications = [];
 		const anilistAPI = new AnilistAPI(this.#settings);
 		try {
 			const [notifs] = await anilistAPI.getNotifications(
 				this.#config.notificationTypes.length > 0
 					? this.#config.notificationTypes
-					: notificationTypes
+					: notificationTypes,
 			);
 			notifications = notifs;
 			this.#shouldRender = true;
 		} catch (error) {
 			console.error(error);
 			Toaster.error(
-				"There was an error querying quick access notifications."
+				"There was an error querying quick access notifications.",
 			);
 		}
 
@@ -135,7 +138,7 @@ export class NotificationQuickAccessHandler {
 			notifications
 				.filter((x) => x.activityId)
 				.filter((x) => x.type !== "ACTIVITY_MESSAGE")
-				.map((x) => x.activityId)
+				.map((x) => x.activityId),
 		);
 
 		if (activityIds.size > 0 && this.#config.addActivityRelation) {
@@ -146,24 +149,24 @@ export class NotificationQuickAccessHandler {
 				try {
 					const rels =
 						await anilistAPI.getActivityNotificationRelations(
-							Array.from(nonDeadIds)
+							Array.from(nonDeadIds),
 						);
 					relations.push(...rels);
 					NotificationsCache.cacheRelations(rels);
 					const foundIds = rels.map((relation) => relation.id);
 					NotificationsCache.cacheDeadLinks(
-						missingIds.filter((id) => !foundIds.includes(id))
+						missingIds.filter((id) => !foundIds.includes(id)),
 					);
 				} catch (error) {
 					console.error(error);
 					Toaster.error(
-						"Failed to get activity notification relations."
+						"Failed to get activity notification relations.",
 					);
 				}
 			}
 			notifications = notifications.map((notification) => {
 				notification.activity = relations.find(
-					(relation) => notification.activityId === relation.id
+					(relation) => notification.activityId === relation.id,
 				);
 				return notification;
 			});
@@ -201,7 +204,7 @@ export class NotificationQuickAccessHandler {
 			}
 		}
 		return notificationsCopy.filter(
-			(_, index) => !notificationsToRemove.includes(index)
+			(_, index) => !notificationsToRemove.includes(index),
 		);
 	}
 
@@ -218,7 +221,7 @@ export class NotificationQuickAccessHandler {
 					?.remove();
 			} catch (error) {
 				Toaster.error(
-					"There was an error resetting notification count."
+					"There was an error resetting notification count.",
 				);
 				console.error(error);
 			}
@@ -245,7 +248,7 @@ export class NotificationQuickAccessHandler {
 		const header = DOM.create(
 			"h2",
 			"notification-settings-header",
-			"Notification Settings"
+			"Notification Settings",
 		);
 
 		const basicOptions = this.#createbasicOptions();
@@ -263,7 +266,7 @@ export class NotificationQuickAccessHandler {
 				this.#config.groupNotifications =
 					!this.#config.groupNotifications;
 				this.#config.save();
-			})
+			}),
 		);
 		const relationOption = SettingLabel(
 			"Add relation to activity notifications.",
@@ -271,7 +274,7 @@ export class NotificationQuickAccessHandler {
 				this.#config.addActivityRelation =
 					!this.#config.addActivityRelation;
 				this.#config.save();
-			})
+			}),
 		);
 		container.append(groupOption, relationOption);
 		return container;
@@ -282,7 +285,7 @@ export class NotificationQuickAccessHandler {
 		const header = DOM.create(
 			"h3",
 			"notification-type-list-header",
-			"Notification Types"
+			"Notification Types",
 		);
 		container.append(header);
 
@@ -293,14 +296,14 @@ export class NotificationQuickAccessHandler {
 					if (this.#config.notificationTypes.includes(type)) {
 						this.#config.notificationTypes =
 							this.#config.notificationTypes.filter(
-								(x) => x !== type
+								(x) => x !== type,
 							);
 					} else {
 						this.#config.notificationTypes.push(type);
 					}
 					this.#config.save();
 					this.#shouldQueryAfterConfigClose = true;
-				})
+				}),
 			);
 			container.append(t);
 		}
@@ -311,11 +314,11 @@ export class NotificationQuickAccessHandler {
 	#insertIntoDOM(quickAccessContainer, container) {
 		if (
 			quickAccessContainer.querySelector(
-				".void-quick-access-notifications"
+				".void-quick-access-notifications",
 			)
 		) {
 			const oldNotifications = DOM.get(
-				"quick-access-notifications-wrapper"
+				"quick-access-notifications-wrapper",
 			);
 			quickAccessContainer.replaceChild(container, oldNotifications);
 		} else {
@@ -327,7 +330,7 @@ export class NotificationQuickAccessHandler {
 			return;
 		}
 		const section = document.querySelector(
-			".container > .home > div:nth-child(2)"
+			".container > .home > div:nth-child(2)",
 		);
 		section.insertBefore(quickAccessContainer, section.firstChild);
 	}

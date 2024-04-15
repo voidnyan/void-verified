@@ -59,7 +59,7 @@ export class ReadNotifications {
 
 	static #getReadNotifications() {
 		return new Set(
-			JSON.parse(localStorage.getItem(this.#notificationsInLocalStorage))
+			JSON.parse(localStorage.getItem(this.#notificationsInLocalStorage)),
 		);
 	}
 
@@ -70,7 +70,7 @@ export class ReadNotifications {
 		}
 		localStorage.setItem(
 			this.#notificationsInLocalStorage,
-			JSON.stringify(notificationsAsArray)
+			JSON.stringify(notificationsAsArray),
 		);
 	}
 }

@@ -34,11 +34,11 @@ export class ImageHostService {
 		if (!config) {
 			localStorage.setItem(
 				this.#localStorage,
-				JSON.stringify(imageHostConfiguration)
+				JSON.stringify(imageHostConfiguration),
 			);
 		} else {
 			for (const key of Object.keys(
-				imageHostConfiguration.configurations
+				imageHostConfiguration.configurations,
 			)) {
 				if (config.configurations[key]) {
 					continue;
@@ -64,7 +64,7 @@ export class ImageHostService {
 		this.#configuration.selectedHost = host;
 		localStorage.setItem(
 			this.#localStorage,
-			JSON.stringify(this.#configuration)
+			JSON.stringify(this.#configuration),
 		);
 	}
 
@@ -72,7 +72,7 @@ export class ImageHostService {
 		this.#configuration.configurations[host] = config;
 		localStorage.setItem(
 			this.#localStorage,
-			JSON.stringify(this.#configuration)
+			JSON.stringify(this.#configuration),
 		);
 	}
 }

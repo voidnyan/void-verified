@@ -26,7 +26,7 @@ class GifKeyboardConfig {
 	#configInLocalStorage = "void-verified-gif-keyboard";
 	constructor() {
 		const config = JSON.parse(
-			localStorage.getItem(this.#configInLocalStorage)
+			localStorage.getItem(this.#configInLocalStorage),
 		);
 		this.gifs = config?.gifs ?? [];
 		this.images = config?.images ?? [];
@@ -36,7 +36,7 @@ class GifKeyboardConfig {
 	save() {
 		localStorage.setItem(
 			"void-verified-gif-keyboard",
-			JSON.stringify(this)
+			JSON.stringify(this),
 		);
 	}
 }
@@ -67,7 +67,7 @@ export class GifKeyboardHandler {
 		}
 
 		const gifs = document.querySelectorAll(
-			":is(.activity-markdown, .reply-markdown) .markdown img[src$='.gif']"
+			":is(.activity-markdown, .reply-markdown) .markdown img[src$='.gif']",
 		);
 		for (const gif of gifs) {
 			this.#addMediaLikeButton(gif, keyboardTabs.gifs, this.config.gifs);
@@ -76,7 +76,7 @@ export class GifKeyboardHandler {
 		const images = ImageFormats.map((format) => {
 			return [
 				...document.querySelectorAll(
-					`:is(.activity-markdown, .reply-markdown) .markdown img[src$='.${format}']`
+					`:is(.activity-markdown, .reply-markdown) .markdown img[src$='.${format}']`,
 				),
 			];
 		}).flat(1);
@@ -84,7 +84,7 @@ export class GifKeyboardHandler {
 			this.#addMediaLikeButton(
 				image,
 				keyboardTabs.images,
-				this.config.images
+				this.config.images,
 			);
 		}
 	}
@@ -104,7 +104,7 @@ export class GifKeyboardHandler {
 				this.config.save();
 				this.#refreshKeyboards();
 			},
-			mediaList
+			mediaList,
 		);
 
 		const width = media.getAttribute("width");
@@ -142,16 +142,16 @@ export class GifKeyboardHandler {
 					() => {
 						this.#toggleKeyboardVisibility(
 							gifKeyboard,
-							markdownEditor
+							markdownEditor,
 						);
 					},
-					"gif-button"
-				)
+					"gif-button",
+				),
 			);
 
 			markdownEditor.parentNode.insertBefore(
 				gifKeyboard,
-				markdownEditor.nextSibling
+				markdownEditor.nextSibling,
 			);
 		}
 	}
@@ -180,9 +180,9 @@ export class GifKeyboardHandler {
 					event.target.parentElement.parentElement.parentElement; // oh god
 				this.#refreshKeyboard(keyboard);
 				event.target.parentElement.parentElement.replaceWith(
-					this.#createKeyboardHeader()
+					this.#createKeyboardHeader(),
 				);
-			})
+			}),
 		);
 		header.append(Select(options));
 
@@ -195,8 +195,8 @@ export class GifKeyboardHandler {
 				},
 				600,
 				10,
-				10
-			)
+				10,
+			),
 		);
 		return header;
 	};
@@ -251,14 +251,14 @@ export class GifKeyboardHandler {
 					"gif-keyboard-list-placeholder",
 					this.#activeTab === keyboardTabs.gifs
 						? "It's pronounced GIF."
-						: "You have no funny memes :c"
-				)
+						: "You have no funny memes :c",
+				),
 			);
 		}
 		for (const [index, media] of mediaList
 			.slice(
 				this.#paginationPage * this.#pageSize,
-				this.#paginationPage * this.#pageSize + this.#pageSize
+				this.#paginationPage * this.#pageSize + this.#pageSize,
 			)
 			.entries()) {
 			mediaItems.children.item(index % 3).append(
@@ -266,22 +266,22 @@ export class GifKeyboardHandler {
 					media,
 					() => {
 						textarea.setRangeText(
-							`img${this.config.gifSize}(${media})`
+							`img${this.config.gifSize}(${media})`,
 						);
 					},
 					() => {
 						this.#addOrRemoveMedia(media, this.#activeTab);
 						this.config.save();
 					},
-					mediaList
-				)
+					mediaList,
+				),
 			);
 		}
 	}
 
 	#renderControls(keyboard, markdownEditor) {
 		const container = keyboard.querySelector(
-			".void-gif-keyboard-control-container"
+			".void-gif-keyboard-control-container",
 		);
 		const mediaField = this.#createMediaAddField(keyboard, markdownEditor);
 		const pagination = this.#createPagination(keyboard, markdownEditor);
@@ -294,7 +294,7 @@ export class GifKeyboardHandler {
 			(_, inputField) => {
 				this.#handleAddMediaField(inputField, keyboard, markdownEditor);
 			},
-			AddIcon()
+			AddIcon(),
 		);
 		actionfield
 			.querySelector("input")
@@ -312,7 +312,7 @@ export class GifKeyboardHandler {
 			format = keyboardTabs.gifs;
 		} else if (
 			ImageFormats.some((imgFormat) =>
-				url.toLowerCase().endsWith(imgFormat.toLocaleLowerCase())
+				url.toLowerCase().endsWith(imgFormat.toLocaleLowerCase()),
 			)
 		) {
 			format = keyboardTabs.images;
@@ -331,7 +331,7 @@ export class GifKeyboardHandler {
 	#createPagination(keyboard, markdownEditor) {
 		const container = DOM.create(
 			"div",
-			"gif-keyboard-pagination-container"
+			"gif-keyboard-pagination-container",
 		);
 		const mediaList =
 			this.#activeTab === keyboardTabs.gifs
@@ -347,7 +347,7 @@ export class GifKeyboardHandler {
 			Pagination(this.#paginationPage, maxPages, (page) => {
 				this.#paginationPage = page;
 				this.#refreshKeyboards(keyboard, markdownEditor);
-			})
+			}),
 		);
 		return container;
 	}

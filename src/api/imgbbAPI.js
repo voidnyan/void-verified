@@ -40,7 +40,7 @@ export class ImgbbAPI extends ImageHostBase {
 			Toaster.debug("Uploading image to imgbb.");
 			const response = await fetch(
 				`${this.#url}?key=${this.#configuration.apiKey}`,
-				settings
+				settings,
 			);
 			const data = await response.json();
 			Toaster.success("Uploaded image to imgbb.");
@@ -59,11 +59,11 @@ export class ImgbbAPI extends ImageHostBase {
 			"API key",
 			SecretField(this.#configuration.apiKey, (event) => {
 				this.#updateApiKey(event, this.#configuration);
-			})
+			}),
 		);
 
 		const note = Note(
-			"You need to get the API key from the following link: "
+			"You need to get the API key from the following link: ",
 		);
 		note.append(Link("api.imgbb.com", "https://api.imgbb.com/", "_blank"));
 		container.append(apiKey, note);

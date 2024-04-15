@@ -78,12 +78,12 @@ export class Toaster {
 	static initializeToaster(settings) {
 		this.#settings = settings;
 		const config = JSON.parse(
-			localStorage.getItem(this.#configInLocalStorage)
+			localStorage.getItem(this.#configInLocalStorage),
 		);
 		this.#config = new ToasterConfig(config);
 		const toastContainer = DOM.create(
 			"div",
-			`#toast-container ${this.#config.location}`
+			`#toast-container ${this.#config.location}`,
 		);
 		document.body.append(toastContainer);
 	}
@@ -96,8 +96,8 @@ export class Toaster {
 			new ToastInstance(
 				message,
 				toastTypes.info,
-				this.#config.duration
-			).toast()
+				this.#config.duration,
+			).toast(),
 		);
 	}
 
@@ -110,8 +110,8 @@ export class Toaster {
 			new ToastInstance(
 				message,
 				toastTypes.success,
-				this.#config.duration
-			).toast()
+				this.#config.duration,
+			).toast(),
 		);
 	}
 
@@ -124,8 +124,8 @@ export class Toaster {
 			new ToastInstance(
 				message,
 				toastTypes.warning,
-				this.#config.duration
-			).toast()
+				this.#config.duration,
+			).toast(),
 		);
 	}
 
@@ -138,14 +138,14 @@ export class Toaster {
 			new ToastInstance(
 				message,
 				toastTypes.error,
-				this.#config.duration
-			).toast()
+				this.#config.duration,
+			).toast(),
 		);
 	}
 
 	static critical(message) {
 		DOM.get("#toast-container").append(
-			new ToastInstance(message, toastTypes.error, 8).toast()
+			new ToastInstance(message, toastTypes.error, 8).toast(),
 		);
 	}
 
@@ -165,15 +165,15 @@ export class Toaster {
 			DOM.create(
 				"p",
 				null,
-				"Toasts are notifications that pop up in the corner of your screen when things are happening."
-			)
+				"Toasts are notifications that pop up in the corner of your screen when things are happening.",
+			),
 		);
 
 		const options = Object.values(toastTypes).map((type) =>
 			Option(type, this.#config.toastLevel === toastLevels[type], () => {
 				this.#handleLevelChange(type);
 				settingsUi.renderSettingsUiContent();
-			})
+			}),
 		);
 		container.append(Label("Toast level", Select(options)));
 
@@ -181,7 +181,7 @@ export class Toaster {
 			Option(location, this.#config.location === location, () => {
 				this.#handleLocationChange(location);
 				settingsUi.renderSettingsUiContent();
-			})
+			}),
 		);
 
 		container.append(Label("Toast location", Select(locationOptions)));
@@ -190,7 +190,7 @@ export class Toaster {
 			Option(`${duration}s`, duration === this.#config.duration, () => {
 				this.#handleDurationChange(duration);
 				settingsUi.renderSettingsUiContent();
-			})
+			}),
 		);
 
 		container.append(Label("Toast duration", Select(durationOptions)));
@@ -201,7 +201,7 @@ export class Toaster {
 				Toaster.success("This is a success toast.");
 				Toaster.warning("This is a warning toast.");
 				Toaster.error("This is an error toast.");
-			})
+			}),
 		);
 
 		return container;
@@ -231,7 +231,7 @@ export class Toaster {
 	static #saveConfig() {
 		localStorage.setItem(
 			this.#configInLocalStorage,
-			JSON.stringify(this.#config)
+			JSON.stringify(this.#config),
 		);
 	}
 }
