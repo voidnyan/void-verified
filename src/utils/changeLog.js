@@ -10,7 +10,7 @@ export class ChangeLog {
 	constructor(settings) {
 		this.#settings = settings;
 		this.#lastVersion = localStorage.getItem(
-			this.#lastVersionInLocalStorage
+			this.#lastVersionInLocalStorage,
 		);
 	}
 
@@ -31,20 +31,20 @@ export class ChangeLog {
 				"div",
 				"change-log-note",
 				Note(
-					"Here are some changes included in recent releases. You can enable new features here or later from settings. You can view this popup again or disable it from settings."
-				)
+					"Here are some changes included in recent releases. You can enable new features here or later from settings. You can view this popup again or disable it from settings.",
+				),
 			),
 		];
 		modalBody.push(
 			...changeLog.map((version) => {
 				return this.#createModalContent(version);
-			})
+			}),
 		);
 
 		document.body.append(
 			Modal(modalBody, () => {
 				this.#handleClose(this);
-			})
+			}),
 		);
 	}
 
@@ -53,7 +53,7 @@ export class ChangeLog {
 			return true;
 		}
 		const versions = changeLog.map((version) =>
-			version.versionNumber.split(".")
+			version.versionNumber.split("."),
 		);
 		const [lastMajorVersion, lastMinorVersion] =
 			this.#lastVersion.split(".");
@@ -75,7 +75,7 @@ export class ChangeLog {
 		const header = DOM.create(
 			"h3",
 			"change-log-header",
-			`Version ${version.versionNumber}`
+			`Version ${version.versionNumber}`,
 		);
 		container.append(header);
 		const list = DOM.create("ul", "change-log-list");
@@ -96,8 +96,8 @@ export class ChangeLog {
 					feature.description,
 					Checkbox(value, (event) => {
 						this.#handleOptionChange(event, feature.option);
-					})
-				)
+					}),
+				),
 			);
 			return container;
 		}
@@ -105,7 +105,7 @@ export class ChangeLog {
 			DOM.create("span", "change-log-list-item", [
 				DOM.create("span", null, "-"),
 				DOM.create("span", null, feature.description),
-			])
+			]),
 		);
 		return container;
 	}

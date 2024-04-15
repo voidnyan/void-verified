@@ -33,7 +33,7 @@ describe("Components", () => {
 			"%p matches snapshot",
 			(_, component) => {
 				expect(component()).toMatchSnapshot();
-			}
+			},
 		);
 	});
 
@@ -58,13 +58,13 @@ describe("Components", () => {
 			const onClick = jest.fn();
 			const pagination = components.Pagination(1, 3, onClick);
 			const button = pagination.querySelector(
-				".void-icon-button:nth-child(3)"
+				".void-icon-button:nth-child(3)",
 			);
 			const chevronLeft = pagination.querySelector(
-				".void-icon-button:nth-child(1)"
+				".void-icon-button:nth-child(1)",
 			);
 			const chevronRight = pagination.querySelector(
-				".void-icon-button:nth-child(5)"
+				".void-icon-button:nth-child(5)",
 			);
 			chevronLeft.click();
 			chevronRight.click();
@@ -78,10 +78,10 @@ describe("Components", () => {
 				const pagination = components.Pagination(
 					currentPage,
 					5,
-					() => {}
+					() => {},
 				);
 				expect(pagination).toMatchSnapshot();
-			}
+			},
 		);
 	});
 
@@ -89,7 +89,7 @@ describe("Components", () => {
 		it("matches snapshot", () => {
 			const gifContainer = createGifContainer(
 				"http://localhost/imgUrl",
-				() => {}
+				() => {},
 			);
 			expect(gifContainer).toMatchSnapshot();
 		});
@@ -98,7 +98,7 @@ describe("Components", () => {
 			const onClick = jest.fn();
 			const gifContainer = createGifContainer(
 				"http://localhost/imgUrl",
-				onClick
+				onClick,
 			);
 			const button = gifContainer.querySelector(".void-icon-button");
 			button.click();
@@ -109,7 +109,7 @@ describe("Components", () => {
 		it("image is not liked yet", () => {
 			const gifContainer = createGifContainer(
 				"http://localhost/anotherUrl",
-				() => {}
+				() => {},
 			);
 			expect(gifContainer).toMatchSnapshot();
 		});
@@ -121,7 +121,7 @@ describe("Components", () => {
 				"http://localhost/imgUrl",
 				() => {},
 				() => {},
-				["http://localhost/imgUrl"]
+				["http://localhost/imgUrl"],
 			);
 			expect(gifItem).toMatchSnapshot();
 		});
@@ -131,7 +131,7 @@ describe("Components", () => {
 				"http://localhost/imgUrl",
 				onClick,
 				() => {},
-				["http://localhost/imgUrl"]
+				["http://localhost/imgUrl"],
 			);
 			gifItem.click();
 			expect(onClick).toBeCalledTimes(1);
@@ -196,7 +196,7 @@ describe("Components", () => {
 			const actionInputField = components.ActionInputField(
 				"value",
 				() => {},
-				HeartIcon()
+				HeartIcon(),
 			);
 			expect(actionInputField).toMatchSnapshot();
 		});
@@ -206,7 +206,7 @@ describe("Components", () => {
 			const actionInputField = components.ActionInputField(
 				"value",
 				onClick,
-				HeartIcon()
+				HeartIcon(),
 			);
 			actionInputField.querySelector(".void-icon-button").click();
 			expect(onClick).toHaveBeenCalledTimes(1);
@@ -265,7 +265,7 @@ describe("Components", () => {
 		it("matches snapshot", () => {
 			const settingLabel = components.SettingLabel(
 				"settinglabel",
-				components.Checkbox(true, () => {})
+				components.Checkbox(true, () => {}),
 			);
 			expect(settingLabel).toMatchSnapshot();
 		});

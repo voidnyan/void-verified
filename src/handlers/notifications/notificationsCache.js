@@ -18,14 +18,14 @@ export class NotificationsCache {
 
 	static cacheDeadLinks(activityIds) {
 		const deadLinks = new Set(
-			JSON.parse(sessionStorage.getItem(this.#deadLinkRelations))
+			JSON.parse(sessionStorage.getItem(this.#deadLinkRelations)),
 		);
 		for (const id of activityIds) {
 			deadLinks.add(id);
 		}
 		sessionStorage.setItem(
 			this.#deadLinkRelations,
-			JSON.stringify(Array.from(deadLinks))
+			JSON.stringify(Array.from(deadLinks)),
 		);
 	}
 
@@ -33,7 +33,7 @@ export class NotificationsCache {
 		const relations = this.#getRelations();
 		const cachedIds = Array.from(relations.keys());
 		const nonCachedIds = activityIds.filter(
-			(id) => !cachedIds.includes(id)
+			(id) => !cachedIds.includes(id),
 		);
 		return [
 			Array.from(relations).map((mapEntry) => mapEntry[1]),
@@ -45,9 +45,9 @@ export class NotificationsCache {
 		const relations = new Map(
 			JSON.parse(
 				sessionStorage.getItem(
-					this.#notificationRelationsInSessionStorage
-				)
-			)
+					this.#notificationRelationsInSessionStorage,
+				),
+			),
 		);
 		return relations;
 	}
@@ -55,7 +55,7 @@ export class NotificationsCache {
 	static #setRelations(relations) {
 		sessionStorage.setItem(
 			this.#notificationRelationsInSessionStorage,
-			JSON.stringify(Array.from(relations))
+			JSON.stringify(Array.from(relations)),
 		);
 	}
 }

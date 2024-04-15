@@ -22,6 +22,17 @@ export class DOM {
 		return el;
 	}
 
+	static render(element, parent) {
+		const htmlElement = document.createElement(element);
+		parent.append(htmlElement);
+	}
+
+	static renderReplace(element, parent) {
+		const htmlElement = document.createElement(element);
+		htmlElement.setAttribute("title", "wow");
+		parent.replaceChildren(htmlElement);
+	}
+
 	static getOrCreate(element, classes) {
 		const id = classes
 			.split(" ")

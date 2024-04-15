@@ -56,13 +56,13 @@ export class SettingsUserInterface {
 	renderSettingsUi() {
 		this.#checkAuthFromUrl();
 		const container = document.querySelector(
-			".settings.container > .content"
+			".settings.container > .content",
 		);
 		const settingsContainerExists = DOM.get("#verified-settings") !== null;
 		if (!settingsContainerExists) {
 			const settingsContainer = DOM.create(
 				"div",
-				"#verified-settings settings"
+				"#verified-settings settings",
 			);
 			container.append(settingsContainer);
 		}
@@ -95,7 +95,7 @@ export class SettingsUserInterface {
 				break;
 			case subCategories.layout:
 				settingsContainer.append(
-					this.layoutDesigner.renderSettings(this)
+					this.layoutDesigner.renderSettings(this),
 				);
 				if (
 					this.settings.auth?.token &&
@@ -104,7 +104,7 @@ export class SettingsUserInterface {
 				) {
 					this.#renderCustomCssEditor(
 						settingsContainer,
-						this.userCSS
+						this.userCSS,
 					);
 				}
 				if (this.settings.options.csspyEnabled.getValue()) {
@@ -115,7 +115,7 @@ export class SettingsUserInterface {
 				if (this.settings.options.globalCssEnabled.getValue()) {
 					this.#renderCustomCssEditor(
 						settingsContainer,
-						this.globalCSS
+						this.globalCSS,
 					);
 				}
 				break;
@@ -181,7 +181,7 @@ export class SettingsUserInterface {
 		list.append(
 			this.#createNavBtn("all", "all" === this.#activeCategory, () => {
 				onClick("all");
-			})
+			}),
 		);
 
 		for (const category of Object.values(categories)) {
@@ -191,8 +191,8 @@ export class SettingsUserInterface {
 					category === this.#activeCategory,
 					() => {
 						onClick(category);
-					}
-				)
+					},
+				),
 			);
 		}
 
@@ -215,8 +215,8 @@ export class SettingsUserInterface {
 					() => {
 						this.#activeSubCategory = subCategory;
 						this.renderSettingsUiContent();
-					}
-				)
+					},
+				),
 			);
 		}
 
@@ -267,7 +267,7 @@ export class SettingsUserInterface {
 		const head = TableHead("Username", "Sign", "Color", "Other");
 
 		const rows = this.settings.verifiedUsers.map((user) =>
-			this.#createUserRow(user)
+			this.#createUserRow(user),
 		);
 		const body = TableBody(rows);
 
@@ -294,7 +294,7 @@ export class SettingsUserInterface {
 			DOM.create("h5", null, "Fallback color"),
 			ColorPicker(fallbackColorOption.getValue(), (event) => {
 				this.#handleOption(event, "fallbackColor");
-			})
+			}),
 		);
 	}
 
@@ -303,7 +303,7 @@ export class SettingsUserInterface {
 		const userLink = DOM.create("a", null, user.username);
 		userLink.setAttribute(
 			"href",
-			`https://anilist.co/user/${user.username}/`
+			`https://anilist.co/user/${user.username}/`,
 		);
 		userLink.setAttribute("target", "_blank");
 		row.append(DOM.create("td", null, userLink));
@@ -314,10 +314,10 @@ export class SettingsUserInterface {
 				this.#updateUserOption(
 					user.username,
 					"sign",
-					event.target.value
+					event.target.value,
 				);
 			},
-			"sign"
+			"sign",
 		);
 
 		const signCell = DOM.create("td", null, signInput);
@@ -326,8 +326,8 @@ export class SettingsUserInterface {
 				user.enabledForUsername,
 				user.username,
 				"enabledForUsername",
-				this.settings.options.enabledForUsername.getValue()
-			)
+				this.settings.options.enabledForUsername.getValue(),
+			),
 		);
 
 		row.append(DOM.create("th", null, signCell));
@@ -340,7 +340,7 @@ export class SettingsUserInterface {
 		colorInput.addEventListener(
 			"change",
 			(event) => this.#handleUserColorChange(event, user.username),
-			false
+			false,
 		);
 
 		colorInputContainer.append(colorInput);
@@ -348,7 +348,7 @@ export class SettingsUserInterface {
 		colorInputContainer.append(
 			IconButton(RefreshIcon(), () => {
 				this.#handleUserColorReset(user.username);
-			})
+			}),
 		);
 
 		colorInputContainer.append(
@@ -356,8 +356,8 @@ export class SettingsUserInterface {
 				user.copyColorFromProfile,
 				user.username,
 				"copyColorFromProfile",
-				this.settings.options.copyColorFromProfile.getValue()
-			)
+				this.settings.options.copyColorFromProfile.getValue(),
+			),
 		);
 
 		colorInputContainer.append(
@@ -365,8 +365,8 @@ export class SettingsUserInterface {
 				user.highlightEnabled,
 				user.username,
 				"highlightEnabled",
-				this.settings.options.highlightEnabled.getValue()
-			)
+				this.settings.options.highlightEnabled.getValue(),
+			),
 		);
 
 		colorInputContainer.append(
@@ -374,8 +374,8 @@ export class SettingsUserInterface {
 				user.highlightEnabledForReplies,
 				user.username,
 				"highlightEnabledForReplies",
-				this.settings.options.highlightEnabledForReplies.getValue()
-			)
+				this.settings.options.highlightEnabledForReplies.getValue(),
+			),
 		);
 
 		colorInputContainer.append(
@@ -383,8 +383,8 @@ export class SettingsUserInterface {
 				user.colorUserActivity,
 				user.username,
 				"colorUserActivity",
-				this.settings.options.colorUserActivity.getValue()
-			)
+				this.settings.options.colorUserActivity.getValue(),
+			),
 		);
 
 		colorInputContainer.append(
@@ -392,8 +392,8 @@ export class SettingsUserInterface {
 				user.colorUserReplies,
 				user.username,
 				"colorUserReplies",
-				this.settings.options.colorUserReplies.getValue()
-			)
+				this.settings.options.colorUserReplies.getValue(),
+			),
 		);
 
 		const colorCell = DOM.create("td", null, colorInputContainer);
@@ -403,7 +403,7 @@ export class SettingsUserInterface {
 			user.quickAccessEnabled,
 			user.username,
 			"quickAccessEnabled",
-			this.settings.options.quickAccessEnabled.getValue()
+			this.settings.options.quickAccessEnabled.getValue(),
 		);
 
 		const otherCell = DOM.create("td", null, quickAccessCheckbox);
@@ -412,7 +412,7 @@ export class SettingsUserInterface {
 			user.onlyLoadCssFromVerifiedUser,
 			user.username,
 			"onlyLoadCssFromVerifiedUser",
-			this.settings.options.onlyLoadCssFromVerifiedUser.getValue()
+			this.settings.options.onlyLoadCssFromVerifiedUser.getValue(),
 		);
 
 		otherCell.append(cssEnabledCheckbox);
@@ -421,7 +421,7 @@ export class SettingsUserInterface {
 
 		const deleteButton = DOM.create("button", null, "❌");
 		deleteButton.addEventListener("click", () =>
-			this.#removeUser(user.username)
+			this.#removeUser(user.username),
 		);
 		row.append(DOM.create("th", null, deleteButton));
 		return row;
@@ -561,7 +561,7 @@ export class SettingsUserInterface {
 						});
 					}
 				},
-				"error"
+				"error",
 			);
 
 			const publishButton = Button(
@@ -569,7 +569,7 @@ export class SettingsUserInterface {
 				(event) => {
 					this.#handlePublishCss(event, cssHandler);
 				},
-				"success"
+				"success",
 			);
 
 			const previewButton = Button(
@@ -579,13 +579,18 @@ export class SettingsUserInterface {
 					previewButton.innerText = cssHandler.preview
 						? "Disable Preview"
 						: "Enable Preview";
-				}
+				},
 			);
 
 			container.append(resetButton);
 			container.append(publishButton);
 			container.append(previewButton);
 		}
+
+		const prettifyButton = Button("Prettify", () => {
+			cssHandler.prettify(textarea);
+		});
+		container.append(prettifyButton);
 
 		settingsContainer.append(container);
 	}
@@ -619,8 +624,8 @@ export class SettingsUserInterface {
 				() => {
 					imageHostService.setSelectedHost(imageHost);
 					this.renderSettingsUiContent();
-				}
-			)
+				},
+			),
 		);
 
 		const select = Select(imageHostOptions);
@@ -647,12 +652,12 @@ export class SettingsUserInterface {
 		const description = DOM.create(
 			"p",
 			null,
-			"Some features of VoidVerified might need your access token to work correctly or fully. Below is a list of features using your access token. If you do not wish to use any of these features, you do not need to authenticate. If revoking authentication, be sure to revoke VoidVerified from Anilist Apps as well."
+			"Some features of VoidVerified might need your access token to work correctly or fully. Below is a list of features using your access token. If you do not wish to use any of these features, you do not need to authenticate. If revoking authentication, be sure to revoke VoidVerified from Anilist Apps as well.",
 		);
 
 		const list = DOM.create("ul");
 		for (const option of Object.values(this.settings.options).filter(
-			(o) => o.authRequired
+			(o) => o.authRequired,
 		)) {
 			list.append(DOM.create("li", null, option.description));
 		}
@@ -660,13 +665,13 @@ export class SettingsUserInterface {
 		const authLink = DOM.create("a", "button", "Authenticate VoidVerified");
 		authLink.setAttribute(
 			"href",
-			`https://anilist.co/api/v2/oauth/authorize?client_id=${clientId}&response_type=token`
+			`https://anilist.co/api/v2/oauth/authorize?client_id=${clientId}&response_type=token`,
 		);
 
 		const removeAuthButton = DOM.create(
 			"button",
 			null,
-			"Revoke auth token"
+			"Revoke auth token",
 		);
 		removeAuthButton.classList.add("button");
 		removeAuthButton.addEventListener("click", () => {
@@ -678,7 +683,7 @@ export class SettingsUserInterface {
 		authenticationContainer.append(description);
 		authenticationContainer.append(list);
 		authenticationContainer.append(
-			!isAuthenticated ? authLink : removeAuthButton
+			!isAuthenticated ? authLink : removeAuthButton,
 		);
 
 		settingsContainer.append(authenticationContainer);
@@ -695,7 +700,7 @@ export class SettingsUserInterface {
 		if (path === "void_imgur") {
 			const imgurConfig =
 				new ImageHostService().getImageHostConfiguration(
-					imageHosts.imgur
+					imageHosts.imgur,
 				);
 			new ImgurAPI(imgurConfig).handleAuth();
 		}
@@ -704,7 +709,7 @@ export class SettingsUserInterface {
 		}
 
 		const expiresDate = new Date(
-			new Date().getTime() + Number(expiress.split("=")[1]) * 1000
+			new Date().getTime() + Number(expiress.split("=")[1]) * 1000,
 		);
 
 		this.settings.saveAuthToken({
@@ -715,7 +720,7 @@ export class SettingsUserInterface {
 		window.history.replaceState(
 			null,
 			"",
-			"https://anilist.co/settings/developer"
+			"https://anilist.co/settings/developer",
 		);
 	}
 }

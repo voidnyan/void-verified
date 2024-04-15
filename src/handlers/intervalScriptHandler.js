@@ -11,6 +11,7 @@ import { GifKeyboardHandler } from "./gifKeyboardHandler.js";
 import { AnilistFeedFixHandler } from "./anilistFeedFixHandler.js";
 import { NotificationQuickAccessHandler } from "./notifications/notificationQuickAccessHandler.js";
 import { NotificationFeedHandler } from "./notifications/notificationFeedHandler.js";
+import { DOM } from "../utils/DOM.js";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -39,7 +40,7 @@ export class IntervalScriptHandler {
 			this.styleHandler,
 			this.globalCSS,
 			this.userCSS,
-			this.layoutDesigner
+			this.layoutDesigner,
 		);
 		this.activityHandler = new ActivityHandler(settings);
 		this.quickAccess = new QuickAccess(settings);
@@ -70,6 +71,7 @@ export class IntervalScriptHandler {
 		intervalScriptHandler.layoutDesigner.renderLayoutPreview();
 		intervalScriptHandler.anilistFeedFixHandler.handleFix();
 		intervalScriptHandler.notificationFeedHandler.renderNotificationsFeed();
+		// intervalScriptHandler.voidRouter.handleRouting();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();
@@ -123,7 +125,7 @@ export class IntervalScriptHandler {
 					Link(
 						"voidnyan",
 						"https://anilist.co/user/voidnyan/",
-						"_blank"
+						"_blank",
 					),
 					".",
 				]);

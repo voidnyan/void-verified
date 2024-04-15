@@ -45,6 +45,16 @@ export class GlobalCSS {
 		}
 	}
 
+	prettify(textarea) {
+		const options = {
+			max_preserve_newlines: 1,
+		};
+		const css = css_beautify(this.css, options);
+		this.css = css;
+		localStorage.setItem(this.cssInLocalStorage, css);
+		textarea.value = css;
+	}
+
 	shouldRender() {
 		if (window.location.pathname.startsWith("/settings")) {
 			return false;
@@ -62,7 +72,7 @@ export class GlobalCSS {
 		}
 
 		const profileCustomCss = document.getElementById(
-			"customCSS-automail-styles"
+			"customCSS-automail-styles",
 		);
 
 		const styleHandler = new StyleHandler(this.settings);

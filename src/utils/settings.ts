@@ -2,14 +2,15 @@ import { categories, defaultSettings } from "../assets/defaultSettings";
 import { ColorFunctions } from "./colorFunctions";
 import { AnilistAPI } from "../api/anilistAPI";
 import { Toaster } from "./toaster";
+import { IOption, IOptions, ISettings } from "../types/settings";
 
-class Option {
-	value;
-	defaultValue;
-	description;
-	category;
-	authRequired;
-	constructor(option) {
+class Option implements IOption {
+	value: string | boolean;
+	defaultValue: string | number | boolean;
+	description: string;
+	category: string;
+	authRequired: boolean;
+	constructor(option: IOption) {
 		this.defaultValue = option.defaultValue;
 		this.description = option.description;
 		this.category = option.category ?? categories.misc;
@@ -24,7 +25,7 @@ class Option {
 	}
 }
 
-export class Settings {
+export class Settings implements ISettings {
 	localStorageUsers = "void-verified-users";
 	localStorageSettings = "void-verified-settings";
 	localStorageAuth = "void-verified-auth";
@@ -34,7 +35,7 @@ export class Settings {
 
 	verifiedUsers = [];
 
-	options = {};
+	options: IOptions = {} as IOptions;
 
 	constructor() {
 		this.version = GM_info.script.version;
@@ -45,10 +46,11 @@ export class Settings {
 			JSON.parse(localStorage.getItem(this.localStorageSettings)) ?? {};
 
 		for (const [key, value] of Object.entries(defaultSettings)) {
-			this.options[key] = new Option(value);
+			this.options[key] = new Option(value as IOption);
 		}
 
-		for (const [key, value] of Object.entries(settingsInLocalStorage)) {
+		for (const [key, val] of Object.entries(settingsInLocalStorage)) {
+			const value = val as IOption;
 			if (!this.options[key]) {
 				continue;
 			}
@@ -70,7 +72,8 @@ export class Settings {
 	async verifyUser(username) {
 		if (
 			this.verifiedUsers.find(
-				(user) => user.username.toLowerCase() === username.toLowerCase()
+				(user) =>
+					user.username.toLowerCase() === username.toLowerCase(),
 			)
 		) {
 			return;
@@ -79,7 +82,7 @@ export class Settings {
 		this.verifiedUsers.push({ username });
 		localStorage.setItem(
 			this.localStorageUsers,
-			JSON.stringify(this.verifiedUsers)
+			JSON.stringify(this.verifiedUsers),
 		);
 
 		try {
@@ -107,12 +110,12 @@ export class Settings {
 				? {
 						...u,
 						[key]: value,
-				  }
-				: u
+					}
+				: u,
 		);
 		localStorage.setItem(
 			this.localStorageUsers,
-			JSON.stringify(this.verifiedUsers)
+			JSON.stringify(this.verifiedUsers),
 		);
 	}
 
@@ -128,7 +131,7 @@ export class Settings {
 
 		localStorage.setItem(
 			this.localStorageUsers,
-			JSON.stringify(this.verifiedUsers)
+			JSON.stringify(this.verifiedUsers),
 		);
 	}
 
@@ -140,21 +143,21 @@ export class Settings {
 		}
 
 		return this.verifiedUsers.find(
-			(u) => u.username.toLowerCase() === apiUser.name.toLowerCase()
+			(u) => u.username.toLowerCase() === apiUser.name.toLowerCase(),
 		);
 	}
 
 	#mapVerifiedUsers(newUser) {
 		if (this.verifiedUsers.find((u) => u.id && u.id === newUser.id)) {
 			this.verifiedUsers = this.verifiedUsers.map((u) =>
-				u.id === newUser.id ? newUser : u
+				u.id === newUser.id ? newUser : u,
 			);
 			return;
 		}
 		this.verifiedUsers = this.verifiedUsers.map((u) =>
 			u.username.toLowerCase() === newUser.username.toLowerCase()
 				? newUser
-				: u
+				: u,
 		);
 	}
 
@@ -162,7 +165,7 @@ export class Settings {
 		let userObject = { ...user };
 
 		userObject.color = ColorFunctions.handleAnilistColor(
-			apiUser.options.profileColor
+			apiUser.options.profileColor,
 		);
 
 		userObject.username = apiUser.name;
@@ -191,7 +194,7 @@ export class Settings {
 		this.auth = tokenObject;
 		localStorage.setItem(
 			this.localStorageAuth,
-			JSON.stringify(tokenObject)
+			JSON.stringify(tokenObject),
 		);
 	}
 
@@ -202,17 +205,17 @@ export class Settings {
 
 	removeUser(username) {
 		this.verifiedUsers = this.verifiedUsers.filter(
-			(user) => user.username !== username
+			(user) => user.username !== username,
 		);
 		localStorage.setItem(
 			this.localStorageUsers,
-			JSON.stringify(this.verifiedUsers)
+			JSON.stringify(this.verifiedUsers),
 		);
 	}
 
 	saveSettingToLocalStorage(key, value) {
 		let localSettings = JSON.parse(
-			localStorage.getItem(this.localStorageSettings)
+			localStorage.getItem(this.localStorageSettings),
 		);
 
 		this.options[key].value = value;
@@ -223,7 +226,7 @@ export class Settings {
 			};
 			localStorage.setItem(
 				this.localStorageSettings,
-				JSON.stringify(settings)
+				JSON.stringify(settings),
 			);
 			return;
 		}
@@ -231,7 +234,7 @@ export class Settings {
 		localSettings[key] = { value };
 		localStorage.setItem(
 			this.localStorageSettings,
-			JSON.stringify(localSettings)
+			JSON.stringify(localSettings),
 		);
 	}
 }

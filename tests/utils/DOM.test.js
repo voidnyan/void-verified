@@ -46,7 +46,7 @@ describe("Getters", () => {
 		const existingElement = DOM.create(
 			"div",
 			"#test",
-			"this exists in the body"
+			"this exists in the body",
 		);
 		document.body.append(existingElement);
 		const element = DOM.getOrCreate("div", "#test");

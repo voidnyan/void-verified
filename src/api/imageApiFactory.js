@@ -8,17 +8,21 @@ export class ImageApiFactory {
 		switch (imageHostService.getSelectedHost()) {
 			case imageHosts.imgbb:
 				return new ImgbbAPI(
-					imageHostService.getImageHostConfiguration(imageHosts.imgbb)
+					imageHostService.getImageHostConfiguration(
+						imageHosts.imgbb,
+					),
 				);
 			case imageHosts.imgur:
 				return new ImgurAPI(
-					imageHostService.getImageHostConfiguration(imageHosts.imgur)
+					imageHostService.getImageHostConfiguration(
+						imageHosts.imgur,
+					),
 				);
 			case imageHosts.catbox:
 				return new CatboxAPI(
 					imageHostService.getImageHostConfiguration(
-						imageHosts.catbox
-					)
+						imageHosts.catbox,
+					),
 				);
 		}
 	}

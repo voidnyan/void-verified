@@ -27,7 +27,7 @@ export class UserCSS {
 			this.#settings.options.profileCssEnabled.getValue()
 		) {
 			const cssInLocalStorage = JSON.parse(
-				localStorage.getItem(this.cssInLocalStorage)
+				localStorage.getItem(this.cssInLocalStorage),
 			);
 			if (cssInLocalStorage) {
 				this.css = cssInLocalStorage.css;
@@ -39,7 +39,7 @@ export class UserCSS {
 
 		this.broadcastChannel = new BroadcastChannel("user-css");
 		this.broadcastChannel.addEventListener("message", (event) =>
-			this.#handleBroadcastMessage(event, this.#settings)
+			this.#handleBroadcastMessage(event, this.#settings),
 		);
 	}
 
@@ -52,7 +52,7 @@ export class UserCSS {
 		}
 
 		const activityId = window.location.pathname.match(
-			/^\/activity\/([^/]*)\/?/
+			/^\/activity\/([^/]*)\/?/,
 		)[1];
 
 		if (this.#currentActivity === activityId) {
@@ -78,7 +78,7 @@ export class UserCSS {
 		const rgb = ColorFunctions.handleAnilistColor(userColor);
 
 		const activityEntry = document.querySelector(
-			".container > .activity-entry"
+			".container > .activity-entry",
 		);
 
 		activityEntry.style.setProperty("--color-blue", rgb);
@@ -193,7 +193,7 @@ export class UserCSS {
 		let aboutJson = this.#decodeAbout(about);
 		aboutJson.customCSS = this.css;
 		const compressedAbout = LZString.compressToBase64(
-			JSON.stringify(aboutJson)
+			JSON.stringify(aboutJson),
 		);
 
 		const target = about.match(/^\[\]\(json([A-Za-z0-9+/=]+)\)/)?.[1];
@@ -248,7 +248,7 @@ export class UserCSS {
 			(_, inputField) => {
 				this.#handleSpy(inputField, settingsUi);
 			},
-			SearchDocumentIcon()
+			SearchDocumentIcon(),
 		);
 
 		container.append(usernameInput);
@@ -262,7 +262,7 @@ export class UserCSS {
 		const header = DOM.create("h5", "layout-header", [
 			Link(
 				this.#csspy.username,
-				`https://anilist.co/user/${this.#csspy.username}/`
+				`https://anilist.co/user/${this.#csspy.username}/`,
 			),
 			`'s CSS`,
 		]);
@@ -271,6 +271,16 @@ export class UserCSS {
 		container.append(cssContainer);
 
 		return container;
+	}
+
+	prettify(textarea) {
+		const options = {
+			max_preserve_newlines: 1,
+		};
+		const css = css_beautify(this.css, options);
+		this.css = css;
+		this.#saveToLocalStorage();
+		textarea.value = css;
 	}
 
 	async #handleSpy(inputField, settingsUi) {
@@ -282,7 +292,7 @@ export class UserCSS {
 		try {
 			Toaster.debug(`Spying CSS from ${username}.`);
 			const about = await new AnilistAPI(this.#settings).getUserAbout(
-				username
+				username,
 			);
 			const css = this.#decodeAbout(about)?.customCSS;
 			if (css) {
@@ -316,7 +326,7 @@ export class UserCSS {
 	#handlePreviewCssMessage(css, settings) {
 		this.css = css;
 		const hasUserCss = document.getElementById(
-			"void-verified-user-css-styles"
+			"void-verified-user-css-styles",
 		);
 		if (hasUserCss) {
 			new StyleHandler(settings).createStyleLink(css, "user-css");
@@ -326,7 +336,7 @@ export class UserCSS {
 	#handlePreviewToggleMessage(preview) {
 		this.preview = preview;
 		const hasUserCss = document.getElementById(
-			"void-verified-user-css-styles"
+			"void-verified-user-css-styles",
 		);
 		if (!hasUserCss) {
 			return;
@@ -345,7 +355,7 @@ export class UserCSS {
 			JSON.stringify({
 				css: this.css,
 				preview: this.preview,
-			})
+			}),
 		);
 	}
 
@@ -365,7 +375,7 @@ export class UserCSS {
 
 	#userSpecificRenderingExists() {
 		return this.#settings.verifiedUsers.some(
-			(user) => user.onlyLoadCssFromVerifiedUser
+			(user) => user.onlyLoadCssFromVerifiedUser,
 		);
 	}
 

@@ -21,7 +21,7 @@ export class NotificationFeedHandler {
 	constructor(settings) {
 		this.#settings = settings;
 		this.#config = new NotificationConfig(
-			"void-verified-notifications-config"
+			"void-verified-notifications-config",
 		);
 
 		if (
@@ -30,12 +30,15 @@ export class NotificationFeedHandler {
 		) {
 			new StyleHandler().createStyleLink(
 				notificationReplacementStyles,
-				"notifications"
+				"notifications",
 			);
 			this.#handleUnreadNotificationsCount(this);
-			setInterval(() => {
-				this.#handleUnreadNotificationsCount(this);
-			}, 3 * 60 * 1000);
+			setInterval(
+				() => {
+					this.#handleUnreadNotificationsCount(this);
+				},
+				3 * 60 * 1000,
+			);
 		}
 	}
 
@@ -80,11 +83,11 @@ export class NotificationFeedHandler {
 
 		try {
 			let [notifications] = await new AnilistAPI(
-				notificationFeedHandler.#settings
+				notificationFeedHandler.#settings,
 			).getNotifications(
 				notificationFeedHandler.#config.notificationTypes,
 				1,
-				this.#config.resetDefaultNotifications
+				this.#config.resetDefaultNotifications,
 			);
 
 			const unreadNotificationsCount =
@@ -98,11 +101,11 @@ export class NotificationFeedHandler {
 			const notificationDot = DOM.create(
 				"a",
 				"notification-dot",
-				unreadNotificationsCount
+				unreadNotificationsCount,
 			);
 			notificationDot.setAttribute(
 				"href",
-				"https://anilist.co/notifications"
+				"https://anilist.co/notifications",
 			);
 
 			document.querySelector(".nav .user")?.append(notificationDot);
@@ -127,7 +130,7 @@ export class NotificationFeedHandler {
 				const filterButton = DOM.create(
 					"div",
 					"notifications-feed-filter",
-					filter
+					filter,
 				);
 				filterButton.setAttribute("void-filter", filter);
 				if (filter === this.#filter) {
@@ -138,12 +141,12 @@ export class NotificationFeedHandler {
 					ReadNotifications.resetUnreadNotificationsFeed();
 					document
 						.querySelector(
-							".void-notifications-feed-filter.void-active"
+							".void-notifications-feed-filter.void-active",
 						)
 						?.classList.remove("void-active");
 					document
 						.querySelector(
-							`.void-notifications-feed-filter[void-filter="${filter}"]`
+							`.void-notifications-feed-filter[void-filter="${filter}"]`,
 						)
 						?.classList.add("void-active");
 					this.#pageInfo = { currentPage: 0, hasNextPage: false };
@@ -153,7 +156,7 @@ export class NotificationFeedHandler {
 					this.#createNotifications();
 				});
 				return filterButton;
-			})
+			}),
 		);
 		return container;
 	}
@@ -167,7 +170,7 @@ export class NotificationFeedHandler {
 					.querySelectorAll(".void-unread-notification")
 					.forEach((notification) => {
 						notification.classList.remove(
-							"void-unread-notification"
+							"void-unread-notification",
 						);
 					});
 				document.querySelector(".void-notification-dot")?.remove();
@@ -175,7 +178,7 @@ export class NotificationFeedHandler {
 					try {
 						Toaster.debug("Resetting notification count.");
 						await new AnilistAPI(
-							this.#settings
+							this.#settings,
 						).resetNotificationCount();
 						document.body
 							.querySelector(".user .notification-dot")
@@ -183,13 +186,13 @@ export class NotificationFeedHandler {
 						Toaster.success("Notifications count reset.");
 					} catch (error) {
 						Toaster.error(
-							"There was an error resetting notification count."
+							"There was an error resetting notification count.",
 						);
 						console.error(error);
 					}
 				}
 			},
-			"notification-all-read-button"
+			"notification-all-read-button",
 		);
 		return button;
 	};
@@ -199,7 +202,7 @@ export class NotificationFeedHandler {
 		const header = DOM.create(
 			"h2",
 			"notification-settings-header",
-			"Notification Settings"
+			"Notification Settings",
 		);
 
 		const configWrapper = DOM.create("div", "notifications-config-wrapper");
@@ -212,7 +215,7 @@ export class NotificationFeedHandler {
 		header.addEventListener("click", () => {
 			configWrapper.setAttribute(
 				"collapsed",
-				!(configWrapper.getAttribute("collapsed") === "true")
+				!(configWrapper.getAttribute("collapsed") === "true"),
 			);
 		});
 
@@ -229,7 +232,7 @@ export class NotificationFeedHandler {
 				this.#config.groupNotifications =
 					!this.#config.groupNotifications;
 				this.#config.save();
-			})
+			}),
 		);
 		const relationOption = SettingLabel(
 			"Add relation to activity notifications.",
@@ -237,7 +240,7 @@ export class NotificationFeedHandler {
 				this.#config.addActivityRelation =
 					!this.#config.addActivityRelation;
 				this.#config.save();
-			})
+			}),
 		);
 		const resetOption = SettingLabel(
 			"Reset AniList's notification count when querying notifications.",
@@ -245,7 +248,7 @@ export class NotificationFeedHandler {
 				this.#config.resetDefaultNotifications =
 					!this.#config.resetDefaultNotifications;
 				this.#config.save();
-			})
+			}),
 		);
 		container.append(groupOption, relationOption, resetOption);
 		return container;
@@ -256,7 +259,7 @@ export class NotificationFeedHandler {
 		const header = DOM.create(
 			"h3",
 			"notification-type-list-header",
-			"Notification Types"
+			"Notification Types",
 		);
 		container.append(header);
 
@@ -267,13 +270,13 @@ export class NotificationFeedHandler {
 					if (this.#config.notificationTypes.includes(type)) {
 						this.#config.notificationTypes =
 							this.#config.notificationTypes.filter(
-								(x) => x !== type
+								(x) => x !== type,
 							);
 					} else {
 						this.#config.notificationTypes.push(type);
 					}
 					this.#config.save();
-				})
+				}),
 			);
 			container.append(t);
 		}
@@ -296,7 +299,7 @@ export class NotificationFeedHandler {
 			const [notifs, pageInfo] = await anilistAPI.getNotifications(
 				this.#getNotificationTypes(),
 				this.#pageInfo.currentPage + 1,
-				this.#config.resetDefaultNotifications
+				this.#config.resetDefaultNotifications,
 			);
 			notifications = notifs;
 			this.#pageInfo = pageInfo;
@@ -309,7 +312,7 @@ export class NotificationFeedHandler {
 			notifications
 				.filter((x) => x.activityId)
 				.filter((x) => x.type !== "ACTIVITY_MESSAGE")
-				.map((x) => x.activityId)
+				.map((x) => x.activityId),
 		);
 
 		if (activityIds.size > 0 && this.#config.addActivityRelation) {
@@ -320,24 +323,24 @@ export class NotificationFeedHandler {
 				try {
 					const rels =
 						await anilistAPI.getActivityNotificationRelations(
-							Array.from(nonDeadIds)
+							Array.from(nonDeadIds),
 						);
 					relations.push(...rels);
 					NotificationsCache.cacheRelations(rels);
 					const foundIds = rels.map((relation) => relation.id);
 					NotificationsCache.cacheDeadLinks(
-						missingIds.filter((id) => !foundIds.includes(id))
+						missingIds.filter((id) => !foundIds.includes(id)),
 					);
 				} catch (error) {
 					console.error(error);
 					Toaster.error(
-						"Failed to get activity notification relations."
+						"Failed to get activity notification relations.",
 					);
 				}
 			}
 			notifications = notifications.map((notification) => {
 				notification.activity = relations.find(
-					(relation) => notification.activityId === relation.id
+					(relation) => notification.activityId === relation.id,
 				);
 				return notification;
 			});
@@ -356,8 +359,8 @@ export class NotificationFeedHandler {
 				DOM.create(
 					"div",
 					"notifications-feed-empty-notice",
-					"Couldn't load notifications."
-				)
+					"Couldn't load notifications.",
+				),
 			);
 		}
 
@@ -379,7 +382,7 @@ export class NotificationFeedHandler {
 			() => {
 				this.#createNotifications(this.#pageInfo.currentPage + 1);
 			},
-			"notifications-load-more-button"
+			"notifications-load-more-button",
 		);
 		document.querySelector(".void-notifications-feed-list").append(button);
 	}
@@ -465,7 +468,7 @@ export class NotificationFeedHandler {
 			}
 		}
 		return notificationsCopy.filter(
-			(_, index) => !notificationsToRemove.includes(index)
+			(_, index) => !notificationsToRemove.includes(index),
 		);
 	}
 }

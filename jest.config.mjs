@@ -5,17 +5,17 @@
 
 /** @type {import('jest').Config} */
 const config = {
-	clearMocks: true,
-	collectCoverage: true,
-	coverageDirectory: "coverage",
-	moduleFileExtensions: ["js"],
+    clearMocks: true,
+    collectCoverage: true,
+    coverageDirectory: "coverage",
+    moduleFileExtensions: ["js"],
 
-	roots: ["./src", "./tests"],
-	setupFiles: ["./tests/GM_infoMock.js", "./tests/broadcastChannerMock.js"],
-	transform: {
-		"\\.[jt]sx?$": "babel-jest",
-	},
-	testEnvironment: "jsdom",
+    roots: ["./src", "./tests"],
+    setupFiles: ["./tests/GM_infoMock.js", "./tests/broadcastChannerMock.js"],
+    transform: {
+        "\\.[jt]sx?$": "babel-jest",
+    },
+    testEnvironment: "jsdom",
 };
 
 export default config;

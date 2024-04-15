@@ -59,7 +59,7 @@ export class ImgurAPI extends ImageHostBase {
 			SecretField(this.#configuration?.clientId ?? "", (event) => {
 				this.#updateConfig(event, "clientId", this.#configuration);
 				settingsUi.renderSettingsUiContent();
-			})
+			}),
 		);
 
 		const clientSecret = Label(
@@ -67,7 +67,7 @@ export class ImgurAPI extends ImageHostBase {
 			SecretField(this.#configuration?.clientSecret ?? "", (event) => {
 				this.#updateConfig(event, "clientSecret", this.#configuration);
 				settingsUi.renderSettingsUiContent();
-			})
+			}),
 		);
 
 		container.append(clientId, clientSecret);
@@ -81,9 +81,7 @@ export class ImgurAPI extends ImageHostBase {
 			authLink.classList.add("button");
 			authLink.setAttribute(
 				"href",
-				`https://api.imgur.com/oauth2/authorize?client_id=${
-					this.#configuration.clientId
-				}&response_type=token`
+				`https://api.imgur.com/oauth2/authorize?client_id=${this.#configuration.clientId}&response_type=token`,
 			);
 			container.append(authLink);
 		}
@@ -92,7 +90,7 @@ export class ImgurAPI extends ImageHostBase {
 			const revokeAuthButton = DOM.create(
 				"button",
 				null,
-				"Clear Authorization"
+				"Clear Authorization",
 			);
 			revokeAuthButton.classList.add("button");
 			revokeAuthButton.addEventListener("click", () => {
@@ -123,18 +121,18 @@ export class ImgurAPI extends ImageHostBase {
 		config.refreshToken = refreshToken.split("=")[1];
 
 		config.expires = new Date(
-			new Date().getTime() + Number(expires.split("=")[1])
+			new Date().getTime() + Number(expires.split("=")[1]),
 		);
 
 		new ImageHostService().setImageHostConfiguration(
 			imageHosts.imgur,
-			config
+			config,
 		);
 
 		window.history.replaceState(
 			null,
 			"",
-			"https://anilist.co/settings/developer"
+			"https://anilist.co/settings/developer",
 		);
 	}
 
@@ -175,7 +173,7 @@ export class ImgurAPI extends ImageHostBase {
 			};
 			new ImageHostService().setImageHostConfiguration(
 				imageHosts.imgur,
-				config
+				config,
 			);
 			Toaster.success("Refreshed imgur access token.");
 		} catch (error) {
@@ -190,7 +188,7 @@ export class ImgurAPI extends ImageHostBase {
 		const registerLink = Link(
 			"api.imgur.com",
 			"https://api.imgur.com/oauth2/addclient",
-			"_blank"
+			"_blank",
 		);
 		const stepList = DOM.create("ol", null, [
 			DOM.create("li", null, [
@@ -201,17 +199,17 @@ export class ImgurAPI extends ImageHostBase {
 			DOM.create(
 				"li",
 				null,
-				"Fill the client id and secret fields with the value Imgur provided."
+				"Fill the client id and secret fields with the value Imgur provided.",
 			),
 			DOM.create(
 				"li",
 				null,
-				"Click on authorize (you can skip this step if you don't want images tied to your account)."
+				"Click on authorize (you can skip this step if you don't want images tied to your account).",
 			),
 		]);
 		note.append(stepList);
 		note.append(
-			"Hitting Imgur API limits might get your API access blocked."
+			"Hitting Imgur API limits might get your API access blocked.",
 		);
 
 		container.append(note);
@@ -226,7 +224,7 @@ export class ImgurAPI extends ImageHostBase {
 
 		new ImageHostService().setImageHostConfiguration(
 			imageHosts.imgur,
-			config
+			config,
 		);
 	}
 
@@ -238,7 +236,7 @@ export class ImgurAPI extends ImageHostBase {
 		};
 		new ImageHostService().setImageHostConfiguration(
 			imageHosts.imgur,
-			config
+			config,
 		);
 	}
 }

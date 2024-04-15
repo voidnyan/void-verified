@@ -19,7 +19,7 @@ export class AnilistFeedFixHandler {
 
 		const feedOptions = Array.from(
 			document.querySelector(".activity-feed-wrap .section-header ul")
-				.children
+				.children,
 		);
 
 		if (!feedOptions) {
@@ -54,7 +54,7 @@ export class AnilistFeedFixHandler {
 		if (this.#hidePrivateMessages) {
 			this.#styleHandler.createStyleLink(
 				hidePrivateMessagesStyle,
-				"private-message-fix"
+				"private-message-fix",
 			);
 		} else {
 			this.#styleHandler.clearStyles("private-message-fix");
