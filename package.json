@@ -7,11 +7,10 @@
     },
     "scripts": {
         "format": "prettier -w ./",
-        "analize": "cross-env npm_config_report=true npm run build --plugins @babel/plugin-transform-react-jsx script.js",
         "build": "webpack --config config/webpack.config.prod.cjs",
         "dev": "webpack --config config/webpack.config.dev.cjs",
-        "prepare": "husky install",
-        "lint-staged": "lint-staged"
+        "lint-staged": "lint-staged",
+        "test": "jest"
     },
     "repository": {
         "type": "git",
@@ -43,5 +42,10 @@
         "webpack-livereload-plugin": "^3.0.2",
         "webpack-merge": "^5.10.0",
         "webpack-sources": "^3.2.3"
+    },
+    "dependencies": {
+        "@babel/preset-env": "^7.24.7",
+        "jest": "^29.7.0",
+        "jest-environment-jsdom": "^29.7.0"
     }
 }

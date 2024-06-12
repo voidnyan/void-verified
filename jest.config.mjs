@@ -8,7 +8,7 @@ const config = {
     clearMocks: true,
     collectCoverage: true,
     coverageDirectory: "coverage",
-    moduleFileExtensions: ["js"],
+    moduleFileExtensions: ["js", "ts"],
 
     roots: ["./src", "./tests"],
     setupFiles: ["./tests/GM_infoMock.js", "./tests/broadcastChannerMock.js"],
