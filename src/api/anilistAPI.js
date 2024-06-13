@@ -181,7 +181,7 @@ export class AnilistAPI {
 		const query = `
         query($notificationTypes: [NotificationType], $page: Int, $resetNotificationCount: Boolean) {
             Page(page: $page) {
-                notifications(type_in: $notificationTypes, 
+                notifications(type_in: $notificationTypes,
                     resetNotificationCount: $resetNotificationCount) {
                     ... on ActivityMessageNotification {${activityQuery}}
                     ... on ActivityReplyNotification {${activityQuery}}
@@ -291,13 +291,157 @@ export class AnilistAPI {
 		}
 	}
 
+	async searchMedia(searchword) {
+		const query = `query($searchword: String) {
+            Page(page: 1, perPage: 10) {
+                media(search: $searchword) {
+                    id
+                    title {
+                        userPreferred
+                    }
+                    coverImage {
+                        large
+                    }
+                    type
+                    startDate {
+                        year
+                    }
+                    episodes
+                    chapters
+                }
+            }
+        }`;
+		const options = this.#getMutationOptions(query, { searchword });
+		try {
+			const data = await this.#elevatedFetch(options);
+			return data.Page.media;
+		} catch (error) {
+			throw new Error(`Failed to query media (${searchword})`);
+		}
+	}
+
+	async getMediaProgress(mediaId){
+		const query = `query($mediaId: Int, $userId: Int) {
+			  MediaList(mediaId: $mediaId, userId: $userId) {
+				id
+				mediaId
+				status
+				progress
+				media {title {
+				  romaji
+				  english
+				  native
+				  userPreferred
+				}}
+				media {
+				  episodes
+				  chapters
+				}
+			  }
+			}`;
+
+		const options = this.#getMutationOptions(query, {mediaId, userId: this.#userId})
+		try {
+			const data = await this.#elevatedFetch(options);
+			return data.MediaList;
+		} catch (error) {
+			throw new Error(`Failed to query media progress with media id ${mediaId}`);
+		}
+	}
+
+	async updateMediaProgress(id, mediaId, status, progress) {
+		const query = `mutation ($id: Int, $mediaId: Int, $status: MediaListStatus, $progress: Int) {
+			  SaveMediaListEntry(id: $id, mediaId: $mediaId, status: $status, progress: $progress) {
+				id
+			  }
+			}
+		`;
+
+		const options = this.#getMutationOptions(query, {id, status, progress, mediaId})
+		try {
+			const data = await this.#elevatedFetch(options);
+			return data.MediaList;
+		} catch (error){
+			throw new Error(`Failed to update media progress with media id ${mediaId}`);
+		}
+	}
+
+	async getCreatedMediaActivity(mediaId){
+		const query = `query ($userId: Int, $mediaId: Int) {
+				Activity(userId: $userId, mediaId: $mediaId, sort: ID_DESC, type_in: [ANIME_LIST, MANGA_LIST]) {
+					... on ListActivity {
+					  id
+					}
+				  }
+				}`;
+
+		const options = this.#getMutationOptions(query, {mediaId, userId: this.#userId})
+		try {
+			const data = await this.#elevatedFetch(options);
+			return data.Activity;
+		} catch (error) {
+			throw new Error(`Failed to get created media activity with media id ${mediaId}`);
+		}
+	}
+
+	async replyToActivity(activityId, reply) {
+		const query = `mutation ($activityId: Int, $reply: String) {
+		SaveActivityReply(activityId: $activityId, text: $reply) {
+			  activityId
+			}}`;
+
+		const options = this.#getMutationOptions(query, {activityId, reply});
+		try {
+			const data = await this.#elevatedFetch(options);
+			return data.ActivityReply;
+		} catch (error) {
+			throw new Error(`Failed to reply to activity with id ${activityId}`);
+		}
+	}
+
 	async #elevatedFetch(options) {
+		// const runElevated = this.settings.options.useElevatedFetch.getValue();
+		// if (runElevated && GM.xmlHttpRequest) {
+		// 	try {
+		// 		const response = await GM.xmlHttpRequest({
+		// 			method: "POST",
+		// 			url: this.#url,
+		// 			data: options.body,
+		// 			headers: options.headers,
+		// 		});
+		// 		const data = JSON.parse(response.response);
+		// 		console.log(
+		// 			"remaining",
+		// 			this.#parseStringHeaders(response.responseHeaders)[
+		// 				"x-ratelimit-remaining"
+		// 			],
+		// 		);
+		// 		return data.data;
+		// 	} catch (error) {
+		// 		if (error.error?.includes("Request was blocked by the user")) {
+		// 			Toaster.warning(
+		// 				"Elevated access has been enabled in the userscript settings but user has refused permissions to run it.",
+		// 			);
+		// 		}
+		// 		console.error(error);
+		// 		throw error;
+		// 	}
+		// }
+
+		return await this.#regularFetch(options);
+	}
+
+	async #regularFetch(options) {
 		try {
 			const response = await fetch(this.#url, options);
 			this.#setApiLimitRemaining(response);
 			const data = await response.json();
+			if (data.errors) {
+				console.error(data.errors);
+			}
 			return data.data;
 		} catch (error) {
+			console.error(error);
 			if (error instanceof TypeError) {
 				console.log("reset:", error.headers?.get("X-RateLimit-Reset"));
 				Toaster.warning(
@@ -308,8 +452,20 @@ export class AnilistAPI {
 					`Last successful query by VoidVerified returned ${this.#getApiLimitRemaining()} queries remaining.`,
 				);
 			}
-			throw new error();
+			throw error;
 		}
+	}
+
+	#parseStringHeaders(responseHeaders) {
+		const headersArray = responseHeaders.split("\r\n");
+		const headers = {};
+		headersArray
+			.filter((x) => x !== "")
+			.forEach((headerRow) => {
+				const [key, value] = headerRow.split(":");
+				headers[key] = value.trim();
+			});
+		return headers;
 	}
 
 	async #queryUsers(page) {
@@ -326,7 +482,7 @@ export class AnilistAPI {
                   options {
                     profileColor
                   }
-                }, 
+                },
                 pageInfo {
                   total
                   perPage

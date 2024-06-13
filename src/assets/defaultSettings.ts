@@ -206,4 +206,10 @@ export const defaultSettings = {
 		description: "Enable CSSpy in Layout & CSS tab.",
 		category: categories.css,
 	},
+	replyActivityUpdate: {
+		defaultValue: false,
+		description: "Add reply with activity update to home feed.",
+		category: categories.misc,
+		authRequired: true,
+	},
 };

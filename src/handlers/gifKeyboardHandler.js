@@ -136,18 +136,18 @@ export class GifKeyboardHandler {
 			this.#renderMediaList(gifKeyboard, markdownEditor);
 			this.#renderControls(gifKeyboard, markdownEditor);
 
-			markdownEditor.append(
-				IconButton(
-					GifIcon(),
-					() => {
-						this.#toggleKeyboardVisibility(
-							gifKeyboard,
-							markdownEditor,
-						);
-					},
-					"gif-button",
-				),
+			const iconButton = IconButton(
+				GifIcon(),
+				() => {
+					this.#toggleKeyboardVisibility(
+						gifKeyboard,
+						markdownEditor,
+					);
+				},
+				"gif-button",
 			);
+			iconButton.setAttribute("title", "GIF Keyboard");
+			markdownEditor.append(iconButton);
 
 			markdownEditor.parentNode.insertBefore(
 				gifKeyboard,

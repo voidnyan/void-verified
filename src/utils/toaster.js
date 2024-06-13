@@ -1,5 +1,5 @@
-import { DOM } from "./DOM";
-import { Select, Toast, Option, Button, Label } from "../components/components";
+import {DOM} from "./DOM";
+import {Select, Toast, Option, Button, Label} from "../components/components";
 
 export const toastTypes = {
 	info: "info",
@@ -23,6 +23,7 @@ export class ToasterConfig {
 	toastLevel;
 	duration;
 	location;
+
 	constructor(config) {
 		this.toastLevel = config?.toastLevel ?? 2;
 		this.duration = config?.duration ?? 5;
@@ -75,6 +76,7 @@ export class Toaster {
 	static #config;
 	static #configInLocalStorage = "void-verified-toaster-config";
 	static #settings;
+
 	static initializeToaster(settings) {
 		this.#settings = settings;
 		const config = JSON.parse(
@@ -146,6 +148,12 @@ export class Toaster {
 	static critical(message) {
 		DOM.get("#toast-container").append(
 			new ToastInstance(message, toastTypes.error, 8).toast(),
+		);
+	}
+
+	static notify(message) {
+		DOM.get("#toast-container").append(
+			new ToastInstance(message, toastTypes.info, this.#config.duration).toast(),
 		);
 	}
 

@@ -44,7 +44,7 @@ export const styles = /* css */ `
     .void-settings .void-nav li:last-child {
         border-radius: 0px 4px 4px 0px;
     }
-    
+
     .void-settings .void-settings-header {
         margin-top: 30px;
     }
@@ -119,7 +119,7 @@ export const styles = /* css */ `
     .void-checkbox {
         cursor: pointer;
     }
-    
+
 
     .void-settings .void-settings-list input.void-input {
         width: 50px;
@@ -398,7 +398,9 @@ export const styles = /* css */ `
         margin: 0px;
     }
 
-    .markdown-editor[style*="display: none;"] + .void-gif-keyboard-container {
+    .markdown-editor[style*="display: none;"] + .void-gif-keyboard-container,
+    .home > .activity-feed-wrap > .activity-edit:has(.markdown-editor[style*="display: none;"]) .void-activity-reply-controls-container
+     {
         display: none;
     }
 
@@ -519,7 +521,7 @@ export const styles = /* css */ `
         display: flex;
         flex-direction: column;
     }
-    
+
     .void-quick-access .void-quick-access-wrap {
         background: rgb(var(--color-foreground));
         display: grid;
@@ -564,7 +566,7 @@ export const styles = /* css */ `
     .void-quick-access-notifications-wrapper .section-header h2 {
         cursor: pointer;
     }
-    
+
     .void-quick-access .section-header {
         display: flex;
         justify-content: space-between;
@@ -653,7 +655,7 @@ export const styles = /* css */ `
     .void-notification-preview-wrapper {
         position: relative;
     }
-    
+
     .void-notification-preview-wrapper:hover .void-notification-group,
     .void-notification-group:hover {
         display: flex;
@@ -724,7 +726,7 @@ export const styles = /* css */ `
         grid-template-columns: fit-content(200px) auto;
         gap: 20px;
     }
-    
+
     @media screen and (max-width: 800px) {
         #void-notifications-feed-container {
             grid-template-columns: 1fr;
@@ -807,7 +809,7 @@ export const styles = /* css */ `
         bottom: unset;
     }
 
-    
+
     .void-notification-preview-relation {
         height: 30px;
         aspect-ratio: 1 / 1;
@@ -1029,8 +1031,8 @@ export const styles = /* css */ `
         padding-left: 20px;
     }
 
-    .void-change-log-list li:not(:last-child) { 
-        margin-bottom: 4px;  
+    .void-change-log-list li:not(:last-child) {
+        margin-bottom: 4px;
     }
 
     .void-change-log-list-item span:first-child {
@@ -1082,6 +1084,7 @@ export const styles = /* css */ `
         border-color: rgb(var(--color-foreground-blue)) transparent transparent transparent;
     }
 
+    .void-button.void-slim,
     .void-button.void-self-message {
         margin-top: 0;
         margin-right: 0;
@@ -1147,6 +1150,153 @@ export const styles = /* css */ `
 
     .void-warning {
         background: rgb(var(--void-warning));
+    }
+
+    .void-activity-reply-controls-container {
+    	background: rgb(var(--color-foreground));
+    	border-radius: 4px;
+        justify-self: flex-start;
+        margin: 10px 0px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .void-activity-reply-controls-container[closed="true"] {
+    	display: none;
+    }
+
+    .void-media-status-controls {
+    	display: flex;
+    	gap: 10px;
+    	padding: 12px;
+    	height: 168px;
+    }
+
+    .void-media-status-controls .void-gif-keyboard-list-placeholder {
+    	height: unset;
+    }
+
+    .void-activity-reply-progress-container {
+    	display: flex;
+    	flex-direction: column;
+    	max-width: 100%;
+    	flex-shrink: 1;
+    	overflow: hidden;
+    }
+
+    .void-activity-reply-progress-container .void-media-search-title {
+		font-size: 16px;
+    }
+
+    .void-activity-reply-progress-container .void-media-search-type {
+    	font-size: 12px;
+    	margin-top: 2px;
+    }
+
+    .void-activity-reply-progress-container .void-layout-header {
+    	margin-top: 10px;
+    	margin-bottom: 5px;
+    }
+
+    .void-reply-button-container {
+    	display: flex;
+    	justify-content: flex-end;
+    }
+
+    .void-activity-reply-toggle-button {
+    	display: flex;
+    	align-items: center;
+    	background-color: rgb(var(--color-blue));
+    	padding: 10px 15px;
+    	border-radius: 4px;
+    }
+
+    .void-media-status-controls .void-status-poster {
+    	height: 144px;
+    	aspect-ratio: 75 / 115;
+    	object-fit: cover;
+    }
+
+	.void-activity-reply-toggle-button svg {
+	    height: 18px;
+	}
+
+	.void-activity-reply-header {
+		width: 100%;
+		background: rgb(var(--color-foreground-grey-dark));
+		display: flex;
+		justify-content: space-between;
+		padding: 12px;
+		border-radius: 4px 4px 0px 0px;
+	}
+
+    .void-activity-reply-search-container {
+        position: relative;
+        width: fit-content;
+    }
+
+    #void-media-search-list {
+        position: absolute;
+        z-index: 999;
+        background: rgb(var(--color-foreground));
+        border: 2px solid rgb(var(--color-blue));
+        border-top: 0px solid transparent;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border-radius: 0px 0px 4px 4px;
+    }
+
+    .void-ace-editor {
+    	width: 100%;
+    	height: 600px;
+    	max-height: 800px;
+    	resize: vertical;
+    	min-height: 150px;
+    }
+
+    .void-status-poster {
+        height: 85px;
+        border-radius: 4px;
+        user-select: none;
+    }
+
+    .void-media-search-result {
+        cursor: pointer;
+        padding: 4px 6px;
+        display: flex;
+        gap: 5px;
+        text-overflow: ellipsis;
+        align-items: center;
+    }
+
+    .void-media-search-poster {
+        width: 30px;
+        height: 30px;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    .void-media-search-info {
+        max-width: calc(100% - 30px - 4px - 4px);
+    }
+
+    .void-media-search-title {
+        font-size: 12px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .void-media-search-type {
+        font-size: 10px;
+        font-style: italic;
+    }
+
+    .void-media-search-result:hover {
+        background: rgb(var(--color-foreground-grey));
     }
     .
 `;

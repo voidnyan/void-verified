@@ -50,4 +50,6 @@ export interface IOptions {
 	selfMessageEnabled: IOption;
 	hideMessagesFromListFeed: IOption;
 	csspyEnabled: IOption;
+	replyActivityUpdate: IOption;
+	// useElevatedFetch: IOption;
 }

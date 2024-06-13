@@ -87,6 +87,13 @@ export const RangeField = (value, onChange, max, step = 1, min = 0, unit) => {
 	return container;
 };
 
+export const Image = (url, classes) => {
+	const image = DOM.create("img", classes);
+	image.setAttribute("src", url);
+	image.setAttribute("draggable", false);
+	return image;
+};
+
 export const Button = (text, onClick, classes) => {
 	const button = DOM.create(
 		"button",
