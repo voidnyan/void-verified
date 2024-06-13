@@ -11,9 +11,29 @@ import { GifKeyboardHandler } from "./gifKeyboardHandler.js";
 import { AnilistFeedFixHandler } from "./anilistFeedFixHandler.js";
 import { NotificationQuickAccessHandler } from "./notifications/notificationQuickAccessHandler.js";
 import { NotificationFeedHandler } from "./notifications/notificationFeedHandler.js";
-import { DOM } from "../utils/DOM.js";
+import {
+	ActivityPostHandler,
+	IActivityPostHandler,
+} from "./activityPostHandler";
 
-export class IntervalScriptHandler {
+interface IIntervalScriptsHandler {
+	styleHandler: any;
+	settingsUi: any;
+	activityHandler: any;
+	settings: any;
+	globalCSS: any;
+	quickAccess: any;
+	userCSS: any;
+	layoutDesigner: any;
+	gifKeyboard: any;
+	anilistFeedFixHandler: any;
+	notificationQuickAccessHandler: any;
+	notificationFeedHandler: any;
+	activityPostHandler: IActivityPostHandler;
+	hasPathChanged(path: string): boolean;
+}
+
+export class IntervalScriptHandler implements IIntervalScriptsHandler {
 	styleHandler;
 	settingsUi;
 	activityHandler;
@@ -26,6 +46,7 @@ export class IntervalScriptHandler {
 	anilistFeedFixHandler;
 	notificationQuickAccessHandler;
 	notificationFeedHandler;
+	activityPostHandler;
 	constructor(settings) {
 		this.settings = settings;
 
@@ -48,10 +69,12 @@ export class IntervalScriptHandler {
 		this.notificationQuickAccessHandler =
 			new NotificationQuickAccessHandler(settings);
 		this.notificationFeedHandler = new NotificationFeedHandler(settings);
+		this.activityPostHandler = new ActivityPostHandler(settings);
 	}
 
 	currentPath = "";
 	evaluationIntervalInSeconds = 1;
+
 	hasPathChanged(path) {
 		if (path === this.currentPath) {
 			return false;
@@ -60,7 +83,7 @@ export class IntervalScriptHandler {
 		return true;
 	}
 
-	handleIntervalScripts(intervalScriptHandler) {
+	handleIntervalScripts(intervalScriptHandler: IIntervalScriptsHandler) {
 		const path = window.location.pathname;
 
 		intervalScriptHandler.activityHandler.moveAndDisplaySubscribeButton();
@@ -77,6 +100,7 @@ export class IntervalScriptHandler {
 			intervalScriptHandler.styleHandler.refreshHomePage();
 			intervalScriptHandler.quickAccess.renderQuickAccess();
 			intervalScriptHandler.notificationQuickAccessHandler.renderNotifications();
+			intervalScriptHandler.activityPostHandler.render();
 		} else {
 			intervalScriptHandler.notificationQuickAccessHandler.resetShouldRender();
 		}

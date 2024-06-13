@@ -17,6 +17,12 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.14", [
+		new Feature(
+			"Add reply with activity update to home feed.",
+			"replyActivityUpdate",
+		),
+	]),
 	new Version("1.13", [
 		new Feature(
 			"Replace AniList notification system.",

@@ -604,6 +604,13 @@ exports[`Components SimpleComponentTests "IconButton" matches snapshot 1`] = `
 />
 `;
 
+exports[`Components SimpleComponentTests "Image" matches snapshot 1`] = `
+<img
+  draggable="false"
+  src="undefined"
+/>
+`;
+
 exports[`Components SimpleComponentTests "InputField" matches snapshot 1`] = `
 <input
   class="void-input"
