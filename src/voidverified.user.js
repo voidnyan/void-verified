@@ -7,6 +7,9 @@ import { ImgurAPI } from "./api/imgurAPI";
 import { ImageHostService, imageHosts } from "./api/imageHostConfiguration";
 import { Toaster } from "./utils/toaster";
 import { ChangeLog } from "./utils/changeLog";
+import {LibraryLoader} from "./handlers/libraryLoader";
+
+LibraryLoader.loadAceEditor();
 
 const settings = new Settings();
 Toaster.initializeToaster(settings);

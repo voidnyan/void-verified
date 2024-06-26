@@ -19,9 +19,10 @@ class Feature {
 export const changeLog = [
 	new Version("1.14", [
 		new Feature(
-			"Add reply with activity update to home feed.",
+			"Add insta-reply to activity update in home feed.",
 			"replyActivityUpdate",
 		),
+		new Feature("Replace CSS text fields with code editors.")
 	]),
 	new Version("1.13", [
 		new Feature(

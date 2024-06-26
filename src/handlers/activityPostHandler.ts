@@ -60,7 +60,7 @@ export class ActivityPostHandler implements IActivityPostHandler {
 	}
 
 	render() {
-		if (!this.settings.options.replyActivityUpdate.getValue()) {
+		if (!this.settings.options.replyActivityUpdate.getValue() || !this.settings.isAuthorized()) {
 			return;
 		}
 

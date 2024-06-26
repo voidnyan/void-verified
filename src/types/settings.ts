@@ -3,6 +3,7 @@ export interface ISettings {
 	version: string;
 	auth: {};
 	anilistUser: string;
+	isAuthorized: () => boolean;
 }
 
 export interface IOption {
