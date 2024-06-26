@@ -1,11 +1,12 @@
-import { AnilistAPI } from "../api/anilistAPI";
-import { ColorFunctions } from "../utils/colorFunctions";
-import { StyleHandler } from "./styleHandler";
+import {AnilistAPI} from "../api/anilistAPI";
+import {ColorFunctions} from "../utils/colorFunctions";
+import {StyleHandler} from "./styleHandler";
 import LZString from "../libraries/lz-string";
-import { Toaster } from "../utils/toaster";
-import { DOM } from "../utils/DOM";
-import { ActionInputField, Link, TextArea } from "../components/components";
-import { SearchDocumentIcon } from "../assets/icons";
+import {Toaster} from "../utils/toaster";
+import {DOM} from "../utils/DOM";
+import {ActionInputField, Link, TextArea} from "../components/components";
+import {SearchDocumentIcon} from "../assets/icons";
+import {AceEditorInitializer} from "../utils/aceEditorInitializer";
 
 export class UserCSS {
 	#settings;
@@ -167,7 +168,7 @@ export class UserCSS {
 	updateCss(css) {
 		this.css = css;
 		if (this.preview) {
-			this.broadcastChannel.postMessage({ type: "css", css });
+			this.broadcastChannel.postMessage({type: "css", css});
 		}
 		this.#saveToLocalStorage();
 	}
@@ -257,8 +258,8 @@ export class UserCSS {
 			return container;
 		}
 
-		const cssContainer = TextArea(this.#csspy.css);
-		cssContainer.setAttribute("readonly", true);
+		const cssContainer = DOM.create("div", "#css-spy-container ace-editor");
+		// cssContainer.setAttribute("readonly", true);
 		const header = DOM.create("h5", "layout-header", [
 			Link(
 				this.#csspy.username,
@@ -267,20 +268,15 @@ export class UserCSS {
 			`'s CSS`,
 		]);
 
+		setTimeout(() => {
+			AceEditorInitializer.initializeEditor("void-css-spy-container", this.#csspy.css);
+			ace.edit("void-css-spy-container").setOption("readOnly", true);
+		}, 150);
+
 		container.append(header);
 		container.append(cssContainer);
 
 		return container;
-	}
-
-	prettify(textarea) {
-		const options = {
-			max_preserve_newlines: 1,
-		};
-		const css = css_beautify(this.css, options);
-		this.css = css;
-		this.#saveToLocalStorage();
-		textarea.value = css;
 	}
 
 	async #handleSpy(inputField, settingsUi) {

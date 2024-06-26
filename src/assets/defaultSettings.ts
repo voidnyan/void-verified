@@ -208,7 +208,7 @@ export const defaultSettings = {
 	},
 	replyActivityUpdate: {
 		defaultValue: false,
-		description: "Add reply with activity update to home feed.",
+		description: "Add insta-reply to activity update in home feed.",
 		category: categories.misc,
 		authRequired: true,
 	},
