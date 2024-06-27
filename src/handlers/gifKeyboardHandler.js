@@ -268,6 +268,7 @@ export class GifKeyboardHandler {
 						textarea.setRangeText(
 							`img${this.config.gifSize}(${media})`,
 						);
+						textarea.dispatchEvent(new Event('input', {bubbles: true}));
 					},
 					() => {
 						this.#addOrRemoveMedia(media, this.#activeTab);

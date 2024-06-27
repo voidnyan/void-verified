@@ -212,4 +212,10 @@ export const defaultSettings = {
 		category: categories.misc,
 		authRequired: true,
 	},
+	markdownHotkeys: {
+		defaultValue: false,
+		description: "Enable markdown editor shortcuts.",
+		category: categories.misc,
+		authRequired: false,
+	},
 };
