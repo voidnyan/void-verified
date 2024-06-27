@@ -8,10 +8,12 @@ import { ImageHostService, imageHosts } from "./api/imageHostConfiguration";
 import { Toaster } from "./utils/toaster";
 import { ChangeLog } from "./utils/changeLog";
 import {LibraryLoader} from "./handlers/libraryLoader";
+import {MarkdownHotkeys} from "./handlers/markdownHotkeys";
 
 LibraryLoader.loadAceEditor();
 
 const settings = new Settings();
+new MarkdownHotkeys(settings).setupMarkdownHotkeys();
 Toaster.initializeToaster(settings);
 const styleHandler = new StyleHandler(settings);
 styleHandler.refreshStyles();

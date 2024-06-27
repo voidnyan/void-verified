@@ -17,6 +17,10 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.15", [
+		new Feature("Added shortcuts to markdown editors.",
+			"markdownHotkeys")
+	]),
 	new Version("1.14", [
 		new Feature(
 			"Add insta-reply to activity update in home feed.",

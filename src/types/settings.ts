@@ -52,5 +52,6 @@ export interface IOptions {
 	hideMessagesFromListFeed: IOption;
 	csspyEnabled: IOption;
 	replyActivityUpdate: IOption;
+	markdownHotkeys: IOption
 	// useElevatedFetch: IOption;
 }
