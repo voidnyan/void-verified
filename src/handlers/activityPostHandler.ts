@@ -247,7 +247,6 @@ export class ActivityPostHandler implements IActivityPostHandler {
 				Toaster.debug(`Querying media with search word ${value}`);
 				const response = await anilistAPI.searchMedia(value);
 				this.renderSearchResults(response);
-				console.log(response);
 			} catch (error) {
 				console.error(error);
 				Toaster.error(
@@ -303,7 +302,6 @@ export class ActivityPostHandler implements IActivityPostHandler {
 	async setSelectedSearchResult(result: ISearchResult) {
 		this.selectedSearchResult = result;
 		DOM.get("#media-search-list")?.remove();
-		console.log(this.selectedSearchResult);
 		const anilistAPI = new AnilistAPI(this.settings);
 		try {
 			const mediaProgress = await anilistAPI.getMediaProgress(result.id);
