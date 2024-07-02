@@ -2,13 +2,13 @@ import { Settings } from "./utils/settings";
 import { StyleHandler } from "./handlers/styleHandler";
 import { IntervalScriptHandler } from "./handlers/intervalScriptHandler";
 import { PasteHandler } from "./handlers/pasteHandler";
-import { styles } from "./assets/styles";
 import { ImgurAPI } from "./api/imgurAPI";
 import { ImageHostService, imageHosts } from "./api/imageHostConfiguration";
 import { Toaster } from "./utils/toaster";
 import { ChangeLog } from "./utils/changeLog";
 import {LibraryLoader} from "./handlers/libraryLoader";
 import {MarkdownHotkeys} from "./handlers/markdownHotkeys";
+import {StyleRegister} from "./assets/styles/styleRegister";
 
 LibraryLoader.loadAceEditor();
 
@@ -16,8 +16,7 @@ const settings = new Settings();
 new MarkdownHotkeys(settings).setupMarkdownHotkeys();
 Toaster.initializeToaster(settings);
 const styleHandler = new StyleHandler(settings);
-styleHandler.refreshStyles();
-styleHandler.createStyleLink(styles, "script");
+StyleRegister.registerStyles();
 
 try {
 	const intervalScriptHandler = new IntervalScriptHandler(settings);

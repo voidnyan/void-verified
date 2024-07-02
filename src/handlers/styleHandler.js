@@ -35,12 +35,12 @@ export class StyleHandler {
                 left: unset !important;
                 right: -10px;
                 }
-    
+
                 .has-label[label="Unsubscribe"],
                 .has-label[label="Subscribe"] {
                 font-size: 0.875em !important;
                 }
-    
+
                 .has-label[label="Unsubscribe"] {
                 color: rgba(var(--color-green),.8);
                 }
@@ -262,7 +262,7 @@ export class StyleHandler {
 		oldLink?.remove();
 		return link;
 	}
-
+	
 	stringIsEmpty(string) {
 		if (!string || string.length === 0) {
 			return undefined;

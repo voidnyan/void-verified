@@ -1,0 +1,27 @@
+﻿.void-markdown-dialog-container {
+    background: rgb(var(--color-foreground));
+    border-radius: 4px;
+    margin: 10px 0px;
+}
+
+.void-markdown-dialog-header {
+    width: 100%;
+    background: rgb(var(--color-foreground-grey-dark));
+    padding: 12px;
+    border-radius: 4px 4px 0px 0px;
+    user-select: none;
+}
+
+.activity-edit:has(.markdown-editor[style*="display: none;"]) .void-markdown-dialog-container,
+.void-markdown-dialog-container[closed="true"] {
+    display: none;
+}
+
+.void-markdown-dialog-header.void-flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+.void-markdown-dialog-body {
+    padding: 12px;
+}

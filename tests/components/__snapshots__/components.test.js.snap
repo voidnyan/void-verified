@@ -617,6 +617,13 @@ exports[`Components SimpleComponentTests "InputField" matches snapshot 1`] = `
 />
 `;
 
+exports[`Components SimpleComponentTests "KeyInput" matches snapshot 1`] = `
+<input
+  class="void-input void-key-input"
+  value="undefined"
+/>
+`;
+
 exports[`Components SimpleComponentTests "Link" matches snapshot 1`] = `
 <a
   class="void-link"

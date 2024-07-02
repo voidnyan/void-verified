@@ -1,0 +1,12 @@
+﻿.void-key-input {
+    width: 15ch;
+    text-align: center;
+}
+
+.void-markdown-shortcut-dialog {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 12px;
+    row-gap: 6px;
+    align-items: center;
+}
