@@ -7,6 +7,7 @@ import {
 	HeartIcon,
 } from "../assets/icons";
 import { DOM } from "../utils/DOM";
+import hotkeys from "../libraries/hotkeys";
 
 export const ColorPicker = (value, onChange) => {
 	const container = DOM.create("div", "color-picker-container");
@@ -354,6 +355,22 @@ export const Chip = (text) => {
 	const chip = DOM.create("span", "chip", text);
 	return chip;
 };
+
+export const KeyInput = (currentKey, bindingScope, onFocusOut) => {
+	const keyInput = DOM.create("input", "input key-input");
+	keyInput.setAttribute("value", currentKey);
+	keyInput.addEventListener("keydown", (event) => {
+		event.preventDefault();
+	});
+	keyInput.addEventListener("focusin", () => {
+		// @ts-ignore
+		hotkeys.setScope(bindingScope);
+	});
+	keyInput.addEventListener("focusout", (event) => {
+		onFocusOut(event);
+	});
+	return keyInput;
+}
 
 const transformClasses = (base, additional) => {
 	let classes = base;
