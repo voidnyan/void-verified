@@ -19,7 +19,9 @@ class Feature {
 export const changeLog = [
 	new Version("1.15", [
 		new Feature("Added shortcuts to markdown editors.",
-			"markdownHotkeys")
+			"markdownHotkeys"),
+		new Feature("Fix inserting clipboard multiple times in some cases."),
+		new Feature("Pasting images to code editor doesn't wrap them in image tags.")
 	]),
 	new Version("1.14", [
 		new Feature(

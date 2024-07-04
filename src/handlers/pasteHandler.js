@@ -35,6 +35,9 @@ export class PasteHandler {
 				transformedClipboard,
 			);
 		} else if (this.settings.options.pasteEnabled.getValue()) {
+			if (event.target.classList.contains("ace_text-input")) {
+				return;
+			}
 			event.preventDefault();
 			const regex = new RegExp(
 				`(?<!\\()\\b(https?:\/\/\\S+\\.(?:${ImageFormats.join(
@@ -83,7 +86,7 @@ export class PasteHandler {
 
 	#handleRow(row, event) {
 		if (
-			event.target.parentElement.classList.contains("void-css-editor") ||
+			event.target.classList.contains("ace_text-input") ||
 			event.target.tagName === "INPUT"
 		) {
 			return row;
