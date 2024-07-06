@@ -258,8 +258,6 @@ export class UserCSS {
 			return container;
 		}
 
-		const cssContainer = DOM.create("div", "#css-spy-container ace-editor");
-		// cssContainer.setAttribute("readonly", true);
 		const header = DOM.create("h5", "layout-header", [
 			Link(
 				this.#csspy.username,
@@ -268,10 +266,11 @@ export class UserCSS {
 			`'s CSS`,
 		]);
 
+		const cssContainer = AceEditorInitializer.createEditor("css-spy-container", this.#csspy.css);
+
 		setTimeout(() => {
-			AceEditorInitializer.initializeEditor("void-css-spy-container", this.#csspy.css);
 			ace.edit("void-css-spy-container").setOption("readOnly", true);
-		}, 150);
+		}, 160);
 
 		container.append(header);
 		container.append(cssContainer);

@@ -1,7 +1,7 @@
-import { ImageApiFactory } from "../api/imageApiFactory";
-import { imageHosts, ImageHostService } from "../api/imageHostConfiguration";
-import { ImgurAPI } from "../api/imgurAPI";
-import { ColorFunctions } from "../utils/colorFunctions";
+import {ImageApiFactory} from "../api/imageApiFactory";
+import {imageHosts, ImageHostService} from "../api/imageHostConfiguration";
+import {ImgurAPI} from "../api/imgurAPI";
+import {ColorFunctions} from "../utils/colorFunctions";
 import {
 	Checkbox,
 	InputField,
@@ -19,12 +19,12 @@ import {
 	Button,
 	Tooltip,
 } from "../components/components";
-import { categories } from "../assets/defaultSettings";
-import { GlobalCSS } from "./globalCSS";
-import { DOM } from "../utils/DOM";
-import { Toaster } from "../utils/toaster";
-import { RefreshIcon } from "../assets/icons";
-import { ChangeLog } from "../utils/changeLog";
+import {categories} from "../assets/defaultSettings";
+import {GlobalCSS} from "./globalCSS";
+import {DOM} from "../utils/DOM";
+import {Toaster} from "../utils/toaster";
+import {RefreshIcon} from "../assets/icons";
+import {ChangeLog} from "../utils/changeLog";
 import {AceEditorInitializer} from "../utils/aceEditorInitializer";
 
 const subCategories = {
@@ -285,7 +285,8 @@ export class SettingsUserInterface {
 		inputFormLabel.setAttribute("for", "void-verified-add-user");
 
 		inputForm.append(inputFormLabel);
-		inputForm.append(InputField("", () => {}, "#verified-add-user"));
+		inputForm.append(InputField("", () => {
+		}, "#verified-add-user"));
 		tableContainer.append(inputForm);
 
 		settingsContainer.append(tableContainer);
@@ -540,15 +541,12 @@ export class SettingsUserInterface {
 		const label = DOM.create("h3", null, `Custom ${cssName} CSS`);
 		container.append(label);
 
-		container.append(DOM.create("div", `#custom-css-editor-${cssName} ace-editor`, cssHandler.css));
 
-		// use timeout so div has been appended to DOM before trying to access it
-		setTimeout(() => {
-			AceEditorInitializer.initializeEditor(`void-custom-css-editor-${cssName}`, cssHandler.css);
-			AceEditorInitializer.addChangeHandler(`void-custom-css-editor-${cssName}`, (value) => {
-				cssHandler.updateCss(value);
-			});
-		}, 150);
+		const editor = AceEditorInitializer.createEditor(`custom-css-editor-${cssName}`, cssHandler.css);
+		container.append(editor);
+		AceEditorInitializer.addChangeHandler(`custom-css-editor-${cssName}`, (value) => {
+			cssHandler.updateCss(value);
+		});
 
 		if (cssName === "global") {
 			const notice = DOM.create("div");
@@ -562,7 +560,8 @@ export class SettingsUserInterface {
 				() => {
 					if (window.confirm("Your changes will be lost.")) {
 						cssHandler.getAuthUserCss().then(() => {
-							textarea.value = cssHandler.css;
+							// @ts-ignore
+							ace.edit(`void-custom-css-editor-${cssName}`).setValue(cssHandler.css);
 						});
 					}
 				},
@@ -598,9 +597,9 @@ export class SettingsUserInterface {
 			const value = editor.getValue()
 				.replace(/(\n\s*\n)+/g, '\n\n')
 				.replace(/\{[^\}]*\}/g, (block) => {
-				// Remove all empty lines within the block
-				return block.replace(/\n\s*\n/g, '\n');
-			});
+					// Remove all empty lines within the block
+					return block.replace(/\n\s*\n/g, '\n');
+				});
 			editor.setValue(value);
 			beautify.beautify(editor.session);
 		});

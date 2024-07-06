@@ -21,7 +21,8 @@ export const changeLog = [
 		new Feature("Added shortcuts to markdown editors.",
 			"markdownHotkeys"),
 		new Feature("Fix inserting clipboard multiple times in some cases."),
-		new Feature("Pasting images to code editor doesn't wrap them in image tags.")
+		new Feature("Pasting images to code editor doesn't wrap them in image tags."),
+		new Feature("Enabled Find/Replace feature in CSS editors.")
 	]),
 	new Version("1.14", [
 		new Feature(
