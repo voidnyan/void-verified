@@ -1256,6 +1256,7 @@ body:has(.void-modal-background[open]) {
     max-height: 800px;
     resize: vertical;
     min-height: 150px;
+    scrollbar-color: rgb(var(--color-blue)) rgba(0, 0, 0, 0);
 }
 
 .void-status-poster {

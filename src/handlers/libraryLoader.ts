@@ -38,7 +38,10 @@
 				// @ts-ignore
 				ace.config.setModuleUrl("https://cdnjs.cloudflare.com/ajax/libs/ace/1.35.0/keybinding-vscode.min.js");
 			});
+			this.loadScript("https://cdnjs.cloudflare.com/ajax/libs/ace/1.35.2/ext-searchbox.min.js", () => {
+				// @ts-ignore
+				ace.config.setModuleUrl("https://cdnjs.cloudflare.com/ajax/libs/ace/1.35.2/ext-searchbox.min.js");
+			});
 		});
-
 	}
 }
