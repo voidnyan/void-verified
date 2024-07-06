@@ -967,6 +967,29 @@ a.void-link {
     cursor: wait !important;
 }
 
+.input:has(> .void-drag-indicator) {
+    position: relative;
+}
+
+.input:has(> .void-drag-indicator)::before {
+    content: "Drop Images";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(var(--color-foreground-grey));
+    color: rgb(var(--color-blue));
+    backdrop-filter: blur(2px);
+    font-size: 20px;
+    font-weight: 700;
+    opacity: 0.9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
 body:has(.void-modal-background[open]) {
     overflow: hidden;
 }

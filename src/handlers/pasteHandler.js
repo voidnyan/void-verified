@@ -14,6 +14,62 @@ export class PasteHandler {
 		});
 	}
 
+	registerDragAndDropInputs() {
+		if (!this.settings.options.pasteImagesToHostService.getValue()) {
+			return;
+		}
+		const inputs = document.querySelectorAll("textarea, input");
+
+		for (const input of inputs) {
+			this.#registerDragAndDropInput(input);
+		}
+	}
+
+	#registerDragAndDropInput(input) {
+		input.addEventListener("drop", this.#handleDrop.bind(this));
+		input.addEventListener("dragenter", () => {
+			input.classList.add("void-drag-indicator");
+		});
+		input.addEventListener("dragleave", () => {
+			input.classList.remove("void-drag-indicator");
+		});
+	}
+
+	async #handleDrop(event) {
+		if (
+			event.target.tagName !== "TEXTAREA" &&
+			event.target.tagName !== "INPUT"
+		) {
+			return;
+		}
+
+		event.preventDefault();
+		event.target.classList.remove("void-drag-indicator");
+		const currentValue = event.target.value;
+		const start = event.target.selectionStart;
+		const end = event.target.selectionEnd;
+		const beforeSelection = currentValue.substring(0, start);
+		const selection = currentValue.substring(start, end);
+		const afterSelection = currentValue.substring(end);
+
+		let files;
+		if (event.dataTransfer.items) {
+			files = [...event.dataTransfer.items].map(item => item.getAsFile());
+		} else {
+			files = [...event.dataTransfer.files];
+		}
+
+		const images = files.filter((file) => file.type.startsWith("image/"));
+
+		const result = await this.#handleImages(event, images);
+		const transformedClipboard = result.join("\n\n");
+
+		event.target.value = `${beforeSelection}${transformedClipboard}${afterSelection}`;
+		event.target.selectionStart = start;
+		event.target.selectionEnd = start + transformedClipboard.length;
+		event.target.dispatchEvent(new Event('input', {bubbles: true}));
+	}
+
 	async #handlePaste(event) {
 		if (
 			event.target.tagName !== "TEXTAREA" &&
@@ -27,7 +83,10 @@ export class PasteHandler {
 		const file = event.clipboardData.items[0]?.getAsFile();
 		if (file && this.settings.options.pasteImagesToHostService.getValue()) {
 			event.preventDefault();
-			const result = await this.#handleImages(event);
+			const _files = event.clipboardData.items;
+			const files = Object.values(_files).map((file) => file.getAsFile());
+			const images = files.filter((file) => file.type.startsWith("image/"));
+			const result = await this.#handleImages(event, images);
 			const transformedClipboard = result.join("\n\n");
 			window.document.execCommand(
 				"insertText",
@@ -55,8 +114,7 @@ export class PasteHandler {
 		}
 	}
 
-	async #handleImages(event) {
-		const _files = event.clipboardData.items;
+	async #handleImages(event, images) {
 		if (this.#uploadInProgress) {
 			return;
 		}
@@ -64,9 +122,6 @@ export class PasteHandler {
 		document.body.classList.add("void-upload-in-progress");
 
 		const imageApi = new ImageApiFactory().getImageHostInstance();
-
-		const files = Object.values(_files).map((file) => file.getAsFile());
-		const images = files.filter((file) => file.type.startsWith("image/"));
 
 		try {
 			const results = await Promise.all(

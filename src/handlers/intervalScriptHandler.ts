@@ -16,6 +16,7 @@ import {
 	IActivityPostHandler,
 } from "./activityPostHandler";
 import {IMarkdownHotkeys, MarkdownHotkeys} from "./markdownHotkeys";
+import {PasteHandler} from "./pasteHandler";
 
 interface IIntervalScriptsHandler {
 	styleHandler: any;
@@ -32,6 +33,7 @@ interface IIntervalScriptsHandler {
 	notificationFeedHandler: any;
 	activityPostHandler: IActivityPostHandler;
 	markdownHotkeys: IMarkdownHotkeys;
+	pasteHandler: any;
 	hasPathChanged(path: string): boolean;
 }
 
@@ -50,6 +52,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 	notificationFeedHandler;
 	activityPostHandler;
 	markdownHotkeys;
+	pasteHandler;
 	constructor(settings) {
 		this.settings = settings;
 
@@ -74,6 +77,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		this.notificationFeedHandler = new NotificationFeedHandler(settings);
 		this.activityPostHandler = new ActivityPostHandler(settings);
 		this.markdownHotkeys = new MarkdownHotkeys(settings);
+		this.pasteHandler = new PasteHandler(settings);
 	}
 
 	currentPath = "";
@@ -99,6 +103,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		intervalScriptHandler.anilistFeedFixHandler.handleFix();
 		intervalScriptHandler.notificationFeedHandler.renderNotificationsFeed();
 		intervalScriptHandler.markdownHotkeys.renderSettings();
+		intervalScriptHandler.pasteHandler.registerDragAndDropInputs();
 		// intervalScriptHandler.voidRouter.handleRouting();
 
 		if (path === "/home") {
