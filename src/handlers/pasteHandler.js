@@ -1,9 +1,10 @@
-import { ImageApiFactory } from "../api/imageApiFactory";
-import { ImageFormats } from "../assets/imageFormats";
+import {ImageApiFactory} from "../api/imageApiFactory";
+import {ImageFormats} from "../assets/imageFormats";
 
 export class PasteHandler {
 	settings;
 	#uploadInProgress = false;
+
 	constructor(settings) {
 		this.settings = settings;
 	}
@@ -94,7 +95,7 @@ export class PasteHandler {
 				transformedClipboard,
 			);
 		} else if (this.settings.options.pasteEnabled.getValue()) {
-			if (event.target.classList.contains("ace_text-input")) {
+			if (this.#verifyTarget(event)) {
 				return;
 			}
 			event.preventDefault();
@@ -140,10 +141,7 @@ export class PasteHandler {
 	}
 
 	#handleRow(row, event) {
-		if (
-			event.target.classList.contains("ace_text-input") ||
-			event.target.tagName === "INPUT"
-		) {
+		if (this.#verifyTarget(event)) {
 			return row;
 		}
 
@@ -155,6 +153,11 @@ export class PasteHandler {
 		} else {
 			return row;
 		}
+	}
+
+	#verifyTarget(event) {
+		return event.target.classList.contains("ace_text-input") ||
+			event.target.tagName === "INPUT";
 	}
 
 	#handleImg(row) {
