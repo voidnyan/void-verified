@@ -1,7 +1,5 @@
 import { AnilistAPI } from "../api/anilistAPI";
-import { GifIcon } from "../assets/icons";
-import { Button, IconButton } from "../components/components";
-import { DOM } from "../utils/DOM";
+import { Button } from "../components/components";
 import { Toaster } from "../utils/toaster";
 
 export class ActivityHandler {
