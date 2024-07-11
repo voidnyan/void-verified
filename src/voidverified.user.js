@@ -16,6 +16,7 @@ const settings = new Settings();
 new MarkdownHotkeys(settings).setupMarkdownHotkeys();
 Toaster.initializeToaster(settings);
 const styleHandler = new StyleHandler(settings);
+styleHandler.refreshStyles();
 StyleRegister.registerStyles();
 
 try {
