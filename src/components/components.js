@@ -128,12 +128,6 @@ export const Link = (text, href, target = "_blank", classes) => {
 	const link = DOM.create("a", transformClasses("link", classes), text);
 	link.setAttribute("href", href);
 	link.setAttribute("target", target);
-	if (href.match(/^(https?:\/\/)?(www\.)?anilist\.co(\/[^\s]*)?$/)) {
-		link.addEventListener("click", (event) => {
-			event.preventDefault();
-			history.pushState(null, null, href);
-		})
-	}
 	return link;
 };
 
