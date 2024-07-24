@@ -39,7 +39,8 @@ export class PasteHandler {
 	async #handleDrop(event) {
 		if (
 			event.target.tagName !== "TEXTAREA" &&
-			event.target.tagName !== "INPUT"
+			event.target.tagName !== "INPUT" ||
+			event.target.classList.contains("input-file")
 		) {
 			return;
 		}
