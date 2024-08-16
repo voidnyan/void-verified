@@ -17,6 +17,9 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.16", [
+		new Feature("Cache user CSS.", "cacheUserCss")
+	]),
 	new Version("1.15", [
 		new Feature("Added shortcuts to markdown editors.",
 			"markdownHotkeys"),

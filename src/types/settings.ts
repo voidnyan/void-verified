@@ -34,6 +34,7 @@ export interface IOptions {
 	profileCssEnabled: IOption;
 	activityCssEnabled: IOption;
 	onlyLoadCssFromVerifiedUser: IOption;
+	cacheUserCss: IOption;
 	layoutDesignerEnabled: IOption;
 	quickAccessNotificationsEnabled: IOption;
 	quickAccessEnabled: IOption;
@@ -52,6 +53,6 @@ export interface IOptions {
 	hideMessagesFromListFeed: IOption;
 	csspyEnabled: IOption;
 	replyActivityUpdate: IOption;
-	markdownHotkeys: IOption
+	markdownHotkeys: IOption;
 	// useElevatedFetch: IOption;
 }
