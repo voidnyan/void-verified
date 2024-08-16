@@ -9,7 +9,7 @@ export class CssCache {
 	static #localStorage = "void-verified-css-cache";
 
 	static getCss(username: string) {
-		return this.get(username)?.css ?? null;
+		return this.get(username)?.css;
 	}
 
 	static get(username: string) {
