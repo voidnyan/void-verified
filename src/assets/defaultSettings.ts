@@ -101,6 +101,11 @@ export const defaultSettings = {
 		description: "Only load custom CSS from verified users.",
 		category: categories.css,
 	},
+	cacheUserCss: {
+		defaultValue: true,
+		description: "Cache user CSS.",
+		categories: categories.css,
+	},
 	layoutDesignerEnabled: {
 		defaultValue: false,
 		description: "Enable Layout Designer in the settings tab.",

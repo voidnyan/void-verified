@@ -9,6 +9,7 @@ import { ChangeLog } from "./utils/changeLog";
 import {LibraryLoader} from "./handlers/libraryLoader";
 import {MarkdownHotkeys} from "./handlers/markdownHotkeys";
 import {StyleRegister} from "./assets/styles/styleRegister";
+import {CssCache} from "./utils/cssCache";
 
 LibraryLoader.loadAceEditor();
 
@@ -18,6 +19,8 @@ Toaster.initializeToaster(settings);
 const styleHandler = new StyleHandler(settings);
 styleHandler.refreshStyles();
 StyleRegister.registerStyles();
+
+CssCache.clearExpired();
 
 try {
 	const intervalScriptHandler = new IntervalScriptHandler(settings);

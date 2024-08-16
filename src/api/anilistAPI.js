@@ -52,9 +52,17 @@ export class AnilistAPI {
 	}
 
 	async getUserAbout(username) {
+		const response = await this.getUserCssAndColour(username);
+		return response?.about;
+	}
+
+	async getUserCssAndColour(username) {
 		const query = `query ($username: String) {
             User(name: $username) {
                 about
+				options {
+					profileColor
+				}
             }
         }`;
 
@@ -62,7 +70,7 @@ export class AnilistAPI {
 		const options = this.#getQueryOptions(query, variables);
 		try {
 			const data = await this.#elevatedFetch(options);
-			return data.User.about;
+			return data.User;
 		} catch (error) {
 			throw new Error("Error querying user about.", error);
 		}

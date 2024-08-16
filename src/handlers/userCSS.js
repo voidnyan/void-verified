@@ -7,6 +7,7 @@ import {DOM} from "../utils/DOM";
 import {ActionInputField, Link, TextArea} from "../components/components";
 import {SearchDocumentIcon} from "../assets/icons";
 import {AceEditorInitializer} from "../utils/aceEditorInitializer";
+import {CssCache} from "../utils/cssCache";
 
 export class UserCSS {
 	#settings;
@@ -61,6 +62,22 @@ export class UserCSS {
 		}
 
 		this.#currentActivity = activityId;
+
+		if (this.#settings.options.cacheUserCss.getValue() && !this.preview) {
+			const activityUsername = document.querySelector(".activity-entry > .wrap a.name").innerText.trim();
+			if (!this.#shouldRenderCss(activityUsername)) {
+				return;
+			}
+			const cachedCss = CssCache.get(activityUsername);
+			if (cachedCss) {
+				new StyleHandler(this.#settings).clearStyles("user-css");
+				this.#renderCss(cachedCss.css, "user-css");
+				this.#setActivityColor(cachedCss.userColor);
+				Toaster.debug("Found CSS from cache.");
+				return;
+			}
+		}
+
 		let activity;
 		try {
 			Toaster.debug("Querying user activity.");
@@ -76,14 +93,8 @@ export class UserCSS {
 		const userColor =
 			activity.user?.options.profileColor ??
 			activity.recipient?.options.profileColor;
-		const rgb = ColorFunctions.handleAnilistColor(userColor);
 
-		const activityEntry = document.querySelector(
-			".container > .activity-entry",
-		);
-
-		activityEntry.style.setProperty("--color-blue", rgb);
-		activityEntry.style.setProperty("--color-blue-dim", rgb);
+		this.#setActivityColor(userColor);
 
 		if (username === this.#settings.anilistUser && this.preview) {
 			this.#renderCss(this.css, "user-css");
@@ -110,6 +121,21 @@ export class UserCSS {
 		}
 
 		this.#currentUser = username;
+
+		if (this.#settings.options.cacheUserCss.getValue() && (css || userColor)) {
+			CssCache.set(username, css, userColor);
+		}
+	}
+
+	#setActivityColor(userColor) {
+		const rgb = ColorFunctions.handleAnilistColor(userColor);
+
+		const activityEntry = document.querySelector(
+			".container > .activity-entry",
+		);
+
+		activityEntry.style.setProperty("--color-blue", rgb);
+		activityEntry.style.setProperty("--color-blue-dim", rgb);
 	}
 
 	resetCurrentActivity() {
@@ -143,11 +169,23 @@ export class UserCSS {
 
 		this.#currentUser = username;
 
+		if (this.#settings.options.cacheUserCss.getValue()) {
+			const cachedCss = CssCache.getCss(username);
+			if (cachedCss) {
+				Toaster.debug("Found CSS from cache.");
+				this.#renderCss(cachedCss, "user-css");
+				return;
+			}
+		}
+
 		let about;
+		let userColor;
 		try {
 			Toaster.debug("Querying user CSS.");
 			const anilistAPI = new AnilistAPI(this.#settings);
-			about = await anilistAPI.getUserAbout(username);
+			const user = await anilistAPI.getUserCssAndColour(username)
+			about = user?.about;
+			userColor = user?.options?.profileColor;
 		} catch (error) {
 			Toaster.error("Failed to load user's CSS.");
 			return;
@@ -159,6 +197,9 @@ export class UserCSS {
 			new StyleHandler(this.#settings).clearStyles("user-css");
 		}
 		this.#renderCss(css, "user-css");
+		if (this.#settings.options.cacheUserCss.getValue() && (css || userColor)) {
+			CssCache.set(username, css, userColor);
+		}
 	}
 
 	resetCurrentUser() {
@@ -207,6 +248,9 @@ export class UserCSS {
 		try {
 			Toaster.debug("Publishing CSS.");
 			await anilistAPI.saveUserAbout(about);
+			if (this.#settings.options.cacheUserCss.getValue()) {
+				CssCache.clear(this.#settings.anilistUser);
+			}
 			Toaster.success("CSS published.");
 		} catch (error) {
 			Toaster.error("Failed to publish CSS changes.");
