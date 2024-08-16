@@ -73,7 +73,7 @@ export class UserCSS {
 				new StyleHandler(this.#settings).clearStyles("user-css");
 				this.#renderCss(cachedCss.css, "user-css");
 				this.#setActivityColor(cachedCss.userColor);
-				Toaster.debug("Found CSS from cache.");
+				Toaster.debug("Found user from CSS cache.");
 				return;
 			}
 		}
@@ -170,10 +170,10 @@ export class UserCSS {
 		this.#currentUser = username;
 
 		if (this.#settings.options.cacheUserCss.getValue()) {
-			const cachedCss = CssCache.getCss(username);
+			const cachedCss = CssCache.get(username);
 			if (cachedCss) {
-				Toaster.debug("Found CSS from cache.");
-				this.#renderCss(cachedCss, "user-css");
+				Toaster.debug("Found user from CSS cache.");
+				this.#renderCss(cachedCss.css, "user-css");
 				return;
 			}
 		}
