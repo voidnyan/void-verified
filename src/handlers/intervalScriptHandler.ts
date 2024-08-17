@@ -97,6 +97,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		intervalScriptHandler.activityHandler.moveAndDisplaySubscribeButton();
 		intervalScriptHandler.activityHandler.addSelfMessageButton();
 		intervalScriptHandler.activityHandler.removeBlankFromAnilistLinks();
+		intervalScriptHandler.activityHandler.addCollapseReplyButtons();
 		intervalScriptHandler.gifKeyboard.handleGifKeyboard();
 		intervalScriptHandler.globalCSS.clearCssForProfile();
 		intervalScriptHandler.layoutDesigner.renderLayoutPreview();
@@ -104,7 +105,6 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		intervalScriptHandler.notificationFeedHandler.renderNotificationsFeed();
 		intervalScriptHandler.markdownHotkeys.renderSettings();
 		intervalScriptHandler.pasteHandler.registerDragAndDropInputs();
-		// intervalScriptHandler.voidRouter.handleRouting();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();

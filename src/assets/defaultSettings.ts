@@ -1,7 +1,10 @@
+import {IOption} from "../types/settings";
+
 export const categories = {
 	users: "users",
 	paste: "paste",
 	css: "css",
+	activity: "activity",
 	misc: "misc",
 };
 
@@ -15,12 +18,12 @@ export const defaultSettings = {
 		defaultValue: false,
 		description:
 			"Move activity subscribe button next to comments and likes.",
-		category: categories.misc,
+		category: categories.activity,
 	},
 	hideLikeCount: {
 		defaultValue: false,
 		description: "Hide activity and reply like counts.",
-		category: categories.misc,
+		category: categories.activity,
 	},
 	enabledForUsername: {
 		defaultValue: true,
@@ -197,14 +200,14 @@ export const defaultSettings = {
 		defaultValue: false,
 		description:
 			"Enable a self-message button on your profile (requires authentication).",
-		category: categories.misc,
+		category: categories.activity,
 		authRequired: true,
 	},
 	hideMessagesFromListFeed: {
 		defaultValue: false,
 		description:
 			"Fix AniList bug where private messages are displayed in List activity feed.",
-		category: categories.misc,
+		category: categories.activity,
 	},
 	csspyEnabled: {
 		defaultValue: false,
@@ -214,13 +217,25 @@ export const defaultSettings = {
 	replyActivityUpdate: {
 		defaultValue: false,
 		description: "Add insta-reply to activity update in home feed.",
-		category: categories.misc,
+		category: categories.activity,
 		authRequired: true,
 	},
 	markdownHotkeys: {
 		defaultValue: false,
 		description: "Enable markdown editor shortcuts.",
-		category: categories.misc,
+		category: categories.activity,
 		authRequired: false,
 	},
+	collapsibleReplies: {
+		defaultValue: false,
+		description: "Add collapse button to replies.",
+		category: categories.activity,
+		authRequired: false,
+	},
+	autoCollapseLiked: {
+		defaultValue: false,
+		description: "Collapse liked comments.",
+		category: categories.activity,
+		authRequired: false,
+	}
 };

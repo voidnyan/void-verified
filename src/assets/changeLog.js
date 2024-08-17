@@ -17,6 +17,10 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.17", [
+		new Feature("Add collapse button to replies.", "collapsibleReplies"),
+		new Feature("Collapse liked comments.", "autoCollapseLiked")
+	]),
 	new Version("1.16", [
 		new Feature("Cache user CSS.", "cacheUserCss")
 	]),

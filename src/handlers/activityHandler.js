@@ -1,9 +1,11 @@
-import { AnilistAPI } from "../api/anilistAPI";
-import { Button } from "../components/components";
-import { Toaster } from "../utils/toaster";
+import {AnilistAPI} from "../api/anilistAPI";
+import {Button} from "../components/components";
+import {Toaster} from "../utils/toaster";
+import {DOM} from "../utils/DOM";
 
 export class ActivityHandler {
 	settings;
+
 	constructor(settings) {
 		this.settings = settings;
 	}
@@ -59,6 +61,33 @@ export class ActivityHandler {
 				"self-message",
 			),
 		);
+	}
+
+	addCollapseReplyButtons() {
+		if (!this.settings.options.collapsibleReplies.getValue()) {
+			return;
+		}
+
+		const replies = document.querySelectorAll(".activity-replies .reply:not([collapsed])");
+
+		for (const reply of replies) {
+			this.#addCollapseReplyButton(reply);
+		}
+	}
+
+	#addCollapseReplyButton(reply) {
+		const button = DOM.create("div", "reply-collapse");
+		button.addEventListener("click", () => {
+			const isCollapsed = reply.getAttribute("collapsed") === "true";
+			reply.setAttribute("collapsed", !isCollapsed);
+		});
+		const container = DOM.create("div", "reply-container");
+		reply.parentNode.replaceChild(container, reply);
+		container.append(button, reply);
+		const isLiked = this.settings.options.autoCollapseLiked.getValue()
+			? reply.querySelector(".action.likes .button").classList.contains("liked")
+			: false;
+		reply.setAttribute("collapsed", isLiked);
 	}
 
 	async #handleSelfMessage(settings) {
