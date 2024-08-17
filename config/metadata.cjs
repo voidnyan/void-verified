@@ -8,7 +8,8 @@ module.exports = {
 	version: version,
 	author: author,
 	source: repository.url,
-	// 'license': 'MIT',
+	license: 'MIT',
+	description: "Social enhancements for AniList.",
 	match: ["https://anilist.co/*"],
 	require: [
 		// `https://cdn.jsdelivr.net/gh/lit/dist@3/all/lit-all.min.js`

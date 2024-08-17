@@ -54,5 +54,7 @@ export interface IOptions {
 	csspyEnabled: IOption;
 	replyActivityUpdate: IOption;
 	markdownHotkeys: IOption;
+	collapsibleReplies: IOption;
+	autoCollapseLiked: IOption;
 	// useElevatedFetch: IOption;
 }
