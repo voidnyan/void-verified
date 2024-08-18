@@ -45,13 +45,11 @@ export class PasteHandler {
 			return;
 		}
 
-		event.preventDefault();
 		event.target.classList.remove("void-drag-indicator");
 		const currentValue = event.target.value;
 		const start = event.target.selectionStart;
 		const end = event.target.selectionEnd;
 		const beforeSelection = currentValue.substring(0, start);
-		const selection = currentValue.substring(start, end);
 		const afterSelection = currentValue.substring(end);
 
 		let files;
@@ -62,6 +60,12 @@ export class PasteHandler {
 		}
 
 		const images = files.filter((file) => file.type.startsWith("image/"));
+
+		if (images.length === 0) {
+			return;
+		}
+
+		event.preventDefault();
 
 		const result = await this.#handleImages(event, images);
 		const transformedClipboard = result.join("\n\n");
