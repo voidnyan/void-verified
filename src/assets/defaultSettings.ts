@@ -237,5 +237,11 @@ export const defaultSettings = {
 		description: "Collapse liked comments.",
 		category: categories.activity,
 		authRequired: false,
+	},
+	autoCollapseSelf: {
+		defaultValue: false,
+		description: "Collapse your own replies.",
+		category: categories.activity,
+		authRequired: false,
 	}
 };

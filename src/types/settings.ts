@@ -56,5 +56,6 @@ export interface IOptions {
 	markdownHotkeys: IOption;
 	collapsibleReplies: IOption;
 	autoCollapseLiked: IOption;
+	autoCollapseSelf: IOption;
 	// useElevatedFetch: IOption;
 }

@@ -81,12 +81,21 @@ export class ActivityHandler {
 			const isCollapsed = reply.getAttribute("collapsed") === "true";
 			reply.setAttribute("collapsed", !isCollapsed);
 		});
-		const container = DOM.create("div", "reply-container");
-		reply.parentNode.replaceChild(container, reply);
-		container.append(button, reply);
-		const isLiked = this.settings.options.autoCollapseLiked.getValue()
-			? reply.querySelector(".action.likes .button").classList.contains("liked")
-			: false;
+		// const container = DOM.create("div", "reply-container");
+		// reply.parentNode.replaceChild(container, reply);
+		// container.append(button, reply);
+		// reply.parentNode.insertBefore(button, reply);
+		reply.prepend(button);
+		const replyContent = DOM.create("div", "reply-content");
+		replyContent.append(reply.querySelector(".header"), reply.querySelector(".reply-markdown"));
+		reply.append(replyContent);
+		let isLiked = false;
+		switch (true) {
+			case this.settings.options.autoCollapseLiked.getValue():
+				isLiked =  reply.querySelector(".action.likes .button").classList.contains("liked");
+			case this.settings.options.autoCollapseSelf.getValue():
+				isLiked = !reply.classList.contains("preview") && reply.querySelector("a.name").innerText.trim() === this.settings.anilistUser || isLiked;
+		}
 		reply.setAttribute("collapsed", isLiked);
 	}
 
