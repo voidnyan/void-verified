@@ -19,7 +19,9 @@ class Feature {
 export const changeLog = [
 	new Version("1.17", [
 		new Feature("Add collapse button to replies.", "collapsibleReplies"),
-		new Feature("Collapse liked comments.", "autoCollapseLiked")
+		new Feature("Collapse liked comments.", "autoCollapseLiked"),
+		new Feature("Collapse your own replies.", "autoCollapseSelf"),
+		new Feature("Fixed not being able to drag text to input fields because of image drag and drop feature.")
 	]),
 	new Version("1.16", [
 		new Feature("Cache user CSS.", "cacheUserCss")
