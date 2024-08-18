@@ -1122,19 +1122,10 @@ body:has(.void-modal-background[open]) {
     display: block;
 }
 
-/*.activity-replies:has(.void-reply-collapse) {*/
-/*    display: grid;*/
-/*    grid-template-columns: 4px auto;*/
-/*}*/
-
 .reply:has(.void-reply-collapse) {
     display: flex;
     gap: 8px;
     padding-left: 8px;
-}
-
-.reply[collapsed=true] {
-    padding-bottom: 14px;
 }
 
 .reply[collapsed=true] .markdown {
@@ -1150,6 +1141,10 @@ body:has(.void-modal-background[open]) {
     align-self: stretch;
     opacity: 0;
     transition: opacity 0.2s ease;
+}
+
+.void-reply-content {
+    width: 100%;
 }
 
 .reply:hover .void-reply-collapse {
