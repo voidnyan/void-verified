@@ -81,10 +81,6 @@ export class ActivityHandler {
 			const isCollapsed = reply.getAttribute("collapsed") === "true";
 			reply.setAttribute("collapsed", !isCollapsed);
 		});
-		// const container = DOM.create("div", "reply-container");
-		// reply.parentNode.replaceChild(container, reply);
-		// container.append(button, reply);
-		// reply.parentNode.insertBefore(button, reply);
 		reply.prepend(button);
 		const replyContent = DOM.create("div", "reply-content");
 		replyContent.append(reply.querySelector(".header"), reply.querySelector(".reply-markdown"));
