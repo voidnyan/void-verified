@@ -3,7 +3,6 @@ import { ActivityHandler } from "./activityHandler.js";
 import { SettingsUserInterface } from "./settingsUserInterface.js";
 import { StyleHandler } from "./styleHandler.js";
 import { QuickAccess } from "./quickAccessHandler.js";
-import { UserCSS } from "./userCSS.js";
 import { LayoutDesigner } from "./layoutDesigner.js";
 import { Toaster } from "../utils/toaster.js";
 import { Link } from "../components/components.js";
@@ -25,7 +24,6 @@ interface IIntervalScriptsHandler {
 	settings: any;
 	globalCSS: any;
 	quickAccess: any;
-	userCSS: any;
 	layoutDesigner: any;
 	gifKeyboard: any;
 	anilistFeedFixHandler: any;
@@ -44,7 +42,6 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 	settings;
 	globalCSS;
 	quickAccess;
-	userCSS;
 	layoutDesigner;
 	gifKeyboard;
 	anilistFeedFixHandler;
@@ -58,7 +55,6 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 
 		this.styleHandler = new StyleHandler(settings);
 		this.globalCSS = new GlobalCSS(settings);
-		this.userCSS = new UserCSS(settings);
 		this.layoutDesigner = new LayoutDesigner(settings);
 		this.gifKeyboard = new GifKeyboardHandler(settings);
 
@@ -66,7 +62,6 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 			settings,
 			this.styleHandler,
 			this.globalCSS,
-			this.userCSS,
 			this.layoutDesigner,
 		);
 		this.activityHandler = new ActivityHandler(settings);
@@ -99,7 +94,6 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		intervalScriptHandler.activityHandler.removeBlankFromAnilistLinks();
 		intervalScriptHandler.activityHandler.addCollapseReplyButtons();
 		intervalScriptHandler.gifKeyboard.handleGifKeyboard();
-		intervalScriptHandler.globalCSS.clearCssForProfile();
 		intervalScriptHandler.layoutDesigner.renderLayoutPreview();
 		intervalScriptHandler.anilistFeedFixHandler.handleFix();
 		intervalScriptHandler.notificationFeedHandler.renderNotificationsFeed();
@@ -124,22 +118,11 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		}
 
 		if (path.startsWith("/user/")) {
-			intervalScriptHandler.userCSS.checkUserCss();
 			intervalScriptHandler.quickAccess.clearBadge();
 			intervalScriptHandler.styleHandler.verifyProfile();
 			intervalScriptHandler.anilistFeedFixHandler.handleFilters();
 		} else {
 			intervalScriptHandler.styleHandler.clearStyles("profile");
-		}
-
-		if (path.startsWith("/activity/")) {
-			intervalScriptHandler.userCSS.checkActivityCss();
-		}
-
-		if (!path.startsWith("/activity/") && !path.startsWith("/user/")) {
-			intervalScriptHandler.userCSS.resetCurrentActivity();
-			intervalScriptHandler.userCSS.resetCurrentUser();
-			intervalScriptHandler.styleHandler.clearStyles("user-css");
 		}
 
 		intervalScriptHandler.globalCSS.createCss();

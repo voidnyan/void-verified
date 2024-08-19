@@ -3,7 +3,6 @@ import {IOption} from "../types/settings";
 export const categories = {
 	users: "users",
 	paste: "paste",
-	css: "css",
 	activity: "activity",
 	misc: "misc",
 };
@@ -79,35 +78,7 @@ export const defaultSettings = {
 	globalCssEnabled: {
 		defaultValue: false,
 		description: "Enable custom global CSS.",
-		category: categories.css,
-	},
-	globalCssAutoDisable: {
-		defaultValue: true,
-		description: "Disable global CSS when a profile has custom CSS.",
-		category: categories.css,
-	},
-	profileCssEnabled: {
-		defaultValue: false,
-		description: "Load user's custom CSS when viewing their profile.",
-		category: categories.css,
-		authRequired: true,
-	},
-	activityCssEnabled: {
-		defaultValue: false,
-		description:
-			"Load user's custom CSS when viewing their activity (direct link).",
-		category: categories.css,
-		authRequired: true,
-	},
-	onlyLoadCssFromVerifiedUser: {
-		defaultValue: false,
-		description: "Only load custom CSS from verified users.",
-		category: categories.css,
-	},
-	cacheUserCss: {
-		defaultValue: true,
-		description: "Cache user CSS.",
-		categories: categories.css,
+		category: categories.misc,
 	},
 	layoutDesignerEnabled: {
 		defaultValue: false,
@@ -208,11 +179,6 @@ export const defaultSettings = {
 		description:
 			"Fix AniList bug where private messages are displayed in List activity feed.",
 		category: categories.activity,
-	},
-	csspyEnabled: {
-		defaultValue: false,
-		description: "Enable CSSpy in Layout & CSS tab.",
-		category: categories.css,
 	},
 	replyActivityUpdate: {
 		defaultValue: false,

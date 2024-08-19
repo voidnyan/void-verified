@@ -17,6 +17,9 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.18", [
+		new Feature("Removed support for user CSS.")
+	]),
 	new Version("1.17", [
 		new Feature("Add collapse button to replies.", "collapsibleReplies"),
 		new Feature("Collapse liked comments.", "autoCollapseLiked"),
@@ -24,7 +27,7 @@ export const changeLog = [
 		new Feature("Fixed not being able to drag text to input fields because of image drag and drop feature.")
 	]),
 	new Version("1.16", [
-		new Feature("Cache user CSS.", "cacheUserCss")
+		new Feature("Cache user CSS.")
 	]),
 	new Version("1.15", [
 		new Feature("Added shortcuts to markdown editors.",
@@ -58,7 +61,7 @@ export const changeLog = [
 		),
 	]),
 	new Version("1.12", [
-		new Feature("Enable CSSpy in Layout & CSS tab.", "csspyEnabled"),
+		new Feature("Enable CSSpy in Layout & CSS tab."),
 	]),
 	new Version("1.11", [
 		new Feature(
