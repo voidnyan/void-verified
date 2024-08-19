@@ -21,10 +21,6 @@ export class GlobalCSS {
 			return;
 		}
 
-		if (!this.shouldRender()) {
-			return;
-		}
-
 		this.isCleared = false;
 		this.styleHandler.createStyleLink(this.css, this.styleId);
 	}
@@ -35,49 +31,4 @@ export class GlobalCSS {
 		localStorage.setItem(this.cssInLocalStorage, css);
 	}
 
-	clearCssForProfile() {
-		if (this.isCleared) {
-			return;
-		}
-		if (!this.shouldRender()) {
-			this.styleHandler.clearStyles(this.styleId);
-			this.isCleared = true;
-		}
-	}
-
-	shouldRender() {
-		if (window.location.pathname.startsWith("/settings")) {
-			return false;
-		}
-
-		if (!this.settings.options.globalCssAutoDisable.getValue()) {
-			return true;
-		}
-
-		if (
-			!window.location.pathname.startsWith("/user/") &&
-			!window.location.pathname.startsWith("/activity/")
-		) {
-			return true;
-		}
-
-		const profileCustomCss = document.getElementById(
-			"customCSS-automail-styles",
-		);
-
-		const styleHandler = new StyleHandler(this.settings);
-		const voidActivityStyles = styleHandler.getStyleLink("activity-css");
-		const voidUserStyles = styleHandler.getStyleLink("user-css");
-
-		if (voidActivityStyles || voidUserStyles) {
-			return false;
-		}
-
-		if (!profileCustomCss) {
-			return true;
-		}
-
-		const shouldRender = profileCustomCss.innerHTML.trim().length === 0;
-		return shouldRender;
-	}
 }

@@ -31,7 +31,7 @@ const subCategories = {
 	users: "users",
 	authorization: "authorization",
 	imageHost: "image host",
-	layout: "layout & CSS",
+	layout: "layout",
 	globalCss: "global CSS",
 	toasts: "toasts",
 };
@@ -40,17 +40,15 @@ export class SettingsUserInterface {
 	settings;
 	styleHandler;
 	globalCSS;
-	userCSS;
 	layoutDesigner;
 	AnilistBlue = "120, 180, 255";
 	#activeCategory = "all";
 	#activeSubCategory = subCategories.users;
 
-	constructor(settings, styleHandler, globalCSS, userCSS, layoutDesigner) {
+	constructor(settings, styleHandler, globalCSS, layoutDesigner) {
 		this.settings = settings;
 		this.styleHandler = styleHandler;
 		this.globalCSS = globalCSS;
-		this.userCSS = userCSS;
 		this.layoutDesigner = layoutDesigner;
 	}
 
@@ -98,19 +96,6 @@ export class SettingsUserInterface {
 				settingsContainer.append(
 					this.layoutDesigner.renderSettings(this),
 				);
-				if (
-					this.settings.auth?.token &&
-					(this.settings.options.profileCssEnabled.getValue() ||
-						this.settings.options.activityCssEnabled.getValue())
-				) {
-					this.#renderCustomCssEditor(
-						settingsContainer,
-						this.userCSS,
-					);
-				}
-				if (this.settings.options.csspyEnabled.getValue()) {
-					settingsContainer.append(this.userCSS.renderCSSpy(this));
-				}
 				break;
 			case subCategories.globalCss:
 				if (this.settings.options.globalCssEnabled.getValue()) {
@@ -234,13 +219,7 @@ export class SettingsUserInterface {
 			case subCategories.imageHost:
 				return this.settings.options.pasteImagesToHostService.getValue();
 			case subCategories.layout:
-				return (
-					(this.settings.auth?.token &&
-						(this.settings.options.profileCssEnabled.getValue() ||
-							this.settings.options.activityCssEnabled.getValue())) ||
-					this.settings.options.layoutDesignerEnabled.getValue() ||
-					this.settings.options.csspyEnabled.getValue()
-				);
+				return this.settings.options.layoutDesignerEnabled.getValue();
 			case subCategories.globalCss:
 				return this.settings.options.globalCssEnabled.getValue();
 			case subCategories.toasts:
@@ -409,16 +388,6 @@ export class SettingsUserInterface {
 		);
 
 		const otherCell = DOM.create("td", null, quickAccessCheckbox);
-
-		const cssEnabledCheckbox = this.#createUserCheckbox(
-			user.onlyLoadCssFromVerifiedUser,
-			user.username,
-			"onlyLoadCssFromVerifiedUser",
-			this.settings.options.onlyLoadCssFromVerifiedUser.getValue(),
-		);
-
-		otherCell.append(cssEnabledCheckbox);
-
 		row.append(otherCell);
 
 		const deleteButton = DOM.create("button", null, "❌");
@@ -534,7 +503,6 @@ export class SettingsUserInterface {
 		this.renderSettingsUiContent();
 	}
 
-	// TODO: separate userCSS
 	#renderCustomCssEditor(settingsContainer, cssHandler) {
 		const cssName = cssHandler instanceof GlobalCSS ? "global" : "user";
 		const container = DOM.create("div", "css-editor");
@@ -554,41 +522,6 @@ export class SettingsUserInterface {
 				"Please note that Custom CSS is disabled in the settings. \nIn the event that you accidentally disable rendering of critical parts of AniList, navigate to the settings by URL";
 			notice.style.fontSize = "11px";
 			container.append(notice);
-		} else {
-			const resetButton = Button(
-				"Reset CSS",
-				() => {
-					if (window.confirm("Your changes will be lost.")) {
-						cssHandler.getAuthUserCss().then(() => {
-							// @ts-ignore
-							ace.edit(`void-custom-css-editor-${cssName}`).setValue(cssHandler.css);
-						});
-					}
-				},
-				"error",
-			);
-
-			const publishButton = Button(
-				"Publish CSS",
-				(event) => {
-					this.#handlePublishCss(event, cssHandler);
-				},
-				"success",
-			);
-
-			const previewButton = Button(
-				cssHandler.preview ? "Disable Preview" : "Enable Preview",
-				() => {
-					cssHandler.togglePreview();
-					previewButton.innerText = cssHandler.preview
-						? "Disable Preview"
-						: "Enable Preview";
-				},
-			);
-
-			container.append(resetButton);
-			container.append(publishButton);
-			container.append(previewButton);
 		}
 
 		const prettifyButton = Button("Prettify", () => {
@@ -605,21 +538,6 @@ export class SettingsUserInterface {
 		});
 		container.append(prettifyButton);
 		settingsContainer.append(container);
-	}
-
-	// TODO: separate userCSS
-	#handlePublishCss(event, cssHandler) {
-		const btn = event.target;
-		btn.innerText = "Publishing...";
-		cssHandler.publishUserCss().then(() => {
-			btn.innerText = "Publish";
-		});
-	}
-
-	// TODO: separate userCSS
-	#handleCustomCssEditor(event, cssHandler) {
-		const value = event.target.value;
-		cssHandler.updateCss(value);
 	}
 
 	// TODO: separate to imageHostService?

@@ -30,11 +30,6 @@ export interface IOptions {
 	useDefaultHighlightColor: IOption;
 	defaultHighlightColor: IOption;
 	globalCssEnabled: IOption;
-	globalCssAutoDisable: IOption;
-	profileCssEnabled: IOption;
-	activityCssEnabled: IOption;
-	onlyLoadCssFromVerifiedUser: IOption;
-	cacheUserCss: IOption;
 	layoutDesignerEnabled: IOption;
 	quickAccessNotificationsEnabled: IOption;
 	quickAccessEnabled: IOption;
@@ -51,7 +46,6 @@ export interface IOptions {
 	changeLogEnabled: IOption;
 	selfMessageEnabled: IOption;
 	hideMessagesFromListFeed: IOption;
-	csspyEnabled: IOption;
 	replyActivityUpdate: IOption;
 	markdownHotkeys: IOption;
 	collapsibleReplies: IOption;
