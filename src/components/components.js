@@ -29,9 +29,12 @@ export const ColorPicker = (value, onChange) => {
 	return container;
 };
 
-export const InputField = (value, onChange, classes) => {
+export const InputField = (value, onChange, classes, options = {}) => {
 	const inputField = DOM.create("input", transformClasses("input", classes));
 	inputField.value = value;
+	for (const [key, value] of Object.entries(options)) {
+		inputField.setAttribute(key, value);
+	}
 	inputField.addEventListener("change", (event) => {
 		onChange(event);
 	});

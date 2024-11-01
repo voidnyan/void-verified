@@ -1,0 +1,79 @@
+.void-goals-container {
+    margin-top: 20px;
+}
+
+.void-goals-wrap {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: rgb(var(--color-foreground));
+    border-radius: 4px;
+    overflow: hidden;
+    gap: 15px;
+}
+
+.void-goal-title {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.void-goal-description {
+    font-size: 1.3rem;
+    margin: 6px 0px;
+}
+
+.void-milestones {
+    display: grid;
+    font-size: 1.1rem;
+    font-weight: 500;
+    grid-template-columns: repeat(3, 1fr);
+    overflow: hidden;
+    padding: 11px 0;
+    user-select: none;
+}
+
+.void-milestone {
+    display: inline-block;
+    position: relative;
+    text-align: center;
+}
+
+.void-milestone::after {
+    color: #c6d5d5;
+    content: "|";
+    left: 0;
+    padding-top: 5px;
+    position: absolute;
+    text-align: center;
+    top: 100%;
+    width: 100%;
+}
+
+.void-progress {
+    background: rgb(var(--color-foreground-grey-dark));
+    height: 11px;
+    padding: 0 16.5%;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.void-progress .void-bar {
+    background: linear-gradient(270deg, #02a9ff, #71cfff);
+    border-radius: 0 50px 50px 4px;
+    box-sizing: content-box;
+    height: 100%;
+    margin-left: -33.3%;
+    padding-right: 33.3%;
+    background: rgb(var(--color-blue));
+    overflow: hidden;
+    position: relative;
+}
+
+.void-progress .void-bar::after {
+    background: linear-gradient(530deg, hsla(0, 0%, 100%, .5), hsla(0, 0%, 100%, 0));
+    content: "";
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}

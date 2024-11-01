@@ -13,7 +13,6 @@ import {
 	Table,
 	TableBody,
 	TableHead,
-	TextArea,
 	ColorPicker,
 	IconButton,
 	Button,
@@ -26,6 +25,7 @@ import {Toaster} from "../utils/toaster";
 import {RefreshIcon} from "../assets/icons";
 import {ChangeLog} from "../utils/changeLog";
 import {AceEditorInitializer} from "../utils/aceEditorInitializer";
+import {GoalsHandler} from "./goalsHandler";
 
 const subCategories = {
 	users: "users",
@@ -33,6 +33,7 @@ const subCategories = {
 	imageHost: "image host",
 	layout: "layout",
 	globalCss: "global CSS",
+	goals: "goals",
 	toasts: "toasts",
 };
 
@@ -107,6 +108,10 @@ export class SettingsUserInterface {
 				break;
 			case subCategories.toasts:
 				settingsContainer.append(Toaster.renderSettings(this));
+				break;
+			case subCategories.goals:
+				settingsContainer.append(GoalsHandler.renderSettings());
+				break;
 		}
 	}
 
@@ -224,6 +229,8 @@ export class SettingsUserInterface {
 				return this.settings.options.globalCssEnabled.getValue();
 			case subCategories.toasts:
 				return this.settings.options.toasterEnabled.getValue();
+			case subCategories.goals:
+				return this.settings.options.goalsEnabled.getValue();
 		}
 	}
 
