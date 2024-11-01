@@ -51,5 +51,6 @@ export interface IOptions {
 	collapsibleReplies: IOption;
 	autoCollapseLiked: IOption;
 	autoCollapseSelf: IOption;
+	goalsEnabled: IOption;
 	// useElevatedFetch: IOption;
 }

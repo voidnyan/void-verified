@@ -3,27 +3,9 @@ import { ColorFunctions } from "./colorFunctions";
 import { AnilistAPI } from "../api/anilistAPI";
 import { Toaster } from "./toaster";
 import { IOption, IOptions, ISettings } from "../types/settings";
+import {StaticSettings} from "./staticSettings";
 
-class Option implements IOption {
-	value: string | boolean;
-	defaultValue: string | number | boolean;
-	description: string;
-	category: string;
-	authRequired: boolean;
-	constructor(option: IOption) {
-		this.defaultValue = option.defaultValue;
-		this.description = option.description;
-		this.category = option.category ?? categories.misc;
-		this.authRequired = option.authRequired;
-	}
 
-	getValue() {
-		if (this.value === "") {
-			return this.defaultValue;
-		}
-		return this.value ?? this.defaultValue;
-	}
-}
 
 export class Settings implements ISettings {
 	localStorageUsers = "void-verified-users";
@@ -31,31 +13,16 @@ export class Settings implements ISettings {
 	localStorageAuth = "void-verified-auth";
 	version;
 	auth = null;
-	anilistUser;
+	anilistUser: string;
 
 	verifiedUsers = [];
 
-	options: IOptions = {} as IOptions;
+	options: IOptions = StaticSettings.options;
 
 	constructor() {
 		this.version = GM_info.script.version;
 		this.verifiedUsers =
 			JSON.parse(localStorage.getItem(this.localStorageUsers)) ?? [];
-
-		const settingsInLocalStorage =
-			JSON.parse(localStorage.getItem(this.localStorageSettings)) ?? {};
-
-		for (const [key, value] of Object.entries(defaultSettings)) {
-			this.options[key] = new Option(value as IOption);
-		}
-
-		for (const [key, val] of Object.entries(settingsInLocalStorage)) {
-			const value = val as IOption;
-			if (!this.options[key]) {
-				continue;
-			}
-			this.options[key].value = value.value;
-		}
 
 		this.auth =
 			JSON.parse(localStorage.getItem(this.localStorageAuth)) ?? null;

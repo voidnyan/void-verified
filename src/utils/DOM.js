@@ -1,5 +1,5 @@
 export class DOM {
-	static create(element, classes = null, children = null) {
+	static create(element, classes = null, children = null, options = {}) {
 		const el = document.createElement(element);
 		if (classes !== null) {
 			for (const className of classes?.split(" ")) {
@@ -17,6 +17,10 @@ export class DOM {
 			} else {
 				el.append(children);
 			}
+		}
+
+		for (const key of Object.keys(options)) {
+			el[key] = options[key];
 		}
 
 		return el;

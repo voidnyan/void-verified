@@ -940,11 +940,13 @@ a.void-link {
 }
 
 .void-select .void-option:first-child {
-    border-radius: 4px 0px 0px 4px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
 }
 
 .void-select .void-option:last-child {
-    border-radius: 0px 4px 4px 0px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
 }
 
 .void-select .void-option.active {
@@ -1352,4 +1354,8 @@ body:has(.void-modal-background[open]) {
 
 .void-media-search-result:hover {
     background: rgb(var(--color-foreground-grey));
+}
+
+.void-w-100 {
+    width: 100%;
 }

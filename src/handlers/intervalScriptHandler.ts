@@ -16,6 +16,7 @@ import {
 } from "./activityPostHandler";
 import {IMarkdownHotkeys, MarkdownHotkeys} from "./markdownHotkeys";
 import {PasteHandler} from "./pasteHandler";
+import {GoalsHandler} from "./goalsHandler";
 
 interface IIntervalScriptsHandler {
 	styleHandler: any;
@@ -117,10 +118,13 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 			return;
 		}
 
+		GoalsHandler.removeGoalsContainer();
+
 		if (path.startsWith("/user/")) {
 			intervalScriptHandler.quickAccess.clearBadge();
 			intervalScriptHandler.styleHandler.verifyProfile();
 			intervalScriptHandler.anilistFeedFixHandler.handleFilters();
+			GoalsHandler.renderGoals();
 		} else {
 			intervalScriptHandler.styleHandler.clearStyles("profile");
 		}

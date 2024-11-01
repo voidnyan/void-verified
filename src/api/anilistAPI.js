@@ -76,6 +76,45 @@ export class AnilistAPI {
 		}
 	}
 
+	async getUserMediaListCollection(username, type) {
+		const query = `query Query($userName: String, $type: MediaType) {
+		  MediaListCollection(userName: $userName, type: $type) {
+			lists {
+			  entries {
+				completedAt {
+				  year
+				  month
+				  day
+				}
+				startedAt {
+				  year
+				  month
+				  day
+				}
+				media {
+				  title {
+					userPreferred
+				  }
+				  format
+				  duration
+				  id
+				}
+				status
+				progress
+				progressVolumes
+			  }
+			}
+			user {
+			  about
+			}
+		  }
+		}`;
+		const variables = { userName: username, type};
+		const options = this.#getQueryOptions(query, variables);
+		const data = await this.#elevatedFetch(options);
+		return data;
+	}
+
 	async saveUserAbout(about) {
 		const query = `mutation ($about: String) {
             UpdateUser(about: $about) {

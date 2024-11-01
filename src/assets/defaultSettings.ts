@@ -209,5 +209,11 @@ export const defaultSettings = {
 		description: "Collapse your own replies.",
 		category: categories.activity,
 		authRequired: false,
+	},
+	goalsEnabled: {
+		defaultValue: false,
+		description: "Display animanga goals in profile overview.",
+		category: categories.misc,
+		authRequired: true,
 	}
 };

@@ -1,4 +1,3 @@
-import { Settings } from "./utils/settings";
 import { StyleHandler } from "./handlers/styleHandler";
 import { IntervalScriptHandler } from "./handlers/intervalScriptHandler";
 import { PasteHandler } from "./handlers/pasteHandler";
@@ -9,18 +8,21 @@ import { ChangeLog } from "./utils/changeLog";
 import {LibraryLoader} from "./handlers/libraryLoader";
 import {MarkdownHotkeys} from "./handlers/markdownHotkeys";
 import {StyleRegister} from "./assets/styles/styleRegister";
+import {StaticSettings} from "./utils/staticSettings";
+import {GoalsHandler} from "./handlers/goalsHandler";
 
 LibraryLoader.loadAceEditor();
 
-const settings = new Settings();
-new MarkdownHotkeys(settings).setupMarkdownHotkeys();
-Toaster.initializeToaster(settings);
-const styleHandler = new StyleHandler(settings);
+StaticSettings.initialize();
+GoalsHandler.initialize();
+new MarkdownHotkeys(StaticSettings.settingsInstance).setupMarkdownHotkeys();
+Toaster.initializeToaster(StaticSettings.settingsInstance);
+const styleHandler = new StyleHandler(StaticSettings.settingsInstance);
 styleHandler.refreshStyles();
 StyleRegister.registerStyles();
 
 try {
-	const intervalScriptHandler = new IntervalScriptHandler(settings);
+	const intervalScriptHandler = new IntervalScriptHandler(StaticSettings.settingsInstance);
 	intervalScriptHandler.enableScriptIntervalHandling();
 } catch (error) {
 	Toaster.critical(
@@ -30,7 +32,7 @@ try {
 }
 
 try {
-	const pasteHandler = new PasteHandler(settings);
+	const pasteHandler = new PasteHandler(StaticSettings.settingsInstance);
 	pasteHandler.setup();
 } catch (error) {
 	Toaster.critical(
@@ -38,10 +40,10 @@ try {
 	);
 }
 
-new ChangeLog(settings).renderChangeLog();
+new ChangeLog(StaticSettings.settingsInstance).renderChangeLog();
 
 new ImgurAPI(
 	new ImageHostService().getImageHostConfiguration(imageHosts.imgur),
 ).refreshAuthToken();
 
-console.log(`VoidVerified ${settings.version} loaded.`);
+console.log(`VoidVerified ${StaticSettings.settingsInstance.version} loaded.`);
