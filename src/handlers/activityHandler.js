@@ -2,6 +2,8 @@ import {AnilistAPI} from "../api/anilistAPI";
 import {Button} from "../components/components";
 import {Toaster} from "../utils/toaster";
 import {DOM} from "../utils/DOM";
+import {StaticSettings} from "../utils/staticSettings";
+import {ImageFormats} from "../assets/imageFormats";
 
 export class ActivityHandler {
 	settings;
@@ -125,5 +127,44 @@ export class ActivityHandler {
 		for (const link of anilistLinks) {
 			link.removeAttribute("target");
 		}
+	}
+
+	handleImageLinkPreview() {
+		if (!StaticSettings.options.imagePreviewEnabled.getValue()) {
+			return;
+		}
+
+		let imageContainer = document.querySelector(".void-image-preview-container");
+
+		if (!imageContainer) {
+			imageContainer = DOM.create("div", "image-preview-container");
+			document.body.append(imageContainer);
+		}
+
+
+		const imageLinks = document.querySelectorAll(
+			ImageFormats.map(format => `.markdown a:not([void-link-preview])[href$='.${format}' i]:not(:has(img))`).join()
+		)
+
+		for (const link of imageLinks) {
+			link.setAttribute("void-link-preview", "true");
+			link.addEventListener("mouseover", (event) => {this.#handleLinkHover(event);});
+			link.addEventListener("mouseout", () => {
+				imageContainer.style.display = "none";
+			})
+		}
+	}
+
+	#handleLinkHover(event) {
+		let imageContainer = document.querySelector(".void-image-preview-container");
+		imageContainer.replaceChildren();
+		const href = event.target.getAttribute("href");
+		const image = DOM.create("img");
+		image.setAttribute("src", href);
+		image.setAttribute("loading", "lazy");
+		imageContainer.append(image);
+		imageContainer.style.display = "block";
+		const position = event.clientY < window.innerHeight / 2 ? `${event.clientY + 20}px` : `${event.clientY - image.clientHeight - 20}px`;
+		imageContainer.style.top = position;
 	}
 }

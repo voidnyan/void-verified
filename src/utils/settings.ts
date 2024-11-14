@@ -2,7 +2,7 @@ import { categories, defaultSettings } from "../assets/defaultSettings";
 import { ColorFunctions } from "./colorFunctions";
 import { AnilistAPI } from "../api/anilistAPI";
 import { Toaster } from "./toaster";
-import { IOption, IOptions, ISettings } from "../types/settings";
+import { IOptions, ISettings } from "../types/settings";
 import {StaticSettings} from "./staticSettings";
 
 

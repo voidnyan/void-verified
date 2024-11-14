@@ -100,6 +100,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		intervalScriptHandler.notificationFeedHandler.renderNotificationsFeed();
 		intervalScriptHandler.markdownHotkeys.renderSettings();
 		intervalScriptHandler.pasteHandler.registerDragAndDropInputs();
+		intervalScriptHandler.activityHandler.handleImageLinkPreview();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();
