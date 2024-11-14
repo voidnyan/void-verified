@@ -1359,3 +1359,17 @@ body:has(.void-modal-background[open]) {
 .void-w-100 {
     width: 100%;
 }
+
+.void-image-preview-container {
+    display: none;
+    position: fixed;
+    max-width: 55%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.void-image-preview-container img {
+    width: 100%;
+}

@@ -18,7 +18,8 @@ class Feature {
 
 export const changeLog = [
 	new Version("1.19", [
-		new Feature("Display animanga goals in profile overview.", "goalsEnabled")
+		new Feature("Display animanga goals in profile overview.", "goalsEnabled"),
+		new Feature("Hover image links to preview.", "imagePreviewEnabled")
 	]),
 	new Version("1.18", [
 		new Feature("Removed support for user CSS.")

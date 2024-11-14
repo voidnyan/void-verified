@@ -215,5 +215,11 @@ export const defaultSettings = {
 		description: "Display animanga goals in profile overview.",
 		category: categories.misc,
 		authRequired: true,
+	},
+	imagePreviewEnabled: {
+		defaultValue: false,
+		description: "Hover image links to preview.",
+		categories: categories.activity,
+		authRequired: false
 	}
 };

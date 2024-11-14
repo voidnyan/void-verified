@@ -52,5 +52,6 @@ export interface IOptions {
 	autoCollapseLiked: IOption;
 	autoCollapseSelf: IOption;
 	goalsEnabled: IOption;
+	imagePreviewEnabled: IOption;
 	// useElevatedFetch: IOption;
 }
