@@ -62,11 +62,13 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		this.layoutDesigner = new LayoutDesigner(settings);
 		this.gifKeyboard = new GifKeyboardHandler(settings);
 
+		this.miniProfileHandler = new MiniProfileHandler();
 		this.settingsUi = new SettingsUserInterface(
 			settings,
 			this.styleHandler,
 			this.globalCSS,
 			this.layoutDesigner,
+			this.miniProfileHandler
 		);
 		this.activityHandler = new ActivityHandler(settings);
 		this.quickAccess = new QuickAccess(settings);
@@ -77,7 +79,6 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		this.activityPostHandler = new ActivityPostHandler(settings);
 		this.markdownHotkeys = new MarkdownHotkeys(settings);
 		this.pasteHandler = new PasteHandler(settings);
-		this.miniProfileHandler = new MiniProfileHandler();
 	}
 
 	currentPath = "";

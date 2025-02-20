@@ -26,6 +26,7 @@ import {RefreshIcon} from "../assets/icons";
 import {ChangeLog} from "../utils/changeLog";
 import {AceEditorInitializer} from "../utils/aceEditorInitializer";
 import {GoalsHandler} from "./goalsHandler";
+import {MiniProfileHandler} from "./miniProfileHandler";
 
 const subCategories = {
 	users: "users",
@@ -35,6 +36,7 @@ const subCategories = {
 	globalCss: "global CSS",
 	goals: "goals",
 	toasts: "toasts",
+	miniProfile: "mini profile"
 };
 
 export class SettingsUserInterface {
@@ -42,15 +44,17 @@ export class SettingsUserInterface {
 	styleHandler;
 	globalCSS;
 	layoutDesigner;
+	miniProfileHandler;
 	AnilistBlue = "120, 180, 255";
 	#activeCategory = "all";
 	#activeSubCategory = subCategories.users;
 
-	constructor(settings, styleHandler, globalCSS, layoutDesigner) {
+	constructor(settings, styleHandler, globalCSS, layoutDesigner, miniProfileHandler) {
 		this.settings = settings;
 		this.styleHandler = styleHandler;
 		this.globalCSS = globalCSS;
 		this.layoutDesigner = layoutDesigner;
+		this.miniProfileHandler = miniProfileHandler;
 	}
 
 	renderSettingsUi() {
@@ -112,6 +116,8 @@ export class SettingsUserInterface {
 			case subCategories.goals:
 				settingsContainer.append(GoalsHandler.renderSettings());
 				break;
+			case subCategories.miniProfile:
+				settingsContainer.append(MiniProfileHandler.renderSettings(this.miniProfileHandler.config));
 		}
 	}
 
@@ -231,6 +237,8 @@ export class SettingsUserInterface {
 				return this.settings.options.toasterEnabled.getValue();
 			case subCategories.goals:
 				return this.settings.options.goalsEnabled.getValue();
+			case subCategories.miniProfile:
+				return this.settings.options.miniProfileEnabled.getValue();
 		}
 	}
 
