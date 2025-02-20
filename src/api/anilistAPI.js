@@ -482,11 +482,32 @@ export class AnilistAPI {
           type
         }
       }
+      characters(page: $page, perPage: $perPage) {
+        nodes {
+          name {
+            userPreferred
+          }
+          image {
+            large
+          }
+          id
+        }
+      }
+      staff(page: $page, perPage: $perPage) {
+        nodes {
+          name {
+            userPreferred
+          }
+          image {
+            large
+          }
+          id
+        }
+      }
     }
     name
     isFollower
     isFollowing
-    about
     options {
       profileColor
     }
