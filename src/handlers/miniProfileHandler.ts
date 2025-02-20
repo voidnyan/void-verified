@@ -64,7 +64,7 @@ export class MiniProfileHandler {
 				if (data === null) {
 					return;
 				}
-				user = data;
+				user = this.#addMissingTypes(data);
 				MiniProfileCache.addUser(user);
 			}
 		} catch (error) {
@@ -92,6 +92,17 @@ export class MiniProfileHandler {
 		}
 
 		this.#showMiniProfile();
+	}
+
+	#addMissingTypes(data) {
+		data?.favourites?.characters?.nodes.forEach(character => {
+			character["type"] = "character";
+		});
+
+		data?.favourites?.staff?.nodes.forEach(staff => {
+			staff["type"] = "staff";
+		});
+		return data;
 	}
 
 	#createHeader(user) {
@@ -135,11 +146,17 @@ export class MiniProfileHandler {
 	#createContent(user) {
 		const content = DOM.create("div", "mini-profile-content-container");
 
-		if (user.favourites.anime.nodes.length + user.favourites.manga.nodes.length > 6 || true) {
+		if (this.config.displayAnime) {
 			content.append(this.#addFavourites(user.favourites.anime.nodes));
+		}
+		if (this.config.displayManga) {
 			content.append(this.#addFavourites(user.favourites.manga.nodes));
-		} else {
-			content.append(this.#addFavourites([...user.favourites.anime.nodes, ...user.favourites.manga.nodes]));
+		}
+		if (this.config.displayCharacters) {
+			content.append(this.#addFavourites(user.favourites.characters.nodes));
+		}
+		if (this.config.displayStaff) {
+			content.append(this.#addFavourites(user.favourites.staff.nodes));
 		}
 
 		this.miniProfileContainer.append(content);
@@ -150,11 +167,11 @@ export class MiniProfileHandler {
 		for (const favourite of favourites) {
 			const cover = DOM.create("a", "mini-profile-favourite");
 			cover.href = `https://anilist.co/${favourite.type.toLowerCase()}/${favourite.id}`
-			cover.style.backgroundImage = `url(${favourite.coverImage.large})`;
+			cover.style.backgroundImage = `url(${favourite.coverImage?.large ?? favourite.image?.large})`;
 			if (favourite.isFavourite) {
 				cover.classList.add("void-mini-profile-favourited");
 			}
-			favouritesContainer.append(Tooltip(favourite.title.userPreferred, cover));
+			favouritesContainer.append(Tooltip(favourite.title?.userPreferred ?? favourite.name?.userPreferred, cover));
 		}
 		return favouritesContainer;
 	}
@@ -181,7 +198,19 @@ export class MiniProfileHandler {
 
 	static #renderSettingsContainer(container: HTMLElement, config: MiniProfileConfig) {
 		container.replaceChildren();
-		container.append(DOM.create("h3", null, "Mini Profile"));
+		container.append(DOM.create("h3", null, "Mini Profile Configuration"));
+
+		const positionOptions = ["top", "center", "bottom"].map(position =>
+			Option(position,
+				config.position === position,
+				() => {
+					config.position = position as "top" | "center" | "bottom";
+					config.save();
+					this.#renderSettingsContainer(container, config);
+				}));
+
+		const positionSelect = Select(positionOptions);
+		container.append(Label("Position", positionSelect));
 
 		const numberOfFavourites = RangeField(
 			config.numberOfFavourites,
@@ -194,19 +223,7 @@ export class MiniProfileHandler {
 			1,
 			1);
 
-		container.append(Label("Favourites", numberOfFavourites));
-
-		const positionOptions = ["top", "center", "bottom"].map(position =>
-		Option(position,
-			config.position === position,
-			() => {
-				config.position = position as "top" | "center" | "bottom";
-				config.save();
-				this.#renderSettingsContainer(container, config);
-			}));
-
-		const positionSelect = Select(positionOptions);
-		container.append(Label("Position", positionSelect));
+		container.append(Label("Number of favourites", numberOfFavourites));
 
 		const hoverTagsCheckbox = Checkbox(config.hoverTags, (event) => {
 			config.hoverTags = event.target.checked;
@@ -214,6 +231,32 @@ export class MiniProfileHandler {
 		});
 
 		container.append(Label("Show when hovering @", hoverTagsCheckbox));
+
+		const animeCheckbox = Checkbox(config.displayAnime, (event) => {
+			config.displayAnime = event.target.checked;
+			config.save();
+		})
+
+		const mangaCheckBox = Checkbox(config.displayManga, (event) => {
+			config.displayManga = event.target.checked;
+			config.save();
+		})
+
+		const charactersCheckBox = Checkbox(config.displayCharacters, (event) => {
+			config.displayCharacters = event.target.checked;
+			config.save();
+		})
+
+		const staffCheckbox = Checkbox(config.displayStaff, (event) => {
+			config.displayStaff = event.target.checked;
+			config.save();
+		})
+
+		container.append(Label("Display anime favourites", animeCheckbox));
+		container.append(Label("Display manga favourites ", mangaCheckBox));
+		container.append(Label("Display character favourites ", charactersCheckBox));
+		container.append(Label("Display staff favourites", staffCheckbox));
+
 	}
 }
 
@@ -229,7 +272,7 @@ class MiniProfileCache {
 		}
 
 		const cachedAt = new Date(user.cachedAt);
-		cachedAt.setHours(cachedAt.getHours() + 1)
+		cachedAt.setHours(cachedAt.getHours() + 3)
 
 		if (cachedAt < new Date()) {
 			this.#removeUser(user)
@@ -269,7 +312,11 @@ class MiniProfileCache {
 class MiniProfileConfig {
 	numberOfFavourites: number;
 	position: "top" | "center" | "bottom";
-	hoverTags: true;
+	hoverTags: boolean;
+	displayAnime: boolean;
+	displayManga: boolean;
+	displayCharacters: boolean;
+	displayStaff: boolean;
 
 	#localStorage = "void-verified-mini-profile-config";
 
@@ -278,6 +325,10 @@ class MiniProfileConfig {
 		this.numberOfFavourites = config?.numberOfFavourites ?? 6;
 		this.position = config?.position ?? "bottom";
 		this.hoverTags = config?.hoverTags ?? true;
+		this.displayAnime = config?.displayAnime ?? true;
+		this.displayManga = config?.displayManga ?? true;
+		this.displayCharacters = config?.displayCharacters ?? false;
+		this.displayStaff = config?.displayStaff ?? false;
 	}
 
 	save() {
