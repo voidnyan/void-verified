@@ -447,8 +447,8 @@ export class AnilistAPI {
 	}
 
 
-	async getMiniProfile(username) {
-		const variables = { name: username, page: 1, perPage: 6 };
+	async getMiniProfile(username, numberOfFavourites) {
+		const variables = { name: username, page: 1, perPage: numberOfFavourites };
 
 		const query = `query User($name: String, $page: Int, $perPage: Int) {
   User(name: $name) {

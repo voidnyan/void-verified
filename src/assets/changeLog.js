@@ -17,6 +17,9 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.20", [
+		new Feature("Hover over users to view a mini profile.", "miniProfileEnabled")
+	]),
 	new Version("1.19", [
 		new Feature("Display animanga goals in profile overview.", "goalsEnabled"),
 		new Feature("Hover image links to preview.", "imagePreviewEnabled")

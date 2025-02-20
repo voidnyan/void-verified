@@ -1,5 +1,5 @@
 import {DOM} from "../utils/DOM";
-import {Tooltip} from "../components/components";
+import {Checkbox, Label, Option, RangeField, Select, Tooltip} from "../components/components";
 import {AnilistAPI} from "../api/anilistAPI";
 import {StaticSettings} from "../utils/staticSettings";
 import {ColorFunctions} from "../utils/colorFunctions";
@@ -9,6 +9,7 @@ export class MiniProfileHandler {
 	protected miniProfileContainer: HTMLElement;
 	#queryInProgress = false;
 	#isVisible = false;
+	config: MiniProfileConfig;
 
 	constructor() {
 		this.miniProfileContainer = DOM.create("div", "mini-profile-container mini-profile-hidden");
@@ -19,12 +20,19 @@ export class MiniProfileHandler {
 			this.#hideMiniProfile();
 		});
 		document.body.append(this.miniProfileContainer);
+		this.config = new MiniProfileConfig();
+		console.log(this.config);
 	}
 	addUserHoverListeners() {
 		if (!StaticSettings.options.miniProfileEnabled.getValue()) {
 			return;
 		}
-		const elements = document.querySelectorAll('a.name:not([void-mini="true"])');
+		let elements = [...document.querySelectorAll('a.name:not([void-mini="true"])')];
+
+		if (this.config.hoverTags) {
+			elements = [...elements, ...document.querySelectorAll('.markdown a[href^="/user/"]:not([void-mini="true"])')];
+		}
+
 		for (const element of elements) {
 			element.addEventListener("mouseover", () => {
 				this.#hoverUser(element);
@@ -43,7 +51,7 @@ export class MiniProfileHandler {
 		}
 
 		let user = null;
-		const username = element.innerHTML.trim();
+		const username = element.innerHTML.trim().replace("@", "");
 		try {
 			const cachedUser = MiniProfileCache.getUser(username);
 			if (cachedUser) {
@@ -52,7 +60,7 @@ export class MiniProfileHandler {
 				const api = new AnilistAPI(StaticSettings.settingsInstance);
 				Toaster.debug("Querying mini profile data.");
 				this.#queryInProgress = true;
-				const data = await api.getMiniProfile(username);
+				const data = await api.getMiniProfile(username, this.config.numberOfFavourites);
 				if (data === null) {
 					return;
 				}
@@ -74,7 +82,15 @@ export class MiniProfileHandler {
 		const elementRect = element.getBoundingClientRect();
 		const containerRect = this.miniProfileContainer.getBoundingClientRect();
 		this.miniProfileContainer.style.left = `${elementRect.left + window.scrollX + elementRect.width}px`;
-		this.miniProfileContainer.style.top = `${elementRect.top + window.scrollY + (elementRect.height / 2) - (containerRect.height / 2)}px`;
+		this.miniProfileContainer.style.maxWidth = `${window.innerWidth - elementRect.right - 30}px`;
+		if (this.config.position === "top") {
+			this.miniProfileContainer.style.top = `${elementRect.top + window.scrollY + elementRect.height - containerRect.height}px`;
+		} else if (this.config.position === "center") {
+			this.miniProfileContainer.style.top = `${elementRect.top + window.scrollY + (elementRect.height / 2) - (containerRect.height / 2)}px`;
+		} else {
+			this.miniProfileContainer.style.top = `${elementRect.top + window.scrollY}px`;
+		}
+
 		this.#showMiniProfile();
 	}
 
@@ -156,6 +172,49 @@ export class MiniProfileHandler {
 			}
 		}, 300);
 	}
+
+	static renderSettings(config: MiniProfileConfig) {
+		const container = DOM.create("div");
+		this.#renderSettingsContainer(container, config);
+		return container;
+	}
+
+	static #renderSettingsContainer(container: HTMLElement, config: MiniProfileConfig) {
+		container.replaceChildren();
+		container.append(DOM.create("h3", null, "Mini Profile"));
+
+		const numberOfFavourites = RangeField(
+			config.numberOfFavourites,
+			(event) => {
+				config.numberOfFavourites = +event.target.value;
+				config.save();
+				MiniProfileCache.clearCache();
+			},
+			25,
+			1,
+			1);
+
+		container.append(Label("Favourites", numberOfFavourites));
+
+		const positionOptions = ["top", "center", "bottom"].map(position =>
+		Option(position,
+			config.position === position,
+			() => {
+				config.position = position as "top" | "center" | "bottom";
+				config.save();
+				this.#renderSettingsContainer(container, config);
+			}));
+
+		const positionSelect = Select(positionOptions);
+		container.append(Label("Position", positionSelect));
+
+		const hoverTagsCheckbox = Checkbox(config.hoverTags, (event) => {
+			config.hoverTags = event.target.checked;
+			config.save();
+		});
+
+		container.append(Label("Show when hovering @", hoverTagsCheckbox));
+	}
 }
 
 class MiniProfileCache {
@@ -200,5 +259,28 @@ class MiniProfileCache {
 
 	static #saveCache(cache) {
 		localStorage.setItem(this.#localStorage, JSON.stringify(cache));
+	}
+
+	static clearCache() {
+		localStorage.removeItem(this.#localStorage);
+	}
+}
+
+class MiniProfileConfig {
+	numberOfFavourites: number;
+	position: "top" | "center" | "bottom";
+	hoverTags: true;
+
+	#localStorage = "void-verified-mini-profile-config";
+
+	constructor() {
+		const config = JSON.parse(localStorage.getItem(this.#localStorage));
+		this.numberOfFavourites = config?.numberOfFavourites ?? 6;
+		this.position = config?.position ?? "bottom";
+		this.hoverTags = config?.hoverTags ?? true;
+	}
+
+	save() {
+		localStorage.setItem(this.#localStorage, JSON.stringify(this));
 	}
 }
