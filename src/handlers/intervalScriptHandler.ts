@@ -17,6 +17,7 @@ import {
 import {IMarkdownHotkeys, MarkdownHotkeys} from "./markdownHotkeys";
 import {PasteHandler} from "./pasteHandler";
 import {GoalsHandler} from "./goalsHandler";
+import {MiniProfileHandler} from "./miniProfileHandler";
 
 interface IIntervalScriptsHandler {
 	styleHandler: any;
@@ -33,6 +34,7 @@ interface IIntervalScriptsHandler {
 	activityPostHandler: IActivityPostHandler;
 	markdownHotkeys: IMarkdownHotkeys;
 	pasteHandler: any;
+	miniProfileHandler: MiniProfileHandler;
 	hasPathChanged(path: string): boolean;
 }
 
@@ -51,6 +53,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 	activityPostHandler;
 	markdownHotkeys;
 	pasteHandler;
+	miniProfileHandler: MiniProfileHandler;
 	constructor(settings) {
 		this.settings = settings;
 
@@ -74,6 +77,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		this.activityPostHandler = new ActivityPostHandler(settings);
 		this.markdownHotkeys = new MarkdownHotkeys(settings);
 		this.pasteHandler = new PasteHandler(settings);
+		this.miniProfileHandler = new MiniProfileHandler();
 	}
 
 	currentPath = "";
@@ -101,6 +105,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		intervalScriptHandler.markdownHotkeys.renderSettings();
 		intervalScriptHandler.pasteHandler.registerDragAndDropInputs();
 		intervalScriptHandler.activityHandler.handleImageLinkPreview();
+		intervalScriptHandler.miniProfileHandler.addUserHoverListeners();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();

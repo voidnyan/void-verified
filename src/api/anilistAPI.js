@@ -446,6 +446,61 @@ export class AnilistAPI {
 		}
 	}
 
+
+	async getMiniProfile(username) {
+		const variables = { name: username, page: 1, perPage: 6 };
+
+		const query = `query User($name: String, $page: Int, $perPage: Int) {
+  User(name: $name) {
+    avatar {
+      large
+    }
+    createdAt
+    donatorBadge
+    favourites {
+      anime(page: $page, perPage: $perPage) {
+        nodes {
+          coverImage {
+            large
+          }
+          title {
+            userPreferred
+          }
+          id
+          type
+        }
+      }
+    manga(page: $page, perPage: $perPage) {
+        nodes {
+          coverImage {
+            large
+          }
+          title {
+            userPreferred
+          }
+          id
+          type
+        }
+      }
+    }
+    name
+    isFollower
+    isFollowing
+    about
+    options {
+      profileColor
+    }
+    bannerImage
+    donatorTier
+  }
+}`;
+
+		const options = this.#getQueryOptions(query, variables);
+
+		const data = await this.#elevatedFetch(options);
+		return data.User;
+	}
+
 	async #elevatedFetch(options) {
 		// const runElevated = this.settings.options.useElevatedFetch.getValue();
 		// if (runElevated && GM.xmlHttpRequest) {
