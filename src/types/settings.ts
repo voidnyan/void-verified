@@ -53,5 +53,6 @@ export interface IOptions {
 	autoCollapseSelf: IOption;
 	goalsEnabled: IOption;
 	imagePreviewEnabled: IOption;
+	miniProfileEnabled: IOption;
 	// useElevatedFetch: IOption;
 }

@@ -1,0 +1,94 @@
+.void-mini-profile-container {
+    position: absolute;
+    z-index: 9999;
+    background-color: rgb(var(--color-foreground-grey));
+    border-radius: 4px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    user-select: none;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s;
+}
+
+.void-mini-profile-container.void-mini-profile-hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.void-mini-profile-header {
+    display: flex;
+    padding: 6px;
+    align-items: center;
+}
+
+.void-mini-profile-avatar {
+    display: block;
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.void-mini-profile-username {
+    padding-left: 6px;
+    color: rgb(var(--color-text-bright));
+    font-weight: 600;
+    text-shadow: black 0px 0px 4px;
+}
+
+.void-mini-profile-donator-badge {
+    background: rgb(var(--color-background));
+    border-radius: 3px;
+    color: rgb(var(--color-text));
+    display: inline-block;
+    font-size: 1.2rem;
+    letter-spacing: .03em;
+    margin-left: 13px;
+    overflow: hidden;
+    padding: 4px 7px;
+}
+
+.void-mini-profile-donator-rainbow-badge {
+    animation-duration: 20s;
+    animation-iteration-count: infinite;
+    animation-name: rainbow;
+    animation-timing-function: ease-in-out;
+    color: rgb(var(--color-white))
+}
+
+.void-mini-profile-follow-badge {
+    color: rgb(var(--color-text-bright));
+}
+
+.void-mini-profile-title {
+    font-weight: 700;
+    font-size: 13px;
+    padding-left: 6px;
+}
+
+.void-mini-profile-content-container {
+    backdrop-filter: blur(10px);
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.void-mini-profile-section {
+    padding: 6px;
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.void-mini-profile-favourite {
+    display: block;
+    width: 42px;
+    height: 57px;
+    border-radius: 4px;
+    background-size: cover;
+}
+
+.void-mini-profile-favourited {
+    box-shadow: rgb(var(--color-blue)) 2px 2px;
+}

@@ -221,5 +221,11 @@ export const defaultSettings = {
 		description: "Hover image links to preview.",
 		categories: categories.activity,
 		authRequired: false
+	},
+	miniProfileEnabled: {
+		defaultValue: false,
+		description: "Hover over users to view a mini profile.",
+		category: categories.users,
+		authRequired: false
 	}
 };
