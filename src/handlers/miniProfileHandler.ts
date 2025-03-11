@@ -44,6 +44,9 @@ export class MiniProfileHandler {
 			});
 			element.addEventListener("mouseleave", () => {
 				this.#hideMiniProfile();
+			});
+			element.addEventListener("click", () => {
+				this.#hideMiniProfile();
 			})
 			element.setAttribute("void-mini", "true");
 		}
