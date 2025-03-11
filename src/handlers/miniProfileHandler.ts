@@ -21,13 +21,12 @@ export class MiniProfileHandler {
 		});
 		document.body.append(this.miniProfileContainer);
 		this.config = new MiniProfileConfig();
-		console.log(this.config);
 	}
 	addUserHoverListeners() {
 		if (!StaticSettings.options.miniProfileEnabled.getValue()) {
 			return;
 		}
-		let elements = [...document.querySelectorAll('a.name:not([void-mini="true"])')];
+		let elements = [...document.querySelectorAll('.activity-entry a.name:not([void-mini="true"])')];
 
 		if (this.config.hoverTags) {
 			elements = [...elements, ...document.querySelectorAll('.markdown a[href^="/user/"]:not([void-mini="true"])')];
@@ -35,7 +34,13 @@ export class MiniProfileHandler {
 
 		for (const element of elements) {
 			element.addEventListener("mouseover", () => {
-				this.#hoverUser(element);
+				this.#isVisible = true;
+				setTimeout(() => {
+					if (!this.#isVisible) {
+						return;
+					}
+					this.#hoverUser(element);
+				}, 100);
 			});
 			element.addEventListener("mouseleave", () => {
 				this.#hideMiniProfile();
@@ -90,7 +95,6 @@ export class MiniProfileHandler {
 		} else {
 			this.miniProfileContainer.style.top = `${elementRect.top + window.scrollY}px`;
 		}
-
 		this.#showMiniProfile();
 	}
 
@@ -146,16 +150,16 @@ export class MiniProfileHandler {
 	#createContent(user) {
 		const content = DOM.create("div", "mini-profile-content-container");
 
-		if (this.config.displayAnime) {
+		if (this.config.displayAnime && user.favourites.anime.nodes.length > 0) {
 			content.append(this.#addFavourites(user.favourites.anime.nodes));
 		}
-		if (this.config.displayManga) {
+		if (this.config.displayManga && user.favourites.manga.nodes.length > 0) {
 			content.append(this.#addFavourites(user.favourites.manga.nodes));
 		}
-		if (this.config.displayCharacters) {
+		if (this.config.displayCharacters && user.favourites.characters.nodes.length > 0) {
 			content.append(this.#addFavourites(user.favourites.characters.nodes));
 		}
-		if (this.config.displayStaff) {
+		if (this.config.displayStaff && user.favourites.staff.nodes.length > 0) {
 			content.append(this.#addFavourites(user.favourites.staff.nodes));
 		}
 
@@ -177,8 +181,10 @@ export class MiniProfileHandler {
 	}
 
 	#showMiniProfile() {
+		if (!this.#isVisible) {
+			return;
+		}
 		this.miniProfileContainer.classList.remove("void-mini-profile-hidden");
-		this.#isVisible = true;
 	}
 
 	#hideMiniProfile() {
