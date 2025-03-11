@@ -14,6 +14,7 @@ export class MiniProfileHandler {
 	constructor() {
 		this.miniProfileContainer = DOM.create("div", "mini-profile-container mini-profile-hidden");
 		this.miniProfileContainer.addEventListener("mouseover", () => {
+			this.#isVisible = true;
 			this.#showMiniProfile();
 		});
 		this.miniProfileContainer.addEventListener("mouseleave", () => {
