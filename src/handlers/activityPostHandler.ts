@@ -4,34 +4,8 @@ import {ISettings} from "../types/settings";
 import {DOM} from "../utils/DOM";
 import {Toaster} from "../utils/toaster";
 import {FilmIcon} from "../assets/icons";
-
-export interface IActivityPostHandler {
-	render(): void;
-
-	settings: ISettings;
-
-	renderSearchResults(
-		results: ISearchResult[],
-		activityPostHandler: IActivityPostHandler,
-	): void;
-
-	setSelectedSearchResult(
-		result: ISearchResult,
-		activityPostHandler: IActivityPostHandler,
-	): void;
-
-	selectedSearchResult?: ISearchResult;
-}
-
-interface ISearchResult {
-	id: Number;
-	title: { userPreferred: String };
-	coverImage: { large: String };
-	type: String;
-	startDate: { year: Number };
-	episodes: Number | null;
-	chapters: Number | null;
-}
+import {Vue} from "../utils/vue";
+import {IMediaSearchResult, MediaSearchComponent} from "../components/MediaSearchComponent";
 
 interface IMediaActivity {
 	status: MediaStatus;
@@ -49,10 +23,10 @@ enum MediaStatus {
 	Repeating = "REPEATING",
 }
 
-export class ActivityPostHandler implements IActivityPostHandler {
+export class ActivityPostHandler {
 	settings: ISettings;
 	#timeout;
-	selectedSearchResult?: ISearchResult;
+	selectedSearchResult?: IMediaSearchResult;
 	mediaActivity?: IMediaActivity;
 
 	constructor(settings: ISettings) {
@@ -135,7 +109,7 @@ export class ActivityPostHandler implements IActivityPostHandler {
 				"div",
 				"media-search-title",
 				Link(this.selectedSearchResult.title.userPreferred,
-					`https://anilist.co/${this.selectedSearchResult.type === "ANIME" ? "anime" : "manga"}/${this.selectedSearchResult.id}`,
+					`/${this.selectedSearchResult.type === "ANIME" ? "anime" : "manga"}/${this.selectedSearchResult.id}`,
 					"_blank"),
 			),
 		);
@@ -177,24 +151,11 @@ export class ActivityPostHandler implements IActivityPostHandler {
 	};
 
 	#createHeader() {
-		const container = DOM.create("div", "activity-reply-search-container");
-		const searchInput = DOM.create("input", "input");
-		searchInput.setAttribute("placeholder", "Search media...");
-		searchInput.addEventListener(
-			"keyup",
-			function (event) {
-				this.#handleSearchInput(event.target.value);
-			}.bind(this),
-		);
-		searchInput.addEventListener("focusout", () => {
-			// set timeout so clicking on a result works
-			setTimeout(() => {
-				DOM.get("#media-search-list")?.remove();
-			}, 150);
-		});
-		container.append(searchInput);
+		const mediaSearch = new MediaSearchComponent((result) => {
+			this.setSelectedSearchResult(result);
+		})
 
-		const headerContainer = DOM.create("div", "activity-reply-header", container);
+		const headerContainer = DOM.create("div", "activity-reply-header", mediaSearch.element);
 		const replyButton = Button("Reply", function () {
 			this.#handleReply();
 		}.bind(this), "slim");
@@ -223,9 +184,13 @@ export class ActivityPostHandler implements IActivityPostHandler {
 			const response = await anilistAPI.getCreatedMediaActivity(this.selectedSearchResult.id);
 			const textarea = document.querySelector(".home > .activity-feed-wrap > .activity-edit > .input > textarea") as HTMLInputElement;
 			const replyResponse = await anilistAPI.replyToActivity(response.id, textarea.value);
-			window.location.replace(
-				`https://anilist.co/activity/${response.id}`,
-			);
+			if (Vue.router) {
+				Vue.router.push(`/activity/${response.id}`);
+			} else {
+				window.location.replace(
+					`https://anilist.co/activity/${response.id}`,
+				);
+			}
 		} catch (error) {
 			Toaster.error("Failed to reply to activity");
 		}
@@ -236,72 +201,8 @@ export class ActivityPostHandler implements IActivityPostHandler {
 		return disabledListActivity.some(disabledListActivity => disabledListActivity.type === this.mediaActivity.status && disabledListActivity.disabled);
 	}
 
-	#handleSearchInput(value: string) {
-		clearTimeout(this.#timeout);
-		if (value === "" || value.length < 3) {
-			return;
-		}
-		this.#timeout = setTimeout(async () => {
-			const anilistAPI = new AnilistAPI(this.settings);
-			try {
-				Toaster.debug(`Querying media with search word ${value}`);
-				const response = await anilistAPI.searchMedia(value);
-				this.renderSearchResults(response);
-			} catch (error) {
-				console.error(error);
-				Toaster.error(
-					`Failed to query media with search word ${value}`,
-				);
-			}
-		}, 800);
-	}
-
-	renderSearchResults(results: ISearchResult[]) {
-		const container = DOM.getOrCreate("div", "#media-search-list");
-		container.replaceChildren([]);
-		for (const result of results) {
-			const resultContainer = DOM.create("div", "media-search-result");
-
-			resultContainer.addEventListener(
-				"click",
-				function () {
-					this.setSelectedSearchResult(result);
-				}.bind(this),
-			);
-
-			resultContainer.append(
-				DOM.create(
-					"div",
-					null,
-					Image(result.coverImage.large, "media-search-poster"),
-				),
-			);
-			const infoContainer = DOM.create("div", "media-search-info");
-			infoContainer.append(
-				DOM.create(
-					"div",
-					"media-search-title",
-					result.title.userPreferred,
-				),
-			);
-			infoContainer.append(
-				DOM.create(
-					"div",
-					"media-search-type",
-					`${result.type} ${result.startDate.year}`,
-				),
-			);
-			resultContainer.append(infoContainer);
-
-			container.append(resultContainer);
-		}
-
-		DOM.get("activity-reply-search-container").append(container);
-	}
-
-	async setSelectedSearchResult(result: ISearchResult) {
+	async setSelectedSearchResult(result: IMediaSearchResult) {
 		this.selectedSearchResult = result;
-		DOM.get("#media-search-list")?.remove();
 		const anilistAPI = new AnilistAPI(this.settings);
 		try {
 			const mediaProgress = await anilistAPI.getMediaProgress(result.id);

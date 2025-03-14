@@ -13,6 +13,7 @@ import {
 } from "../components/components";
 import { DOM } from "../utils/DOM";
 import { Toaster } from "../utils/toaster";
+import {LocalStorageKeys} from "../assets/localStorageKeys";
 
 const keyboardTabs = {
 	gifs: "GIFS",
@@ -23,7 +24,7 @@ class GifKeyboardConfig {
 	gifs;
 	gifSize;
 	images;
-	#configInLocalStorage = "void-verified-gif-keyboard";
+	#configInLocalStorage = LocalStorageKeys.gifKeyboardConfig;
 	constructor() {
 		const config = JSON.parse(
 			localStorage.getItem(this.#configInLocalStorage),
@@ -35,7 +36,7 @@ class GifKeyboardConfig {
 
 	save() {
 		localStorage.setItem(
-			"void-verified-gif-keyboard",
+			LocalStorageKeys.gifKeyboardConfig,
 			JSON.stringify(this),
 		);
 	}

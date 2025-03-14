@@ -1,19 +1,20 @@
-import { categories, defaultSettings } from "../assets/defaultSettings";
 import { ColorFunctions } from "./colorFunctions";
 import { AnilistAPI } from "../api/anilistAPI";
 import { Toaster } from "./toaster";
 import { IOptions, ISettings } from "../types/settings";
 import {StaticSettings} from "./staticSettings";
+import {LocalStorageKeys} from "../assets/localStorageKeys";
 
 
 
 export class Settings implements ISettings {
-	localStorageUsers = "void-verified-users";
-	localStorageSettings = "void-verified-settings";
+	localStorageUsers = LocalStorageKeys.verifiedUSers;
+	localStorageSettings = LocalStorageKeys.settings;
 	localStorageAuth = "void-verified-auth";
 	version;
 	auth = null;
 	anilistUser: string;
+	userId;
 
 	verifiedUsers = [];
 
@@ -29,6 +30,7 @@ export class Settings implements ISettings {
 
 		const auth = JSON.parse(localStorage.getItem("auth"));
 		this.anilistUser = auth?.name;
+		this.userId = auth?.id;
 	}
 
 	isAuthorized() {
@@ -180,7 +182,7 @@ export class Settings implements ISettings {
 		);
 	}
 
-	saveSettingToLocalStorage(key, value) {
+	saveSettingToLocalStorage(key: string, value: string | boolean) {
 		let localSettings = JSON.parse(
 			localStorage.getItem(this.localStorageSettings),
 		);

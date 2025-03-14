@@ -1,0 +1,42 @@
+.void-collapsible-container {
+    background: rgb(var(--color-foreground-grey));
+    color: rgb(var(--color-text));
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.void-collapsible-container-head-wrap {
+    background: rgb(var(--color-foreground-grey-dark));
+    color: rgb(var(--color-text));
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+}
+
+.void-collapsible-container-icon svg {
+    height: 20px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.void-collapsible-container:has(.void-collapsible-container-body-wrap.void-collapsed) .void-collapsible-container-icon svg {
+    transform: rotate(180deg);
+}
+
+.void-collapsible-container-body {
+    padding: 20px;
+}
+
+.void-collapsible-container-body-wrap {
+    max-height: var(--max-height);
+    transition: max-height 0.3s ease;
+    overflow: hidden;
+}
+
+.void-collapsible-container-body-wrap.void-collapsed {
+    max-height: 0px;
+}

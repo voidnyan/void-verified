@@ -1,0 +1,54 @@
+.void-dialog-wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9500;
+    visibility: hidden;
+    background: rgba(18, 22, 28, .9);
+}
+
+.void-dialog-wrapper.void-visible {
+    visibility: visible;
+}
+
+.void-dialog {
+    background: rgb(var(--color-foreground));
+    max-width: 420px;
+    width: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.void-dialog-header-wrap {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 15px 10px;
+    background: rgb(var(--color-foreground-grey-dark));
+}
+
+.void-dialog-header-wrap svg {
+    height: 1em;
+    cursor: pointer;
+}
+
+.void-dialog-header {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.void-dialog-content {
+    padding: 15px 10px;
+    font-size: 14px;
+}
+
+.void-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 5px 15px;
+}

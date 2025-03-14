@@ -1,5 +1,7 @@
+import {LocalStorageKeys} from "../assets/localStorageKeys";
+
 export class ReadNotifications {
-	static #notificationsInLocalStorage = "void-verified-read-notifications";
+	static #notificationsInLocalStorage = LocalStorageKeys.readNotifications;
 	static #unreadNotificationsFeed = new Set();
 	static #unreadNotificationsCount = new Set();
 	static getUnreadNotificationsCount(notifications) {

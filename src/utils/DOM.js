@@ -1,10 +1,23 @@
+import {Vue} from "./vue";
+
 export class DOM {
 	static create(element, classes = null, children = null, options = {}) {
 		const el = document.createElement(element);
+
+		if (element.toLowerCase() === "a") {
+			el.addEventListener("click", (event) => {
+				Vue.handleAnchorClickEvent(event);
+			})
+		}
+
 		if (classes !== null) {
 			for (const className of classes?.split(" ")) {
 				if (className.startsWith("#")) {
 					el.setAttribute("id", `void-${className.slice(1)}`);
+					continue;
+				}
+				if (className.startsWith(".")) {
+					el.classList.add(className.slice(1));
 					continue;
 				}
 				el.classList.add(`void-${className}`);
@@ -24,6 +37,18 @@ export class DOM {
 		}
 
 		return el;
+	}
+
+	static transformClasses(classes) {
+		let result = [];
+		for (const className of classes.split(" ")) {
+			if (className.startsWith(".")) {
+				result.push(className.slice(1));
+				continue;
+			}
+			result.push(`void-${className}`);
+		}
+		return result;
 	}
 
 	static render(element, parent) {

@@ -3,10 +3,11 @@ import { RefreshIcon } from "../assets/icons";
 import { IconButton } from "../components/components";
 import { DOM } from "../utils/DOM";
 import { Toaster } from "../utils/toaster";
+import {StaticSettings} from "../utils/staticSettings";
+import {FuzzyMatch} from "../utils/fuzzyMatch";
 
 export class QuickAccess {
 	settings;
-	#quickAccessId = "void-quick-access";
 	#lastFetchedLocalStorage = "void-verified-last-fetched";
 	#lastFetched;
 	#queryInProgress = false;
@@ -48,7 +49,7 @@ export class QuickAccess {
 		const container = DOM.create("div", "quick-access-users-wrap");
 
 		const sectionHeader = this.#renderHeader();
-		const users = this.#renderUsers();
+		const users = QuickAccess.renderUsers();
 
 		container.append(sectionHeader, users);
 
@@ -77,11 +78,14 @@ export class QuickAccess {
 		return sectionHeader;
 	}
 
-	#renderUsers() {
+	static renderUsers(usernameFilter) {
 		const quickAccessBody = document.createElement("div");
 		quickAccessBody.setAttribute("class", "void-quick-access-wrap");
 
 		for (const user of this.#getQuickAccessUsers()) {
+			if (usernameFilter?.length > 0 && !FuzzyMatch.match(usernameFilter, user.username)) {
+				continue;
+			}
 			quickAccessBody.append(this.#createQuickAccessLink(user));
 		}
 
@@ -148,12 +152,11 @@ export class QuickAccess {
 		);
 	}
 
-	#createQuickAccessLink(user) {
-		const container = document.createElement("a");
-		container.setAttribute("class", "void-quick-access-item");
+	static #createQuickAccessLink(user) {
+		const container = DOM.create("a", "quick-access-item");
 		container.setAttribute(
 			"href",
-			`https://anilist.co/user/${user.username}/`,
+			`/user/${user.username}/`,
 		);
 
 		const image = document.createElement("div");
@@ -166,7 +169,7 @@ export class QuickAccess {
 		username.setAttribute("class", "void-quick-access-username");
 
 		if (
-			(this.settings.options.quickAccessBadge.getValue() ||
+			(StaticSettings.options.quickAccessBadge.getValue() ||
 				user.quickAccessBadge) &&
 			user.quickAccessBadgeDisplay
 		) {
@@ -178,16 +181,16 @@ export class QuickAccess {
 	}
 
 	#quickAccessRendered() {
-		const quickAccess = DOM.get("quick-access-wrap");
+		const quickAccess = document.querySelector(".home .void-quick-access-wrap");
 		return quickAccess !== null;
 	}
 
-	#getQuickAccessUsers() {
-		if (this.settings.options.quickAccessEnabled.getValue()) {
-			return this.settings.verifiedUsers;
+	static #getQuickAccessUsers() {
+		if (StaticSettings.options.quickAccessEnabled.getValue()) {
+			return StaticSettings.settingsInstance.verifiedUsers;
 		}
 
-		return this.settings.verifiedUsers.filter(
+		return StaticSettings.settingsInstance.verifiedUsers.filter(
 			(user) => user.quickAccessEnabled,
 		);
 	}

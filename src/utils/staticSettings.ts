@@ -1,6 +1,7 @@
 import {IOption, IOptions, ISettings} from "../types/settings";
 import {categories, defaultSettings} from "../assets/defaultSettings";
 import {Settings} from "./settings";
+import {LocalStorageKeys} from "../assets/localStorageKeys";
 
 export class Option implements IOption {
 	value: string | boolean;
@@ -24,7 +25,7 @@ export class Option implements IOption {
 }
 
 export class StaticSettings {
-	static #localStorageSettings = "void-verified-settings";
+	static #localStorageSettings = LocalStorageKeys.settings;
 	static options: IOptions = {} as IOptions;
 	static settingsInstance: ISettings;
 

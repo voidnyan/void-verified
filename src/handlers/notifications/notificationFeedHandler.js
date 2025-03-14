@@ -1,5 +1,5 @@
 import { AnilistAPI } from "../../api/anilistAPI";
-import { Button, Checkbox, SettingLabel } from "../../components/components";
+import {Button, Checkbox, InputField, SettingLabel} from "../../components/components";
 import { Loader } from "../../components/loader";
 import { NotificationWrapper } from "../../components/notificationWrapper";
 import { ReadNotifications } from "../../components/readNotifications";
@@ -9,6 +9,8 @@ import { StyleHandler } from "../styleHandler";
 import { NotificationConfig } from "./notificationConfig";
 import { notificationTypes } from "./notificationTypes";
 import { NotificationsCache } from "./notificationsCache";
+import {LocalStorageKeys} from "../../assets/localStorageKeys";
+import {FuzzyMatch} from "../../utils/fuzzyMatch";
 
 export class NotificationFeedHandler {
 	#settings;
@@ -18,10 +20,16 @@ export class NotificationFeedHandler {
 		currentPage: 0,
 		hasNextPage: false,
 	};
+
+	#filterWord = "";
+
+	static notifications;
+	#feedNotifications = [];
+
 	constructor(settings) {
 		this.#settings = settings;
 		this.#config = new NotificationConfig(
-			"void-verified-notifications-config",
+			LocalStorageKeys.notificationsConfig,
 		);
 
 		if (
@@ -73,6 +81,37 @@ export class NotificationFeedHandler {
 		this.#createNotifications();
 	}
 
+	static filterNotifications(notifications, filter) {
+		if (filter?.length > 0) {
+			notifications = notifications.filter(x => {
+				let result = false;
+				if (x.user) {
+					result = FuzzyMatch.match(filter, x.user.name);
+				}
+				if (x.contexts && !result) {
+					result = x.contexts.some(c => FuzzyMatch.match(filter, c));
+				}
+				if (x.context && !result) {
+					result = FuzzyMatch.match(filter, x.context);
+				}
+				if (x.activity?.user?.name && !result) {
+					result = FuzzyMatch.match(filter, x.activity.user.name)
+				}
+				if (x.activity?.recipient?.name && !result) {
+					result = FuzzyMatch.match(filter, x.activity.recipient.name);
+				}
+				if (x.activity?.media?.title?.userPreferred && !result) {
+					result = FuzzyMatch.match(filter, x.activity.media.title.userPreferred);
+				}
+				if (x.thread?.title && !result) {
+					result = FuzzyMatch.match(filter, x.thread.title);
+				}
+				return result;
+			})
+		}
+		return notifications;
+	}
+
 	async #handleUnreadNotificationsCount(notificationFeedHandler) {
 		if (
 			!this.#settings.options.replaceNotifications.getValue() ||
@@ -90,6 +129,8 @@ export class NotificationFeedHandler {
 				this.#config.resetDefaultNotifications,
 			);
 
+			NotificationFeedHandler.notifications = notifications;
+
 			const unreadNotificationsCount =
 				ReadNotifications.getUnreadNotificationsCount(notifications);
 			document
@@ -105,7 +146,7 @@ export class NotificationFeedHandler {
 			);
 			notificationDot.setAttribute(
 				"href",
-				"https://anilist.co/notifications",
+				"/notifications",
 			);
 
 			document.querySelector(".nav .user")?.append(notificationDot);
@@ -117,10 +158,21 @@ export class NotificationFeedHandler {
 
 	#createSideBar() {
 		const container = DOM.create("div", "notifications-feed-sidebar");
+		container.append(this.#createTextFilter());
 		container.append(this.#createFilters());
 		container.append(this.#createReadAllButton());
 		container.append(this.#createConfigurationContainer());
 		return container;
+	}
+
+	#createTextFilter() {
+		const inputField = InputField(this.#filterWord, () => {}, "notification-filter-input", {placeholder: "Filter current..."});
+		inputField.addEventListener("input", (event) => {
+			this.#filterWord = event.target.value;
+			document.querySelector(".void-notifications-feed-list").replaceChildren([]);
+			this.#renderNotifications(this.#feedNotifications);
+		});
+		return inputField;
 	}
 
 	#createFilters() {
@@ -150,6 +202,7 @@ export class NotificationFeedHandler {
 						)
 						?.classList.add("void-active");
 					this.#pageInfo = { currentPage: 0, hasNextPage: false };
+					this.#feedNotifications = [];
 					document
 						.querySelector(".void-notifications-feed-list")
 						.replaceChildren([]);
@@ -234,6 +287,13 @@ export class NotificationFeedHandler {
 				this.#config.save();
 			}),
 		);
+		const groupFilteringOption = SettingLabel(
+			"Don't group notifications when filtering.",
+			Checkbox(this.#config.dontGroupWhenFiltering, (e) => {
+				this.#config.dontGroupWhenFiltering = e.target.checked;
+				this.#config.save();
+			})
+		);
 		const relationOption = SettingLabel(
 			"Add relation to activity notifications.",
 			Checkbox(this.#config.addActivityRelation, () => {
@@ -250,7 +310,7 @@ export class NotificationFeedHandler {
 				this.#config.save();
 			}),
 		);
-		container.append(groupOption, relationOption, resetOption);
+		container.append(groupOption,groupFilteringOption, relationOption, resetOption);
 		return container;
 	};
 
@@ -289,7 +349,6 @@ export class NotificationFeedHandler {
 		document
 			.querySelector(".void-notifications-load-more-button")
 			?.remove();
-		const notificationElements = [];
 		let notifications = [];
 
 		const anilistAPI = new AnilistAPI(this.#settings);
@@ -346,14 +405,12 @@ export class NotificationFeedHandler {
 			});
 		}
 
-		for (const notification of this.#groupNotifications(notifications)) {
-			const notificationElement = NotificationWrapper(notification, true);
-			if (!ReadNotifications.isRead(notification.id)) {
-				notificationElement.classList.add("void-unread-notification");
-			}
-			notificationElements.push(notificationElement);
-		}
+		this.#feedNotifications.push(...notifications);
+		this.#renderNotifications(notifications);
+	}
 
+	#renderNotifications(notifications) {
+		const notificationElements = [];
 		if (notifications.length === 0) {
 			notificationElements.push(
 				DOM.create(
@@ -363,6 +420,16 @@ export class NotificationFeedHandler {
 				),
 			);
 		}
+		notifications = NotificationFeedHandler.filterNotifications(notifications, this.#filterWord);
+		for (const notification of this.#groupNotifications(notifications)) {
+			const notificationElement = NotificationWrapper(notification, true);
+			if (!ReadNotifications.isRead(notification.id)) {
+				notificationElement.classList.add("void-unread-notification");
+			}
+			notificationElements.push(notificationElement);
+		}
+
+
 
 		document.querySelector(".void-loader")?.remove();
 
@@ -437,7 +504,8 @@ export class NotificationFeedHandler {
 		if (
 			!this.#config.groupNotifications ||
 			!notifications ||
-			notifications.length === 0
+			notifications.length === 0 ||
+			(this.#config.dontGroupWhenFiltering && this.#filterWord?.length > 0)
 		) {
 			return notifications.map((notification) => {
 				notification.group = undefined;

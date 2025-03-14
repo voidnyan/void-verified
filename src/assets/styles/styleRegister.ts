@@ -3,15 +3,32 @@ import markdownDialog from "./markdownDialog.css";
 import keyInput from "./keyInput.css";
 import goals from "./goals.css";
 import miniProfile from "./miniProfile.css";
+import quickStart from "./quickStart.css";
+import activity from "./activity.css";
+import markdownEditor from "./markdownEditor.css";
+import collapsibleContainer from "./collapsibleContainer.css";
+import dialog from "./dialog.css";
+import dropdownMenu from "./dropdownMenu.css";
+
 import {StyleHandler} from "../../handlers/styleHandler";
 import {Settings} from "../../utils/settings";
 
 export class StyleRegister {
 	static registerStyles() {
 		const styleHandler = new StyleHandler(new Settings());
-		const css = [styles, markdownDialog, keyInput, goals, miniProfile];
+		const css = [
+			styles,
+			markdownDialog,
+			keyInput,
+			goals,
+			miniProfile,
+			quickStart,
+			activity,
+			markdownEditor,
+			collapsibleContainer,
+			dialog,
+			dropdownMenu
+		];
 		styleHandler.createStyleLink(css.join("\n"), "script");
-		// styleHandler.createStyleLink(markdownDialog, "markdown-dialog");
-		// styleHandler.createStyleLink(keyInput, "key-input");
 	}
 }

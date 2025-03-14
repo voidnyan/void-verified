@@ -11,13 +11,16 @@ import { AnilistFeedFixHandler } from "./anilistFeedFixHandler.js";
 import { NotificationQuickAccessHandler } from "./notifications/notificationQuickAccessHandler.js";
 import { NotificationFeedHandler } from "./notifications/notificationFeedHandler.js";
 import {
-	ActivityPostHandler,
-	IActivityPostHandler,
+	ActivityPostHandler
 } from "./activityPostHandler";
 import {IMarkdownHotkeys, MarkdownHotkeys} from "./markdownHotkeys";
 import {PasteHandler} from "./pasteHandler";
 import {GoalsHandler} from "./goalsHandler";
 import {MiniProfileHandler} from "./miniProfileHandler";
+import {VideoTypeFixer} from "./videoTypeFixer";
+import {MessageFeedHandler} from "./messageFeed/messageFeedHandler";
+import {DOM} from "../utils/DOM";
+import {QuickStartHandler, QuickStartMode} from "./quickStart/quickStartHandler";
 
 interface IIntervalScriptsHandler {
 	styleHandler: any;
@@ -31,7 +34,7 @@ interface IIntervalScriptsHandler {
 	anilistFeedFixHandler: any;
 	notificationQuickAccessHandler: any;
 	notificationFeedHandler: any;
-	activityPostHandler: IActivityPostHandler;
+	activityPostHandler: ActivityPostHandler;
 	markdownHotkeys: IMarkdownHotkeys;
 	pasteHandler: any;
 	miniProfileHandler: MiniProfileHandler;
@@ -94,7 +97,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 
 	handleIntervalScripts(intervalScriptHandler: IIntervalScriptsHandler) {
 		const path = window.location.pathname;
-
+		QuickStartHandler.addNavigationButtons();
 		intervalScriptHandler.activityHandler.moveAndDisplaySubscribeButton();
 		intervalScriptHandler.activityHandler.addSelfMessageButton();
 		intervalScriptHandler.activityHandler.removeBlankFromAnilistLinks();
@@ -107,12 +110,15 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		intervalScriptHandler.pasteHandler.registerDragAndDropInputs();
 		intervalScriptHandler.activityHandler.handleImageLinkPreview();
 		intervalScriptHandler.miniProfileHandler.addUserHoverListeners();
+		intervalScriptHandler.activityHandler.addTooltipsToTimestamps();
+		VideoTypeFixer.fixVideoTypes();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();
 			intervalScriptHandler.quickAccess.renderQuickAccess();
 			intervalScriptHandler.notificationQuickAccessHandler.renderNotifications();
 			intervalScriptHandler.activityPostHandler.render();
+			MessageFeedHandler.addFeedFilter();
 		} else {
 			intervalScriptHandler.notificationQuickAccessHandler.resetShouldRender();
 		}
@@ -148,17 +154,17 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 			try {
 				this.handleIntervalScripts(this);
 			} catch (error) {
+				console.error(error);
 				Toaster.critical([
 					"A critical error has occured running interval script loop. VoidVerified is not working correctly. Please check developer console and contact ",
 					Link(
 						"voidnyan",
-						"https://anilist.co/user/voidnyan/",
+						"/user/voidnyan/",
 						"_blank",
 					),
 					".",
 				]);
 				clearInterval(interval);
-				console.error(error);
 			}
 		}, this.evaluationIntervalInSeconds * 1000);
 	}

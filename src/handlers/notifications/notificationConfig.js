@@ -2,6 +2,7 @@ import { notificationTypes } from "./notificationTypes";
 
 export class NotificationConfig {
 	groupNotifications;
+	dontGroupWhenFiltering;
 	notificationTypes;
 	collapsed;
 	resetDefaultNotifications;
@@ -13,6 +14,7 @@ export class NotificationConfig {
 			localStorage.getItem(this.#configInLocalStorage),
 		);
 		this.groupNotifications = config?.groupNotifications ?? true;
+		this.dontGroupWhenFiltering = config?.dontGroupWhenFiltering ?? true;
 		this.notificationTypes = config?.notificationTypes ?? notificationTypes;
 		this.collapsed = config?.collapsed ?? false;
 		this.resetDefaultNotifications =

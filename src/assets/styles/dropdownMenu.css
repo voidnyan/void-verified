@@ -1,0 +1,52 @@
+.void-dropdown-menu {
+    position: absolute;
+    z-index: 9000;
+    background-color: #fff;
+    box-shadow: 0 1px 10px 0 rgba(49, 54, 68, .15);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .2s, visibility .2s;
+    width: fit-content;
+    color: rgb(var(--color-text));
+    border: 0;
+    overflow: initial;
+    font-family: Overpass, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-weight: 800;
+    transform-origin: center top;
+    padding: 6px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.void-dropdown-menu.void-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.void-dropdown-menu-item {
+    padding: 2px 17px 2px 12px;
+    align-items: center;
+    line-height: 30px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.void-dropdown-menu-item:hover {
+    background: rgb(var(--color-blue));
+    color: rgb(var(--color-white));
+}
+
+.void-dropdown-menu-item:hover a,
+.void-dropdown-menu-item a:hover,
+a.void-dropdown-menu-item:hover {
+    color: rgb(var(--color-white));
+}
+
+.void-dropdown-menu-item svg {
+    height: 1.1em;
+    padding-right: 10px;
+    vertical-align: text-top;
+}

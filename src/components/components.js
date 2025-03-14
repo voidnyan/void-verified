@@ -41,6 +41,20 @@ export const InputField = (value, onChange, classes, options = {}) => {
 	return inputField;
 };
 
+
+export const DateInput = (value, onChange, classes, options = {}) => {
+	const dateInput = DOM.create("input", transformClasses("input", classes));
+	dateInput.setAttribute("type", "date");
+	dateInput.value = value;
+	for (const [key, value] of Object.entries(options)) {
+		dateInput.setAttribute(key, value);
+	}
+	dateInput.addEventListener("change", (event) => {
+		onChange(event);
+	})
+	return dateInput;
+}
+
 export const SecretField = (value, onChange) => {
 	const secret = InputField(value, onChange);
 	secret.setAttribute("type", "password");

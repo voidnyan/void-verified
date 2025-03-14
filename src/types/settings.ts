@@ -3,7 +3,21 @@ export interface ISettings {
 	version: string;
 	auth: {};
 	anilistUser: string;
+	userId?: number;
 	isAuthorized: () => boolean;
+	verifiedUsers: IVerifiedUser[];
+	saveSettingToLocalStorage: (key: string, value: string | boolean) => void;
+}
+
+export interface IVerifiedUser {
+	avatar: string,
+	banner: string,
+	color: string,
+	id: number,
+	lastFetched: string,
+	quickAccessBadgeDisplay: boolean,
+	sign: string,
+	username: string
 }
 
 export interface IOption {
@@ -11,8 +25,8 @@ export interface IOption {
 	defaultValue: string | number | boolean;
 	description: string;
 	category: string;
-	authRequired: boolean;
-	getValue: () => string | number | boolean;
+	authRequired?: boolean;
+	getValue?: () => string | number | boolean;
 }
 
 export interface IOptions {
@@ -54,5 +68,10 @@ export interface IOptions {
 	goalsEnabled: IOption;
 	imagePreviewEnabled: IOption;
 	miniProfileEnabled: IOption;
+	replaceNotifications: IOption;
+	fixVideoTypes: IOption;
+	messageFeedEnabled: IOption;
+	quickStartEnabled: IOption;
+	activityTimestampTooltipsEnabled: IOption;
 	// useElevatedFetch: IOption;
 }

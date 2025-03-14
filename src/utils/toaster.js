@@ -1,5 +1,6 @@
 import {DOM} from "./DOM";
 import {Select, Toast, Option, Button, Label} from "../components/components";
+import {LocalStorageKeys} from "../assets/localStorageKeys";
 
 export const toastTypes = {
 	info: "info",
@@ -74,7 +75,7 @@ class ToastInstance {
 
 export class Toaster {
 	static #config;
-	static #configInLocalStorage = "void-verified-toaster-config";
+	static #configInLocalStorage = LocalStorageKeys.toasterConfig;
 	static #settings;
 
 	static initializeToaster(settings) {

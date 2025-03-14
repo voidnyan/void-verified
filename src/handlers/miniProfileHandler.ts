@@ -4,6 +4,9 @@ import {AnilistAPI} from "../api/anilistAPI";
 import {StaticSettings} from "../utils/staticSettings";
 import {ColorFunctions} from "../utils/colorFunctions";
 import {Toaster} from "../utils/toaster";
+import {Markdown} from "../utils/markdown";
+import {Vue} from "../utils/vue";
+import {LocalStorageKeys} from "../assets/localStorageKeys";
 
 export class MiniProfileHandler {
 	protected miniProfileContainer: HTMLElement;
@@ -84,6 +87,7 @@ export class MiniProfileHandler {
 		}
 
 		this.miniProfileContainer.style.backgroundImage = `url(${user.bannerImage})`;
+		this.miniProfileContainer.style.setProperty("--color-blue", ColorFunctions.handleAnilistColor(user.options.profileColor));
 
 		this.#createHeader(user);
 		this.#createContent(user);
@@ -167,6 +171,10 @@ export class MiniProfileHandler {
 			content.append(this.#addFavourites(user.favourites.staff.nodes));
 		}
 
+		if (this.config.displayBio && user.about?.length > 0) {
+			content.prepend(this.#addBio(user));
+		}
+
 		this.miniProfileContainer.append(content);
 	}
 
@@ -174,7 +182,7 @@ export class MiniProfileHandler {
 		const favouritesContainer = DOM.create("div", "mini-profile-section");
 		for (const favourite of favourites) {
 			const cover = DOM.create("a", "mini-profile-favourite");
-			cover.href = `https://anilist.co/${favourite.type.toLowerCase()}/${favourite.id}`
+			cover.href = `/${favourite.type.toLowerCase()}/${favourite.id}`
 			cover.style.backgroundImage = `url(${favourite.coverImage?.large ?? favourite.image?.large})`;
 			if (favourite.isFavourite) {
 				cover.classList.add("void-mini-profile-favourited");
@@ -182,6 +190,17 @@ export class MiniProfileHandler {
 			favouritesContainer.append(Tooltip(favourite.title?.userPreferred ?? favourite.name?.userPreferred, cover));
 		}
 		return favouritesContainer;
+	}
+
+	#addBio(user) {
+		const rect = this.miniProfileContainer.getBoundingClientRect();
+		const bioMaxWidth = Math.max(rect.width, 500);
+		const markdown = DOM.create("div", ".markdown");
+		markdown.innerHTML = Markdown.parse(user.about);
+		Markdown.applyFunctions(markdown);
+		const container = DOM.create("div", "mini-profile-section mini-profile-about", markdown);
+		container.setAttribute("style", `max-width: ${bioMaxWidth}px`);
+		return container;
 	}
 
 	#showMiniProfile() {
@@ -242,6 +261,11 @@ export class MiniProfileHandler {
 
 		container.append(Label("Show when hovering @", hoverTagsCheckbox));
 
+		const bioCheckBox = Checkbox(config.displayBio, (event) => {
+			config.displayBio = event.target.checked;
+			config.save();
+		});
+
 		const animeCheckbox = Checkbox(config.displayAnime, (event) => {
 			config.displayAnime = event.target.checked;
 			config.save();
@@ -262,6 +286,7 @@ export class MiniProfileHandler {
 			config.save();
 		})
 
+		container.append(Label("Display bio", bioCheckBox));
 		container.append(Label("Display anime favourites", animeCheckbox));
 		container.append(Label("Display manga favourites ", mangaCheckBox));
 		container.append(Label("Display character favourites ", charactersCheckBox));
@@ -271,7 +296,7 @@ export class MiniProfileHandler {
 }
 
 class MiniProfileCache {
-	static #localStorage = "void-verified-mini-profile-cache";
+	static #localStorage = LocalStorageKeys.miniProfileCache;
 
 	static getUser(username: string) {
 		const cache = this.#getCache();
@@ -282,7 +307,7 @@ class MiniProfileCache {
 		}
 
 		const cachedAt = new Date(user.cachedAt);
-		cachedAt.setHours(cachedAt.getHours() + 3)
+		cachedAt.setHours(cachedAt.getHours() + 12)
 
 		if (cachedAt < new Date()) {
 			this.#removeUser(user)
@@ -327,14 +352,16 @@ class MiniProfileConfig {
 	displayManga: boolean;
 	displayCharacters: boolean;
 	displayStaff: boolean;
+	displayBio: boolean;
 
-	#localStorage = "void-verified-mini-profile-config";
+	#localStorage = LocalStorageKeys.miniProfileConfig;
 
 	constructor() {
 		const config = JSON.parse(localStorage.getItem(this.#localStorage));
 		this.numberOfFavourites = config?.numberOfFavourites ?? 6;
 		this.position = config?.position ?? "bottom";
 		this.hoverTags = config?.hoverTags ?? true;
+		this.displayBio = config?.displayBio ?? true;
 		this.displayAnime = config?.displayAnime ?? true;
 		this.displayManga = config?.displayManga ?? true;
 		this.displayCharacters = config?.displayCharacters ?? false;

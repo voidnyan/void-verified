@@ -27,6 +27,9 @@ import {ChangeLog} from "../utils/changeLog";
 import {AceEditorInitializer} from "../utils/aceEditorInitializer";
 import {GoalsHandler} from "./goalsHandler";
 import {MiniProfileHandler} from "./miniProfileHandler";
+import {ConfigHandler} from "./ConfigHandler";
+import {Time} from "../utils/time";
+import {QuickStartHandler} from "./quickStart/quickStartHandler";
 
 const subCategories = {
 	users: "users",
@@ -36,7 +39,10 @@ const subCategories = {
 	globalCss: "global CSS",
 	goals: "goals",
 	toasts: "toasts",
-	miniProfile: "mini profile"
+	miniProfile: "mini profile",
+	quickStart: "quickStart",
+	importExport: "Import/Export",
+	time: "time"
 };
 
 export class SettingsUserInterface {
@@ -118,6 +124,15 @@ export class SettingsUserInterface {
 				break;
 			case subCategories.miniProfile:
 				settingsContainer.append(MiniProfileHandler.renderSettings(this.miniProfileHandler.config));
+				break;
+			case subCategories.importExport:
+				settingsContainer.append(ConfigHandler.renderSettings());
+				break;
+			case subCategories.time:
+				settingsContainer.append(Time.renderConfig());
+				break;
+			case subCategories.quickStart:
+				settingsContainer.append(QuickStartHandler.createConfigContainer());
 		}
 	}
 
@@ -154,7 +169,7 @@ export class SettingsUserInterface {
 		headerContainer.append(versionInfo);
 		const author = DOM.create("p", null, [
 			"Author: ",
-			Link("voidnyan", "https://anilist.co/user/voidnyan/"),
+			Link("voidnyan", "/user/voidnyan/"),
 		]);
 
 		const changeLogButton = Button("View Changelog", () => {
@@ -224,8 +239,9 @@ export class SettingsUserInterface {
 	#shouldDisplaySubCategory(subCategory) {
 		switch (subCategory) {
 			case subCategories.users:
-				return true;
+			case subCategories.importExport:
 			case subCategories.authorization:
+			case subCategories.time:
 				return true;
 			case subCategories.imageHost:
 				return this.settings.options.pasteImagesToHostService.getValue();
@@ -239,6 +255,8 @@ export class SettingsUserInterface {
 				return this.settings.options.goalsEnabled.getValue();
 			case subCategories.miniProfile:
 				return this.settings.options.miniProfileEnabled.getValue();
+			case subCategories.quickStart:
+				return this.settings.options.quickStartEnabled.getValue();
 		}
 	}
 
@@ -299,7 +317,7 @@ export class SettingsUserInterface {
 		const userLink = DOM.create("a", null, user.username);
 		userLink.setAttribute(
 			"href",
-			`https://anilist.co/user/${user.username}/`,
+			`/user/${user.username}/`,
 		);
 		userLink.setAttribute("target", "_blank");
 		row.append(DOM.create("td", null, userLink));
