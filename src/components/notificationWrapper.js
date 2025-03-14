@@ -1,6 +1,8 @@
 import { DOM } from "../utils/DOM";
-import { Link, Tooltip } from "./components";
+import { Link } from "./components";
 import { ReadNotifications } from "./readNotifications";
+import {Time} from "../utils/time";
+import {StaticTooltip} from "../utils/staticTooltip";
 
 export const NotificationWrapper = (notification, addReadListener = false) => {
 	const wrapper = DOM.create("div", "notification-wrapper");
@@ -10,8 +12,10 @@ export const NotificationWrapper = (notification, addReadListener = false) => {
 	const timestamp = DOM.create(
 		"div",
 		"notification-timestamp",
-		timeAgo(notification.createdAt),
+		Time.convertToString(notification.createdAt),
 	);
+
+	StaticTooltip.register(timestamp, Time.toLocaleString(notification.createdAt));
 
 	wrapper.append(previewWrapper, context, timestamp);
 	if (addReadListener) {
@@ -29,11 +33,17 @@ export const NotificationWrapper = (notification, addReadListener = false) => {
 };
 
 const markAsRead = (notification) => {
-	const notifications = [
-		notification.id,
-		...notification.group?.map((item) => item.notificationId),
-	];
-	ReadNotifications.markMultipleAsRead(notifications);
+	try {
+		const notifications = [
+			notification.id,
+		];
+		if (notification.group) {
+			notifications.push(...notification.group.map((item) => item.notificationId));
+		}
+		ReadNotifications.markMultipleAsRead(notifications);
+	} catch (error) {
+		console.error(error);
+	}
 };
 
 const markAsUnread = (notification) => {
@@ -50,8 +60,8 @@ const createPreview = (notification) => {
 		return previewWrapper;
 	}
 	const linkUrl = notification.user
-		? `https://anilist.co/user/${notification.user.name}/`
-		: `https://anilist.co/${notification.media?.type.toLowerCase()}/${
+		? `/user/${notification.user.name}/`
+		: `/${notification.media?.type.toLowerCase()}/${
 				notification.media?.id
 			}`;
 	const preview = Link("", linkUrl, "", "notification-preview");
@@ -85,19 +95,19 @@ const createActivityRelation = (activity) => {
 	let image;
 	switch (activity.type) {
 		case "ANIME_LIST":
-			url = `https://anilist.co/anime/${activity.media.id}`;
+			url = `/anime/${activity.media.id}`;
 			image = activity.media.coverImage.large;
 			break;
 		case "MANGA_LIST":
-			url = `https://anilist.co/manga/${activity.media.id}`;
+			url = `/manga/${activity.media.id}`;
 			image = activity.media.coverImage.large;
 			break;
 		case "TEXT":
-			url = `https://anilist.co/user/${activity.user.name}`;
+			url = `/user/${activity.user.name}`;
 			image = activity.user.avatar.large;
 			break;
 		case "MESSAGE":
-			url = `https://anilist.co/user/${activity.recipient.name}`;
+			url = `/user/${activity.recipient.name}`;
 			image = activity.recipient.avatar.large;
 			break;
 	}
@@ -114,7 +124,7 @@ const createGroup = (notification) => {
 	)) {
 		const groupItem = Link(
 			"",
-			`https://anilist.co/user/${user.name}/`,
+			`/user/${user.name}/`,
 			"",
 			"notification-group-item",
 		);
@@ -124,14 +134,14 @@ const createGroup = (notification) => {
 	return group;
 };
 
-const createContext = (notification) => {
+const createContext = (notification, addReadListener) => {
 	if (
 		notification.type === "AIRING" ||
 		notification.type === "RELATED_MEDIA_ADDITION" ||
 		notification.type === "MEDIA_DATA_CHANGE" ||
 		notification.type === "MEDIA_DELETION"
 	) {
-		return createMediaContext(notification);
+		return createMediaContext(notification, addReadListener);
 	}
 
 	const highlight = DOM.create(
@@ -155,10 +165,12 @@ const createContext = (notification) => {
 	}
 
 	context.setAttribute("href", getNotificationUrl(notification));
-	context.addEventListener("click", (event) => {
-		event.stopPropagation();
-		markAsRead(notification);
-	});
+	if (addReadListener) {
+		context.addEventListener("click", (event) => {
+			event.stopPropagation();
+			markAsRead(notification);
+		});
+	}
 
 	return context;
 };
@@ -169,17 +181,17 @@ const getNotificationUrl = (notification) => {
 		case "THREAD_COMMENT_MENTION":
 		case "THREAD_SUBSCRIBED":
 		case "THREAD_COMMENT_REPLY":
-			return `https://anilist.co/forum/thread/${notification.thread.id}/comment/${notification.commentId}`;
+			return `/forum/thread/${notification.thread.id}/comment/${notification.commentId}`;
 		case "THREAD_LIKE":
-			return `https://anilist.co/forum/thread/${notification.threadId}/`;
+			return `/forum/thread/${notification.threadId}/`;
 		case "FOLLOWING":
-			return `https://anilist.co/user/${notification.user.name}/`;
+			return `/user/${notification.user.name}/`;
 		default:
-			return `https://anilist.co/activity/${notification.activityId}`;
+			return `/activity/${notification.activityId}`;
 	}
 };
 
-const createMediaContext = (notification) => {
+const createMediaContext = (notification, addReadListener) => {
 	const highlight = DOM.create(
 		"span",
 		"notification-context-actor",
@@ -204,7 +216,7 @@ const createMediaContext = (notification) => {
 	if (!notification.deletedMediaTitle) {
 		context.setAttribute(
 			"href",
-			`https://anilist.co/${notification.media.type.toLowerCase()}/${
+			`${notification.media.type.toLowerCase()}/${
 				notification.media.id
 			}`,
 		);
@@ -218,51 +230,11 @@ const createMediaContext = (notification) => {
 		);
 		context.append(reason);
 	}
-	context.addEventListener("click", (event) => {
-		event.stopPropagation();
-		markAsRead(notification);
-	});
+	if (addReadListener) {
+		context.addEventListener("click", (event) => {
+			event.stopPropagation();
+			markAsRead(notification);
+		});
+	}
 	return context;
-};
-
-const timeAgo = (timestamp) => {
-	const now = new Date();
-	const seconds = Math.floor((now.getTime() - timestamp * 1000) / 1000);
-
-	let interval = Math.floor(seconds / 31536000);
-	if (interval > 1) {
-		return interval + " years ago";
-	} else if (interval === 1) {
-		return "1 year ago";
-	}
-
-	interval = Math.floor(seconds / 2592000);
-	if (interval > 1) {
-		return interval + " months ago";
-	} else if (interval === 1) {
-		return "1 month ago";
-	}
-
-	interval = Math.floor(seconds / 86400);
-	if (interval > 1) {
-		return interval + " days ago";
-	} else if (interval === 1) {
-		return "1 day ago";
-	}
-
-	interval = Math.floor(seconds / 3600);
-	if (interval > 1) {
-		return interval + " hours ago";
-	} else if (interval === 1) {
-		return "1 hour ago";
-	}
-
-	interval = Math.floor(seconds / 60);
-	if (interval > 1) {
-		return interval + " minutes ago";
-	} else if (interval === 1) {
-		return "1 minute ago";
-	}
-
-	return Math.floor(seconds) + " seconds ago";
 };

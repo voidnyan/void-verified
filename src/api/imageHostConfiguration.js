@@ -1,3 +1,5 @@
+import {LocalStorageKeys} from "../assets/localStorageKeys";
+
 export const imageHosts = {
 	imgbb: "imgbb",
 	imgur: "imgur",
@@ -28,7 +30,7 @@ const imageHostConfiguration = {
 
 export class ImageHostService {
 	#configuration;
-	#localStorage = "void-verified-image-host-config";
+	#localStorage = LocalStorageKeys.imageHostConfig;
 	constructor() {
 		const config = JSON.parse(localStorage.getItem(this.#localStorage));
 		if (!config) {

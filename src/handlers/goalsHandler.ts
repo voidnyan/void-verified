@@ -6,6 +6,7 @@ import {StaticSettings} from "../utils/staticSettings";
 import {ObjectDecoder} from "../utils/objectDecoder";
 import {Toaster} from "../utils/toaster";
 import {Common} from "../utils/common";
+import {LocalStorageKeys} from "../assets/localStorageKeys";
 
 export interface IGoal {
 	type: string,
@@ -39,7 +40,7 @@ const initialForm: IGoal = {
 	endAt: ""
 };
 
-const localStorageKey = "void-verified-goals";
+const localStorageKey = LocalStorageKeys.goalsConfig;
 
 export class GoalsHandler {
 	static #goalForm: IGoal = {...initialForm};

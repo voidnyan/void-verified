@@ -1,9 +1,32 @@
-import { Toaster } from "../utils/toaster";
+import {Toaster} from "../utils/toaster";
+import toggleActivitySubscription, {IToggleActivitySubscription} from "./queries/toggleActivitySubscription";
+import toggleLike, {IToggleLike} from "./queries/toggleLike";
+import queryActivityReplies, {IActivityReply} from "./queries/queryActivityReplies";
+import queryMessages from "./queries/queryMessages";
+import {IMessageActivity} from "./types/messageActivity";
+import replyToActivityQuery from "./queries/replyToActivityQuery";
+import {LocalStorageKeys} from "../assets/localStorageKeys";
+import {IUserSearchResult} from "./types/IUserSearchResult";
+import SearchUsersQuery from "./queries/searchUsersQuery";
+import {IPageInfo} from "./types/IPageInfo";
+import SaveTextActivityMutation from "./queries/saveTextActivityMutation";
+import SaveMessageActivityMutation from "./queries/saveMessageActivityMutation";
+import SaveActivityReplyMutation from "./queries/saveActivityReplyMutation";
+import DeleteActivityQuery from "./queries/deleteActivityQuery";
+import DeleteActivityReplyQuery from "./queries/deleteActivityReplyQuery";
+
+// [
+// 	{
+// 		"message": "Invalid token",
+// 		"status": 400
+// 	}
+// ]
 
 export class AnilistAPI {
 	settings;
 	#userId;
 	#url = "https://graphql.anilist.co";
+
 	constructor(settings) {
 		this.settings = settings;
 		this.#userId = Number(JSON.parse(localStorage.getItem("auth")).id);
@@ -41,7 +64,7 @@ export class AnilistAPI {
             }
         }`;
 
-		const variables = { activityId };
+		const variables = {activityId};
 		const options = this.#getQueryOptions(query, variables);
 		try {
 			const data = await this.#elevatedFetch(options);
@@ -66,7 +89,7 @@ export class AnilistAPI {
             }
         }`;
 
-		const variables = { username };
+		const variables = {username};
 		const options = this.#getQueryOptions(query, variables);
 		try {
 			const data = await this.#elevatedFetch(options);
@@ -109,7 +132,7 @@ export class AnilistAPI {
 			}
 		  }
 		}`;
-		const variables = { userName: username, type};
+		const variables = {userName: username, type};
 		const options = this.#getQueryOptions(query, variables);
 		const data = await this.#elevatedFetch(options);
 		return data;
@@ -121,7 +144,7 @@ export class AnilistAPI {
                 about
             }
         }`;
-		const variables = { about };
+		const variables = {about};
 		const options = this.#getMutationOptions(query, variables);
 		try {
 			const data = await this.#elevatedFetch(options);
@@ -140,7 +163,7 @@ export class AnilistAPI {
             }
         }`;
 
-		const variables = { color };
+		const variables = {color};
 		const options = this.#getMutationOptions(query, variables);
 		try {
 			const data = await this.#elevatedFetch(options);
@@ -157,7 +180,7 @@ export class AnilistAPI {
             }
         }`;
 
-		const variables = { text };
+		const variables = {text};
 		const options = this.#getMutationOptions(query, variables);
 		try {
 			const data = await this.#elevatedFetch(options);
@@ -174,7 +197,7 @@ export class AnilistAPI {
 	}
 
 	async queryUser(username) {
-		const variables = { username };
+		const variables = {username};
 		const query = `query ($username: String!) {
                 User(name: $username) {
                   name
@@ -200,8 +223,17 @@ export class AnilistAPI {
 		}
 	}
 
+	async searchUsers(username: string): Promise<IUserSearchResult[]> {
+		const variables = {search: username, perPage: 10};
+		const query = SearchUsersQuery;
+		const options = this.#getQueryOptions(query, variables);
+		const data = await this.#elevatedFetch(options);
+		return data.Page.users
+
+	}
+
 	async selfMessage(message) {
-		const variables = { message, recipientId: this.#userId };
+		const variables = {message, recipientId: this.#userId};
 		const query = `
             mutation($recipientId: Int, $message: String) {
                 SaveMessageActivity(message: $message, private: false, recipientId: $recipientId) {
@@ -283,6 +315,9 @@ export class AnilistAPI {
                     coverImage {large}
                     id
                     type
+                    title {
+                    	userPreferred
+                	}
                 }
             }
             ... on TextActivity {
@@ -304,7 +339,7 @@ export class AnilistAPI {
             }
         }`;
 
-		const variables = { activityIds };
+		const variables = {activityIds};
 		const options = this.#getMutationOptions(query, variables);
 		try {
 			const data = await this.#elevatedFetch(options);
@@ -358,7 +393,7 @@ export class AnilistAPI {
                 }
             }
         }`;
-		const options = this.#getMutationOptions(query, { searchword });
+		const options = this.#getMutationOptions(query, {searchword});
 		try {
 			const data = await this.#elevatedFetch(options);
 			return data.Page.media;
@@ -367,7 +402,7 @@ export class AnilistAPI {
 		}
 	}
 
-	async getMediaProgress(mediaId){
+	async getMediaProgress(mediaId) {
 		const query = `query($mediaId: Int, $userId: Int) {
 			  MediaList(mediaId: $mediaId, userId: $userId) {
 				id
@@ -408,12 +443,12 @@ export class AnilistAPI {
 		try {
 			const data = await this.#elevatedFetch(options);
 			return data.MediaList;
-		} catch (error){
+		} catch (error) {
 			throw new Error(`Failed to update media progress with media id ${mediaId}`);
 		}
 	}
 
-	async getCreatedMediaActivity(mediaId){
+	async getCreatedMediaActivity(mediaId) {
 		const query = `query ($userId: Int, $mediaId: Int) {
 				Activity(userId: $userId, mediaId: $mediaId, sort: ID_DESC, type_in: [ANIME_LIST, MANGA_LIST]) {
 					... on ListActivity {
@@ -431,95 +466,193 @@ export class AnilistAPI {
 		}
 	}
 
-	async replyToActivity(activityId, reply) {
-		const query = `mutation ($activityId: Int, $reply: String) {
-		SaveActivityReply(activityId: $activityId, text: $reply) {
-			  activityId
-			}}`;
+	async replyToActivity(activityId: number, reply: string): Promise<IActivityReply> {
+		// return {
+		// 	"activityId": 878490823,
+		// 	"createdAt": 1743352496,
+		// 	"id": 14509737,
+		// 	"likeCount": 0,
+		// 	"likes": [],
+		// 	"isLiked": false,
+		// 	"text": "reply.",
+		// 	"user": {
+		// 		"avatar": {
+		// 			"large": "https://s4.anilist.co/file/anilistcdn/user/avatar/large/b5953162-oJ32skvShWpp.png"
+		// 		},
+		// 		"name": "voidnyan"
+		// 	}
+		// };
+		const query = replyToActivityQuery;
 
-		const options = this.#getMutationOptions(query, {activityId, reply});
+		const options = this.#getMutationOptions(query, {activityId, text: reply});
 		try {
 			const data = await this.#elevatedFetch(options);
-			return data.ActivityReply;
+			console.log("API", data);
+			return data.SaveActivityReply;
 		} catch (error) {
 			throw new Error(`Failed to reply to activity with id ${activityId}`);
 		}
 	}
 
-
 	async getMiniProfile(username, numberOfFavourites) {
-		const variables = { name: username, page: 1, perPage: numberOfFavourites };
+		const variables = {name: username, page: 1, perPage: numberOfFavourites};
 
 		const query = `query User($name: String, $page: Int, $perPage: Int) {
-  User(name: $name) {
-    avatar {
-      large
-    }
-    createdAt
-    donatorBadge
-    favourites {
-      anime(page: $page, perPage: $perPage) {
-        nodes {
-          coverImage {
-            large
-          }
-          title {
-            userPreferred
-          }
-          id
-          type
-        }
-      }
-    manga(page: $page, perPage: $perPage) {
-        nodes {
-          coverImage {
-            large
-          }
-          title {
-            userPreferred
-          }
-          id
-          type
-        }
-      }
-      characters(page: $page, perPage: $perPage) {
-        nodes {
-          name {
-            userPreferred
-          }
-          image {
-            large
-          }
-          id
-        }
-      }
-      staff(page: $page, perPage: $perPage) {
-        nodes {
-          name {
-            userPreferred
-          }
-          image {
-            large
-          }
-          id
-        }
-      }
-    }
-    name
-    isFollower
-    isFollowing
-    options {
-      profileColor
-    }
-    bannerImage
-    donatorTier
-  }
-}`;
+			  User(name: $name) {
+			    about
+				avatar {
+				  large
+				}
+				createdAt
+				donatorBadge
+				favourites {
+				  anime(page: $page, perPage: $perPage) {
+					nodes {
+					  coverImage {
+						large
+					  }
+					  title {
+						userPreferred
+					  }
+					  id
+					  type
+					}
+				  }
+				manga(page: $page, perPage: $perPage) {
+					nodes {
+					  coverImage {
+						large
+					  }
+					  title {
+						userPreferred
+					  }
+					  id
+					  type
+					}
+				  }
+				  characters(page: $page, perPage: $perPage) {
+					nodes {
+					  name {
+						userPreferred
+					  }
+					  image {
+						large
+					  }
+					  id
+					}
+				  }
+				  staff(page: $page, perPage: $perPage) {
+					nodes {
+					  name {
+						userPreferred
+					  }
+					  image {
+						large
+					  }
+					  id
+					}
+				  }
+				}
+				name
+				isFollower
+				isFollowing
+				options {
+				  profileColor
+				}
+				bannerImage
+				donatorTier
+			  }
+			}`;
 
 		const options = this.#getQueryOptions(query, variables);
 
 		const data = await this.#elevatedFetch(options);
 		return data.User;
+	}
+
+	async queryMessages(isFollowing: boolean, page = 1): Promise<{activities: IMessageActivity[], pageInfo: IPageInfo}> {
+		const query = queryMessages;
+
+		const variables = {isFollowing, type: "MESSAGE", sort: "ID_DESC", asHtml: false, page, perPage: 25};
+		const options = this.#getQueryOptions(query, variables);
+		const data = await this.#elevatedFetch(options);
+		return {
+			activities: data.Page.activities,
+			pageInfo: data.Page.pageInfo
+		};
+	}
+
+	async queryActivityReplies(id: number, page: number = 1): Promise<{
+		replies: IActivityReply[],
+		pageInfo: IPageInfo
+	}> {
+		const query = queryActivityReplies;
+
+		const variables = {activityId: id, perPage: 50, page};
+		const options = this.#getQueryOptions(query, variables);
+		const data = await this.#elevatedFetch(options);
+		return {
+			replies: data.Page.activityReplies,
+			pageInfo: data.Page.pageInfo
+		};
+	}
+
+	async saveActivityText(type: "TEXT" | "MESSAGE" | "REPLY", id: number, content: string) {
+		let query;
+		switch (type) {
+			case "TEXT":
+				query = SaveTextActivityMutation;
+				break;
+			case "MESSAGE":
+				query = SaveMessageActivityMutation;
+				break;
+			case "REPLY":
+				query = SaveActivityReplyMutation;
+				break;
+			default:
+				throw new Error("Unsupported type " + type);
+		}
+
+		const variables = {
+			id,
+			content
+		};
+
+		const options = this.#getMutationOptions(query, variables);
+		const data = await this.#elevatedFetch(options);
+		return data.SaveActivityReply ?? data.SaveMessageActivity ?? data.SaveTextActivity;
+	}
+
+	async deleteActivity(type: "ACTIVITY" | "REPLY", id: number): Promise<boolean> {
+		const query = type === "ACTIVITY" ? DeleteActivityQuery : DeleteActivityReplyQuery;
+		const variables = {id};
+		const options = this.#getMutationOptions(query, variables);
+		const data = await this.#elevatedFetch(options);
+		return data.DeleteActivityReply?.deleted ?? data.DeleteActivity?.deleted;
+	}
+
+	async toggleLike(id: number, type: "ACTIVITY" | "ACTIVITY_REPLY" | "THREAD" | "THREAD_COMMENT"): Promise<IToggleLike> {
+		const query = toggleLike;
+
+		const variables = {toggleLikeV2Id: id, type};
+		const options = this.#getMutationOptions(query, variables);
+		const data = await this.#elevatedFetch(options);
+		return data.ToggleLikeV2;
+	}
+
+	async toggleActivitySubscription(id: number, subscribe: boolean): Promise<IToggleActivitySubscription> {
+		const query = toggleActivitySubscription;
+
+		const variables = {activityId: id, subscribe};
+		const options = this.#getMutationOptions(query, variables);
+		const data = await this.#elevatedFetch(options);
+		return data.ToggleActivitySubscription;
+	}
+
+	async query(query: string, params: object): Promise<any> {
+		const options = this.#getQueryOptions(query, params);
+		const data = await this.#elevatedFetch(options);
+		return data;
 	}
 
 	async #elevatedFetch(options) {
@@ -566,6 +699,7 @@ export class AnilistAPI {
 		} catch (error) {
 			console.error(error);
 			if (error instanceof TypeError) {
+				// @ts-ignore
 				console.log("reset:", error.headers?.get("X-RateLimit-Reset"));
 				Toaster.warning(
 					`Preflight check failed. This might be caused by too many requests. Last successful query returned ${this.#getApiLimitRemaining()} queries remaining.`,
@@ -592,7 +726,7 @@ export class AnilistAPI {
 	}
 
 	async #queryUsers(page) {
-		const variables = { page, userId: this.#userId };
+		const variables = {page, userId: this.#userId};
 		const query = `query ($page: Int, $userId: Int!) {
             Page(page: $page) {
                 following(userId: $userId) {
@@ -651,6 +785,7 @@ export class AnilistAPI {
 		};
 
 		if (this.settings.auth?.token) {
+			// @ts-ignore
 			options.headers.Authorization = `Bearer ${this.settings.auth.token}`;
 		}
 
@@ -669,14 +804,14 @@ export class AnilistAPI {
 	}
 
 	#setApiLimitRemaining(response) {
-		sessionStorage.setItem(
+		localStorage.setItem(
 			"void-verified-api-limit-remaining",
 			response.headers.get("X-RateLimit-Remaining"),
 		);
 	}
 
 	#getApiLimitRemaining() {
-		return sessionStorage.getItem("void-verified-api-limit-remaining");
+		return localStorage.getItem("void-verified-api-limit-remaining");
 	}
 }
 

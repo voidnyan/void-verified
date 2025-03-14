@@ -1,13 +1,18 @@
 ﻿export class LibraryLoader {
-	static loadScript(url: string, callback: () => void) {
-		var script = document.createElement('script');
+	static loadScript(url: string, callback?: () => void) {
+		const script = document.createElement('script');
 		script.type = 'text/javascript';
 		script.src = url;
 		script.onload = callback;
 		document.head.appendChild(script);
 	}
 
-	static loadAceEditor() {
+	static loadLibraries() {
+		this.loadAceEditor();
+		this.loadScript("https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js");
+	}
+
+	private static loadAceEditor() {
 		this.loadScript("https://cdnjs.cloudflare.com/ajax/libs/ace/1.35.0/ace.min.js", () => {
 			// @ts-ignore
 			ace.config.set("packaged", true)

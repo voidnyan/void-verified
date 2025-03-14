@@ -17,6 +17,15 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.21", [
+		new Feature("Enable VoidVerified QuickStart.", "quickStartEnabled"),
+		new Feature("QuickStart can be opened by default with ctrl + space, or by clicking the console icon in navigation."),
+		new Feature("Search activities, access notifications and verified users, change VV settings and quickly navigate to Anilist pages."),
+		new Feature("Enable Message-feed in the home page.", "messageFeedEnabled"),
+		new Feature("Added user bio to mini profile."),
+		new Feature("Detect video mime types based on file extension in url.", "fixVideoTypes"),
+		new Feature("Replace activity timestamp tooltips.", "activityTimestampTooltipsEnabled")
+	]),
 	new Version("1.20", [
 		new Feature("Hover over users to view a mini profile.", "miniProfileEnabled")
 	]),

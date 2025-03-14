@@ -1,0 +1,374 @@
+.void-quick-start-container {
+    background: rgba(18,22,28,.9);
+    height: 100vh;
+    left: 0;
+    top: -100vh;
+    opacity: 0;
+    position: fixed;
+    overflow: auto;
+    transition: opacity .4s ease;
+    width: 100vw;
+    z-index: 3000;
+}
+
+.void-quick-start-container.void-visible {
+    opacity: 1;
+    top: 0;
+}
+
+.void-quick-start-input-container {
+    align-items: center;
+    background: rgb(var(--color-foreground));
+    border-radius: 6px;
+    display: grid;
+    grid-template-columns: 46px 1fr 46px 46px;
+    justify-items: center;
+    left: calc(50% - 330px);
+    position: absolute;
+    top: 40px;
+    transition: .25s ease;
+    width: 660px;
+    z-index: 1;
+}
+
+.void-quick-start-command-props-container {
+    position: absolute;
+    top: 52px;
+    justify-self: start;
+    border-radius: 4px;
+    background: rgb(var(--color-foreground-grey-dark));
+    padding: 4px;
+}
+
+.void-quick-start-mode-select-container {
+    display: flex;
+    justify-content: center;
+}
+
+.void-quick-start-mode-select-container .void-option {
+    font-size: 1.1em;
+    padding: 6px 8px;
+}
+
+.void-quick-start-input-container svg {
+    height: 50%;
+}
+
+.void-quick-start-input-container svg:not(:first-child) {
+    cursor: pointer;
+}
+
+.void-quick-start-input-container input {
+    background: transparent;
+    border: none;
+    color: rgb(var(--color-text));
+    font-family: Overpass, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    margin-left: 0;
+    outline: 0;
+    padding: 16px 0;
+    padding-top: 18px;
+    position: relative;
+    width: 100%;
+    z-index: 2;
+}
+
+.void-quick-start-content-container {
+    margin: 0 auto;
+    max-width: 1700px;
+    padding: 150px 60px;
+    display: flex;
+    flex-direction: column;
+    /*gap: 60px;*/
+}
+
+.void-quick-start-content-container > * {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.void-quick-start-content-container > :first-child {
+    margin-top: 0px;
+}
+
+
+.void-quick-start-content-container .void-quick-access-wrap {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-start;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.void-quick-start-results-container {
+    display: grid;
+    grid-gap: 60px;
+}
+
+@media screen and (min-width: 1000px) {
+    .void-quick-start-results-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.void-quick-start-results-container:has(.void-activity-feed) {
+    grid-template-columns: 1fr;
+    justify-items: center;
+}
+
+.void-quick-start-container .void-activity-feed {
+    /*min-width: 400px;*/
+    max-width: 1000px;
+}
+
+@media screen and (min-width: 1000px) {
+    .void-quick-start-container .void-activity-feed {
+        min-width: 750px;
+    }
+}
+
+.void-quick-start-results-list {
+    background: rgb(var(--color-foreground));
+    border-radius: 4px;
+    color: rgb(var(--color-text));
+    position: relative;
+}
+
+.void-quick-start-results-title {
+    color: rgba(var(--color-text-bright), .8);
+    font-size: 1.4rem;
+    font-weight: 600;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    text-transform: capitalize;
+    top: -24px
+}
+
+.void-quick-start-result {
+    cursor: pointer;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transition: background-color .15s ease,color .15s;
+    padding: 10px 15px;
+    width: 100%;
+    display: block;
+}
+
+.void-quick-start-result:first-of-type {
+    padding-top: 15px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.void-quick-start-result:last-of-type {
+    padding-bottom: 15px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.void-quick-start-result:hover,
+.void-quick-start-result:visited:hover {
+    background: rgb(var(--color-blue));
+    color: rgb(var(--color-text-bright));
+}
+
+.void-quick-access-option-input {
+    width: 50px;
+}
+
+.void-quick-start-notifications {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--color-blue)) rgba(0, 0, 0, 0);
+}
+
+.void-quick-start-notifications .void-notification-preview-relation {
+    height: 18px;
+}
+
+/* has two children */
+.void-quick-start-head-container:has(> :last-child:nth-child(2)):not(:has([void-disabled="true"])) {
+    display: grid;
+    gap: 60px;
+}
+
+@media screen and (min-width: 1000px) {
+    .void-quick-start-head-container:has(> :last-child:nth-child(2)):not(:has([void-disabled="true"])) {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+.void-quick-start-config-container {
+    background: rgb(var(--color-foreground));
+    border-radius: 4px;
+    padding: 20px;
+    width: fit-content;
+    margin: auto;
+    max-height: 400px;
+    transition: all 0.5s ease-in-out;
+    overflow: hidden;
+}
+
+.void-settings .void-quick-start-config-container {
+    padding: 0;
+    margin: 0;
+    max-height: unset;
+}
+
+.void-quick-start-config-container[void-hidden="true"] {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    max-height: 0px;
+}
+
+.void-quick-start-head-container:has(.void-quick-start-activity-search-params-container) {
+    display: flex;
+    justify-content: center;
+}
+
+.void-quick-start-activity-search-params-container {
+    max-width: 1000px;
+}
+
+.void-quick-start-activity-search-params-container-head {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.void-quick-start-activity-search-params-container-body {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    background: rgb(var(--color-foreground-grey));
+    border-radius: 4px;
+}
+
+.void-quick-start-activity-search-params-container-body > * {
+    cursor: pointer;
+}
+
+.void-quick-start-activity-search-params-container-body:empty::before {
+    content: "None selected";
+}
+
+.void-quick-start-activity-search-params-container .void-select {
+    display: flex;
+    width: fit-content;
+}
+
+.void-date-range-container {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 20;
+}
+
+.void-date-range-container svg {
+    height: 20px;
+}
+
+.void-button.void-all-users-button {
+    padding: 0px;
+    margin-top: 0px;
+    background: unset;
+    display: inline-block;
+    color: rgb(var(--color-text));
+}
+
+.void-quick-start-media-cache {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.void-quick-start-activity-search-params-container {
+    max-height: 3000px;
+    transition: max-height 0.3s ease;
+    overflow: hidden;
+}
+
+.void-quick-start-activity-search-params-container.collapsed {
+    max-height: 45px;
+}
+
+.void-quick-start-activity-search-params-container .void-collapsible-container {
+    background: rgb(var(--color-foreground));
+}
+
+.void-quick-start-activity-search-params-container .void-collapsible-container .void-collapsible-container-head-wrap {
+    background: rgb(var(--color-foreground-grey-dark));
+}
+
+.void-quick-start-activity-search-base-params {
+    display: grid;
+    gap: 15px
+}
+
+.void-quick-start-activity-search-action-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+}
+
+.void-quick-start-activity-search-action-container .void-button {
+    width: 100%;
+    text-align: center;
+    display: block;
+    font-size: 1.2em;
+}
+
+.transparent .void-quick-start-nav-button svg:hover,
+.void-quick-start-nav-button svg:hover {
+    color: #d3d5f3;
+}
+
+.transparent .void-quick-start-nav-button svg {
+    color: rgba(191, 193, 212, .65);
+}
+
+.void-quick-start-nav-button svg {
+    width: 1.7em;
+    color: #777a9e;
+    cursor: pointer;
+    transition: color .3s ease;
+    vertical-align: -0.525em;
+}
+
+.void-quick-start-nav-button {
+    margin-right: 15px;
+    font-size: 1.4rem;
+}
+
+.void-quick-start-mobile-nav-button {
+    text-decoration: none;
+    transition: .15s;
+    outline: 0;
+}
+
+.void-quick-start-mobile-nav-button:hover {
+    color: rgb(var(--color-blue));
+}
+
+.void-quick-start-mobile-nav-button svg {
+    width: 1.65em;
+}
+
+.void-quick-start-mobile-nav-button div {
+    color: rgb(var(--color-gray-600));
+    display: block;
+    font-size: 1rem;
+}

@@ -15,6 +15,7 @@ import { AnilistAPI } from "../api/anilistAPI";
 import { Markdown } from "../utils/markdown";
 import { Toaster } from "../utils/toaster";
 import { AddIcon, TrashcanIcon } from "../assets/icons";
+import {LocalStorageKeys} from "../assets/localStorageKeys";
 
 class Layout {
 	avatar;
@@ -36,7 +37,7 @@ class Layout {
 
 export class LayoutDesigner {
 	#settings;
-	#layoutsInLocalStorage = "void-verified-layouts";
+	#layoutsInLocalStorage = LocalStorageKeys.layouts;
 	#originalHtml;
 	#broadcastChannel;
 	#donatorTier = 0;

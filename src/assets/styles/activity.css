@@ -1,0 +1,453 @@
+.void-activity-entry.activity-entry {
+    margin-bottom: 20px;
+    min-width: 0
+}
+
+.void-activity-entry.activity-entry:hover .entry-dropdown,
+.void-activity-entry.activity-entry .wrap:hover .time .action {
+    opacity: 1;
+    transform: none
+}
+
+.void-activity-entry .wrap {
+    background: rgb(var(--color-foreground));
+    border-radius: 4px;
+    font-size: 1.3rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.void-activity-entry .text {
+    padding: 20px;
+}
+
+.void-activity-entry .text .header {
+    display: flex;
+    align-items: center;
+}
+
+.void-activity-entry .text .header > svg {
+    height: 20px;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.void-activity-entry .text .avatar {
+    border-radius: 3px;
+    height: 40px;
+    width: 40px;
+}
+
+.void-activity-entry .avatar {
+    display: inline-block;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.void-activity-entry .text .name {
+    height: 40px;
+    line-height: 40px;
+    margin-left: 12px;
+    vertical-align: top;
+}
+
+.void-activity-entry .name {
+    color: rgb(var(--color-blue));
+    display: inline-block;
+    font-size: 1.4rem
+}
+
+.void-activity-entry .list .name {
+    padding-bottom: 8px
+}
+
+.void-activity-entry .text .activity-markdown {
+    font-size: 1.4rem;
+    line-height: 1.4;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.void-activity-entry .text .markdown {
+    margin-bottom: 14px;
+    margin-top: 14px;
+    max-height: 560px;
+    overflow: hidden;
+}
+
+.void-activity-entry .text .markdown p:first-of-type {
+    margin-top: 0;
+}
+
+.void-activity-entry .text .markdown p:last-of-type {
+    margin-bottom: 0;
+}
+
+.void-activity-entry .text .markdown:hover,
+.void-activity-entry .reply .markdown:hover,
+.void-activity-entry .markdown:hover {
+    overflow-y: auto;
+}
+
+.void-activity-entry .markdown {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.void-activity-entry .wrap .actions,
+.void-activity-entry .reply .actions {
+    bottom: 12px;
+    color: rgb(var(--color-blue-dim));
+    position: absolute;
+    right: 12px;
+    font-family: Overpass, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-weight: 800;
+}
+
+.void-activity-entry .actions .action {
+    cursor: pointer;
+    display: inline-block;
+    padding-left: 7px;
+    padding-right: 2px;
+    transition: .2s;
+}
+
+.void-activity-entry .actions .action:hover {
+    color: rgb(var(--color-blue));
+}
+
+.void-activity-entry .actions .count {
+    font-size: 1.2rem;
+    padding-right: 4px;
+}
+
+.void-activity-entry .like-wrap {
+    display: inline-block;
+    position: relative;
+}
+
+.void-activity-entry .button {
+    cursor: pointer;
+}
+
+.void-activity-entry .liked {
+    color: rgb(var(--color-red));
+}
+
+.void-activity-entry .fade-enter {
+    opacity: 0;
+    transform: translateY(3px) scale(.95);
+}
+
+.void-activity-entry .fade-enter-active {
+    transition-timing-function: cubic-bezier(0,0,.2,1);
+    transition: opacity .15s, transform .15s;
+}
+
+.void-activity-entry .users {
+    background: rgb(var(--color-foreground));
+    border-radius: 4px;
+    box-shadow: 0 2px 10px 0 rgba(6, 13, 34, .1);
+    height: 40px;
+    right: -5px;
+    overflow: hidden;
+    position: absolute;
+    top: -40px;
+    width: max-content;
+    max-width: 400px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.void-activity-entry .user {
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+}
+
+.void-activity-entry .activity-replies {
+    margin: 20px;
+}
+
+.void-activity-entry .reply {
+    background: rgb(var(--color-foreground));
+    border-radius: 3px;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    padding: 14px;
+    padding-bottom: 4px;
+    position: relative;
+}
+
+.void-activity-entry .reply .name {
+    color: rgb(var(--color-blue));
+    display: inline-block;
+    font-size: 1.3rem;
+    height: 25px;
+    line-height: 25px;
+    margin-left: 6px;
+    vertical-align: top;
+}
+
+.void-activity-entry .reply .avatar {
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 3px;
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+}
+
+.void-activity-entry .reply .actions {
+    color: rgb(var(--color-blue-dim));
+    font-family: Overpass, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-weight: 700;
+    position: absolute;
+    right: 12px;
+    top: 12px;
+}
+
+.void-activity-entry .wrap .time {
+    color: rgb(var(--color-text-lighter));
+    font-size: 1.1rem;
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    font-family: Overpass, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-weight: 800;
+}
+
+.void-activity-entry .wrap .time a svg,
+.void-activity-entry .wrap .time span svg {
+    height: 1.2em;
+    vertical-align: sub;
+    padding-right: 6px;
+}
+
+.void-activity-entry .wrap .time a,
+.void-activity-entry .reply .time .action,
+.void-activity-entry .reply .void-action {
+    opacity: 0;
+    transition: opacity .2s ease-in-out;
+}
+
+.void-activity-entry .wrap:hover .time a,
+.void-activity-entry .reply:hover .time .action,
+.void-activity-entry .reply:hover .void-action {
+    opacity: 1;
+}
+
+.void-activity-entry .void-action svg {
+    height: 1em;
+}
+
+.void-activity-entry .wrap .time .action {
+    cursor: pointer;
+    opacity: 0;
+    padding-right: 10px;
+    position: relative;
+    transition: .2s
+}
+
+.void-activity-entry .void-activity-dropdown-trigger svg {
+    font-size: 1.6rem;
+}
+
+.void-activity-entry .wrap .time .action:hover {
+    color: rgb(var(--color-blue));
+}
+
+.void-activity-entry .wrap .time .action svg {
+    vertical-align: sub;
+}
+
+.void-activity-entry .has-label svg {
+    width: 1.4em;
+}
+
+.void-activity-entry .wrap .time .action.has-label {
+    padding-right: 5px;
+}
+
+.has-label:hover.has-label::before {
+    display: block;
+}
+
+.has-label:before {
+    background: rgba(var(--color-overlay),.8);
+    border-radius: 5px;
+    color: rgba(var(--color-white),.9);
+    content: attr(label);
+    display: none;
+    font-family: Overpass,-apple-system,BlinkMacSystemFont,Segoe UI,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    left: -45px;
+    padding: 6px 8px;
+    position: absolute;
+    text-align: center;
+    top: 20px;
+    width: 90px;
+    white-space: pre-wrap;
+}
+
+.void-activity-entry .wrap .time .action.active {
+    color: rgba(var(--color-green), .8);
+}
+
+.container .void-activity-entry .activity-entry .wrap .time a {
+    color: rgb(var(--color-blue-dim));
+}
+
+.container .void-activity-entry .activity-entry .wrap .time a:hover {
+    color: rgb(var(--color-blue));
+}
+
+.void-activity-entry .actions .time {
+    color: rgb(var(--color-text-lighter));
+    font-size: 1.1rem;
+}
+
+.void-activity-entry .reply .markdown {
+    line-height: 1.4;
+    max-height: 560px;
+    overflow: hidden;
+}
+
+.void-activity-entry .activity-replies {
+    margin: 20px;
+}
+
+.void-activity-entry .list {
+    display: grid;
+    grid-template-columns: 80px auto;
+    height: 100%;
+    min-height: 110px
+}
+
+.void-activity-entry .cover {
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: cover
+}
+
+.void-activity-entry .details {
+    padding: 14px 16px;
+    padding-right: 100px
+}
+
+.void-activity-entry .list .avatar {
+    border-radius: 3px;
+    height: 36px;
+    margin-top: 9px;
+    width: 36px
+}
+
+.void-activity-entry .list .title {
+    color: rgb(var(--color-blue));
+    word-break: break-word
+}
+
+.void-activity-entry .donator-badge {
+    background: rgb(var(--color-background));
+    border-radius: 3px;
+    color: rgb(var(--color-text));
+    display: inline-block;
+    font-size: 1.2rem;
+    letter-spacing: .03em;
+    margin-left: 13px;
+    overflow: hidden;
+    padding: 4px 7px;
+    position: absolute
+}
+
+.void-activity-entry .donator-badge.donator-rainbow-badge {
+    animation-duration: 20s;
+    animation-iteration-count: infinite;
+    animation-name: rainbow;
+    animation-timing-function: ease-in-out;
+    color: rgb(var(--color-white));
+}
+
+.void-activity-entry .list .donator-badge {
+    top: 12px;
+}
+
+.void-activity-entry .text .donator-badge {
+    position: relative;
+    top: 0
+}
+
+.void-activity-entry .mod-badge {
+    padding: 3px 6px;
+}
+
+.void-activity-entry .donator-badge {
+    font-family: Overpass, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-weight: 800;
+}
+
+.void-activity-entry .mod-badge .label {
+    margin: 1px;
+    margin-left: 4px;
+    letter-spacing: .03rem;
+    font-weight: 800;
+    text-transform: capitalize;
+}
+
+.void-mod-tooltip {
+    text-align: start;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.void-mod-tooltip > div {
+    display: flex;
+    gap: 5px;
+}
+
+.void-activity-feed .load-more,
+.void-message-feed .load-more {
+    background: rgb(var(--color-foreground));
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: Overpass,-apple-system,BlinkMacSystemFont,Segoe UI,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-top: 20px;
+    padding: 14px;
+    text-align: center;
+    transition: .2s
+}
+
+.void-activity-feed > .load-more:hover,
+.void-message-feed > .load-more:hover {
+    color: rgb(var(--color-blue));
+    box-shadow: 0 2px 20px 0 rgba(6,13,34,.05)
+}
+
+.void-activity-entry .load-more {
+    margin-bottom: 20px;
+    background: rgb(var(--color-blue));
+    color: rgb(var(--color-text-bright));
+}
+
+.void-activity-entry .void-action {
+    font-size: 1.1rem;
+    font-weight: normal;
+    display: inline-block;
+}
+
+.void-hide-activity-feed .activity-feed:not(.void-message-feed) {
+    display: none;
+}
+
+.void-hide-activity-feed .scroller {
+    display: none;
+}

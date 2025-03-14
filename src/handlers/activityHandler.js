@@ -4,6 +4,9 @@ import {Toaster} from "../utils/toaster";
 import {DOM} from "../utils/DOM";
 import {StaticSettings} from "../utils/staticSettings";
 import {ImageFormats} from "../assets/imageFormats";
+import {Vue} from "../utils/vue";
+import {StaticTooltip} from "../utils/staticTooltip";
+import {Time} from "../utils/time";
 
 export class ActivityHandler {
 	settings;
@@ -106,9 +109,13 @@ export class ActivityHandler {
 			Toaster.debug("Self-publishing a message.");
 			const response = await anilistAPI.selfMessage(message);
 			Toaster.success("Message self-published.");
-			window.location.replace(
-				`https://anilist.co/activity/${response.id}`,
-			);
+			if (Vue.router) {
+				Vue.router.push(`/activity/${response.id}`);
+			} else {
+				window.location.replace(
+					`https://anilist.co/activity/${response.id}`,
+				);
+			}
 		} catch (err) {
 			console.error(err);
 			Toaster.error("There was an error self-publishing a message.");
@@ -126,6 +133,11 @@ export class ActivityHandler {
 
 		for (const link of anilistLinks) {
 			link.removeAttribute("target");
+			link.addEventListener("click", (event) => {
+				event.preventDefault();
+				const path = event.target.pathname + event.target.search;
+				Vue.router.push(path);
+			})
 		}
 	}
 
@@ -166,5 +178,23 @@ export class ActivityHandler {
 		imageContainer.style.display = "block";
 		const position = event.clientY < window.innerHeight / 2 ? `${event.clientY + 20}px` : `${event.clientY - image.clientHeight - 20}px`;
 		imageContainer.style.top = position;
+	}
+
+	addTooltipsToTimestamps() {
+		if (!StaticSettings.options.activityTimestampTooltipsEnabled.getValue()) {
+			return;
+		}
+
+		const timestamps = document.querySelectorAll(".activity-entry:not(.void-activity-entry) time[title]");
+
+		for (const timestamp of timestamps) {
+			const dateString = timestamp.getAttribute("datetime");
+			if (!dateString) {
+				continue;
+			}
+			const time = Time.toLocaleString(new Date(dateString));
+			StaticTooltip.register(timestamp, time);
+			timestamp.removeAttribute("title");
+		}
 	}
 }

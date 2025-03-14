@@ -1,4 +1,4 @@
-import {IOption} from "../types/settings";
+import {IOptions} from "../types/settings";
 
 export const categories = {
 	users: "users",
@@ -7,7 +7,7 @@ export const categories = {
 	misc: "misc",
 };
 
-export const defaultSettings = {
+export const defaultSettings: IOptions = {
 	copyColorFromProfile: {
 		defaultValue: true,
 		description: "Copy user color from their profile.",
@@ -219,13 +219,37 @@ export const defaultSettings = {
 	imagePreviewEnabled: {
 		defaultValue: false,
 		description: "Hover image links to preview.",
-		categories: categories.activity,
+		category: categories.activity,
 		authRequired: false
 	},
 	miniProfileEnabled: {
 		defaultValue: false,
 		description: "Hover over users to view a mini profile.",
 		category: categories.users,
+		authRequired: false
+	},
+	fixVideoTypes: {
+		defaultValue: false,
+		description: "Detect video mime types based on file extension in url (mobile fix).",
+		category: categories.misc,
+		authRequired: false
+	},
+	messageFeedEnabled: {
+		defaultValue: false,
+		description: "Enable Message-feed in the home page.",
+		category: categories.activity,
+		authRequired: true
+	},
+	quickStartEnabled: {
+		defaultValue: false,
+		description: "Enable VoidVerified QuickStart.",
+		category: categories.misc,
+		authRequired: true
+	},
+	activityTimestampTooltipsEnabled: {
+		defaultValue: false,
+		description: "Replace activity timestamp tooltips.",
+		category: categories.misc,
 		authRequired: false
 	}
 };

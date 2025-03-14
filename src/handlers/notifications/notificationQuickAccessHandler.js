@@ -12,6 +12,7 @@ import { Toaster } from "../../utils/toaster";
 import { NotificationConfig } from "./notificationConfig";
 import { notificationTypes } from "./notificationTypes";
 import { NotificationsCache } from "./notificationsCache";
+import {LocalStorageKeys} from "../../assets/localStorageKeys";
 
 export class NotificationQuickAccessHandler {
 	#settings;
@@ -25,7 +26,7 @@ export class NotificationQuickAccessHandler {
 	constructor(settings) {
 		this.#settings = settings;
 		this.#config = new NotificationConfig(
-			"void-verified-quick-access-notifications-config",
+			LocalStorageKeys.notificationsConfigQuickAccess,
 		);
 	}
 

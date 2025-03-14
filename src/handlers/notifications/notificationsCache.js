@@ -1,7 +1,9 @@
+import {LocalStorageKeys} from "../../assets/localStorageKeys";
+
 export class NotificationsCache {
-	static #notificationRelationsInSessionStorage =
-		"void-verified-notification-relations";
-	static #deadLinkRelations = "void-verified-notification-deadlink-relations";
+	static #notificationRelationsInLocalStorage =
+		LocalStorageKeys.notificationRelationsCache;
+	static #deadLinkRelations = LocalStorageKeys.notificationDeadLinkRelationsCache;
 	static cacheRelations(relations) {
 		const relationsMap = this.#getRelations();
 		for (const relation of relations) {
@@ -12,18 +14,18 @@ export class NotificationsCache {
 
 	static filterDeadLinks(activityIds) {
 		const deadLinks =
-			JSON.parse(sessionStorage.getItem(this.#deadLinkRelations)) ?? [];
+			JSON.parse(localStorage.getItem(this.#deadLinkRelations)) ?? [];
 		return activityIds.filter((id) => !deadLinks.includes(id));
 	}
 
 	static cacheDeadLinks(activityIds) {
 		const deadLinks = new Set(
-			JSON.parse(sessionStorage.getItem(this.#deadLinkRelations)),
+			JSON.parse(localStorage.getItem(this.#deadLinkRelations)),
 		);
 		for (const id of activityIds) {
 			deadLinks.add(id);
 		}
-		sessionStorage.setItem(
+		localStorage.setItem(
 			this.#deadLinkRelations,
 			JSON.stringify(Array.from(deadLinks)),
 		);
@@ -44,8 +46,8 @@ export class NotificationsCache {
 	static #getRelations() {
 		const relations = new Map(
 			JSON.parse(
-				sessionStorage.getItem(
-					this.#notificationRelationsInSessionStorage,
+				localStorage.getItem(
+					this.#notificationRelationsInLocalStorage,
 				),
 			),
 		);
@@ -53,8 +55,8 @@ export class NotificationsCache {
 	}
 
 	static #setRelations(relations) {
-		sessionStorage.setItem(
-			this.#notificationRelationsInSessionStorage,
+		localStorage.setItem(
+			this.#notificationRelationsInLocalStorage,
 			JSON.stringify(Array.from(relations)),
 		);
 	}

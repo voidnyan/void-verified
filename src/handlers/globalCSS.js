@@ -1,4 +1,5 @@
 import { StyleHandler } from "./styleHandler";
+import {LocalStorageKeys} from "../assets/localStorageKeys";
 
 export class GlobalCSS {
 	settings;
@@ -7,7 +8,7 @@ export class GlobalCSS {
 	styleId = "global-css";
 	isCleared = false;
 
-	cssInLocalStorage = "void-verified-global-css";
+	cssInLocalStorage = LocalStorageKeys.globalCSS;
 	constructor(settings) {
 		this.settings = settings;
 		this.styleHandler = new StyleHandler(settings);

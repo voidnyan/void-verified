@@ -71,6 +71,7 @@
 
 .void-mini-profile-content-container {
     backdrop-filter: blur(10px);
+    background: rgba(var(--color-foreground-grey-dark), .6);
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
 }
@@ -93,4 +94,15 @@
 
 .void-mini-profile-favourited {
     box-shadow: rgb(var(--color-blue)) 2px 2px;
+}
+
+.void-mini-profile-about {
+    max-height: 300px;
+    overflow-y: hidden;
+    user-select: text;
+}
+
+
+.void-mini-profile-about:hover {
+    overflow-y: auto;
 }

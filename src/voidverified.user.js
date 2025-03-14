@@ -10,16 +10,24 @@ import {MarkdownHotkeys} from "./handlers/markdownHotkeys";
 import {StyleRegister} from "./assets/styles/styleRegister";
 import {StaticSettings} from "./utils/staticSettings";
 import {GoalsHandler} from "./handlers/goalsHandler";
-
-LibraryLoader.loadAceEditor();
+import {QuickStartHandler} from "./handlers/quickStart/quickStartHandler";
+import {Vue} from "./utils/vue";
+import {StaticTooltip} from "./utils/staticTooltip";
+import {CloseOverlaysHandler} from "./utils/closeOverlaysHandler";
 
 StaticSettings.initialize();
+LibraryLoader.loadLibraries();
+Vue.ensureIsRegistered();
+StaticTooltip.initialize();
+
 GoalsHandler.initialize();
 new MarkdownHotkeys(StaticSettings.settingsInstance).setupMarkdownHotkeys();
+QuickStartHandler.initialize();
 Toaster.initializeToaster(StaticSettings.settingsInstance);
 const styleHandler = new StyleHandler(StaticSettings.settingsInstance);
 styleHandler.refreshStyles();
 StyleRegister.registerStyles();
+CloseOverlaysHandler.initialize();
 
 try {
 	const intervalScriptHandler = new IntervalScriptHandler(StaticSettings.settingsInstance);
