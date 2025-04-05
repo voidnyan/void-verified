@@ -335,6 +335,10 @@ export class BaseActivityComponent {
 			const deleteButton = this.createDeleteButton("REPLY", reply.id, () => {
 				replyContainer.remove();
 			})
+			editButton.classList.add("action");
+			deleteButton.classList.add("action");
+			editButton.classList.add("void-action");
+			deleteButton.classList.add("void-action");
 			actions.prepend(editButton, deleteButton);
 		}
 

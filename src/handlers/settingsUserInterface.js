@@ -625,7 +625,9 @@ export class SettingsUserInterface {
 			list.append(DOM.create("li", null, option.description));
 		}
 
-		const authLink = DOM.create("a", "button", "Authenticate VoidVerified");
+		const authLink = document.createElement("a");
+		authLink.classList.add("void-button");
+		authLink.append("Authenticate VoidVerified");
 		authLink.setAttribute(
 			"href",
 			`https://anilist.co/api/v2/oauth/authorize?client_id=${clientId}&response_type=token`,
