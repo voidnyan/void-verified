@@ -123,9 +123,9 @@ export class QuickStartHandler {
 			return;
 		}
 		if (QuickStartHandler.container.classList.contains("void-visible")) {
-			this.commandInput.value = "";
+			QuickStartHandler.commandInput.value = "";
 			if (cycle) {
-				this.cycleMode();
+				QuickStartHandler.cycleMode();
 			}
 		}
 		QuickStartHandler.headContainer.replaceChildren();

@@ -24,7 +24,9 @@ export const changeLog = [
 		new Feature("Enable Message-feed in the home page.", "messageFeedEnabled"),
 		new Feature("Added user bio to mini profile."),
 		new Feature("Detect video mime types based on file extension in url.", "fixVideoTypes"),
-		new Feature("Replace activity timestamp tooltips.", "activityTimestampTooltipsEnabled")
+		new Feature("Replace activity timestamp tooltips.", "activityTimestampTooltipsEnabled"),
+		new Feature("Export and Import VV configurations in settings."),
+
 	]),
 	new Version("1.20", [
 		new Feature("Hover over users to view a mini profile.", "miniProfileEnabled")

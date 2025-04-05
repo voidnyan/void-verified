@@ -246,6 +246,11 @@
     height: 1em;
 }
 
+.void-activity-entry .reply .void-action svg {
+    vertical-align: text-top;
+    padding-right: 5px;
+}
+
 .void-activity-entry .wrap .time .action {
     cursor: pointer;
     opacity: 0;
