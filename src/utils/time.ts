@@ -70,7 +70,7 @@ export class Time {
 	static toLocaleString(date: Date | number) {
 		let d = typeof date === "number" ? this.convertToDate(date) : date;
 		const day = d.getDate().toString().padStart(2, "0");
-		const month = d.getMonth().toString().padStart(2, "0");
+		const month = (d.getMonth() + 1).toString().padStart(2, "0");
 		const year = d.getFullYear();
 		const minute = d.getMinutes().toString().padStart(2, "0");
 		const second = d.getSeconds().toString().padStart(2, "0");
