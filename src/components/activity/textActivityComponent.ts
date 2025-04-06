@@ -6,6 +6,7 @@ import {Markdown} from "../../utils/markdown";
 import {ITextActivity} from "../../api/types/ITextActivity";
 import {StaticSettings} from "../../utils/staticSettings";
 import {DropdownMenuComponent} from "../dropdownComponent";
+import {IUser} from "../../api/types/user";
 
 export class TextActivityComponent extends BaseActivityComponent {
 	element: HTMLDivElement;
@@ -69,30 +70,12 @@ export class TextActivityComponent extends BaseActivityComponent {
 
 		if (activity.type === "TEXT") {
 			const textActivity = activity as ITextActivity;
-			const user = this.createHeaderUser(textActivity.user);
-			header.append(user.avatar, user.name);
-			if (user.moderatorBadge) {
-				header.append(user.moderatorBadge);
-			}
-			if (user.donatorBadge) {
-				header.append(user.donatorBadge);
-			}
+			this.addUserToHeader(header, textActivity.user);
 		} else {
 			const messageActivity = activity as IMessageActivity;
-			const messenger = this.createHeaderUser(messageActivity.messenger);
-			const recipient = this.createHeaderUser(messageActivity.recipient);
-
-			header.append(messenger.avatar, messenger.name);
-			if (messenger.donatorBadge) {
-				header.append(messenger.donatorBadge)
-			}
-
+			this.addUserToHeader(header, messageActivity.messenger);
 			header.append(ArrowLongRightIcon());
-
-			header.append(recipient.avatar, recipient.name);
-			if (recipient.donatorBadge) {
-				header.append(recipient.donatorBadge)
-			}
+			this.addUserToHeader(header, messageActivity.recipient);
 		}
 
 		const activityMarkdown = DOM.create("div", ".activity-markdown");
@@ -104,5 +87,18 @@ export class TextActivityComponent extends BaseActivityComponent {
 
 		text.append(header, activityMarkdown);
 		return text;
+	}
+
+	private addUserToHeader(header: HTMLDivElement, user: IUser) {
+		const container = DOM.create("div", "message-header-user");
+		const u = this.createHeaderUser(user);
+		container.append(u.avatar, u.name);
+		if (u.moderatorBadge) {
+			container.append(u.moderatorBadge);
+		}
+		if (u.donatorBadge) {
+			container.append(u.donatorBadge);
+		}
+		header.append(container);
 	}
 }

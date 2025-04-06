@@ -1,6 +1,7 @@
 import {DOM} from "./DOM";
 import {Select, Toast, Option, Button, Label} from "../components/components";
 import {LocalStorageKeys} from "../assets/localStorageKeys";
+import {AnilistAPIError} from "../api/anilistAPI";
 
 export const toastTypes = {
 	info: "info",
@@ -36,17 +37,24 @@ class ToastInstance {
 	type;
 	message;
 	duration;
+	error: Error;
 	// durationLeft;
 	// interval;
-	constructor(message, type, duration) {
+	constructor(message, type, duration, error?: Error) {
 		this.type = type;
 		this.message = message;
 		this.duration = duration * 1000;
+		this.error = error;
 	}
 
 	toast() {
 		const toast = Toast(this.message, this.type);
-		this.durationLeft = this.duration;
+
+		if (this.error && this.error instanceof AnilistAPIError) {
+			toast.append(` (${this.error.errors[0].message})`);
+		}
+
+		// this.durationLeft = this.duration;
 		// This code can be used for a visual indicator
 
 		// this.interval = setInterval(
@@ -132,7 +140,7 @@ export class Toaster {
 		);
 	}
 
-	static error(message) {
+	static error(message: string, error?: Error) {
 		if (!this.#shouldToast(toastTypes.error)) {
 			return;
 		}
@@ -142,6 +150,7 @@ export class Toaster {
 				message,
 				toastTypes.error,
 				this.#config.duration,
+				error
 			).toast(),
 		);
 	}

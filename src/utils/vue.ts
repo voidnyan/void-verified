@@ -5,19 +5,23 @@ export class Vue {
 	static router = document.querySelector('#app')?.__vue__?.$router;
 
 	static ensureIsRegistered() {
+		let tries = 0;
 		let vueInterval = setInterval(() => {
-			if (!this.vue) {
+			if (!this.vue && tries < 20) {
 				// @ts-ignore
 				this.vue = document.querySelector('#app')?.__vue__;
+				tries++;
 			} else {
 				clearInterval(vueInterval);
 			}
 		}, 50);
 
+		let tries2 = 0;
 		let routerInterval = setInterval(() => {
-			if (!this.router) {
+			if (!this.router && tries2 < 20) {
 				// @ts-ignore
 				this.router = document.querySelector('#app')?.__vue__?.$router
+				tries2++;
 			} else {
 				clearInterval(routerInterval);
 			}

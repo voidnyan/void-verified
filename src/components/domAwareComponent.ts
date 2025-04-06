@@ -28,4 +28,25 @@ export class DomAwareComponent {
 
 		observer.observe(document.body, { childList: true, subtree: true });
 	}
+
+	addScrollListener(anchor: HTMLElement, callback: () => void) {
+		const scrollContainer = this.findScrollableParent(anchor) /* || window */;
+		if (scrollContainer) {
+			scrollContainer.addEventListener("scroll", callback, {passive: true});
+		}
+		return scrollContainer;
+	}
+
+	private findScrollableParent(el: HTMLElement): HTMLElement | null {
+		let parent: HTMLElement | null = el.parentElement;
+		while (parent) {
+			const style = getComputedStyle(parent);
+			const overflowY = style.overflowY;
+			if (overflowY === "auto" || overflowY === "scroll") {
+				return parent;
+			}
+			parent = parent.parentElement;
+		}
+		return null;
+	}
 }

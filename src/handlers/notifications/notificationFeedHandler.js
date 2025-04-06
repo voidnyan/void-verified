@@ -151,8 +151,7 @@ export class NotificationFeedHandler {
 
 			document.querySelector(".nav .user")?.append(notificationDot);
 		} catch (error) {
-			console.error(error);
-			Toaster.error("There was an error querying unread notifications");
+			Toaster.error("There was an error querying unread notifications", error);
 		}
 	}
 
@@ -240,8 +239,8 @@ export class NotificationFeedHandler {
 					} catch (error) {
 						Toaster.error(
 							"There was an error resetting notification count.",
+							error
 						);
-						console.error(error);
 					}
 				}
 			},
@@ -363,8 +362,7 @@ export class NotificationFeedHandler {
 			notifications = notifs;
 			this.#pageInfo = pageInfo;
 		} catch (error) {
-			console.error(error);
-			Toaster.error("There was an error querying notification feed.");
+			Toaster.error("There was an error querying notification feed.", error);
 		}
 
 		const activityIds = new Set(

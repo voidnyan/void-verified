@@ -60,8 +60,7 @@ export class Settings implements ISettings {
 			const user = await anilistAPI.queryUser(username);
 			this.updateUserFromApi(user);
 		} catch (error) {
-			Toaster.error("Failed to query new user.");
-			console.error(error);
+			Toaster.error("Failed to query new user.", error);
 		}
 	}
 

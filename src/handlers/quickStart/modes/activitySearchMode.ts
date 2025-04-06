@@ -457,8 +457,7 @@ export class ActivitySearchMode {
 			this.paramsUsed = params;
 			this.appendActivities(activities);
 		} catch (error) {
-			console.error(error);
-			Toaster.error("There was an error querying activities.");
+			Toaster.error("There was an error querying activities.", error);
 		} finally {
 			this.searchButton.removeAttribute("disabled");
 		}
@@ -509,8 +508,7 @@ export class ActivitySearchMode {
 			this.activities.push(...activities);
 			this.appendActivities(activities, false);
 		} catch (error) {
-			console.error(error);
-			Toaster.error("There was an error querying activities.");
+			Toaster.error("There was an error querying activities.", error);
 		}
 	}
 

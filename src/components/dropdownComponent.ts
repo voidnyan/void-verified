@@ -7,9 +7,9 @@ interface IDropdownMenuOption {
 }
 
 export class DropdownMenuComponent extends DomAwareComponent {
-	trigger: Element;
+	trigger: HTMLElement;
 	menu: HTMLDivElement;
-	constructor(options: string[] | IDropdownMenuOption[], trigger: Element, callback: (value: string) => void, initialValue?: string) {
+	constructor(options: string[] | IDropdownMenuOption[], trigger: HTMLElement, callback: (value: string) => void, initialValue?: string) {
 		super();
 		this.menu = DOM.create("div", "dropdown-menu");
 		this.trigger = trigger;
@@ -18,9 +18,7 @@ export class DropdownMenuComponent extends DomAwareComponent {
 			this.open();
 		});
 
-		this.onDomLoad(trigger, () => {
-			document.body.append(this.menu);
-		});
+		this.updateDropdownLocation = this.updateDropdownLocation.bind(this);
 
 		this.onDomUnload(trigger, () => {
 			this.menu.remove();
@@ -28,12 +26,15 @@ export class DropdownMenuComponent extends DomAwareComponent {
 	}
 
 	private open() {
+		if (!document.body.contains(this.menu)) {
+			document.body.append(this.menu);
+		}
 		this.menu.classList.add("void-visible");
-		const triggerRect = this.trigger.getBoundingClientRect();
-		const menuRect = this.menu.getBoundingClientRect();
-		const padding = 5;
-		this.menu.style.top = `${triggerRect.bottom + window.scrollY + padding}px`;
-		this.menu.style.left = `${triggerRect.left + window.scrollX - menuRect.width + triggerRect.width}px`;
+
+		this.updateDropdownLocation();
+		const scrollElement = this.addScrollListener(this.trigger, this.updateDropdownLocation);
+
+		window.addEventListener("resize", this.updateDropdownLocation);
 
 		const closeCall = (event) => {
 			const menu = event.target.closest(".void-dropdown-menu");
@@ -41,10 +42,22 @@ export class DropdownMenuComponent extends DomAwareComponent {
 			if (menu !== this.menu && event.target !== this.trigger && t !== this.trigger) {
 				this.close();
 				document.removeEventListener("click", closeCall);
+				if (scrollElement) {
+					scrollElement.removeEventListener("scroll", this.updateDropdownLocation);
+				}
+				window.removeEventListener("resize", this.updateDropdownLocation);
 			}
 		};
 
 		document.addEventListener("click", closeCall);
+	}
+
+	private updateDropdownLocation() {
+		const triggerRect = this.trigger.getBoundingClientRect();
+		const menuRect = this.menu.getBoundingClientRect();
+		const padding = 5;
+		this.menu.style.top = `${triggerRect.bottom + window.scrollY + padding}px`;
+		this.menu.style.left = `${triggerRect.left + window.scrollX - menuRect.width + triggerRect.width}px`;
 	}
 
 	private close() {

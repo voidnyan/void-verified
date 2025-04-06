@@ -15,6 +15,7 @@ export default `query Page($sort: [ActivitySort], $isFollowing: Boolean, $type: 
 				  avatar {
 					large
 				  }
+				  moderatorRoles
 				  donatorBadge
 				  donatorTier
 				}
@@ -22,6 +23,7 @@ export default `query Page($sort: [ActivitySort], $isFollowing: Boolean, $type: 
 				  name
 				  donatorBadge
 				  donatorTier
+				  moderatorRoles
 				  id
 				  avatar {
 					large

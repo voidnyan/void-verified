@@ -112,7 +112,7 @@ export class MarkdownEditor {
 		this.textArea .setAttribute("style", "min-height: 35px; height: 35px;");
 		textAreaContainer.append(this.textArea );
 
-		this.textArea .addEventListener("focus", () => {
+		this.textArea.addEventListener("focus", () => {
 			this.toggleVisibility(true);
 		});
 

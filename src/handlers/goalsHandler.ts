@@ -98,8 +98,8 @@ export class GoalsHandler {
 				mangaMedia = mangaData.MediaListCollection.lists.map(list => list.entries).flat(1);
 			}
 		} catch (error) {
-			Toaster.error("Failed to query user goals.");
-			throw error;
+			Toaster.error("Failed to query user goals.", error);
+			return;
 		}
 
 		const desktopContainer = DOM.create("div", "goals-container");
@@ -422,8 +422,7 @@ export class GoalsHandler {
 			await anilistAPI.saveUserAbout(newAbout);
 			Toaster.success("Saved goals.");
 		} catch (error) {
-			Toaster.error("Failed to save goals.");
-			throw error;
+			Toaster.error("Failed to save goals.", error);
 		}
 	}
 
@@ -442,8 +441,7 @@ export class GoalsHandler {
 				Toaster.success("You had no goals saved.");
 			}
 		} catch (error) {
-			Toaster.error("Failed to fetch goals.");
-			throw error;
+			Toaster.error("Failed to fetch goals.", error);
 		}
 	}
 }

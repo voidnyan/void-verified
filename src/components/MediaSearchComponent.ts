@@ -24,6 +24,7 @@ export class MediaSearchComponent extends BaseSearchComponent {
 	private keepOpen = false;
 
 	onSelect: (value: IMediaSearchResult) => void;
+	private scrollElement: HTMLElement;
 
 	constructor(onSelect: (value: IMediaSearchResult) => void, allowMultiple = false) {
 		super();
@@ -44,6 +45,9 @@ export class MediaSearchComponent extends BaseSearchComponent {
 			setTimeout(() => {
 				if (!this.keepOpen) {
 					this.resultsContainer.replaceChildren();
+					this.scrollElement.removeEventListener("scroll", this.updateResultsContainerLocation);
+					window.removeEventListener("resize", this.updateResultsContainerLocation);
+					this.resultsContainer.remove();
 				}
 			}, 150);
 		});
@@ -62,16 +66,21 @@ export class MediaSearchComponent extends BaseSearchComponent {
 				const response = await anilistAPI.searchMedia(value);
 				this.renderSearchResults(response);
 			} catch (error) {
-				console.error(error);
 				Toaster.error(
 					`Failed to query media with search word ${value}`,
+					error
 				);
 			}
 		}, 800);
 	}
 
 	renderSearchResults(results: IMediaSearchResult[]) {
+		if (!document.body.contains(this.resultsContainer)) {
+			document.body.append(this.resultsContainer);
+		}
 		this.resultsContainer.replaceChildren();
+		this.scrollElement = this.addScrollListener(this.element, this.updateResultsContainerLocation);
+		window.addEventListener("resize", this.updateResultsContainerLocation, {passive: true});
 		for (const result of results) {
 			const resultContainer = DOM.create("div", "search-result");
 

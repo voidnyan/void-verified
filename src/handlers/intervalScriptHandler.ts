@@ -4,7 +4,7 @@ import { SettingsUserInterface } from "./settingsUserInterface.js";
 import { StyleHandler } from "./styleHandler.js";
 import { QuickAccess } from "./quickAccessHandler.js";
 import { LayoutDesigner } from "./layoutDesigner.js";
-import { Toaster } from "../utils/toaster.js";
+import { Toaster } from "../utils/toaster";
 import { Link } from "../components/components.js";
 import { GifKeyboardHandler } from "./gifKeyboardHandler.js";
 import { AnilistFeedFixHandler } from "./anilistFeedFixHandler.js";
@@ -19,8 +19,7 @@ import {GoalsHandler} from "./goalsHandler";
 import {MiniProfileHandler} from "./miniProfileHandler";
 import {VideoTypeFixer} from "./videoTypeFixer";
 import {MessageFeedHandler} from "./messageFeed/messageFeedHandler";
-import {DOM} from "../utils/DOM";
-import {QuickStartHandler, QuickStartMode} from "./quickStart/quickStartHandler";
+import {QuickStartHandler} from "./quickStart/quickStartHandler";
 
 interface IIntervalScriptsHandler {
 	styleHandler: any;

@@ -11,6 +11,7 @@ import {BaseSearchComponent} from "./baseSearchComponent";
 export class UserSearchComponent extends BaseSearchComponent {
 	input: HTMLInputElement;
 	private timeout;
+	private scrollElement: HTMLElement;
 
 	onSelect: (value: IUserSearchResult) => void;
 
@@ -30,6 +31,9 @@ export class UserSearchComponent extends BaseSearchComponent {
 			// set timeout so clicking on a result works
 			setTimeout(() => {
 				this.resultsContainer.replaceChildren();
+				this.scrollElement.removeEventListener("scroll", this.updateResultsContainerLocation);
+				window.removeEventListener("resize", this.updateResultsContainerLocation);
+				this.resultsContainer.remove();
 			}, 150);
 		});
 		this.element.append(this.input);
@@ -47,16 +51,21 @@ export class UserSearchComponent extends BaseSearchComponent {
 				const response = await anilistAPI.searchUsers(value);
 				this.renderSearchResults(response);
 			} catch (error) {
-				console.error(error);
 				Toaster.error(
 					`Failed to query media with search word ${value}`,
+					error
 				);
 			}
 		}, 800);
 	}
 
 	renderSearchResults(results: IUserSearchResult[]) {
+		if (!document.body.contains(this.resultsContainer)) {
+			document.body.append(this.resultsContainer);
+		}
 		this.resultsContainer.replaceChildren();
+		this.scrollElement = this.addScrollListener(this.element, this.updateResultsContainerLocation);
+		window.addEventListener("resize", this.updateResultsContainerLocation, {passive: true});
 		for (const result of results) {
 			const resultContainer = DOM.create("div", "search-result");
 

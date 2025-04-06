@@ -88,6 +88,12 @@
     border-radius: 4px;
 }
 
+@media (max-width: 1040px) {
+    .void-markdown-edit-container .void-markdown-edit-content {
+        min-width: 90vw;
+    }
+}
+
 .void-markdown-edit-container .void-markdown-edit-content .activity-edit > .actions {
     margin-bottom: unset;
 }
