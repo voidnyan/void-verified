@@ -126,8 +126,7 @@ export class QuickAccess {
 				await anilistAPI.queryVerifiedUsers();
 				Toaster.success("Quick Access users updated.");
 			} catch (error) {
-				Toaster.error("Querying Quick Access failed.");
-				console.error(error);
+				Toaster.error("Querying Quick Access failed.", error);
 			} finally {
 				this.#lastFetched = new Date();
 				localStorage.setItem(

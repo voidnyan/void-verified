@@ -129,9 +129,9 @@ export class NotificationQuickAccessHandler {
 			notifications = notifs;
 			this.#shouldRender = true;
 		} catch (error) {
-			console.error(error);
 			Toaster.error(
 				"There was an error querying quick access notifications.",
+				error
 			);
 		}
 
@@ -223,8 +223,8 @@ export class NotificationQuickAccessHandler {
 			} catch (error) {
 				Toaster.error(
 					"There was an error resetting notification count.",
+					error
 				);
-				console.error(error);
 			}
 		});
 		clearButton.setAttribute("title", "Mark all as read");

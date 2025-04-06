@@ -45,14 +45,14 @@ export class BaseActivityComponent {
 				this.activityReplies.append(this.createReply(data));
 				this.activityReplies.append(this.replyMarkdownEditor.element);
 			} catch (error) {
-				console.error(error);
-				Toaster.error("Failed to save reply.");
+				Toaster.error("Failed to save reply.", error);
 			}
 		});
 		this.createEditMarkdownEditor();
 	}
 
 	createEditMarkdownEditor() {
+		// return;
 		this.editContainer = DOM.create("div", "markdown-edit-container");
 		this.editMarkdownEditor = new MarkdownEditor(async (value) => {
 			try {
@@ -60,13 +60,12 @@ export class BaseActivityComponent {
 				const data = await anilistAPI.saveActivityText(this.editType, this.editActivityId, value);
 				this.editCallback(data.text ?? data.message);
 			} catch (error) {
-				console.error(error);
-				Toaster.error(`Failed to save ${this.editType}.`);
+				Toaster.error(`Failed to save ${this.editType}.`, error);
 			}
 		}, () => {
 			this.closeEditDialog();
 		});
-		this.editMarkdownEditor.toggleVisibility(true);
+		// this.editMarkdownEditor.toggleVisibility(true);
 		this.editContainer.append(DOM.create("div", "markdown-edit-content", this.editMarkdownEditor.element));
 	}
 
@@ -172,8 +171,7 @@ export class BaseActivityComponent {
 				const data = await anilistAPI.toggleActivitySubscription(activity.id, subscribe);
 				subscribeButton.setAttribute("label", data.isSubscribed ? "Unsubscribe" : "Subscribe");
 			} catch (error) {
-				console.error(error);
-				Toaster.error("Failed to toggle activity subscription");
+				Toaster.error("Failed to toggle activity subscription", error);
 			}
 		});
 		return subscribeButton;
@@ -208,8 +206,7 @@ export class BaseActivityComponent {
 				this.appendReplies(repliesData.replies, repliesData.pageInfo);
 				replies.setAttribute("queried", true);
 			} catch (error) {
-				console.error(error);
-				Toaster.error("Failed to query activity replies.");
+				Toaster.error("Failed to query activity replies.", error);
 				this.activityReplies?.classList.add("void-hidden");
 				return;
 			}
@@ -254,8 +251,7 @@ export class BaseActivityComponent {
 				}
 				likeCountSpan.innerText = data.likeCount;
 			} catch (error) {
-				console.error(error);
-				Toaster.debug("Failed to like activity or reply.");
+				Toaster.error("Failed to like activity or reply.", error);
 			}
 		})
 
@@ -302,8 +298,7 @@ export class BaseActivityComponent {
 				loader.remove();
 				this.appendReplies(data.replies, data.pageInfo)
 			} catch (error) {
-				console.error(error);
-				Toaster.error("Failed to query replies.");
+				Toaster.error("Failed to query replies.", error);
 			}
 		})
 		this.activityReplies.append(loadMoreButton);
@@ -311,8 +306,12 @@ export class BaseActivityComponent {
 
 	createReply(reply: IActivityReply) {
 		const replyContainer = DOM.create("div", ".reply");
-		const {name, avatar} = this.createHeaderUser(reply.user);
+		const {name, avatar, moderatorBadge} = this.createHeaderUser(reply.user);
 		const header = DOM.create("div", ".header", [avatar, name]);
+
+		if (moderatorBadge) {
+			header.append(moderatorBadge);
+		}
 
 		const actions = DOM.create("div", ".actions");
 		const likeAction = this.createLikeAction(reply.id, "ACTIVITY_REPLY", reply.likes, reply.likeCount, reply.isLiked);
@@ -365,8 +364,7 @@ export class BaseActivityComponent {
 					await anilistAPI.deleteActivity(type, id);
 					callback();
 				} catch (error) {
-					console.log(error);
-					Toaster.error("Failed to delete activity or reply.");
+					Toaster.error("Failed to delete activity or reply.", error);
 				}
 			}, "Are you sure you want to delete this?");
 		});

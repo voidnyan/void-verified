@@ -1,5 +1,5 @@
 ﻿export class LibraryLoader {
-	static loadScript(url: string, callback?: () => void) {
+	static loadScript(url: string, callback?: (event) => void) {
 		const script = document.createElement('script');
 		script.type = 'text/javascript';
 		script.src = url;
@@ -9,9 +9,11 @@
 
 	static loadLibraries() {
 		this.loadAceEditor();
-		this.loadScript("https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js");
+		// DOMPurify (https://github.com/cure53/DOMPurify), used to sanitize user generated content before rendering
+		// this.loadScript("https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js");
 	}
 
+	// Ace Editor (https://github.com/ajaxorg/ace) used to create a code editor for global CSS
 	private static loadAceEditor() {
 		this.loadScript("https://cdnjs.cloudflare.com/ajax/libs/ace/1.35.0/ace.min.js", () => {
 			// @ts-ignore

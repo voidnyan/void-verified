@@ -66,12 +66,8 @@ export class AnilistAPI {
 
 		const variables = {activityId};
 		const options = this.#getQueryOptions(query, variables);
-		try {
-			const data = await this.#elevatedFetch(options);
-			return data.Activity;
-		} catch (error) {
-			throw new Error("Error querying activity.", error);
-		}
+		const data = await this.fetch(options);
+		return data.Activity;
 	}
 
 	async getUserAbout(username) {
@@ -91,12 +87,8 @@ export class AnilistAPI {
 
 		const variables = {username};
 		const options = this.#getQueryOptions(query, variables);
-		try {
-			const data = await this.#elevatedFetch(options);
-			return data.User;
-		} catch (error) {
-			throw new Error("Error querying user about.", error);
-		}
+		const data = await this.fetch(options);
+		return data.User;
 	}
 
 	async getUserMediaListCollection(username, type) {
@@ -134,7 +126,7 @@ export class AnilistAPI {
 		}`;
 		const variables = {userName: username, type};
 		const options = this.#getQueryOptions(query, variables);
-		const data = await this.#elevatedFetch(options);
+		const data = await this.fetch(options);
 		return data;
 	}
 
@@ -146,12 +138,8 @@ export class AnilistAPI {
         }`;
 		const variables = {about};
 		const options = this.#getMutationOptions(query, variables);
-		try {
-			const data = await this.#elevatedFetch(options);
-			return data;
-		} catch (error) {
-			throw new Error("failed to save user about.", error);
-		}
+		const data = await this.fetch(options);
+		return data;
 	}
 
 	async saveUserColor(color) {
@@ -165,12 +153,8 @@ export class AnilistAPI {
 
 		const variables = {color};
 		const options = this.#getMutationOptions(query, variables);
-		try {
-			const data = await this.#elevatedFetch(options);
-			return data;
-		} catch (error) {
-			throw new Error("Failed to publish profile color", error);
-		}
+		const data = await this.fetch(options);
+		return data;
 	}
 
 	async saveDonatorBadge(text) {
@@ -182,12 +166,8 @@ export class AnilistAPI {
 
 		const variables = {text};
 		const options = this.#getMutationOptions(query, variables);
-		try {
-			const data = await this.#elevatedFetch(options);
-			return data;
-		} catch (error) {
-			throw new Error("Failed to publish donator badge", error);
-		}
+		const data = await this.fetch(options);
+		return data;
 	}
 
 	async queryVerifiedUsers() {
@@ -215,19 +195,15 @@ export class AnilistAPI {
 
 		const options = this.#getQueryOptions(query, variables);
 
-		try {
-			const data = await this.#elevatedFetch(options);
-			return data.User;
-		} catch (error) {
-			throw new Error("Failed to query user from Anilist API", error);
-		}
+		const data = await this.fetch(options);
+		return data.User;
 	}
 
 	async searchUsers(username: string): Promise<IUserSearchResult[]> {
 		const variables = {search: username, perPage: 10};
 		const query = SearchUsersQuery;
 		const options = this.#getQueryOptions(query, variables);
-		const data = await this.#elevatedFetch(options);
+		const data = await this.fetch(options);
 		return data.Page.users
 
 	}
@@ -244,12 +220,8 @@ export class AnilistAPI {
 
 		const options = this.#getMutationOptions(query, variables);
 
-		try {
-			const data = await this.#elevatedFetch(options);
-			return data.SaveMessageActivity;
-		} catch (error) {
-			throw new Error("Failed to publish a self-message");
-		}
+		const data = await this.fetch(options);
+		return data.SaveMessageActivity;
 	}
 
 	async getNotifications(
@@ -292,13 +264,8 @@ export class AnilistAPI {
 			resetNotificationCount,
 		};
 		const options = this.#getMutationOptions(query, variables);
-		try {
-			const data = await this.#elevatedFetch(options);
-			return [data.Page.notifications, data.Page.pageInfo];
-		} catch (error) {
-			console.error(error);
-			throw new Error("Failed to query notifications.");
-		}
+		const data = await this.fetch(options);
+		return [data.Page.notifications, data.Page.pageInfo];
 	}
 
 	async getActivityNotificationRelations(activityIds) {
@@ -341,17 +308,12 @@ export class AnilistAPI {
 
 		const variables = {activityIds};
 		const options = this.#getMutationOptions(query, variables);
-		try {
-			const data = await this.#elevatedFetch(options);
-			const activities = new Set([
-				...data.public.activities,
-				...data.following.activities,
-			]);
-			return Array.from(activities);
-		} catch (error) {
-			console.error(error);
-			throw new Error("Failed to query activities.");
-		}
+		const data = await this.fetch(options);
+		const activities = new Set([
+			...data.public.activities,
+			...data.following.activities,
+		]);
+		return Array.from(activities);
 	}
 
 	async resetNotificationCount() {
@@ -364,13 +326,8 @@ export class AnilistAPI {
         }`;
 
 		const options = this.#getMutationOptions(query, {});
-		try {
-			const data = await this.#elevatedFetch(options);
-			return data;
-		} catch (error) {
-			console.error(error);
-			throw new Error("Failed to reset notification count.");
-		}
+		const data = await this.fetch(options);
+		return data;
 	}
 
 	async searchMedia(searchword) {
@@ -394,12 +351,8 @@ export class AnilistAPI {
             }
         }`;
 		const options = this.#getMutationOptions(query, {searchword});
-		try {
-			const data = await this.#elevatedFetch(options);
-			return data.Page.media;
-		} catch (error) {
-			throw new Error(`Failed to query media (${searchword})`);
-		}
+		const data = await this.fetch(options);
+		return data.Page.media;
 	}
 
 	async getMediaProgress(mediaId) {
@@ -423,12 +376,8 @@ export class AnilistAPI {
 			}`;
 
 		const options = this.#getMutationOptions(query, {mediaId, userId: this.#userId})
-		try {
-			const data = await this.#elevatedFetch(options);
-			return data.MediaList;
-		} catch (error) {
-			throw new Error(`Failed to query media progress with media id ${mediaId}`);
-		}
+		const data = await this.fetch(options);
+		return data.MediaList;
 	}
 
 	async updateMediaProgress(id, mediaId, status, progress) {
@@ -440,12 +389,8 @@ export class AnilistAPI {
 		`;
 
 		const options = this.#getMutationOptions(query, {id, status, progress, mediaId})
-		try {
-			const data = await this.#elevatedFetch(options);
-			return data.MediaList;
-		} catch (error) {
-			throw new Error(`Failed to update media progress with media id ${mediaId}`);
-		}
+		const data = await this.fetch(options);
+		return data.MediaList;
 	}
 
 	async getCreatedMediaActivity(mediaId) {
@@ -458,40 +403,16 @@ export class AnilistAPI {
 				}`;
 
 		const options = this.#getMutationOptions(query, {mediaId, userId: this.#userId})
-		try {
-			const data = await this.#elevatedFetch(options);
-			return data.Activity;
-		} catch (error) {
-			throw new Error(`Failed to get created media activity with media id ${mediaId}`);
-		}
+		const data = await this.fetch(options);
+		return data.Activity;
 	}
 
 	async replyToActivity(activityId: number, reply: string): Promise<IActivityReply> {
-		// return {
-		// 	"activityId": 878490823,
-		// 	"createdAt": 1743352496,
-		// 	"id": 14509737,
-		// 	"likeCount": 0,
-		// 	"likes": [],
-		// 	"isLiked": false,
-		// 	"text": "reply.",
-		// 	"user": {
-		// 		"avatar": {
-		// 			"large": "https://s4.anilist.co/file/anilistcdn/user/avatar/large/b5953162-oJ32skvShWpp.png"
-		// 		},
-		// 		"name": "voidnyan"
-		// 	}
-		// };
 		const query = replyToActivityQuery;
 
 		const options = this.#getMutationOptions(query, {activityId, text: reply});
-		try {
-			const data = await this.#elevatedFetch(options);
-			console.log("API", data);
-			return data.SaveActivityReply;
-		} catch (error) {
-			throw new Error(`Failed to reply to activity with id ${activityId}`);
-		}
+		const data = await this.fetch(options);
+		return data.SaveActivityReply;
 	}
 
 	async getMiniProfile(username, numberOfFavourites) {
@@ -566,16 +487,19 @@ export class AnilistAPI {
 
 		const options = this.#getQueryOptions(query, variables);
 
-		const data = await this.#elevatedFetch(options);
+		const data = await this.fetch(options);
 		return data.User;
 	}
 
-	async queryMessages(isFollowing: boolean, page = 1): Promise<{activities: IMessageActivity[], pageInfo: IPageInfo}> {
+	async queryMessages(isFollowing: boolean, page = 1): Promise<{
+		activities: IMessageActivity[],
+		pageInfo: IPageInfo
+	}> {
 		const query = queryMessages;
 
 		const variables = {isFollowing, type: "MESSAGE", sort: "ID_DESC", asHtml: false, page, perPage: 25};
 		const options = this.#getQueryOptions(query, variables);
-		const data = await this.#elevatedFetch(options);
+		const data = await this.fetch(options);
 		return {
 			activities: data.Page.activities,
 			pageInfo: data.Page.pageInfo
@@ -590,7 +514,7 @@ export class AnilistAPI {
 
 		const variables = {activityId: id, perPage: 50, page};
 		const options = this.#getQueryOptions(query, variables);
-		const data = await this.#elevatedFetch(options);
+		const data = await this.fetch(options);
 		return {
 			replies: data.Page.activityReplies,
 			pageInfo: data.Page.pageInfo
@@ -619,7 +543,7 @@ export class AnilistAPI {
 		};
 
 		const options = this.#getMutationOptions(query, variables);
-		const data = await this.#elevatedFetch(options);
+		const data = await this.fetch(options);
 		return data.SaveActivityReply ?? data.SaveMessageActivity ?? data.SaveTextActivity;
 	}
 
@@ -627,7 +551,7 @@ export class AnilistAPI {
 		const query = type === "ACTIVITY" ? DeleteActivityQuery : DeleteActivityReplyQuery;
 		const variables = {id};
 		const options = this.#getMutationOptions(query, variables);
-		const data = await this.#elevatedFetch(options);
+		const data = await this.fetch(options);
 		return data.DeleteActivityReply?.deleted ?? data.DeleteActivity?.deleted;
 	}
 
@@ -636,7 +560,7 @@ export class AnilistAPI {
 
 		const variables = {toggleLikeV2Id: id, type};
 		const options = this.#getMutationOptions(query, variables);
-		const data = await this.#elevatedFetch(options);
+		const data = await this.fetch(options);
 		return data.ToggleLikeV2;
 	}
 
@@ -645,84 +569,49 @@ export class AnilistAPI {
 
 		const variables = {activityId: id, subscribe};
 		const options = this.#getMutationOptions(query, variables);
-		const data = await this.#elevatedFetch(options);
+		const data = await this.fetch(options);
 		return data.ToggleActivitySubscription;
 	}
 
 	async query(query: string, params: object): Promise<any> {
 		const options = this.#getQueryOptions(query, params);
-		const data = await this.#elevatedFetch(options);
+		const data = await this.fetch(options);
 		return data;
 	}
 
-	async #elevatedFetch(options) {
-		// const runElevated = this.settings.options.useElevatedFetch.getValue();
-		// if (runElevated && GM.xmlHttpRequest) {
-		// 	try {
-		// 		const response = await GM.xmlHttpRequest({
-		// 			method: "POST",
-		// 			url: this.#url,
-		// 			data: options.body,
-		// 			headers: options.headers,
-		// 		});
-		// 		const data = JSON.parse(response.response);
-		// 		console.log(
-		// 			"remaining",
-		// 			this.#parseStringHeaders(response.responseHeaders)[
-		// 				"x-ratelimit-remaining"
-		// 			],
-		// 		);
-		// 		return data.data;
-		// 	} catch (error) {
-		// 		if (error.error?.includes("Request was blocked by the user")) {
-		// 			Toaster.warning(
-		// 				"Elevated access has been enabled in the userscript settings but user has refused permissions to run it.",
-		// 			);
-		// 		}
-		// 		console.error(error);
-		// 		throw error;
-		// 	}
-		// }
-
-		return await this.#regularFetch(options);
-	}
-
-	async #regularFetch(options) {
+	private async fetch(options) {
 		try {
 			const response = await fetch(this.#url, options);
 			this.#setApiLimitRemaining(response);
+
 			const data = await response.json();
+
+			if (!response.ok) {
+				let message = "Internal Server Error";
+
+				// The API seems to return 500 with message (bad request) sometimes
+				// to not make this confusing for the user, replace the message that ends up in UI
+				if (response.status !== 500) {
+					message = data?.error?.messages?.join(", ");
+				}
+				throw new AnilistAPIError([{
+					status: response.status,
+					message: message
+				}])
+			}
+
 			if (data.errors) {
-				console.error(data.errors);
+				throw new AnilistAPIError(data.errors);
 			}
 			return data.data;
 		} catch (error) {
-			console.error(error);
-			if (error instanceof TypeError) {
-				// @ts-ignore
-				console.log("reset:", error.headers?.get("X-RateLimit-Reset"));
-				Toaster.warning(
-					`Preflight check failed. This might be caused by too many requests. Last successful query returned ${this.#getApiLimitRemaining()} queries remaining.`,
-				);
-				console.error("Network error occured: ", error.message);
-				console.log(
-					`Last successful query by VoidVerified returned ${this.#getApiLimitRemaining()} queries remaining.`,
-				);
+			if (error instanceof AnilistAPIError) {
+				console.error("Anilist API returned error: ", error.errors);
+			} else if (!(error instanceof AnilistAPIError)) {
+				console.error(error);
 			}
 			throw error;
 		}
-	}
-
-	#parseStringHeaders(responseHeaders) {
-		const headersArray = responseHeaders.split("\r\n");
-		const headers = {};
-		headersArray
-			.filter((x) => x !== "")
-			.forEach((headerRow) => {
-				const [key, value] = headerRow.split(":");
-				headers[key] = value.trim();
-			});
-		return headers;
 	}
 
 	async #queryUsers(page) {
@@ -753,15 +642,11 @@ export class AnilistAPI {
 
 		const options = this.#getQueryOptions(query, variables);
 
-		try {
-			const data = await this.#elevatedFetch(options);
-			this.#handleQueriedUsers(data.Page.following);
-			const pageInfo = data.Page.pageInfo;
-			if (pageInfo.hasNextPage) {
-				await this.#queryUsers(pageInfo.currentPage + 1);
-			}
-		} catch (error) {
-			throw new Error("Failed to query followed users.", error);
+		const data = await this.fetch(options);
+		this.#handleQueriedUsers(data.Page.following);
+		const pageInfo = data.Page.pageInfo;
+		if (pageInfo.hasNextPage) {
+			await this.#queryUsers(pageInfo.currentPage + 1);
 		}
 	}
 
@@ -803,10 +688,16 @@ export class AnilistAPI {
 		return queryOptions;
 	}
 
-	#setApiLimitRemaining(response) {
+	#setApiLimitRemaining(response: Response) {
+		const apiLimitOffset = 60;
+		// @ts-ignore
+		const remaining = response.headers.get("X-RateLimit-Remaining") - apiLimitOffset;
+		if (remaining < 5 && remaining >= 0) {
+			Toaster.warning(`Remaining queries before reset: ${remaining}`);
+		}
 		localStorage.setItem(
 			"void-verified-api-limit-remaining",
-			response.headers.get("X-RateLimit-Remaining"),
+			remaining.toString()
 		);
 	}
 
@@ -894,3 +785,18 @@ const mediaDeleted = `type
     reason
     deletedMediaTitle
     createdAt`;
+
+export interface IAnilistAPIError {
+	message: string;
+	status: number;
+}
+
+export class AnilistAPIError extends Error {
+	public readonly errors: IAnilistAPIError[]
+
+	constructor(errors: IAnilistAPIError[]) {
+		super();
+		this.errors = errors;
+		this.name = "AnilistAPIError";
+	}
+}

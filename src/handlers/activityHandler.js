@@ -116,9 +116,8 @@ export class ActivityHandler {
 					`https://anilist.co/activity/${response.id}`,
 				);
 			}
-		} catch (err) {
-			console.error(err);
-			Toaster.error("There was an error self-publishing a message.");
+		} catch (error) {
+			Toaster.error("There was an error self-publishing a message.", error);
 		}
 	}
 

@@ -68,8 +68,7 @@ export class MessageFeedHandler {
 			messages = data.activities;
 			this.currentPage = data.pageInfo.currentPage;
 		} catch (error) {
-			console.error(error);
-			Toaster.error("Failed to query messages feed.");
+			Toaster.error("Failed to query messages feed.", error);
 			return;
 		}
 		this.messageFeedContainer.replaceChildren();
@@ -101,8 +100,7 @@ export class MessageFeedHandler {
 			this.currentPage = data.pageInfo.currentPage;
 			this.appendMessages(data.activities);
 		} catch (error) {
-			console.error(error);
-			Toaster.error("There was an error querying activities.");
+			Toaster.error("There was an error querying activities.", error);
 		}
 	}
 

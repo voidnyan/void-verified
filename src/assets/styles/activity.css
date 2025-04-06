@@ -24,6 +24,8 @@
 .void-activity-entry .text .header {
     display: flex;
     align-items: center;
+    row-gap: 10px;
+    flex-wrap: wrap;
 }
 
 .void-activity-entry .text .header > svg {
@@ -210,6 +212,7 @@
     position: absolute;
     right: 12px;
     top: 12px;
+    height: fit-content;
 }
 
 .void-activity-entry .wrap .time {
@@ -455,4 +458,9 @@
 
 .void-hide-activity-feed .scroller {
     display: none;
+}
+
+.void-message-header-user {
+    display: flex;
+    align-items: center;
 }

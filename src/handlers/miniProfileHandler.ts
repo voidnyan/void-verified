@@ -80,7 +80,7 @@ export class MiniProfileHandler {
 				MiniProfileCache.addUser(user);
 			}
 		} catch (error) {
-			Toaster.error(`Failed to query mini profile data for ${username}`)
+			Toaster.error(`Failed to query mini profile data for ${username}`, error)
 			return;
 		} finally {
 			this.#queryInProgress = false;

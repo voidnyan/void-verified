@@ -508,8 +508,7 @@ export class LayoutDesigner {
 			Toaster.success("About published.");
 			settingsUi.renderSettingsUiContent();
 		} catch (error) {
-			console.error(error);
-			Toaster.error("Failed to publish about.");
+			Toaster.error("Failed to publish about.", error);
 		}
 	}
 
@@ -536,8 +535,7 @@ export class LayoutDesigner {
 			this.#anilistSettings.options.profileColor = profileColor;
 			Toaster.success("Color published.");
 		} catch (error) {
-			Toaster.error("Failed to publish color.");
-			console.error("Failed to publish color.", error);
+			Toaster.error("Failed to publish color.", error);
 		} finally {
 			settingsUi.renderSettingsUiContent();
 		}
@@ -555,8 +553,7 @@ export class LayoutDesigner {
 			this.#anilistSettings.donatorBadge = donatorBadge;
 			Toaster.success("Donator badge published.");
 		} catch (error) {
-			Toaster.error("Failed to publish donator badge.");
-			console.error("Failed to publish donator badge.", error);
+			Toaster.error("Failed to publish donator badge.", error);
 		} finally {
 			settingsUi.renderSettingsUiContent();
 		}
@@ -583,7 +580,7 @@ export class LayoutDesigner {
 			this.#updateOption("bio", clearedAbout, settingsUi);
 			Toaster.success("About reset.");
 		} catch (error) {
-			Toaster.error("Failed to query current about from AniList API.");
+			Toaster.error("Failed to query current about from AniList API.", error);
 		}
 	}
 

@@ -176,8 +176,7 @@ export class ActivityPostHandler {
 		try {
 			await anilistAPI.updateMediaProgress(this.mediaActivity.mediaListId, this.selectedSearchResult.id, this.mediaActivity.status, this.mediaActivity.progress);
 		} catch (error) {
-			Toaster.error("Failed to update media progress");
-			console.error(error);
+			Toaster.error("Failed to update media progress", error);
 			return;
 		}
 		try {
@@ -224,8 +223,7 @@ export class ActivityPostHandler {
 
 			this.#createStatusAndProgressControl();
 		} catch (error) {
-			Toaster.error("Failed to query media progress");
-			console.error(error);
+			Toaster.error("Failed to query media progress", error);
 		}
 	}
 }
