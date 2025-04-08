@@ -514,11 +514,9 @@ export class ActivitySearchMode {
 
 	private static filterActivities(activities: Array<IListActivity | ITextActivity | IMessageActivity>): Array<IListActivity | ITextActivity | IMessageActivity> {
 		let filteredActivities = [...activities];
-		console.log(activities);
 		if (this.filter?.length > 0) {
 			filteredActivities = filteredActivities.filter(x => {
 				let result = false;
-				console.log(x);
 				if (x.type === "ANIME_LIST" || x.type === "MANGA_LIST") {
 					result = FuzzyMatch.match(this.filter, x.media.title.userPreferred);
 					if (!result) {

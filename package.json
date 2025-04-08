@@ -1,7 +1,7 @@
 {
     "name": "void-verified",
     "description": "Social enhancements for AniLiist",
-    "version": "1.21.4",
+    "version": "1.21.5",
     "author": {
         "name": "voidnyan"
     },
@@ -9,6 +9,7 @@
         "format": "prettier -w ./",
         "build": "webpack --config config/webpack.config.prod.cjs",
         "dev": "webpack --config config/webpack.config.dev.cjs",
+		"mobile": "node devServer.js",
         "lint-staged": "lint-staged",
         "test": "jest"
     },
@@ -28,6 +29,7 @@
         "browserslist": "^4.23.0",
         "cross-env": "^7.0.3",
         "css-loader": "^6.10.0",
+        "express": "^5.1.0",
         "less": "^4.2.0",
         "less-loader": "^12.2.0",
         "lint-staged": "^15.2.2",
