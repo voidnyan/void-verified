@@ -17,7 +17,7 @@ import {IMarkdownHotkeys, MarkdownHotkeys} from "./markdownHotkeys";
 import {PasteHandler} from "./pasteHandler";
 import {GoalsHandler} from "./goalsHandler";
 import {MiniProfileHandler} from "./miniProfileHandler";
-import {VideoTypeFixer} from "./videoTypeFixer";
+import {VideoFixer} from "./videoFixer";
 import {MessageFeedHandler} from "./messageFeed/messageFeedHandler";
 import {QuickStartHandler} from "./quickStart/quickStartHandler";
 
@@ -110,7 +110,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		intervalScriptHandler.activityHandler.handleImageLinkPreview();
 		intervalScriptHandler.miniProfileHandler.addUserHoverListeners();
 		intervalScriptHandler.activityHandler.addTooltipsToTimestamps();
-		VideoTypeFixer.fixVideoTypes();
+		VideoFixer.replaceVideosWithLinks();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();

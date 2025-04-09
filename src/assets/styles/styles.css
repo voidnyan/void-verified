@@ -1530,3 +1530,14 @@ body:has(.void-modal-background[open]) {
 .void-hide-404 .not-found {
     display: none;
 }
+
+.markdown .void-video-link {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    /*aspect-ratio: 16 / 9;*/
+    background: rgb(var(--color-foreground-blue-dark));
+    color: rgb(var(--color-text));
+    border-radius: 4px;
+}

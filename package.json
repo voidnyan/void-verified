@@ -8,8 +8,10 @@
     "scripts": {
         "format": "prettier -w ./",
         "build": "webpack --config config/webpack.config.prod.cjs",
+        "minor": "npm --no-git-tag-version version minor && npm run build",
+        "patch": "npm --no-git-tag-version version patch && npm run build",
         "dev": "webpack --config config/webpack.config.dev.cjs",
-		"mobile": "node devServer.js",
+        "mobile": "node devServer.js",
         "lint-staged": "lint-staged",
         "test": "jest"
     },
