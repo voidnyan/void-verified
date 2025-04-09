@@ -247,7 +247,7 @@ export const AnilistPaths: AnilistPath[] = [
 		path: "/site-stats"
 	},
 	{
-		name: "Moderatos",
+		name: "Moderators",
 		path: "/moderators"
 	},
 	{

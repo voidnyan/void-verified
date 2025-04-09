@@ -230,7 +230,7 @@ export const defaultSettings: IOptions = {
 	},
 	fixVideoTypes: {
 		defaultValue: false,
-		description: "Detect video mime types based on file extension in url (mobile fix).",
+		description: "Replace videos with video links (mobile fix).",
 		category: categories.misc,
 		authRequired: false
 	},
