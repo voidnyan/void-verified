@@ -3,7 +3,7 @@ import {DOM} from "../utils/DOM";
 
 export class VideoFixer {
 	static replaceVideosWithLinks() {
-		if (!StaticSettings.options.fixVideoTypes.getValue()) {
+		if (!StaticSettings.options.replaceVideosWithLinksEnabled.getValue()) {
 			return;
 		}
 

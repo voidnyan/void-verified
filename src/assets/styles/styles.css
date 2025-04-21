@@ -1135,6 +1135,7 @@ body:has(.void-modal-background[open]) {
     position: absolute;
     text-align: center;
     padding: 8px 12px;
+    top: 0px;
     background: rgba(var(--color-overlay), .85);
     border-radius: 4px;
     width: max-content;
@@ -1457,6 +1458,7 @@ body:has(.void-modal-background[open]) {
     transform: translateX(-50%);
     border-radius: 4px;
     overflow: hidden;
+    z-index: 9500;
 }
 
 .void-image-preview-container img {
