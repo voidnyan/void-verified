@@ -1,5 +1,5 @@
 import { AnilistAPI } from "../../api/anilistAPI";
-import { CheckBadgeIcon, CogIcon } from "../../assets/icons";
+import {CheckBadgeIcon, CogIcon, RefreshIcon} from "../../assets/icons";
 import {
 	Checkbox,
 	IconButton,
@@ -46,7 +46,7 @@ export class NotificationQuickAccessHandler {
 		}
 
 		if (this.#config.hideDefaultNotificationDot) {
-			const dot = document.body.querySelector(".user .notification-dot");
+			const dot = document.body.querySelector(".user .notification-dot") as HTMLElement;
 			if (dot) {
 				dot.style.display = "none";
 			}
@@ -92,10 +92,11 @@ export class NotificationQuickAccessHandler {
 		const headerWrapper = DOM.create("div", null, header);
 		headerWrapper.classList.add("section-header");
 
+		const reloadButton = this.createReloadButton();
 		const clearButton = this.#clearButton();
 		const configButton = this.#configOpenButton();
 		headerWrapper.append(
-			DOM.create("span", null, [clearButton, configButton]),
+			DOM.create("span", null, [reloadButton, clearButton, configButton]),
 		);
 
 		containerWrapper.append(headerWrapper, container);
@@ -230,6 +231,13 @@ export class NotificationQuickAccessHandler {
 		clearButton.setAttribute("title", "Mark all as read");
 		return clearButton;
 	};
+
+	private createReloadButton() {
+		const reloadButton = IconButton(RefreshIcon(), async () => {
+			await this.#queryNotifications();
+		});
+		return reloadButton;
+	}
 
 	#configOpenButton = () => {
 		const openConfigurationButton = IconButton(CogIcon(), () => {
