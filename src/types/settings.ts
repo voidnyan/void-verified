@@ -69,7 +69,7 @@ export interface IOptions {
 	imagePreviewEnabled: IOption;
 	miniProfileEnabled: IOption;
 	replaceNotifications: IOption;
-	fixVideoTypes: IOption;
+	replaceVideosWithLinksEnabled: IOption;
 	messageFeedEnabled: IOption;
 	quickStartEnabled: IOption;
 	activityTimestampTooltipsEnabled: IOption;

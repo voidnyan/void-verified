@@ -228,7 +228,7 @@ export const defaultSettings: IOptions = {
 		category: categories.users,
 		authRequired: false
 	},
-	fixVideoTypes: {
+	replaceVideosWithLinksEnabled: {
 		defaultValue: false,
 		description: "Replace videos with video links (mobile fix).",
 		category: categories.misc,

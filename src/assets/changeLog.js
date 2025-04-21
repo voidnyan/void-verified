@@ -18,7 +18,9 @@ class Feature {
 
 export const changeLog = [
 	new Version("1.22", [
-		new Feature("Replace videos with video links (mobile fix)", "fixVideoTypes"),
+		new Feature("Replace videos with video links (mobile fix).", "replaceVideosWithLinksEnabled"),
+		new Feature("Added a reload button to quick access notifications."),
+		new Feature("Fixed VV adding a gap to end of page.")
 	]),
 	new Version("1.21", [
 		new Feature("Enable VoidVerified QuickStart.", "quickStartEnabled"),
