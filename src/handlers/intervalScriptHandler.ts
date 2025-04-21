@@ -8,7 +8,7 @@ import { Toaster } from "../utils/toaster";
 import { Link } from "../components/components.js";
 import { GifKeyboardHandler } from "./gifKeyboardHandler.js";
 import { AnilistFeedFixHandler } from "./anilistFeedFixHandler.js";
-import { NotificationQuickAccessHandler } from "./notifications/notificationQuickAccessHandler.js";
+import { NotificationQuickAccessHandler } from "./notifications/notificationQuickAccessHandler";
 import { NotificationFeedHandler } from "./notifications/notificationFeedHandler.js";
 import {
 	ActivityPostHandler
