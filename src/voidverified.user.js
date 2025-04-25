@@ -14,6 +14,7 @@ import {QuickStartHandler} from "./handlers/quickStart/quickStartHandler";
 import {Vue} from "./utils/vue";
 import {StaticTooltip} from "./utils/staticTooltip";
 import {CloseOverlaysHandler} from "./utils/closeOverlaysHandler";
+import {QuoteHandler} from "./handlers/quoteHandler";
 
 StaticSettings.initialize();
 LibraryLoader.loadLibraries();
@@ -28,6 +29,7 @@ const styleHandler = new StyleHandler(StaticSettings.settingsInstance);
 styleHandler.refreshStyles();
 StyleRegister.registerStyles();
 CloseOverlaysHandler.initialize();
+QuoteHandler.addSelectionListener();
 
 try {
 	const intervalScriptHandler = new IntervalScriptHandler(StaticSettings.settingsInstance);

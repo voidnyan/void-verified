@@ -20,6 +20,9 @@ import {MiniProfileHandler} from "./miniProfileHandler";
 import {VideoFixer} from "./videoFixer";
 import {MessageFeedHandler} from "./messageFeed/messageFeedHandler";
 import {QuickStartHandler} from "./quickStart/quickStartHandler";
+import {Vue} from "../utils/vue";
+import {QuoteHandler} from "./quoteHandler";
+import {DomDataHandler} from "./domDataHandler";
 
 interface IIntervalScriptsHandler {
 	styleHandler: any;
@@ -96,6 +99,10 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 
 	handleIntervalScripts(intervalScriptHandler: IIntervalScriptsHandler) {
 		const path = window.location.pathname;
+
+		DomDataHandler.addActivityIdsToDom();
+		DomDataHandler.addReplyIdsToDom();
+
 		QuickStartHandler.addNavigationButtons();
 		intervalScriptHandler.activityHandler.moveAndDisplaySubscribeButton();
 		intervalScriptHandler.activityHandler.addSelfMessageButton();
@@ -111,6 +118,9 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		intervalScriptHandler.miniProfileHandler.addUserHoverListeners();
 		intervalScriptHandler.activityHandler.addTooltipsToTimestamps();
 		VideoFixer.replaceVideosWithLinks();
+		QuoteHandler.addQuoteClickHandlers();
+		DomDataHandler.scrollToReply();
+		QuoteHandler.addDirectLinksToReplies();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();
@@ -118,6 +128,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 			intervalScriptHandler.notificationQuickAccessHandler.renderNotifications();
 			intervalScriptHandler.activityPostHandler.render();
 			MessageFeedHandler.addFeedFilter();
+
 		} else {
 			intervalScriptHandler.notificationQuickAccessHandler.resetShouldRender();
 		}

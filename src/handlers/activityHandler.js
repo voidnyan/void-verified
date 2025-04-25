@@ -7,6 +7,8 @@ import {ImageFormats} from "../assets/imageFormats";
 import {Vue} from "../utils/vue";
 import {StaticTooltip} from "../utils/staticTooltip";
 import {Time} from "../utils/time";
+import {CollapsedComments} from "../utils/collapsedReplies";
+import {DomDataHandler} from "./domDataHandler";
 
 export class ActivityHandler {
 	settings;
@@ -73,7 +75,7 @@ export class ActivityHandler {
 			return;
 		}
 
-		const replies = document.querySelectorAll(".activity-replies .reply:not([collapsed])");
+		const replies = document.querySelectorAll(".activity-replies .reply:not([collapsed]):not(.preview)");
 
 		for (const reply of replies) {
 			this.#addCollapseReplyButton(reply);
@@ -82,22 +84,30 @@ export class ActivityHandler {
 
 	#addCollapseReplyButton(reply) {
 		const button = DOM.create("div", "reply-collapse");
+		const replyId = DomDataHandler.getIdFromElement(reply);
 		button.addEventListener("click", () => {
 			const isCollapsed = reply.getAttribute("collapsed") === "true";
 			reply.setAttribute("collapsed", !isCollapsed);
+			if (StaticSettings.options.rememberCollapsedReplies.getValue()) {
+				CollapsedComments.setIsCollapsed(replyId, !isCollapsed);
+			}
 		});
 		reply.prepend(button);
 		const replyContent = DOM.create("div", "reply-content");
 		replyContent.append(reply.querySelector(".header"), reply.querySelector(".reply-markdown"));
 		reply.append(replyContent);
-		let isLiked = false;
-		switch (true) {
-			case this.settings.options.autoCollapseLiked.getValue():
-				isLiked =  reply.querySelector(".action.likes .button").classList.contains("liked");
-			case this.settings.options.autoCollapseSelf.getValue():
-				isLiked = !reply.classList.contains("preview") && reply.querySelector("a.name").innerText.trim() === this.settings.anilistUser || isLiked;
+		let isCollapsed = false;
+		if (this.settings.options.autoCollapseLiked.getValue()) {
+			isCollapsed =  reply.querySelector(".action.likes .button").classList.contains("liked");
 		}
-		reply.setAttribute("collapsed", isLiked);
+		if (!isCollapsed && this.settings.options.autoCollapseSelf.getValue()) {
+			isCollapsed = !reply.classList.contains("preview") && reply.querySelector("a.name").innerText.trim() === this.settings.anilistUser || isCollapsed;
+		}
+		if (StaticSettings.options.rememberCollapsedReplies.getValue()) {
+			const isManuallyCollapsed = CollapsedComments.isCollapsed(replyId);
+			isCollapsed = isManuallyCollapsed !== undefined ? isManuallyCollapsed : isCollapsed;
+		}
+		reply.setAttribute("collapsed", isCollapsed);
 	}
 
 	async #handleSelfMessage(settings) {

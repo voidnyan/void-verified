@@ -9,6 +9,7 @@
 .nav a[href="/settings/developer" i]::after{content: " & Void"}
 .void-settings .void-nav ol {
     display: flex;
+    flex-wrap: wrap;
     margin: 8px 0px;
     padding: 0;
 }
@@ -1181,6 +1182,11 @@ body:has(.void-modal-background[open]) {
     visibility: visible;
 }
 
+.void-static-tooltip.void-interactable {
+    pointer-events: initial;
+    cursor: pointer;
+}
+
 .void-button.void-self-message,
 .void-button.void-slim {
     margin-top: 0;
@@ -1542,4 +1548,26 @@ body:has(.void-modal-background[open]) {
     background: rgb(var(--color-foreground-blue-dark));
     color: rgb(var(--color-text));
     border-radius: 4px;
+}
+
+.void-quote {
+    cursor: pointer;
+    transition: border-color .3s ease;
+}
+
+.void-quote:hover {
+    border-color: rgb(var(--color-blue));
+}
+
+.void-has-icon svg {
+    height: 14px;
+    vertical-align: text-top;
+}
+
+.void-icon-mr svg {
+    margin-right: 6px;
+}
+
+.void-icon-ml svg {
+    margin-left: 6px;
 }

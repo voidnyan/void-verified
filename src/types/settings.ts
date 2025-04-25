@@ -63,6 +63,7 @@ export interface IOptions {
 	replyActivityUpdate: IOption;
 	markdownHotkeys: IOption;
 	collapsibleReplies: IOption;
+	rememberCollapsedReplies: IOption;
 	autoCollapseLiked: IOption;
 	autoCollapseSelf: IOption;
 	goalsEnabled: IOption;
@@ -73,5 +74,7 @@ export interface IOptions {
 	messageFeedEnabled: IOption;
 	quickStartEnabled: IOption;
 	activityTimestampTooltipsEnabled: IOption;
-	// useElevatedFetch: IOption;
+	replyToEnabled: IOption;
+	replyDirectLinksEnabled: IOption;
+	scrollToReplyEnabled: IOption;
 }

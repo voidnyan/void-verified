@@ -198,6 +198,12 @@ export const defaultSettings: IOptions = {
 		category: categories.activity,
 		authRequired: false,
 	},
+	rememberCollapsedReplies: {
+		defaultValue: true,
+		description: "Remember collapsed replies.",
+		category: categories.activity,
+		authRequired: false,
+	},
 	autoCollapseLiked: {
 		defaultValue: false,
 		description: "Collapse liked comments.",
@@ -250,6 +256,24 @@ export const defaultSettings: IOptions = {
 		defaultValue: false,
 		description: "Replace activity timestamp tooltips.",
 		category: categories.misc,
+		authRequired: false
+	},
+	replyToEnabled: {
+		defaultValue: false,
+		description: "Add Reply To selection to activities and replies.",
+		category: categories.activity,
+		authRequired: false
+	},
+	replyDirectLinksEnabled: {
+		defaultValue: false,
+		description: "Add direct links to replies.",
+		category: categories.activity,
+		authRequired: false
+	},
+	scrollToReplyEnabled: {
+		defaultValue: true,
+		description: "Scroll to reply if it is specified in the URL.",
+		category: categories.activity,
 		authRequired: false
 	}
 };
