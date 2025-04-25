@@ -17,6 +17,12 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.23", [
+		new Feature("Add Reply To selection to activities and replies.", "replyToEnabled"),
+		new Feature("Add direct links to replies.", "replyDirectLinksEnabled"),
+		new Feature("Scroll to reply if it is specified in the URL.", "scrollToReplyEnabled"),
+		new Feature("Remember collapsed replies.", "rememberCollapsedReplies"),
+	]),
 	new Version("1.22", [
 		new Feature("Replace videos with video links (mobile fix).", "replaceVideosWithLinksEnabled"),
 		new Feature("Added a reload button to quick access notifications."),

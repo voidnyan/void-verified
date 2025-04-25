@@ -39,6 +39,12 @@ export class DOM {
 		return el;
 	}
 
+	static createAnchor(href, classes = null, children = null) {
+		const anchor = this.create("a", classes, children);
+		anchor.setAttribute("href", href);
+		return anchor;
+	}
+
 	static transformClasses(classes) {
 		let result = [];
 		for (const className of classes.split(" ")) {

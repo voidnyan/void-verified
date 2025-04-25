@@ -36,11 +36,11 @@ export class Vue {
 				const path = target.pathname + target.search;
 				const pathStart = path.slice(1).split("/")[0]
 				const locationStart = window.location.pathname.slice(1).split("/")[0]
-				if (pathStart && locationStart) {
+				if (pathStart === locationStart) {
 					document.body.classList.add("void-hide-404");
 					this.router.push("/404");
 					setTimeout(() => {
-						this.router.push(path);
+						this.router.replace(path);
 						document.body.classList.remove("void-hide-404");
 					}, 5);
 				} else {
@@ -48,5 +48,19 @@ export class Vue {
 				}
 			}
 		}
+	}
+
+	static getProps(element: string | Element): any | null {
+		const el = typeof element === "string" ? document.querySelector(element) : element;
+		if (!el) {
+			return null;
+		}
+
+		// @ts-ignore;
+		const instance = el.__vue__;
+		if (!instance || !instance?.$props) {
+			return null;
+		}
+		return instance.$props;
 	}
 }

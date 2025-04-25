@@ -16,6 +16,7 @@ export class TextActivityComponent extends BaseActivityComponent {
 		super(activity.id);
 		const activityClass = activity.type === "MESSAGE" ? ".activity-message" : ".activity-text";
 		this.element = DOM.create("div", `activity-entry .activity-entry ${activityClass}`);
+		this.element.setAttribute("void-activity-id", activity.id.toString());
 		const wrap = DOM.create("div", ".wrap");
 		const text = this.createText(activity);
 

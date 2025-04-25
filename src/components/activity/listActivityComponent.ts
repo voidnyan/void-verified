@@ -13,6 +13,7 @@ export class ListActivityComponent extends BaseActivityComponent{
 		this.activity = activity;
 		const entryClass = activity.type === "ANIME_LIST" ? ".activity-anime_list" : ".activity-manga_list";
 		this.element = DOM.create("div", `activity-entry .activity-entry ${entryClass}`);
+		this.element.setAttribute("void-activity-id", activity.id.toString());
 
 		const wrap = DOM.create("div", ".wrap");
 		wrap.append(this.createList());

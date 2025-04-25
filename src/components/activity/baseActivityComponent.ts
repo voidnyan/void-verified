@@ -306,6 +306,7 @@ export class BaseActivityComponent {
 
 	createReply(reply: IActivityReply) {
 		const replyContainer = DOM.create("div", ".reply");
+		replyContainer.setAttribute("void-reply-id", reply.id);
 		const {name, avatar, moderatorBadge} = this.createHeaderUser(reply.user);
 		const header = DOM.create("div", ".header", [avatar, name]);
 
@@ -318,6 +319,10 @@ export class BaseActivityComponent {
 		const timeAction = this.createTime(reply.createdAt);
 
 		actions.append(likeAction, timeAction);
+		if (StaticSettings.options.replyDirectLinksEnabled.getValue()) {
+			const directLink = DOM.createAnchor(`/activity/${this.activityId}?void-reply-id=${reply.id}`, "has-icon reply-direct-link icon-ml", LinkIcon());
+			actions.prepend(directLink);
+		}
 		header.append(actions);
 
 		const replyMarkdown = DOM.create("div", ".reply-markdown");
