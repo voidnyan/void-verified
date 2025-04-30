@@ -8,23 +8,22 @@ export class ImageApiFactory {
 	}
 
 	static getImageHostInstance() {
-		const imageHostService = new ImageHostService();
-		switch (imageHostService.getSelectedHost()) {
+		switch (ImageHostService.getSelectedHost()) {
 			case imageHosts.imgbb:
 				return new ImgbbAPI(
-					imageHostService.getImageHostConfiguration(
+					ImageHostService.getImageHostConfiguration(
 						imageHosts.imgbb,
 					),
 				);
 			case imageHosts.imgur:
 				return new ImgurAPI(
-					imageHostService.getImageHostConfiguration(
+					ImageHostService.getImageHostConfiguration(
 						imageHosts.imgur,
 					),
 				);
 			case imageHosts.catbox:
 				return new CatboxAPI(
-					imageHostService.getImageHostConfiguration(
+					ImageHostService.getImageHostConfiguration(
 						imageHosts.catbox,
 					),
 				);

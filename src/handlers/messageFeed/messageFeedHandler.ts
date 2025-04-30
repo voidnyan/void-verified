@@ -60,11 +60,10 @@ export class MessageFeedHandler {
 		document.querySelector(".activity-feed-wrap").classList.add("void-hide-activity-feed")
 		this.messageFeedContainer = DOM.create("div", ".activity-feed message-feed", Loader());
 		document.querySelector(".activity-feed-wrap").append(this.messageFeedContainer);
-		const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
 		let messages: IMessageActivity[];
 		const isFollowing = document.querySelector(".feed-type-toggle :first-child").classList.contains("active");
 		try {
-			const data = await anilistAPI.queryMessages(isFollowing);
+			const data = await AnilistAPI.queryMessages(isFollowing);
 			messages = data.activities;
 			this.currentPage = data.pageInfo.currentPage;
 		} catch (error) {
@@ -95,8 +94,7 @@ export class MessageFeedHandler {
 	private static async loadMore() {
 		try {
 			const isFollowing = document.querySelector(".feed-type-toggle :first-child").classList.contains("active");
-			const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
-			const data = await anilistAPI.queryMessages(isFollowing, this.currentPage + 1);
+			const data = await AnilistAPI.queryMessages(isFollowing, this.currentPage + 1);
 			this.currentPage = data.pageInfo.currentPage;
 			this.appendMessages(data.activities);
 		} catch (error) {

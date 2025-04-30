@@ -122,8 +122,7 @@ export class QuickAccess {
 			try {
 				Toaster.debug("Querying Quick Access users.");
 				this.#queryInProgress = true;
-				const anilistAPI = new AnilistAPI(this.settings);
-				await anilistAPI.queryVerifiedUsers();
+				await AnilistAPI.queryVerifiedUsers();
 				Toaster.success("Quick Access users updated.");
 			} catch (error) {
 				Toaster.error("Querying Quick Access failed.", error);

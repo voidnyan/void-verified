@@ -50,7 +50,7 @@ export class GoalsHandler {
 		this.#goals = JSON.parse(localStorage.getItem(localStorageKey)) as IGoal[] ?? [] as IGoal[];
 	}
 	static renderSettings() {
-		const container = DOM.create("div", "goals-settings");
+		const container = DOM.createDiv("goals-settings");
 		this.#goalForm = {...initialForm};
 		this.#renderSettingsContainer(container);
 		return container;
@@ -82,8 +82,7 @@ export class GoalsHandler {
 		const filterByDate = new Date();
 		filterByDate.setDate(filterByDate.getDate() + 7);
 		try {
-			const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
-			const data = await anilistAPI.getUserMediaListCollection(username, "ANIME");
+			const data = await AnilistAPI.getUserMediaListCollection(username, "ANIME");
 			const about = data.MediaListCollection.user.about;
 			const json = ObjectDecoder.decodeStringToObject(about);
 			goals = json?.goals;
@@ -94,7 +93,7 @@ export class GoalsHandler {
 			media = data.MediaListCollection.lists.map(list => list.entries).flat(1);
 			if (goals?.some(goal => this.#isMangaGoal(goal.type))) {
 				Toaster.debug("User has manga goals. Querying manga list.");
-				const mangaData = await anilistAPI.getUserMediaListCollection(username, "MANGA");
+				const mangaData = await AnilistAPI.getUserMediaListCollection(username, "MANGA");
 				mangaMedia = mangaData.MediaListCollection.lists.map(list => list.entries).flat(1);
 			}
 		} catch (error) {
@@ -411,15 +410,13 @@ export class GoalsHandler {
 	}
 
 	static async #saveGoals() {
-		const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
-
 		try {
 			Toaster.debug("Querying API for bio and saving goals.");
-			const about = await anilistAPI.getUserAbout(StaticSettings.settingsInstance.anilistUser);
+			const about = await AnilistAPI.getUserAbout(StaticSettings.settingsInstance.anilistUser);
 			const aboutJson = ObjectDecoder.decodeStringToObject(about);
 			aboutJson.goals = this.#goals;
 			const newAbout = ObjectDecoder.insertJsonToUserBio(about, aboutJson);
-			await anilistAPI.saveUserAbout(newAbout);
+			await AnilistAPI.saveUserAbout(newAbout);
 			Toaster.success("Saved goals.");
 		} catch (error) {
 			Toaster.error("Failed to save goals.", error);
@@ -427,11 +424,9 @@ export class GoalsHandler {
 	}
 
 	static async #fetchGoals(){
-		const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
-
 		try {
 			Toaster.debug("Fetching goals.");
-			const about = await anilistAPI.getUserAbout(StaticSettings.settingsInstance.anilistUser);
+			const about = await AnilistAPI.getUserAbout(StaticSettings.settingsInstance.anilistUser);
 			const aboutJson = ObjectDecoder.decodeStringToObject(about);
 			if (aboutJson.goals) {
 				this.#goals = aboutJson.goals;

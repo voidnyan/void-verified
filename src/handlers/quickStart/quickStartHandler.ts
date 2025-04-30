@@ -305,13 +305,13 @@ export class QuickStartHandler {
 	}
 
 	static createConfigContainer() {
-		const configContainer = DOM.create("div", "quick-start-config-container");
+		const configContainer = DOM.createDiv("quick-start-config-container");
 		configContainer.append(DOM.create("h3", "header", "QuickStart Configuration"));
 		const keybindInput = KeyInput(this.config.openQuickStartKeybind, "all", (event) => {
 			this.bindOpenQuickStart(event.target.value, this.config.openQuickStartKeybind);
 			this.config.openQuickStartKeybind = event.target.value;
 			this.config.save();
-		});
+		}) as HTMLInputElement;
 		hotkeys("*", {element: keybindInput, scope: "all"}, (event) => {
 			if (event.target !== keybindInput) {
 				return;

@@ -77,6 +77,6 @@ export class ImgbbAPI extends ImageHostBase {
 			...configuration,
 			apiKey,
 		};
-		new ImageHostService().setImageHostConfiguration(config.name, config);
+		ImageHostService.setImageHostConfiguration(config.name, config);
 	}
 }

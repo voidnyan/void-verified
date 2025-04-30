@@ -1,11 +1,10 @@
-import { GlobalCSS } from "./globalCSS.js";
+import { GlobalCSS } from "./globalCSS";
 import { ActivityHandler } from "./activityHandler.js";
-import { SettingsUserInterface } from "./settingsUserInterface.js";
 import { StyleHandler } from "./styleHandler.js";
 import { QuickAccess } from "./quickAccessHandler.js";
-import { LayoutDesigner } from "./layoutDesigner.js";
+import { LayoutDesigner } from "./layoutDesigner";
 import { Toaster } from "../utils/toaster";
-import { Link } from "../components/components.js";
+import {Link} from "../components/components.js";
 import { GifKeyboardHandler } from "./gifKeyboardHandler.js";
 import { AnilistFeedFixHandler } from "./anilistFeedFixHandler.js";
 import { NotificationQuickAccessHandler } from "./notifications/notificationQuickAccessHandler";
@@ -13,45 +12,23 @@ import { NotificationFeedHandler } from "./notifications/notificationFeedHandler
 import {
 	ActivityPostHandler
 } from "./activityPostHandler";
-import {IMarkdownHotkeys, MarkdownHotkeys} from "./markdownHotkeys";
+import {MarkdownHotkeys} from "./markdownHotkeys";
 import {PasteHandler} from "./pasteHandler";
 import {GoalsHandler} from "./goalsHandler";
 import {MiniProfileHandler} from "./miniProfileHandler";
 import {VideoFixer} from "./videoFixer";
 import {MessageFeedHandler} from "./messageFeed/messageFeedHandler";
 import {QuickStartHandler} from "./quickStart/quickStartHandler";
-import {Vue} from "../utils/vue";
 import {QuoteHandler} from "./quoteHandler";
 import {DomDataHandler} from "./domDataHandler";
 import {MarkdownTaskbarHandler} from "./markdownTaskbarHandler";
+import {SettingsUi} from "./settingsUi";
 
-interface IIntervalScriptsHandler {
-	styleHandler: any;
-	settingsUi: any;
-	activityHandler: any;
-	settings: any;
-	globalCSS: any;
-	quickAccess: any;
-	layoutDesigner: any;
-	gifKeyboard: any;
-	anilistFeedFixHandler: any;
-	notificationQuickAccessHandler: any;
-	notificationFeedHandler: any;
-	activityPostHandler: ActivityPostHandler;
-	markdownHotkeys: IMarkdownHotkeys;
-	pasteHandler: any;
-	miniProfileHandler: MiniProfileHandler;
-	hasPathChanged(path: string): boolean;
-}
-
-export class IntervalScriptHandler implements IIntervalScriptsHandler {
+export class IntervalScriptHandler {
 	styleHandler;
-	settingsUi;
 	activityHandler;
 	settings;
-	globalCSS;
 	quickAccess;
-	layoutDesigner;
 	gifKeyboard;
 	anilistFeedFixHandler;
 	notificationQuickAccessHandler;
@@ -59,23 +36,12 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 	activityPostHandler;
 	markdownHotkeys;
 	pasteHandler;
-	miniProfileHandler: MiniProfileHandler;
 	constructor(settings) {
 		this.settings = settings;
 
 		this.styleHandler = new StyleHandler(settings);
-		this.globalCSS = new GlobalCSS(settings);
-		this.layoutDesigner = new LayoutDesigner(settings);
 		this.gifKeyboard = new GifKeyboardHandler(settings);
 
-		this.miniProfileHandler = new MiniProfileHandler();
-		this.settingsUi = new SettingsUserInterface(
-			settings,
-			this.styleHandler,
-			this.globalCSS,
-			this.layoutDesigner,
-			this.miniProfileHandler
-		);
 		this.activityHandler = new ActivityHandler(settings);
 		this.quickAccess = new QuickAccess(settings);
 		this.anilistFeedFixHandler = new AnilistFeedFixHandler(settings);
@@ -90,7 +56,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 	currentPath = "";
 	evaluationIntervalInSeconds = 1;
 
-	hasPathChanged(path) {
+	hasPathChanged(path: string) {
 		if (path === this.currentPath) {
 			return false;
 		}
@@ -98,7 +64,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		return true;
 	}
 
-	handleIntervalScripts(intervalScriptHandler: IIntervalScriptsHandler) {
+	handleIntervalScripts(intervalScriptHandler: IntervalScriptHandler) {
 		const path = window.location.pathname;
 
 		DomDataHandler.addActivityIdsToDom();
@@ -110,13 +76,13 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		intervalScriptHandler.activityHandler.removeBlankFromAnilistLinks();
 		intervalScriptHandler.activityHandler.addCollapseReplyButtons();
 		intervalScriptHandler.gifKeyboard.handleGifKeyboard();
-		intervalScriptHandler.layoutDesigner.renderLayoutPreview();
+		LayoutDesigner.renderLayoutPreview();
 		intervalScriptHandler.anilistFeedFixHandler.handleFix();
 		intervalScriptHandler.notificationFeedHandler.renderNotificationsFeed();
 		intervalScriptHandler.markdownHotkeys.renderSettings();
 		intervalScriptHandler.pasteHandler.registerDragAndDropInputs();
 		intervalScriptHandler.activityHandler.handleImageLinkPreview();
-		intervalScriptHandler.miniProfileHandler.addUserHoverListeners();
+		MiniProfileHandler.addUserHoverListeners();
 		intervalScriptHandler.activityHandler.addTooltipsToTimestamps();
 		VideoFixer.replaceVideosWithLinks();
 		QuoteHandler.addQuoteClickHandlers();
@@ -136,7 +102,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		}
 
 		if (!path.startsWith("/settings/developer")) {
-			intervalScriptHandler.settingsUi.removeSettingsUi();
+			SettingsUi.removeSettings();
 		}
 
 		if (!intervalScriptHandler.hasPathChanged(path)) {
@@ -154,10 +120,10 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 			intervalScriptHandler.styleHandler.clearStyles("profile");
 		}
 
-		intervalScriptHandler.globalCSS.createCss();
+		GlobalCSS.createCss();
 
 		if (path.startsWith("/settings/developer")) {
-			intervalScriptHandler.settingsUi.renderSettingsUi();
+			SettingsUi.render();
 		}
 	}
 
@@ -180,4 +146,5 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 			}
 		}, this.evaluationIntervalInSeconds * 1000);
 	}
+
 }

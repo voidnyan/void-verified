@@ -14,10 +14,18 @@ export interface IVerifiedUser {
 	banner: string,
 	color: string,
 	id: number,
-	lastFetched: string,
+	lastFetch: string | Date,
 	quickAccessBadgeDisplay: boolean,
 	sign: string,
-	username: string
+	username: string,
+	quickAccessBadge: boolean,
+	enabledForUsername: boolean,
+	copyColorFromProfile: boolean,
+	highlightEnabled: boolean,
+	highlightEnabledForReplies: boolean,
+	colorUserActivity: boolean,
+	colorUserReplies: boolean,
+	quickAccessEnabled: boolean,
 }
 
 export interface IOption {
@@ -28,7 +36,7 @@ export interface IOption {
 	category: string;
 	authRequired?: boolean;
 	getValue?: () => string | number | boolean;
-	setValue?: (key: string | number | boolean) => void;
+	setValue?: (value: string | number | boolean) => void;
 }
 
 export interface IOptions {
@@ -53,7 +61,8 @@ export interface IOptions {
 	quickAccessTimer: IOption;
 	pasteEnabled: IOption;
 	pasteWrapImagesWithLink: IOption;
-	pasteImageWidth: IOption;
+	pasteImageWidthValue: IOption;
+	pasteImageUnitIsPercentage: IOption;
 	pasteImagesToHostService: IOption;
 	toasterEnabled: IOption;
 	removeAnilistBlanks: IOption;

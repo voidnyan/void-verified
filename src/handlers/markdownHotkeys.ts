@@ -178,7 +178,7 @@ export class MarkdownHotkeys implements IMarkdownHotkeys {
 
 	#createSettingsContainer(): Element {
 		const container = DOM.create("div", "markdown-dialog-container");
-		container.setAttribute("closed", true);
+		container.setAttribute("closed", "true");
 		const header = DOM.create("div", "markdown-dialog-header", "Shortcuts");
 		const body = this.#createSettingsContainerBody();
 		container.append(header, body);
@@ -193,7 +193,7 @@ export class MarkdownHotkeys implements IMarkdownHotkeys {
 		for (const input of this.config.getAllMappings()) {
 			const inputField = KeyInput(input.key, "markdown-mapping", () => {
 				this.setupMarkdownHotkeys();
-			});
+			}) as HTMLInputElement;
 			hotkeys("*", {element: inputField, scope: "markdown-mapping"}, (event) => {
 				if (!filter(event)) {
 					return;

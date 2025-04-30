@@ -2,6 +2,7 @@ import {DOM} from "./DOM";
 import {Select, Toast, Option, Button, Label} from "../components/components";
 import {LocalStorageKeys} from "../assets/localStorageKeys";
 import {AnilistAPIError} from "../api/anilistAPI";
+import {SelectComponent} from "../components/selectComponent";
 
 export const toastTypes = {
 	info: "info",
@@ -174,8 +175,8 @@ export class Toaster {
 		);
 	}
 
-	static renderSettings(settingsUi) {
-		const container = DOM.create("div");
+	static renderSettings() {
+		const container = DOM.createDiv();
 
 		container.append(DOM.create("h3", null, "Configure Toasts"));
 
@@ -187,31 +188,23 @@ export class Toaster {
 			),
 		);
 
-		const options = Object.values(toastTypes).map((type) =>
-			Option(type, this.#config.toastLevel === toastLevels[type], () => {
-				this.#handleLevelChange(type);
-				settingsUi.renderSettingsUiContent();
-			}),
-		);
-		container.append(Label("Toast level", Select(options)));
+		const toastTypeSelect = new SelectComponent(this.#config.toastLevel, Object.values(toastTypes), (value) => {
+			this.#handleLevelChange(value);
+		} );
 
-		const locationOptions = toastLocations.map((location) =>
-			Option(location, this.#config.location === location, () => {
-				this.#handleLocationChange(location);
-				settingsUi.renderSettingsUiContent();
-			}),
-		);
+		container.append(Label("Toast level", toastTypeSelect.element));
 
-		container.append(Label("Toast location", Select(locationOptions)));
+		const locationSelect = new SelectComponent(this.#config.location, toastLocations, (value) => {
+			this.#handleLocationChange(location);
+		})
 
-		const durationOptions = toastDurations.map((duration) =>
-			Option(`${duration}s`, duration === this.#config.duration, () => {
-				this.#handleDurationChange(duration);
-				settingsUi.renderSettingsUiContent();
-			}),
-		);
+		container.append(Label("Toast location", locationSelect.element));
 
-		container.append(Label("Toast duration", Select(durationOptions)));
+		const durationSelect = new SelectComponent(this.#config.duration, toastDurations, (value) => {
+			this.#handleDurationChange(value);
+		})
+
+		container.append(Label("Toast duration", durationSelect.element));
 
 		container.append(
 			Button("Test Toasts", () => {

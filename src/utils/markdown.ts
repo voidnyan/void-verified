@@ -117,8 +117,8 @@ export class Markdown {
 		for (const youtube of markdownElement.querySelectorAll(".youtube")) {
 			youtube.addEventListener("click", () => {
 				const id = youtube.id;
-				const iframe = DOM.create("iframe");
-				iframe.setAttribute("frameborder", 0);
+				const iframe = DOM.create<HTMLIFrameElement>("iframe");
+				iframe.setAttribute("frameborder", "0");
 				iframe.setAttribute("src", `https://www.youtube.com/embed/${id}?autoplay=1&autohide=1`);
 				youtube.replaceChildren(iframe);
 			});

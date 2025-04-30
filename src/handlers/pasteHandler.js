@@ -114,7 +114,7 @@ export class PasteHandler {
 			const result = clipboard.replace(
 				regex,
 				(match) =>
-					`img${this.settings.options.pasteImageWidth.getValue()}(${match})`,
+					`img${PasteHandler.getImageWidth()}(${match})`,
 			);
 			window.document.execCommand("insertText", false, result);
 			return;
@@ -167,11 +167,17 @@ export class PasteHandler {
 	}
 
 	static handleImg(row) {
-		const img = `img${StaticSettings.options.pasteImageWidth.getValue()}(${row})`;
+		const img = `img${this.getImageWidth()}(${row})`;
 		let result = img;
 		if (StaticSettings.options.pasteWrapImagesWithLink.getValue()) {
 			result = `[ ${img} ](${row})`;
 		}
 		return result;
+	}
+
+	static getImageWidth() {
+		const isPercentage = StaticSettings.options.pasteImageUnitIsPercentage.getValue();
+		const width = StaticSettings.options.pasteImageWidthValue.getValue();
+		return  isPercentage ? Math.min(width, 100) + "%" : width.toString();
 	}
 }

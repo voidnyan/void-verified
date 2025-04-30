@@ -13,7 +13,7 @@ const ignoredKeys = [
 
 export class ConfigHandler {
 	static renderSettings() {
-		const container = DOM.create("div");
+		const container = DOM.createDiv();
 		container.append(DOM.create("h4", null, "Import"));
 		container.append(this.createInput());
 
@@ -27,7 +27,7 @@ export class ConfigHandler {
 		input.setAttribute("type", "file");
 		input.setAttribute("accept", ".json");
 		input.addEventListener("change", (event) => {
-			this.import(event.target.files[0]);
+			this.import((event.target as HTMLInputElement).files[0]);
 		});
 		return DOM.create("div", "dropbox", [input, DOM.create("p", null, "Drop VoidVerified config json file here or click to upload")]);
 	}

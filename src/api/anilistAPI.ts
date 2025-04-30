@@ -14,6 +14,9 @@ import SaveMessageActivityMutation from "./queries/saveMessageActivityMutation";
 import SaveActivityReplyMutation from "./queries/saveActivityReplyMutation";
 import DeleteActivityQuery from "./queries/deleteActivityQuery";
 import DeleteActivityReplyQuery from "./queries/deleteActivityReplyQuery";
+import {AnilistAuth} from "../utils/anilistAuth";
+import {VerifiedUsers} from "../utils/verifiedUsers";
+import {IUser} from "./types/user";
 
 // [
 // 	{
@@ -23,59 +26,14 @@ import DeleteActivityReplyQuery from "./queries/deleteActivityReplyQuery";
 // ]
 
 export class AnilistAPI {
-	settings;
-	#userId;
-	#url = "https://graphql.anilist.co";
+	private static url = "https://graphql.anilist.co";
 
-	constructor(settings) {
-		this.settings = settings;
-		this.#userId = Number(JSON.parse(localStorage.getItem("auth")).id);
-	}
-
-	async getActivityCss(activityId) {
-		const query = `query ($activityId: Int) {
-            Activity(id: $activityId) {
-                ... on ListActivity {
-                    user {
-                        name
-                        about
-                        options {
-                            profileColor
-                        }
-                }}
-                ... on TextActivity {
-                    user {
-                        name
-                        about
-                        options {
-                            profileColor
-                        }
-                    }
-                }
-                ... on MessageActivity {
-                    recipient {
-                        name
-                        about
-                        options {
-                            profileColor
-                        }
-                    }
-                }
-            }
-        }`;
-
-		const variables = {activityId};
-		const options = this.#getQueryOptions(query, variables);
-		const data = await this.fetch(options);
-		return data.Activity;
-	}
-
-	async getUserAbout(username) {
+	static async getUserAbout(username: string): Promise<string> {
 		const response = await this.getUserCssAndColour(username);
 		return response?.about;
 	}
 
-	async getUserCssAndColour(username) {
+	static async getUserCssAndColour(username) {
 		const query = `query ($username: String) {
             User(name: $username) {
                 about
@@ -86,12 +44,12 @@ export class AnilistAPI {
         }`;
 
 		const variables = {username};
-		const options = this.#getQueryOptions(query, variables);
+		const options = this.getQueryOptions(query, variables);
 		const data = await this.fetch(options);
 		return data.User;
 	}
 
-	async getUserMediaListCollection(username, type) {
+	static async getUserMediaListCollection(username, type) {
 		const query = `query Query($userName: String, $type: MediaType) {
 		  MediaListCollection(userName: $userName, type: $type) {
 			lists {
@@ -125,24 +83,24 @@ export class AnilistAPI {
 		  }
 		}`;
 		const variables = {userName: username, type};
-		const options = this.#getQueryOptions(query, variables);
+		const options = this.getQueryOptions(query, variables);
 		const data = await this.fetch(options);
 		return data;
 	}
 
-	async saveUserAbout(about) {
+	static async saveUserAbout(about) {
 		const query = `mutation ($about: String) {
             UpdateUser(about: $about) {
                 about
             }
         }`;
 		const variables = {about};
-		const options = this.#getMutationOptions(query, variables);
+		const options = this.getMutationOptions(query, variables);
 		const data = await this.fetch(options);
 		return data;
 	}
 
-	async saveUserColor(color) {
+	static async saveUserColor(color) {
 		const query = `mutation ($color: String) {
             UpdateUser(profileColor: $color) {
                 options {
@@ -152,12 +110,12 @@ export class AnilistAPI {
         }`;
 
 		const variables = {color};
-		const options = this.#getMutationOptions(query, variables);
+		const options = this.getMutationOptions(query, variables);
 		const data = await this.fetch(options);
 		return data;
 	}
 
-	async saveDonatorBadge(text) {
+	static async saveDonatorBadge(text) {
 		const query = `mutation ($text: String) {
             UpdateUser(donatorBadge: $text) {
                 donatorBadge
@@ -165,18 +123,18 @@ export class AnilistAPI {
         }`;
 
 		const variables = {text};
-		const options = this.#getMutationOptions(query, variables);
+		const options = this.getMutationOptions(query, variables);
 		const data = await this.fetch(options);
 		return data;
 	}
 
-	async queryVerifiedUsers() {
-		const accountUser = await this.queryUser(this.settings.anilistUser);
-		this.settings.updateUserFromApi(accountUser);
-		await this.#queryUsers(1);
+	static async queryVerifiedUsers() {
+		const accountUser = await this.queryUser(AnilistAuth.name);
+		VerifiedUsers.updateUserFromApi(accountUser);
+		await this.queryUsers(1);
 	}
 
-	async queryUser(username) {
+	static async queryUser(username) {
 		const variables = {username};
 		const query = `query ($username: String!) {
                 User(name: $username) {
@@ -193,23 +151,23 @@ export class AnilistAPI {
             }
         `;
 
-		const options = this.#getQueryOptions(query, variables);
+		const options = this.getQueryOptions(query, variables);
 
 		const data = await this.fetch(options);
 		return data.User;
 	}
 
-	async searchUsers(username: string): Promise<IUserSearchResult[]> {
+	static async searchUsers(username: string): Promise<IUserSearchResult[]> {
 		const variables = {search: username, perPage: 10};
 		const query = SearchUsersQuery;
-		const options = this.#getQueryOptions(query, variables);
+		const options = this.getQueryOptions(query, variables);
 		const data = await this.fetch(options);
 		return data.Page.users
 
 	}
 
-	async selfMessage(message) {
-		const variables = {message, recipientId: this.#userId};
+	static async selfMessage(message) {
+		const variables = {message, recipientId: AnilistAuth.id};
 		const query = `
             mutation($recipientId: Int, $message: String) {
                 SaveMessageActivity(message: $message, private: false, recipientId: $recipientId) {
@@ -218,13 +176,13 @@ export class AnilistAPI {
             }
         `;
 
-		const options = this.#getMutationOptions(query, variables);
+		const options = this.getMutationOptions(query, variables);
 
 		const data = await this.fetch(options);
 		return data.SaveMessageActivity;
 	}
 
-	async getNotifications(
+	static async getNotifications(
 		notificationTypes,
 		page = 1,
 		resetNotificationCount = false,
@@ -263,12 +221,12 @@ export class AnilistAPI {
 			page,
 			resetNotificationCount,
 		};
-		const options = this.#getMutationOptions(query, variables);
+		const options = this.getMutationOptions(query, variables);
 		const data = await this.fetch(options);
 		return [data.Page.notifications, data.Page.pageInfo];
 	}
 
-	async getActivityNotificationRelations(activityIds) {
+	static async getActivityNotificationRelations(activityIds) {
 		const userQuery = `
             name
             avatar {
@@ -307,7 +265,7 @@ export class AnilistAPI {
         }`;
 
 		const variables = {activityIds};
-		const options = this.#getMutationOptions(query, variables);
+		const options = this.getMutationOptions(query, variables);
 		const data = await this.fetch(options);
 		const activities = new Set([
 			...data.public.activities,
@@ -316,7 +274,7 @@ export class AnilistAPI {
 		return Array.from(activities);
 	}
 
-	async resetNotificationCount() {
+	static async resetNotificationCount() {
 		const query = `query {
             Page(page: 1, perPage: 1) {
                 notifications(resetNotificationCount: true) {
@@ -325,12 +283,12 @@ export class AnilistAPI {
             }
         }`;
 
-		const options = this.#getMutationOptions(query, {});
+		const options = this.getMutationOptions(query, {});
 		const data = await this.fetch(options);
 		return data;
 	}
 
-	async searchMedia(searchword) {
+	static async searchMedia(searchword) {
 		const query = `query($searchword: String) {
             Page(page: 1, perPage: 10) {
                 media(search: $searchword) {
@@ -350,12 +308,12 @@ export class AnilistAPI {
                 }
             }
         }`;
-		const options = this.#getMutationOptions(query, {searchword});
+		const options = this.getMutationOptions(query, {searchword});
 		const data = await this.fetch(options);
 		return data.Page.media;
 	}
 
-	async getMediaProgress(mediaId) {
+	static async getMediaProgress(mediaId) {
 		const query = `query($mediaId: Int, $userId: Int) {
 			  MediaList(mediaId: $mediaId, userId: $userId) {
 				id
@@ -375,12 +333,12 @@ export class AnilistAPI {
 			  }
 			}`;
 
-		const options = this.#getMutationOptions(query, {mediaId, userId: this.#userId})
+		const options = this.getMutationOptions(query, {mediaId, userId: AnilistAuth.id})
 		const data = await this.fetch(options);
 		return data.MediaList;
 	}
 
-	async updateMediaProgress(id, mediaId, status, progress) {
+	static async updateMediaProgress(id, mediaId, status, progress) {
 		const query = `mutation ($id: Int, $mediaId: Int, $status: MediaListStatus, $progress: Int) {
 			  SaveMediaListEntry(id: $id, mediaId: $mediaId, status: $status, progress: $progress) {
 				id
@@ -388,12 +346,12 @@ export class AnilistAPI {
 			}
 		`;
 
-		const options = this.#getMutationOptions(query, {id, status, progress, mediaId})
+		const options = this.getMutationOptions(query, {id, status, progress, mediaId})
 		const data = await this.fetch(options);
 		return data.MediaList;
 	}
 
-	async getCreatedMediaActivity(mediaId) {
+	static async getCreatedMediaActivity(mediaId) {
 		const query = `query ($userId: Int, $mediaId: Int) {
 				Activity(userId: $userId, mediaId: $mediaId, sort: ID_DESC, type_in: [ANIME_LIST, MANGA_LIST]) {
 					... on ListActivity {
@@ -402,20 +360,20 @@ export class AnilistAPI {
 				  }
 				}`;
 
-		const options = this.#getMutationOptions(query, {mediaId, userId: this.#userId})
+		const options = this.getMutationOptions(query, {mediaId, userId: AnilistAuth.id})
 		const data = await this.fetch(options);
 		return data.Activity;
 	}
 
-	async replyToActivity(activityId: number, reply: string): Promise<IActivityReply> {
+	static async replyToActivity(activityId: number, reply: string): Promise<IActivityReply> {
 		const query = replyToActivityQuery;
 
-		const options = this.#getMutationOptions(query, {activityId, text: reply});
+		const options = this.getMutationOptions(query, {activityId, text: reply});
 		const data = await this.fetch(options);
 		return data.SaveActivityReply;
 	}
 
-	async getMiniProfile(username, numberOfFavourites) {
+	static async getMiniProfile(username, numberOfFavourites) {
 		const variables = {name: username, page: 1, perPage: numberOfFavourites};
 
 		const query = `query User($name: String, $page: Int, $perPage: Int) {
@@ -485,20 +443,20 @@ export class AnilistAPI {
 			  }
 			}`;
 
-		const options = this.#getQueryOptions(query, variables);
+		const options = this.getQueryOptions(query, variables);
 
 		const data = await this.fetch(options);
 		return data.User;
 	}
 
-	async queryMessages(isFollowing: boolean, page = 1): Promise<{
+	static async queryMessages(isFollowing: boolean, page = 1): Promise<{
 		activities: IMessageActivity[],
 		pageInfo: IPageInfo
 	}> {
 		const query = queryMessages;
 
 		const variables = {isFollowing, type: "MESSAGE", sort: "ID_DESC", asHtml: false, page, perPage: 25};
-		const options = this.#getQueryOptions(query, variables);
+		const options = this.getQueryOptions(query, variables);
 		const data = await this.fetch(options);
 		return {
 			activities: data.Page.activities,
@@ -506,14 +464,14 @@ export class AnilistAPI {
 		};
 	}
 
-	async queryActivityReplies(id: number, page: number = 1): Promise<{
+	static async queryActivityReplies(id: number, page: number = 1): Promise<{
 		replies: IActivityReply[],
 		pageInfo: IPageInfo
 	}> {
 		const query = queryActivityReplies;
 
 		const variables = {activityId: id, perPage: 50, page};
-		const options = this.#getQueryOptions(query, variables);
+		const options = this.getQueryOptions(query, variables);
 		const data = await this.fetch(options);
 		return {
 			replies: data.Page.activityReplies,
@@ -521,7 +479,7 @@ export class AnilistAPI {
 		};
 	}
 
-	async saveActivityText(type: "TEXT" | "MESSAGE" | "REPLY", id: number, content: string) {
+	static async saveActivityText(type: "TEXT" | "MESSAGE" | "REPLY", id: number, content: string) {
 		let query;
 		switch (type) {
 			case "TEXT":
@@ -542,47 +500,47 @@ export class AnilistAPI {
 			content
 		};
 
-		const options = this.#getMutationOptions(query, variables);
+		const options = this.getMutationOptions(query, variables);
 		const data = await this.fetch(options);
 		return data.SaveActivityReply ?? data.SaveMessageActivity ?? data.SaveTextActivity;
 	}
 
-	async deleteActivity(type: "ACTIVITY" | "REPLY", id: number): Promise<boolean> {
+	static async deleteActivity(type: "ACTIVITY" | "REPLY", id: number): Promise<boolean> {
 		const query = type === "ACTIVITY" ? DeleteActivityQuery : DeleteActivityReplyQuery;
 		const variables = {id};
-		const options = this.#getMutationOptions(query, variables);
+		const options = this.getMutationOptions(query, variables);
 		const data = await this.fetch(options);
 		return data.DeleteActivityReply?.deleted ?? data.DeleteActivity?.deleted;
 	}
 
-	async toggleLike(id: number, type: "ACTIVITY" | "ACTIVITY_REPLY" | "THREAD" | "THREAD_COMMENT"): Promise<IToggleLike> {
+	static async toggleLike(id: number, type: "ACTIVITY" | "ACTIVITY_REPLY" | "THREAD" | "THREAD_COMMENT"): Promise<IToggleLike> {
 		const query = toggleLike;
 
 		const variables = {toggleLikeV2Id: id, type};
-		const options = this.#getMutationOptions(query, variables);
+		const options = this.getMutationOptions(query, variables);
 		const data = await this.fetch(options);
 		return data.ToggleLikeV2;
 	}
 
-	async toggleActivitySubscription(id: number, subscribe: boolean): Promise<IToggleActivitySubscription> {
+	static async toggleActivitySubscription(id: number, subscribe: boolean): Promise<IToggleActivitySubscription> {
 		const query = toggleActivitySubscription;
 
 		const variables = {activityId: id, subscribe};
-		const options = this.#getMutationOptions(query, variables);
+		const options = this.getMutationOptions(query, variables);
 		const data = await this.fetch(options);
 		return data.ToggleActivitySubscription;
 	}
 
-	async query(query: string, params: object): Promise<any> {
-		const options = this.#getQueryOptions(query, params);
+	static async query(query: string, params: object): Promise<any> {
+		const options = this.getQueryOptions(query, params);
 		const data = await this.fetch(options);
 		return data;
 	}
 
-	private async fetch(options) {
+	private static async fetch(options) {
 		try {
-			const response = await fetch(this.#url, options);
-			this.#setApiLimitRemaining(response);
+			const response = await fetch(this.url, options);
+			this.setApiLimitRemaining(response);
 
 			const data = await response.json();
 
@@ -592,7 +550,8 @@ export class AnilistAPI {
 				// The API seems to return 500 with message (bad request) sometimes
 				// to not make this confusing for the user, replace the message that ends up in UI
 				if (response.status !== 500) {
-					message = data?.error?.messages?.join(", ");
+					console.log(data);
+					message = data?.errors?.map(x => x.message)?.join(", ");
 				}
 				throw new AnilistAPIError([{
 					status: response.status,
@@ -614,8 +573,8 @@ export class AnilistAPI {
 		}
 	}
 
-	async #queryUsers(page) {
-		const variables = {page, userId: this.#userId};
+	private static async queryUsers(page) {
+		const variables = {page, userId: AnilistAuth.id};
 		const query = `query ($page: Int, $userId: Int!) {
             Page(page: $page) {
                 following(userId: $userId) {
@@ -640,23 +599,23 @@ export class AnilistAPI {
             }
         `;
 
-		const options = this.#getQueryOptions(query, variables);
+		const options = this.getQueryOptions(query, variables);
 
 		const data = await this.fetch(options);
-		this.#handleQueriedUsers(data.Page.following);
+		this.handleQueriedUsers(data.Page.following);
 		const pageInfo = data.Page.pageInfo;
 		if (pageInfo.hasNextPage) {
-			await this.#queryUsers(pageInfo.currentPage + 1);
+			await this.queryUsers(pageInfo.currentPage + 1);
 		}
 	}
 
-	#handleQueriedUsers(users) {
+	private static handleQueriedUsers(users) {
 		for (const user of users) {
-			this.settings.updateUserFromApi(user);
+			VerifiedUsers.updateUserFromApi(user);
 		}
 	}
 
-	#getQueryOptions(query, variables) {
+	private static getQueryOptions(query, variables) {
 		const options = {
 			method: "POST",
 			headers: {
@@ -669,26 +628,26 @@ export class AnilistAPI {
 			}),
 		};
 
-		if (this.settings.auth?.token) {
+		if (AnilistAuth.token) {
 			// @ts-ignore
-			options.headers.Authorization = `Bearer ${this.settings.auth.token}`;
+			options.headers.Authorization = `Bearer ${AnilistAuth.token}`;
 		}
 
 		return options;
 	}
 
-	#getMutationOptions(query, variables) {
-		if (!this.settings.auth?.token) {
+	private static getMutationOptions(query, variables) {
+		if (!AnilistAuth.token) {
 			Toaster.error(
 				"Tried to make API query without authorizing VoidVerified. You can do so in the settings.",
 			);
 			throw new Error("VoidVerified is missing auth token.");
 		}
-		let queryOptions = this.#getQueryOptions(query, variables);
+		let queryOptions = this.getQueryOptions(query, variables);
 		return queryOptions;
 	}
 
-	#setApiLimitRemaining(response: Response) {
+	private static setApiLimitRemaining(response: Response) {
 		const apiLimitOffset = 60;
 		// @ts-ignore
 		const remaining = response.headers.get("X-RateLimit-Remaining") - apiLimitOffset;
@@ -699,10 +658,6 @@ export class AnilistAPI {
 			"void-verified-api-limit-remaining",
 			remaining.toString()
 		);
-	}
-
-	#getApiLimitRemaining() {
-		return localStorage.getItem("void-verified-api-limit-remaining");
 	}
 }
 

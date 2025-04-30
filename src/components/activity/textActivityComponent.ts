@@ -5,7 +5,7 @@ import {ArrowLongRightIcon, EllipsisHorizontalIcon} from "../../assets/icons";
 import {Markdown} from "../../utils/markdown";
 import {ITextActivity} from "../../api/types/ITextActivity";
 import {StaticSettings} from "../../utils/staticSettings";
-import {DropdownMenuComponent} from "../dropdownComponent";
+import {DropdownMenuComponent, IDropdownMenuOption} from "../dropdownComponent";
 import {IUser} from "../../api/types/user";
 
 export class TextActivityComponent extends BaseActivityComponent {
@@ -25,7 +25,7 @@ export class TextActivityComponent extends BaseActivityComponent {
 		const subscribeButton = this.createSubscribeButton(activity);
 		const dropdownTrigger = DOM.create("div", "action .action activity-dropdown-trigger", EllipsisHorizontalIcon());
 
-		const dropdownItems = [{item: directLink, value: "directlink"}];
+		const dropdownItems: IDropdownMenuOption[] = [{item: directLink, value: "directlink"}];
 		const message = activity as IMessageActivity;
 		const textActivity = activity as ITextActivity;
 
@@ -65,9 +65,9 @@ export class TextActivityComponent extends BaseActivityComponent {
 	}
 
 	createText(activity: IMessageActivity | ITextActivity) {
-		const text = DOM.create("div", ".text");
+		const text = DOM.createDiv(".text");
 
-		const header = DOM.create("div", ".header");
+		const header = DOM.createDiv(".header");
 
 		if (activity.type === "TEXT") {
 			const textActivity = activity as ITextActivity;

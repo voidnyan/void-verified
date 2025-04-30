@@ -54,7 +54,7 @@ export class Dialog {
 		}
 
 		this.header.replaceChildren(title);
-		const input = InputField("", () => {}, "w-100", {placeholder});
+		const input = InputField("", () => {}, "w-100", {placeholder}) as HTMLInputElement;
 		this.content.replaceChildren(input);
 		this.confirmCallback = () => {
 			callback(input.value);

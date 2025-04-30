@@ -45,10 +45,9 @@ export class UserSearchComponent extends BaseSearchComponent {
 			return;
 		}
 		this.timeout = setTimeout(async () => {
-			const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
 			try {
 				Toaster.debug(`Querying user with search word ${value}`);
-				const response = await anilistAPI.searchUsers(value);
+				const response = await AnilistAPI.searchUsers(value);
 				this.renderSearchResults(response);
 			} catch (error) {
 				Toaster.error(

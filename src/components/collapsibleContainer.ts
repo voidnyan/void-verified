@@ -109,14 +109,10 @@ export class CollapsibleContainer {
 
 	private setClasses(classes?: {head?: string, body?: string}) {
 		if (classes?.head) {
-			for (const className of DOM.transformClasses(classes.head)) {
-				this.head.classList.add(className)
-			}
+			DOM.transformClasses(this.head, classes.head)
 		}
 		if (classes?.body) {
-			for (const className of DOM.transformClasses(classes.body)) {
-				this.body.classList.add(className)
-			}
+			DOM.transformClasses(this.body, classes.body)
 		}
 	}
 }

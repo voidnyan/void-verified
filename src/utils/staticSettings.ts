@@ -10,6 +10,7 @@ export class Option implements IOption {
 	description: string;
 	category: string;
 	authRequired: boolean;
+
 	constructor(option: IOption) {
 		this.defaultValue = option.defaultValue;
 		this.description = option.description;
@@ -55,6 +56,7 @@ export class StaticSettings {
 	static #localStorageSettings = LocalStorageKeys.settings;
 	static options: IOptions = {} as IOptions;
 	static settingsInstance: ISettings;
+	static version = GM_info.script.version;
 
 	static initialize() {
 		const settingsInLocalStorage =

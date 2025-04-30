@@ -3,7 +3,7 @@ import {IListActivity} from "../../api/types/IListActivity";
 import {BaseActivityComponent} from "./baseActivityComponent";
 import {StaticSettings} from "../../utils/staticSettings";
 import {EllipsisHorizontalIcon} from "../../assets/icons";
-import {DropdownMenuComponent} from "../dropdownComponent";
+import {DropdownMenuComponent, IDropdownMenuOption} from "../dropdownComponent";
 
 export class ListActivityComponent extends BaseActivityComponent{
 	element: HTMLDivElement;
@@ -22,7 +22,7 @@ export class ListActivityComponent extends BaseActivityComponent{
 		time.prepend(this.createSubscribeButton(activity), dropdownTrigger);
 
 		const directLink = this.createDirectLink(activity)
-		const dropdownItems = [{item: directLink, value: "directlink"}];
+		const dropdownItems: IDropdownMenuOption[] = [{item: directLink, value: "directlink"}];
 
 
 		if (activity.user.id === StaticSettings.settingsInstance.userId) {
@@ -54,7 +54,7 @@ export class ListActivityComponent extends BaseActivityComponent{
 	}
 
 	private createList(): HTMLDivElement {
-		const list = DOM.create("div", ".list");
+		const list = DOM.createDiv(".list");
 		const cover = DOM.create("a", ".cover");
 		cover.setAttribute("style", `background-image: url("${this.activity.media.coverImage.large}");`);
 		cover.setAttribute("href", `/${this.activity.type.toLocaleLowerCase()}/${this.activity.media.id}`);
@@ -76,7 +76,7 @@ export class ListActivityComponent extends BaseActivityComponent{
 	}
 
 	private createStatus(): HTMLDivElement {
-		const status = DOM.create("div", ".status", this.getProgress());
+		const status = DOM.createDiv(".status", this.getProgress());
 		const title = DOM.create("a", ".title", this.activity.media.title.userPreferred);
 		title.setAttribute("href", `/${this.activity.type.toLocaleLowerCase()}/${this.activity.media.id}`);
 		status.append(title);

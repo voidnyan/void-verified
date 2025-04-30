@@ -124,7 +124,7 @@ export class ImgurAPI extends ImageHostBase {
 			new Date().getTime() + Number(expires.split("=")[1]),
 		);
 
-		new ImageHostService().setImageHostConfiguration(
+		ImageHostService.setImageHostConfiguration(
 			imageHosts.imgur,
 			config,
 		);
@@ -171,7 +171,7 @@ export class ImgurAPI extends ImageHostBase {
 				authToken: data.access_token,
 				expires: new Date(new Date().getTime() + data.expires_in),
 			};
-			new ImageHostService().setImageHostConfiguration(
+			ImageHostService.setImageHostConfiguration(
 				imageHosts.imgur,
 				config,
 			);
@@ -222,7 +222,7 @@ export class ImgurAPI extends ImageHostBase {
 			refreshToken: null,
 		};
 
-		new ImageHostService().setImageHostConfiguration(
+		ImageHostService.setImageHostConfiguration(
 			imageHosts.imgur,
 			config,
 		);
@@ -234,7 +234,7 @@ export class ImgurAPI extends ImageHostBase {
 			...configuration,
 			[key]: value,
 		};
-		new ImageHostService().setImageHostConfiguration(
+		ImageHostService.setImageHostConfiguration(
 			imageHosts.imgur,
 			config,
 		);
