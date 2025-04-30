@@ -125,9 +125,14 @@ export const defaultSettings: IOptions = {
 		description: "Wrap images with a link tag.",
 		category: categories.paste,
 	},
-	pasteImageWidth: {
-		defaultValue: "420",
+	pasteImageWidthValue: {
+		defaultValue: 420,
 		description: "Width used when pasting images.",
+		category: categories.paste,
+	},
+	pasteImageUnitIsPercentage: {
+		defaultValue: false,
+		description: "Use percentage instead of pixels as image width.",
 		category: categories.paste,
 	},
 	pasteImagesToHostService: {
@@ -141,12 +146,6 @@ export const defaultSettings: IOptions = {
 		description: "Enable toast notifications.",
 		category: categories.misc,
 	},
-	// useElevatedFetch: {
-	// 	defaultValue: false,
-	// 	description:
-	// 		"Query AniList API with elevated browser access (this might solve some API issues).",
-	// 	category: categories.misc,
-	// },
 	removeAnilistBlanks: {
 		defaultValue: false,
 		description: "Open AniList links in the same tab.",

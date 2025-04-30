@@ -4,8 +4,8 @@ import {DOM} from "../utils/DOM";
 export class MediaDisplayComponent {
 	element: HTMLDivElement;
 	constructor(media: IMediaSearchResult) {
-		this.element = DOM.create("div", "media-display-container");
-		const poster = DOM.create("div", "media-display-poster");
+		this.element = DOM.createDiv("media-display-container");
+		const poster = DOM.createDiv("media-display-poster");
 		poster.setAttribute("style", `background-image: url(${media.coverImage.large})`);
 
 		const info = DOM.create("div","media-display-info");

@@ -121,9 +121,7 @@ export class NotificationFeedHandler {
 		}
 
 		try {
-			let [notifications] = await new AnilistAPI(
-				notificationFeedHandler.#settings,
-			).getNotifications(
+			let [notifications] = await AnilistAPI.getNotifications(
 				notificationFeedHandler.#config.notificationTypes,
 				1,
 				this.#config.resetDefaultNotifications,
@@ -229,9 +227,7 @@ export class NotificationFeedHandler {
 				if (!this.#config.resetDefaultNotifications) {
 					try {
 						Toaster.debug("Resetting notification count.");
-						await new AnilistAPI(
-							this.#settings,
-						).resetNotificationCount();
+						await AnilistAPI.resetNotificationCount();
 						document.body
 							.querySelector(".user .notification-dot")
 							?.remove();
@@ -350,11 +346,9 @@ export class NotificationFeedHandler {
 			?.remove();
 		let notifications = [];
 
-		const anilistAPI = new AnilistAPI(this.#settings);
-
 		try {
 			Toaster.debug("Querying notification feed.");
-			const [notifs, pageInfo] = await anilistAPI.getNotifications(
+			const [notifs, pageInfo] = await AnilistAPI.getNotifications(
 				this.#getNotificationTypes(),
 				this.#pageInfo.currentPage + 1,
 				this.#config.resetDefaultNotifications,
@@ -379,7 +373,7 @@ export class NotificationFeedHandler {
 			if (nonDeadIds.length > 0) {
 				try {
 					const rels =
-						await anilistAPI.getActivityNotificationRelations(
+						await AnilistAPI.getActivityNotificationRelations(
 							Array.from(nonDeadIds),
 						);
 					relations.push(...rels);

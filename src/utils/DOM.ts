@@ -1,8 +1,8 @@
 import {Vue} from "./vue";
 
 export class DOM {
-	static create(element, classes = null, children = null, options = {}) {
-		const el = document.createElement(element);
+	static create<T extends HTMLElement = HTMLElement>(element: string, classes?: string, children?: any, options = {}) : T {
+		const el = document.createElement(element) as T;
 
 		if (element.toLowerCase() === "a") {
 			el.addEventListener("click", (event) => {
@@ -10,24 +10,14 @@ export class DOM {
 			})
 		}
 
-		if (classes !== null) {
-			for (const className of classes?.split(" ")) {
-				if (className.startsWith("#")) {
-					el.setAttribute("id", `void-${className.slice(1)}`);
-					continue;
-				}
-				if (className.startsWith(".")) {
-					el.classList.add(className.slice(1));
-					continue;
-				}
-				el.classList.add(`void-${className}`);
-			}
-		}
+		this.transformClasses(el, classes);
 
 		if (children) {
 			if (Array.isArray(children)) {
+				// @ts-ignore
 				el.append(...children);
 			} else {
+				// @ts-ignore
 				el.append(children);
 			}
 		}
@@ -39,26 +29,14 @@ export class DOM {
 		return el;
 	}
 
-	static createAnchor(href, classes = null, children = null) {
-		const anchor = this.create("a", classes, children);
+	static createAnchor(href, classes = null, children = null): HTMLAnchorElement {
+		const anchor = this.create<HTMLAnchorElement>("a", classes, children);
 		anchor.setAttribute("href", href);
 		return anchor;
 	}
 
-	static createDiv(classes = null, children = null) {
-		return DOM.create("div", classes, children);
-	}
-
-	static transformClasses(classes) {
-		let result = [];
-		for (const className of classes.split(" ")) {
-			if (className.startsWith(".")) {
-				result.push(className.slice(1));
-				continue;
-			}
-			result.push(`void-${className}`);
-		}
-		return result;
+	static createDiv(classes?: string, children?: any): HTMLDivElement {
+		return DOM.create<HTMLDivElement>("div", classes, children);
 	}
 
 	static render(element, parent) {
@@ -87,6 +65,22 @@ export class DOM {
 	static getAll(selector) {
 		const convertedSelector = this.#convertSelector(selector);
 		return document.querySelectorAll(convertedSelector);
+	}
+
+	static transformClasses(element: HTMLElement, classes?: string) {
+		if (classes) {
+			for (const className of classes?.split(" ")) {
+				if (className.startsWith("#")) {
+					element.setAttribute("id", `void-${className.slice(1)}`);
+					continue;
+				}
+				if (className.startsWith(".")) {
+					element.classList.add(className.slice(1));
+					continue;
+				}
+				element.classList.add(`void-${className}`);
+			}
+		}
 	}
 
 	static #convertSelector(selector) {

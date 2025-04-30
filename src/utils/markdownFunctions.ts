@@ -1,4 +1,5 @@
 import {StaticSettings} from "./staticSettings";
+import {PasteHandler} from "../handlers/pasteHandler";
 
 export enum InputType {
 	Wrap,
@@ -296,7 +297,7 @@ export class MarkdownFunctions {
 
 	static wrapImage(textarea: HTMLTextAreaElement) {
 		const selectionStart = textarea.selectionStart;
-		const imageWidth = StaticSettings.options.pasteImageWidth.getValue() as string;
+		const imageWidth = PasteHandler.getImageWidth();
 		this.wrapSelection(textarea, [`img${imageWidth}(`, ")"], null, false);
 		textarea.selectionStart = selectionStart + 3 + imageWidth.length;
 		textarea.selectionEnd = selectionStart + 3 + imageWidth.length;

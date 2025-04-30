@@ -91,7 +91,7 @@ export class MarkdownEditor {
 	}
 
 	private createMarkdownEditorBar(): HTMLDivElement {
-		const markdownEditor = DOM.create("div", ".markdown-editor hidden");
+		const markdownEditor = DOM.createDiv(".markdown-editor hidden");
 		for (const item of this.markdownBarItems) {
 			const action = DOM.create("div", null, item.icon);
 			action.setAttribute("title", item.label);
@@ -105,7 +105,7 @@ export class MarkdownEditor {
 	}
 
 	private createTextArea(): HTMLDivElement {
-		const textAreaContainer = DOM.create("div", ".input .el-textarea");
+		const textAreaContainer = DOM.createDiv(".input .el-textarea");
 		this.textArea = DOM.create("textarea", ".el-textarea__inner");
 		this.textArea .setAttribute("autocomplete", "off");
 		this.textArea .setAttribute("placeholder", "Write a reply...");
@@ -132,7 +132,7 @@ export class MarkdownEditor {
 	}
 
 	private createPreview(): HTMLDivElement {
-		const preview = DOM.create("div", ".reply .preview hidden");
+		const preview = DOM.createDiv(".reply .preview hidden");
 		const header = DOM.create("div", ".header");
 		const user: IUser = JSON.parse(localStorage.getItem("auth"));
 		const {avatar, name} = BaseActivityComponent.createHeaderUser(user);
@@ -147,8 +147,8 @@ export class MarkdownEditor {
 	}
 
 	private createActions(): HTMLDivElement {
-		const actions = DOM.create("div", ".actions hidden");
-		const cancelButton = DOM.create("div", ".button .cancel", "Cancel");
+		const actions = DOM.createDiv(".actions hidden");
+		const cancelButton = DOM.createDiv(".button .cancel", "Cancel");
 		cancelButton.addEventListener("click", (event) => {
 			event.stopPropagation()
 			this.cancel();
@@ -176,7 +176,7 @@ export class MarkdownEditor {
 	}
 
 	private createRulesNotice(): HTMLDivElement {
-		const rulesNotice = DOM.create("div", ".rules-notice hidden");
+		const rulesNotice = DOM.createDiv(".rules-notice hidden");
 		const rulesLink = DOM.create("a", null, "Please read the site guidelines before posting");
 		rulesLink.setAttribute("href", "/forum/thread/14");
 		rulesLink.setAttribute("target", "_blank");

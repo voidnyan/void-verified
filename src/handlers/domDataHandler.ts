@@ -21,6 +21,9 @@ export class DomDataHandler {
 	}
 
 	static getIdFromElement(element: Element): number {
+		if (!element) {
+			return undefined
+		}
 		return Number(element.getAttribute("void-reply-id") ?? element.getAttribute("void-activity-id") ?? Vue.getProps(element)?.id);
 	}
 

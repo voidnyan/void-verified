@@ -22,5 +22,9 @@ export interface IUser {
 	name?: string,
 	donatorTier?: number,
 	donatorBadge?: string,
-	moderatorRoles: ModeratorRole[]
+	moderatorRoles: ModeratorRole[],
+	bannerImage?: string,
+	options?: {
+		profileColor?: string,
+	}
 }

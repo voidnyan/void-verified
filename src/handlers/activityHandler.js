@@ -63,7 +63,7 @@ export class ActivityHandler {
 			Button(
 				"Message Self",
 				() => {
-					this.#handleSelfMessage(this.settings);
+					this.#handleSelfMessage();
 				},
 				"self-message",
 			),
@@ -110,14 +110,13 @@ export class ActivityHandler {
 		reply.setAttribute("collapsed", isCollapsed);
 	}
 
-	async #handleSelfMessage(settings) {
-		const anilistAPI = new AnilistAPI(settings);
+	async #handleSelfMessage() {
 		const message = document.querySelector(
 			".activity-feed-wrap > .activity-edit textarea",
 		).value;
 		try {
 			Toaster.debug("Self-publishing a message.");
-			const response = await anilistAPI.selfMessage(message);
+			const response = await AnilistAPI.selfMessage();
 			Toaster.success("Message self-published.");
 			if (Vue.router) {
 				Vue.router.push(`/activity/${response.id}`);

@@ -25,7 +25,6 @@ enum MediaStatus {
 
 export class ActivityPostHandler {
 	settings: ISettings;
-	#timeout;
 	selectedSearchResult?: IMediaSearchResult;
 	mediaActivity?: IMediaActivity;
 
@@ -80,7 +79,7 @@ export class ActivityPostHandler {
 		container.append(this.#createHeader());
 		container.append(DOM.create("div", "media-status-controls", DOM.create("div", "gif-keyboard-list-placeholder", "Select a media...")));
 
-		container.setAttribute("closed", true);
+		container.setAttribute("closed", "true");
 		return container;
 	}
 
@@ -145,8 +144,8 @@ export class ActivityPostHandler {
 			this.mediaActivity.progress = Number(event.target.value);
 		});
 		progressInput.setAttribute("type", "number");
-		progressInput.setAttribute("max", this.mediaActivity.maxProgress);
-		progressInput.setAttribute("min", 0);
+		progressInput.setAttribute("max", this.mediaActivity.maxProgress.toString());
+		progressInput.setAttribute("min", "0");
 		progressContainer.append(DOM.create("div", null, progressInput));
 	};
 
@@ -172,17 +171,16 @@ export class ActivityPostHandler {
 			Toaster.notify(`You have disabled ${this.mediaActivity.status} list activity type. Enable it in settings to create this activity.`);
 			return;
 		}
-		const anilistAPI = new AnilistAPI(this.settings);
 		try {
-			await anilistAPI.updateMediaProgress(this.mediaActivity.mediaListId, this.selectedSearchResult.id, this.mediaActivity.status, this.mediaActivity.progress);
+			await AnilistAPI.updateMediaProgress(this.mediaActivity.mediaListId, this.selectedSearchResult.id, this.mediaActivity.status, this.mediaActivity.progress);
 		} catch (error) {
 			Toaster.error("Failed to update media progress", error);
 			return;
 		}
 		try {
-			const response = await anilistAPI.getCreatedMediaActivity(this.selectedSearchResult.id);
+			const response = await AnilistAPI.getCreatedMediaActivity(this.selectedSearchResult.id);
 			const textarea = document.querySelector(".home > .activity-feed-wrap > .activity-edit > .input > textarea") as HTMLInputElement;
-			const replyResponse = await anilistAPI.replyToActivity(response.id, textarea.value);
+			const replyResponse = await AnilistAPI.replyToActivity(response.id, textarea.value);
 			if (Vue.router) {
 				Vue.router.push(`/activity/${response.id}`);
 			} else {
@@ -202,9 +200,8 @@ export class ActivityPostHandler {
 
 	async setSelectedSearchResult(result: IMediaSearchResult) {
 		this.selectedSearchResult = result;
-		const anilistAPI = new AnilistAPI(this.settings);
 		try {
-			const mediaProgress = await anilistAPI.getMediaProgress(result.id);
+			const mediaProgress = await AnilistAPI.getMediaProgress(result.id);
 			if (mediaProgress) {
 				this.mediaActivity = {
 					status: mediaProgress.status,

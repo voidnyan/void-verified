@@ -448,8 +448,7 @@ export class ActivitySearchMode {
 		this.searchButton.setAttribute("disabled", "true");
 		this.activityFeed.replaceChildren(Loader());
 		try {
-			const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
-			const response = await anilistAPI.query(query, params);
+			const response = await AnilistAPI.query(query, params);
 			const activities: IListActivity[] | IMessageActivity[] | ITextActivity[] = response.Page.activities;
 			this.activities = activities;
 			this.queryUsed = query;
@@ -485,7 +484,7 @@ export class ActivitySearchMode {
 	}
 
 	private static createLoadMoreButton() {
-		const button = DOM.create("div", ".load-more", "Load More");
+		const button = DOM.createDiv(".load-more", "Load More");
 		button.addEventListener("click", async () => {
 			const loader = Loader();
 			button.replaceWith(loader);
@@ -497,12 +496,11 @@ export class ActivitySearchMode {
 
 	private static async loadMore() {
 		try {
-			const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
 			const params = {
 				...this.paramsUsed,
 				page: this.pageInfo.currentPage + 1
 			};
-			const response = await anilistAPI.query(this.queryUsed, params);
+			const response = await AnilistAPI.query(this.queryUsed, params);
 			const activities: IListActivity[] | IMessageActivity[] | ITextActivity[] = response.Page.activities;
 			this.pageInfo = response.Page.pageInfo;
 			this.activities.push(...activities);

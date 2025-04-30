@@ -5,7 +5,7 @@ import {ImageApiFactory} from "../api/imageApiFactory";
 import {PasteHandler} from "../handlers/pasteHandler";
 import {ImageHostService} from "../api/imageHostConfiguration";
 import {DropdownMenuComponent} from "./dropdownComponent";
-import {ClassWithTooltip, StaticTooltip} from "../utils/staticTooltip";
+import {StaticTooltip} from "../utils/staticTooltip";
 import {ChevronUpDownIcon, DocumentTextIcon, ImageIcon, LinkIcon} from "../assets/icons";
 import {RangeField} from "./components";
 import {DropdownDirection, PopOverComponent} from "./popOverComponent";
@@ -28,7 +28,6 @@ export class MarkdownTaskbar {
 				.closest(".activity-edit")
 				?.querySelector('.void-icon-button[title="Reply to Activity"]')
 				?.addEventListener("click", () => {
-					console.log("ree");
 					this.updateCharacterCounter();
 				})
 		}, 100);
@@ -37,11 +36,6 @@ export class MarkdownTaskbar {
 	private createItems() {
 		const items: HTMLElement[] = [];
 
-		// upload image button
-		// switch image host & change image width
-		// other image upload settings toggle (can be icons with hover explanations
-
-		// character counter & on click word counter etc
 		if (StaticSettings.options.pasteImagesToHostService.getValue()) {
 			items.push(...this.createImageHostItems());
 		}
@@ -81,13 +75,12 @@ export class MarkdownTaskbar {
 			this.textarea.dispatchEvent(new Event("input", {bubbles: true}));
 		});
 
-		const imageHostService = new ImageHostService();
-		const initialHost = imageHostService.getSelectedHost();
+		const initialHost = ImageHostService.getSelectedHost();
 		const hostDropdown = new DropdownMenuComponent(
 			["imgur", "catbox", "imgbb"],
 			DOM.create("div", "markdown-taskbar-image-host", initialHost),
 			(value: string) => {
-				imageHostService.setSelectedHost(value);
+				ImageHostService.setSelectedHost(value);
 				hostDropdown.trigger.replaceChildren(value);
 			},
 			initialHost);
@@ -124,10 +117,30 @@ export class MarkdownTaskbar {
 
 		const imageWidth = DOM.createDiv("icon-rotate-90", ChevronUpDownIcon());
 
-		const widthRange = RangeField(StaticSettings.options.pasteImageWidth.getValue(), (event) => {
-			StaticSettings.options.pasteImageWidth.setValue(event.target.value);
-		}, 1000, 10, 10);
-		StaticTooltip.register(imageWidth, widthRange, true);
+		const widthRange = RangeField(StaticSettings.options.pasteImageWidthValue.getValue(), (event) => {
+			StaticSettings.options.pasteImageWidthValue.setValue(event.target.value);
+		}, 1000, 5, 10);
+
+		const widthPercentage = DOM.createDiv(null, StaticSettings.options.pasteImageUnitIsPercentage.getValue() ? "%" : "PX");
+		widthPercentage.addEventListener("click", () => {
+			const value = StaticSettings.options.pasteImageUnitIsPercentage.getValue();
+			StaticSettings.options.pasteImageUnitIsPercentage.setValue(!value);
+			const range = widthRange.querySelector("input");
+			const display = widthRange.querySelector(".void-range-display");
+			if (!value) {
+				const width = Math.min(StaticSettings.options.pasteImageWidthValue.getValue() as number, 100);
+				StaticSettings.options.pasteImageWidthValue.setValue(width);
+				range.value = width.toString();
+				display.replaceChildren(width.toString());
+				range.setAttribute("max", "100");
+				widthPercentage.replaceChildren("%");
+			} else {
+				range.setAttribute("max", "1000");
+				widthPercentage.replaceChildren("PX");
+			}
+		})
+
+		StaticTooltip.register(imageWidth, DOM.createDiv("flex", [widthRange, widthPercentage]), true);
 
 		StaticTooltip.register(wrapWithImage, "Wrap images with image tag");
 

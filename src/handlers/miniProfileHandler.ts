@@ -5,28 +5,27 @@ import {StaticSettings} from "../utils/staticSettings";
 import {ColorFunctions} from "../utils/colorFunctions";
 import {Toaster} from "../utils/toaster";
 import {Markdown} from "../utils/markdown";
-import {Vue} from "../utils/vue";
 import {LocalStorageKeys} from "../assets/localStorageKeys";
 
 export class MiniProfileHandler {
-	protected miniProfileContainer: HTMLElement;
-	#queryInProgress = false;
-	#isVisible = false;
-	config: MiniProfileConfig;
+	protected static miniProfileContainer: HTMLElement;
+	private static queryInProgress = false;
+	private static isVisible = false;
+	static config: MiniProfileConfig;
 
-	constructor() {
+	static initialize() {
 		this.miniProfileContainer = DOM.create("div", "mini-profile-container mini-profile-hidden");
 		this.miniProfileContainer.addEventListener("mouseover", () => {
-			this.#isVisible = true;
-			this.#showMiniProfile();
+			this.isVisible = true;
+			this.showMiniProfile();
 		});
 		this.miniProfileContainer.addEventListener("mouseleave", () => {
-			this.#hideMiniProfile();
+			this.hideMiniProfile();
 		});
 		document.body.append(this.miniProfileContainer);
 		this.config = new MiniProfileConfig();
 	}
-	addUserHoverListeners() {
+	static addUserHoverListeners() {
 		if (!StaticSettings.options.miniProfileEnabled.getValue()) {
 			return;
 		}
@@ -38,27 +37,27 @@ export class MiniProfileHandler {
 
 		for (const element of elements) {
 			element.addEventListener("mouseover", () => {
-				this.#isVisible = true;
+				this.isVisible = true;
 				setTimeout(() => {
-					if (!this.#isVisible) {
+					if (!this.isVisible) {
 						return;
 					}
 					this.#hoverUser(element);
 				}, 100);
 			});
 			element.addEventListener("mouseleave", () => {
-				this.#hideMiniProfile();
+				this.hideMiniProfile();
 			});
 			element.addEventListener("click", () => {
-				this.#hideMiniProfile();
+				this.hideMiniProfile();
 			})
 			element.setAttribute("void-mini", "true");
 		}
 	}
 
-	async #hoverUser(element: Element) {
+	static async #hoverUser(element: Element) {
 		this.miniProfileContainer.replaceChildren();
-		if (this.#queryInProgress) {
+		if (this.queryInProgress) {
 			return;
 		}
 
@@ -69,28 +68,27 @@ export class MiniProfileHandler {
 			if (cachedUser) {
 				user= cachedUser;
 			} else {
-				const api = new AnilistAPI(StaticSettings.settingsInstance);
 				Toaster.debug("Querying mini profile data.");
-				this.#queryInProgress = true;
-				const data = await api.getMiniProfile(username, this.config.numberOfFavourites);
+				this.queryInProgress = true;
+				const data = await AnilistAPI.getMiniProfile(username, this.config.numberOfFavourites);
 				if (data === null) {
 					return;
 				}
-				user = this.#addMissingTypes(data);
+				user = this.addMissingTypes(data);
 				MiniProfileCache.addUser(user);
 			}
 		} catch (error) {
 			Toaster.error(`Failed to query mini profile data for ${username}`, error)
 			return;
 		} finally {
-			this.#queryInProgress = false;
+			this.queryInProgress = false;
 		}
 
 		this.miniProfileContainer.style.backgroundImage = `url(${user.bannerImage})`;
 		this.miniProfileContainer.style.setProperty("--color-blue", ColorFunctions.handleAnilistColor(user.options.profileColor));
 
-		this.#createHeader(user);
-		this.#createContent(user);
+		this.createHeader(user);
+		this.createContent(user);
 
 		const elementRect = element.getBoundingClientRect();
 		const containerRect = this.miniProfileContainer.getBoundingClientRect();
@@ -103,10 +101,10 @@ export class MiniProfileHandler {
 		} else {
 			this.miniProfileContainer.style.top = `${elementRect.top + window.scrollY}px`;
 		}
-		this.#showMiniProfile();
+		this.showMiniProfile();
 	}
 
-	#addMissingTypes(data) {
+	private static addMissingTypes(data) {
 		data?.favourites?.characters?.nodes.forEach(character => {
 			character["type"] = "character";
 		});
@@ -117,7 +115,7 @@ export class MiniProfileHandler {
 		return data;
 	}
 
-	#createHeader(user) {
+	private static createHeader(user) {
 		const header = DOM.create("div", "mini-profile-header");
 		const avatar = DOM.create("a", "mini-profile-avatar");
 		avatar.style.backgroundImage = `url(${user.avatar.large})`;
@@ -125,7 +123,7 @@ export class MiniProfileHandler {
 		const name = DOM.create("div", "mini-profile-username", user.name);
 		header.append(name)
 
-		this.#handleFollowBadge(user, header);
+		this.handleFollowBadge(user, header);
 
 
 		if (user.donatorTier > 0) {
@@ -138,7 +136,7 @@ export class MiniProfileHandler {
 		this.miniProfileContainer.append(header);
 	}
 
-	#handleFollowBadge(user, header: HTMLElement) {
+	private static handleFollowBadge(user, header: HTMLElement) {
 		if (!user.isFollower && !user.isFollowing) {
 			return;
 		}
@@ -155,33 +153,33 @@ export class MiniProfileHandler {
 		header.append(followsYou);
 	}
 
-	#createContent(user) {
+	private static createContent(user) {
 		const content = DOM.create("div", "mini-profile-content-container");
 
 		if (this.config.displayAnime && user.favourites.anime.nodes.length > 0) {
-			content.append(this.#addFavourites(user.favourites.anime.nodes));
+			content.append(this.addFavourites(user.favourites.anime.nodes));
 		}
 		if (this.config.displayManga && user.favourites.manga.nodes.length > 0) {
-			content.append(this.#addFavourites(user.favourites.manga.nodes));
+			content.append(this.addFavourites(user.favourites.manga.nodes));
 		}
 		if (this.config.displayCharacters && user.favourites.characters.nodes.length > 0) {
-			content.append(this.#addFavourites(user.favourites.characters.nodes));
+			content.append(this.addFavourites(user.favourites.characters.nodes));
 		}
 		if (this.config.displayStaff && user.favourites.staff.nodes.length > 0) {
-			content.append(this.#addFavourites(user.favourites.staff.nodes));
+			content.append(this.addFavourites(user.favourites.staff.nodes));
 		}
 
 		if (this.config.displayBio && user.about?.length > 0) {
-			content.prepend(this.#addBio(user));
+			content.prepend(this.addBio(user));
 		}
 
 		this.miniProfileContainer.append(content);
 	}
 
-	#addFavourites(favourites: any[]) {
+	private static addFavourites(favourites: any[]) {
 		const favouritesContainer = DOM.create("div", "mini-profile-section");
 		for (const favourite of favourites) {
-			const cover = DOM.create("a", "mini-profile-favourite");
+			const cover = DOM.create<HTMLAnchorElement>("a","mini-profile-favourite");
 			cover.href = `/${favourite.type.toLowerCase()}/${favourite.id}`
 			cover.style.backgroundImage = `url(${favourite.coverImage?.large ?? favourite.image?.large})`;
 			if (favourite.isFavourite) {
@@ -192,10 +190,10 @@ export class MiniProfileHandler {
 		return favouritesContainer;
 	}
 
-	#addBio(user) {
+	private static addBio(user) {
 		const rect = this.miniProfileContainer.getBoundingClientRect();
 		const bioMaxWidth = Math.max(rect.width, 500);
-		const markdown = DOM.create("div", ".markdown");
+		const markdown = DOM.createDiv(".markdown");
 		markdown.innerHTML = Markdown.parse(user.about);
 		Markdown.applyFunctions(markdown);
 		const container = DOM.create("div", "mini-profile-section mini-profile-about", markdown);
@@ -203,29 +201,29 @@ export class MiniProfileHandler {
 		return container;
 	}
 
-	#showMiniProfile() {
-		if (!this.#isVisible) {
+	private static showMiniProfile() {
+		if (!this.isVisible) {
 			return;
 		}
 		this.miniProfileContainer.classList.remove("void-mini-profile-hidden");
 	}
 
-	#hideMiniProfile() {
-		this.#isVisible = false;
+	private static hideMiniProfile() {
+		this.isVisible = false;
 		setTimeout(() => {
-			if (!this.#isVisible) {
+			if (!this.isVisible) {
 				this.miniProfileContainer.classList.add("void-mini-profile-hidden");
 			}
 		}, 300);
 	}
 
-	static renderSettings(config: MiniProfileConfig) {
-		const container = DOM.create("div");
-		this.#renderSettingsContainer(container, config);
+	static renderSettings() {
+		const container = DOM.createDiv();
+		this.renderSettingsContainer(container, new MiniProfileConfig());
 		return container;
 	}
 
-	static #renderSettingsContainer(container: HTMLElement, config: MiniProfileConfig) {
+	private static renderSettingsContainer(container: HTMLElement, config: MiniProfileConfig) {
 		container.replaceChildren();
 		container.append(DOM.create("h3", null, "Mini Profile Configuration"));
 
@@ -235,7 +233,7 @@ export class MiniProfileHandler {
 				() => {
 					config.position = position as "top" | "center" | "bottom";
 					config.save();
-					this.#renderSettingsContainer(container, config);
+					this.renderSettingsContainer(container, config);
 				}));
 
 		const positionSelect = Select(positionOptions);

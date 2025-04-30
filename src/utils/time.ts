@@ -115,7 +115,7 @@ export class Time {
 	}
 
 	static renderConfig() {
-		const container = DOM.create("div", null, DOM.create("h3", null, "Time Format Configuration"));
+		const container = DOM.createDiv(null, DOM.create("h3", null, "Time Format Configuration"));
 		const dateFormatSelect = new SelectComponent(
 			this.config.dateFormat,
 			["yyyy-mm-dd", "dd/mm/yyyy", "mm/dd/yyyy", "dd.mm.yyyy"],

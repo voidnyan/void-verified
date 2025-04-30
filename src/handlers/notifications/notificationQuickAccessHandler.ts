@@ -120,9 +120,8 @@ export class NotificationQuickAccessHandler {
 			3 * 60 * 1000,
 		);
 		let notifications = [];
-		const anilistAPI = new AnilistAPI(this.#settings);
 		try {
-			const [notifs] = await anilistAPI.getNotifications(
+			const [notifs] = await AnilistAPI.getNotifications(
 				this.#config.notificationTypes.length > 0
 					? this.#config.notificationTypes
 					: notificationTypes,
@@ -150,7 +149,7 @@ export class NotificationQuickAccessHandler {
 			if (nonDeadIds.length > 0) {
 				try {
 					const rels =
-						await anilistAPI.getActivityNotificationRelations(
+						await AnilistAPI.getActivityNotificationRelations(
 							Array.from(nonDeadIds),
 						);
 					relations.push(...rels);
@@ -217,7 +216,7 @@ export class NotificationQuickAccessHandler {
 				document.querySelector(".void-notification-dot")?.remove();
 			}
 			try {
-				await new AnilistAPI(this.#settings).resetNotificationCount();
+				await AnilistAPI.resetNotificationCount();
 				document.body
 					.querySelector(".user .notification-dot")
 					?.remove();

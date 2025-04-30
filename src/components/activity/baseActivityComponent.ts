@@ -39,9 +39,8 @@ export class BaseActivityComponent {
 	constructor(activityId: number) {
 		this.activityId = activityId;
 		this.replyMarkdownEditor = new MarkdownEditor(async (reply) => {
-			const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
 			try {
-				const data = await anilistAPI.replyToActivity(this.activityId, reply);
+				const data = await AnilistAPI.replyToActivity(this.activityId, reply);
 				this.activityReplies.append(this.createReply(data));
 				this.activityReplies.append(this.replyMarkdownEditor.element);
 			} catch (error) {
@@ -56,8 +55,7 @@ export class BaseActivityComponent {
 		this.editContainer = DOM.create("div", "markdown-edit-container");
 		this.editMarkdownEditor = new MarkdownEditor(async (value) => {
 			try {
-				const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
-				const data = await anilistAPI.saveActivityText(this.editType, this.editActivityId, value);
+				const data = await AnilistAPI.saveActivityText(this.editType, this.editActivityId, value);
 				this.editCallback(data.text ?? data.message);
 			} catch (error) {
 				Toaster.error(`Failed to save ${this.editType}.`, error);
@@ -97,8 +95,8 @@ export class BaseActivityComponent {
 	}
 
 	createHeaderUser(user: IUser): {
-		name: HTMLDivElement,
-		avatar: HTMLDivElement,
+		name: HTMLAnchorElement,
+		avatar: HTMLAnchorElement,
 		donatorBadge: HTMLDivElement | null,
 		moderatorBadge: HTMLDivElement | null
 	} {
@@ -106,16 +104,16 @@ export class BaseActivityComponent {
 	}
 
 	static createHeaderUser(user: IUser): {
-		name: HTMLDivElement,
-		avatar: HTMLDivElement,
+		name: HTMLAnchorElement,
+		avatar: HTMLAnchorElement,
 		donatorBadge: HTMLDivElement | null,
 		moderatorBadge: HTMLDivElement | null
 	} {
-		const avatar = DOM.create("a", ".avatar");
+		const avatar = DOM.create<HTMLAnchorElement>("a", ".avatar");
 		avatar.setAttribute("href", `/user/${user.name}/`);
 		avatar.setAttribute("style", `background-image: url(${user.avatar.large});`);
 
-		const name = DOM.create("a", ".name", user.name);
+		const name = DOM.create<HTMLAnchorElement>("a", ".name", user.name);
 		name.setAttribute("href", `/user/${user.name}/`);
 
 		let donatorBadge: HTMLDivElement = null;
@@ -148,17 +146,17 @@ export class BaseActivityComponent {
 	}
 
 	createTime(timestamp: number): HTMLDivElement {
-		const timeAction = DOM.create("div", ".action .time");
+		const timeAction = DOM.createDiv(".action .time");
 		const time = DOM.create("time", null, Time.convertToString(timestamp));
 		const date = Time.convertToDate(timestamp);
-		time.setAttribute("timestamp", date);
+		time.setAttribute("timestamp", date.toString());
 		StaticTooltip.register(time, Time.toLocaleString(date));
 		timeAction.append(time);
 		return timeAction;
 	}
 
-	createSubscribeButton(activity: IListActivity | IMessageActivity | ITextActivity): HTMLDivElement {
-		const subscribeButton = DOM.create("span", ".action .has-label", SubscribeBellIcon());
+	createSubscribeButton(activity: IListActivity | IMessageActivity | ITextActivity): HTMLSpanElement {
+		const subscribeButton = DOM.create<HTMLSpanElement>("span", ".action .has-label", SubscribeBellIcon());
 		subscribeButton.setAttribute("label", activity.isSubscribed ? "Unsubscribe" : "Subscribe");
 		if (activity.isSubscribed) {
 			subscribeButton.classList.add("active");
@@ -166,9 +164,8 @@ export class BaseActivityComponent {
 
 		subscribeButton.addEventListener("click", async () => {
 			try {
-				const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
 				const subscribe = subscribeButton.getAttribute("label") === "Subscribe";
-				const data = await anilistAPI.toggleActivitySubscription(activity.id, subscribe);
+				const data = await AnilistAPI.toggleActivitySubscription(activity.id, subscribe);
 				subscribeButton.setAttribute("label", data.isSubscribed ? "Unsubscribe" : "Subscribe");
 			} catch (error) {
 				Toaster.error("Failed to toggle activity subscription", error);
@@ -177,14 +174,14 @@ export class BaseActivityComponent {
 		return subscribeButton;
 	}
 
-	createDirectLink(activity: IListActivity | IMessageActivity | ITextActivity): HTMLDivElement {
-		const directLink = DOM.create("a", null, [LinkIcon(), "Direct Link"]);
+	createDirectLink(activity: IListActivity | IMessageActivity | ITextActivity): HTMLAnchorElement {
+		const directLink = DOM.create<HTMLAnchorElement>("a", null, [LinkIcon(), "Direct Link"]);
 		directLink.setAttribute("href", `/activity/${activity.id}`);
 		return directLink;
 	}
 
 	createActions(activity: IListActivity | IMessageActivity | ITextActivity): HTMLDivElement {
-		const actions = DOM.create("div", ".actions");
+		const actions = DOM.createDiv(".actions");
 
 		const replies = DOM.create("div", ".action .replies");
 		const replyCount = DOM.create("span", ".count", activity.replyCount);
@@ -200,11 +197,10 @@ export class BaseActivityComponent {
 				return;
 			}
 			try {
-				const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
-				const repliesData = await anilistAPI.queryActivityReplies(activity.id);
+				const repliesData = await AnilistAPI.queryActivityReplies(activity.id);
 				this.activityReplies.replaceChildren();
 				this.appendReplies(repliesData.replies, repliesData.pageInfo);
-				replies.setAttribute("queried", true);
+				replies.setAttribute("queried", "true");
 			} catch (error) {
 				Toaster.error("Failed to query activity replies.", error);
 				this.activityReplies?.classList.add("void-hidden");
@@ -241,15 +237,14 @@ export class BaseActivityComponent {
 		likeWrapActivity.append(users, likeButton);
 
 		likeButton.addEventListener("click", async () => {
-			const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
 			try {
-				const data = await anilistAPI.toggleLike(id, type);
+				const data = await AnilistAPI.toggleLike(id, type);
 				if (data.isLiked) {
 					likeButton.classList.add("liked");
 				} else {
 					likeButton.classList.remove("liked");
 				}
-				likeCountSpan.innerText = data.likeCount;
+				likeCountSpan.innerText = data.likeCount.toString();
 			} catch (error) {
 				Toaster.error("Failed to like activity or reply.", error);
 			}
@@ -293,8 +288,7 @@ export class BaseActivityComponent {
 			const loader = Loader();
 			loadMoreButton.replaceWith(loader);
 			try {
-				const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
-				const data = await anilistAPI.queryActivityReplies(this.activityId, pageInfo.currentPage + 1);
+				const data = await AnilistAPI.queryActivityReplies(this.activityId, pageInfo.currentPage + 1);
 				loader.remove();
 				this.appendReplies(data.replies, data.pageInfo)
 			} catch (error) {
@@ -306,7 +300,7 @@ export class BaseActivityComponent {
 
 	createReply(reply: IActivityReply) {
 		const replyContainer = DOM.create("div", ".reply");
-		replyContainer.setAttribute("void-reply-id", reply.id);
+		replyContainer.setAttribute("void-reply-id", reply.id.toString());
 		const {name, avatar, moderatorBadge} = this.createHeaderUser(reply.user);
 		const header = DOM.create("div", ".header", [avatar, name]);
 
@@ -326,7 +320,7 @@ export class BaseActivityComponent {
 		header.append(actions);
 
 		const replyMarkdown = DOM.create("div", ".reply-markdown");
-		const markdown = DOM.create("div", ".markdown");
+		const markdown = DOM.createDiv(".markdown");
 		markdown.innerHTML = Markdown.parse(reply.text);
 		Markdown.applyFunctions(markdown);
 		replyMarkdown.append(markdown);
@@ -351,7 +345,7 @@ export class BaseActivityComponent {
 	}
 
 	createEditButton(activity: IMessageActivity | ITextActivity | IActivityReply, callback: (editedValue) => void): HTMLDivElement {
-		const editButton = DOM.create("div", null, [PencilSquareIcon(), "Edit"]);
+		const editButton = DOM.createDiv(null, [PencilSquareIcon(), "Edit"]);
 		editButton.addEventListener("click", () => {
 			this.openEditDialog(activity, (editedValue) => {
 				callback(editedValue);
@@ -361,12 +355,11 @@ export class BaseActivityComponent {
 	}
 
 	createDeleteButton(type: "ACTIVITY" | "REPLY", id: number, callback: () => void) {
-		const deleteButton = DOM.create("div", null, [XMarkIcon(), "Delete"]);
+		const deleteButton = DOM.create<HTMLDivElement>("div", null, [XMarkIcon(), "Delete"]);
 		deleteButton.addEventListener("click", () => {
 			Dialog.confirm(async () => {
 				try {
-					const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
-					await anilistAPI.deleteActivity(type, id);
+					await AnilistAPI.deleteActivity(type, id);
 					callback();
 				} catch (error) {
 					Toaster.error("Failed to delete activity or reply.", error);

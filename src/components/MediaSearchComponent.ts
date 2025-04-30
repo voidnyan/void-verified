@@ -60,10 +60,9 @@ export class MediaSearchComponent extends BaseSearchComponent {
 			return;
 		}
 		this.timeout = setTimeout(async () => {
-			const anilistAPI = new AnilistAPI(StaticSettings.settingsInstance);
 			try {
 				Toaster.debug(`Querying media with search word ${value}`);
-				const response = await anilistAPI.searchMedia(value);
+				const response = await AnilistAPI.searchMedia(value);
 				this.renderSearchResults(response);
 			} catch (error) {
 				Toaster.error(

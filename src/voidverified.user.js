@@ -15,11 +15,22 @@ import {Vue} from "./utils/vue";
 import {StaticTooltip} from "./utils/staticTooltip";
 import {CloseOverlaysHandler} from "./utils/closeOverlaysHandler";
 import {QuoteHandler} from "./handlers/quoteHandler";
+import {VerifiedUsers} from "./utils/verifiedUsers";
+import {GlobalCSS} from "./handlers/globalCSS";
+import {AnilistAuth} from "./utils/anilistAuth";
+import {LayoutDesigner} from "./handlers/layoutDesigner";
+import {MiniProfileHandler} from "./handlers/miniProfileHandler";
 
+ImageHostService.initialize();
+AnilistAuth.initialize();
+VerifiedUsers.initialize();
 StaticSettings.initialize();
+GlobalCSS.initialize();
 LibraryLoader.loadLibraries();
 Vue.ensureIsRegistered();
 StaticTooltip.initialize();
+LayoutDesigner.initialize();
+MiniProfileHandler.initialize();
 
 GoalsHandler.initialize();
 new MarkdownHotkeys(StaticSettings.settingsInstance).setupMarkdownHotkeys();
@@ -53,7 +64,7 @@ try {
 new ChangeLog(StaticSettings.settingsInstance).renderChangeLog();
 
 new ImgurAPI(
-	new ImageHostService().getImageHostConfiguration(imageHosts.imgur),
+	ImageHostService.getImageHostConfiguration(imageHosts.imgur),
 ).refreshAuthToken();
 
 console.log(`VoidVerified ${StaticSettings.settingsInstance.version} loaded.`);
