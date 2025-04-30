@@ -17,6 +17,9 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.24", [
+		new Feature("Add a taskbar to markdown editors.", "markdownTaskbarEnabled")
+	]),
 	new Version("1.23", [
 		new Feature("Add Reply To selection to activities and replies.", "replyToEnabled"),
 		new Feature("Add direct links to replies.", "replyDirectLinksEnabled"),

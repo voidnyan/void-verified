@@ -21,12 +21,14 @@ export interface IVerifiedUser {
 }
 
 export interface IOption {
+	key?: string;
 	value?: string | number | boolean;
 	defaultValue: string | number | boolean;
 	description: string;
 	category: string;
 	authRequired?: boolean;
 	getValue?: () => string | number | boolean;
+	setValue?: (key: string | number | boolean) => void;
 }
 
 export interface IOptions {
@@ -77,4 +79,5 @@ export interface IOptions {
 	replyToEnabled: IOption;
 	replyDirectLinksEnabled: IOption;
 	scrollToReplyEnabled: IOption;
+	markdownTaskbarEnabled: IOption;
 }

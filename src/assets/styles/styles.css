@@ -1144,7 +1144,7 @@ body:has(.void-modal-background[open]) {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease;
-    z-index: 9000;
+    z-index: 9500;
     font-family: Overpass, -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     font-size: 1.3rem;
     pointer-events: none;
@@ -1504,7 +1504,7 @@ body:has(.void-modal-background[open]) {
     opacity: 0;
     overflow: hidden;
     position: absolute;
-    width: 100%
+    width: 100%;
 }
 
 .void-media-display-container {
@@ -1564,10 +1564,48 @@ body:has(.void-modal-background[open]) {
     vertical-align: text-top;
 }
 
+.void-icon-pointer svg {
+    cursor: pointer;
+}
+
 .void-icon-mr svg {
     margin-right: 6px;
 }
 
 .void-icon-ml svg {
     margin-left: 6px;
+}
+
+.void-icon-v-top svg {
+    vertical-align: top;
+}
+
+.void-align-right {
+    margin-left: auto;
+}
+
+.void-align-right-container {
+    display: flex;
+    gap: inherit;
+    margin-left: auto;
+}
+
+.void-color-blue {
+    color: rgb(var(--color-blue));
+}
+
+.void-icon-rotate-90 svg {
+    transform: rotate(90deg);
+}
+
+.void-flex {
+    display: flex;
+}
+
+.void-justify-center {
+    justify-content: center;
+}
+
+.void-p-6 {
+    padding: 6px;
 }

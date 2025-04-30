@@ -1,0 +1,15 @@
+.void-file-icon-input-dropbox {
+    position: relative;
+    cursor: pointer;
+}
+
+.void-file-icon-input-dropbox input {
+    cursor: pointer;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    width: 0;
+    top: 0;
+    left: 0;
+}

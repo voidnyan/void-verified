@@ -41,6 +41,7 @@ export class StaticTooltip extends ClassWithTooltip {
 	private static isVisible = false;
 	static initialize() {
 		this.initializeTooltip();
+		this.hide = this.hide.bind(this);
 		this.tooltip.addEventListener("mouseover", () => {
 			this.isVisible = true;
 		});
@@ -48,7 +49,7 @@ export class StaticTooltip extends ClassWithTooltip {
 			this.hide();
 		});
 	}
-	static register(trigger: HTMLElement, content: any, isInteractable = false) {
+	static register(trigger: HTMLElement | ChildNode, content: any, isInteractable = false) {
 		trigger.addEventListener("mouseover", () => {
 			this.show(trigger, content, isInteractable);
 		});
@@ -67,7 +68,8 @@ export class StaticTooltip extends ClassWithTooltip {
 		setTimeout(() => {
 			if (!this.isVisible) {
 				this.hideTooltip();
+				this.tooltip.removeEventListener("mouseout", this.hide);
 			}
-		}, 300);
+		}, this.tooltip.classList.contains("void-interactable") ? 300 : 0);
 	}
 }

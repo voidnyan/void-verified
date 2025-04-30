@@ -1,5 +1,6 @@
 import {ImageApiFactory} from "../api/imageApiFactory";
 import {ImageFormats} from "../assets/imageFormats";
+import {StaticSettings} from "../utils/staticSettings";
 
 export class PasteHandler {
 	settings;
@@ -152,7 +153,7 @@ export class PasteHandler {
 
 		row = row.trim();
 		if (ImageFormats.some((format) => row.toLowerCase().endsWith(format))) {
-			return this.#handleImg(row);
+			return PasteHandler.handleImg(row);
 		} else if (row.toLowerCase().startsWith("http")) {
 			return `[](${row})`;
 		} else {
@@ -165,10 +166,10 @@ export class PasteHandler {
 			event.target.tagName === "INPUT";
 	}
 
-	#handleImg(row) {
-		const img = `img${this.settings.options.pasteImageWidth.getValue()}(${row})`;
+	static handleImg(row) {
+		const img = `img${StaticSettings.options.pasteImageWidth.getValue()}(${row})`;
 		let result = img;
-		if (this.settings.options.pasteWrapImagesWithLink.getValue()) {
+		if (StaticSettings.options.pasteWrapImagesWithLink.getValue()) {
 			result = `[ ${img} ](${row})`;
 		}
 		return result;

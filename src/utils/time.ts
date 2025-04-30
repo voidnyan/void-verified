@@ -63,12 +63,17 @@ export class Time {
 		return Math.floor(seconds) + " seconds ago";
 	}
 
-	static convertToDate(timestamp: number): Date {
-		return new Date(timestamp * 1000);
+	static convertToDate(timestamp: number | string | Date): Date {
+		if (typeof timestamp === "number") {
+			return new Date(timestamp * 1000);
+		} else if (typeof timestamp === "string") {
+			return new Date(timestamp);
+		}
+		return timestamp
 	}
 
-	static toLocaleString(date: Date | number) {
-		let d = typeof date === "number" ? this.convertToDate(date) : date;
+	static toLocaleString(date: Date | number | string) {
+		let d = this.convertToDate(date);
 		const day = d.getDate().toString().padStart(2, "0");
 		const month = (d.getMonth() + 1).toString().padStart(2, "0");
 		const year = d.getFullYear();

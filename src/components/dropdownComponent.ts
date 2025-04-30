@@ -1,67 +1,24 @@
 import {DomAwareComponent} from "./domAwareComponent";
 import {DOM} from "../utils/DOM";
+import {DropdownDirection, PopOverComponentBase} from "./popOverComponent";
 
-interface IDropdownMenuOption {
+export interface IDropdownMenuOption {
 	value: string,
 	item: Node
 }
 
-export class DropdownMenuComponent extends DomAwareComponent {
-	trigger: HTMLElement;
-	menu: HTMLDivElement;
-	constructor(options: string[] | IDropdownMenuOption[], trigger: HTMLElement, callback: (value: string) => void, initialValue?: string) {
-		super();
-		this.menu = DOM.create("div", "dropdown-menu");
-		this.trigger = trigger;
-		this.createMenu(options, callback, initialValue)
-		this.trigger.addEventListener("click", () => {
-			this.open();
-		});
+export class DropdownMenuComponent extends PopOverComponentBase {
+	constructor(
+		options: string[] | IDropdownMenuOption[],
+				trigger: HTMLElement,
+		callback: (value: string | IDropdownMenuOption) => void,
+		initialValue?: string,
+		direction = DropdownDirection.bottomLeft
+	) {
+		super(trigger, direction);
+		this.createMenu(options, callback, initialValue);
 
-		this.updateDropdownLocation = this.updateDropdownLocation.bind(this);
 
-		this.onDomUnload(trigger, () => {
-			this.menu.remove();
-		});
-	}
-
-	private open() {
-		if (!document.body.contains(this.menu)) {
-			document.body.append(this.menu);
-		}
-		this.menu.classList.add("void-visible");
-
-		this.updateDropdownLocation();
-		const scrollElement = this.addScrollListener(this.trigger, this.updateDropdownLocation);
-
-		window.addEventListener("resize", this.updateDropdownLocation);
-
-		const closeCall = (event) => {
-			const menu = event.target.closest(".void-dropdown-menu");
-			const t = event.target.closest([...this.trigger.classList].map(x => "." + x));
-			if (menu !== this.menu && event.target !== this.trigger && t !== this.trigger) {
-				this.close();
-				document.removeEventListener("click", closeCall);
-				if (scrollElement) {
-					scrollElement.removeEventListener("scroll", this.updateDropdownLocation);
-				}
-				window.removeEventListener("resize", this.updateDropdownLocation);
-			}
-		};
-
-		document.addEventListener("click", closeCall);
-	}
-
-	private updateDropdownLocation() {
-		const triggerRect = this.trigger.getBoundingClientRect();
-		const menuRect = this.menu.getBoundingClientRect();
-		const padding = 5;
-		this.menu.style.top = `${triggerRect.bottom + window.scrollY + padding}px`;
-		this.menu.style.left = `${triggerRect.left + window.scrollX - menuRect.width + triggerRect.width}px`;
-	}
-
-	private close() {
-		this.menu.classList.remove("void-visible");
 	}
 
 	private createMenu(options: string[] | IDropdownMenuOption[], callback: (value: string | IDropdownMenuOption) => void, initialValue?: string) {

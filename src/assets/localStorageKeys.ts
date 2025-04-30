@@ -16,5 +16,6 @@ export const LocalStorageKeys = {
 	settings: "void-verified-settings",
 	toasterConfig: "void-verified-toaster-config",
 	collapsedContainers: "void-verified-collapsed-containers",
-	timeConfig: "void-verified-time-config"
+	timeConfig: "void-verified-time-config",
+	drafts: "void-verified-markdown-drafts"
 }
