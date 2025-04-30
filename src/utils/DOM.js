@@ -45,6 +45,10 @@ export class DOM {
 		return anchor;
 	}
 
+	static createDiv(classes = null, children = null) {
+		return DOM.create("div", classes, children);
+	}
+
 	static transformClasses(classes) {
 		let result = [];
 		for (const className of classes.split(" ")) {

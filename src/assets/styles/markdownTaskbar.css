@@ -1,0 +1,25 @@
+.void-markdown-taskbar {
+    background: rgb(var(--color-foreground-blue-dark));
+    display: flex;
+    vertical-align: middle;
+}
+
+.void-markdown-taskbar > * {
+    cursor: pointer;
+    padding: 3px 6px;
+    user-select: none;
+}
+
+.void-markdown-taskbar > *:hover {
+    background: rgb(var(--color-foreground-blue));
+}
+
+.void-markdown-taskbar-character-counts-grid {
+    display: grid;
+    width: 100%;
+    grid-template-columns: auto min-content;
+    /*grid-template-columns:  min-content;*/
+    column-gap: 15px;
+    row-gap: 5px;
+    justify-items: start;
+}

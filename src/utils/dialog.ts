@@ -1,5 +1,5 @@
 import {DOM} from "./DOM";
-import {Button} from "../components/components";
+import {Button, InputField} from "../components/components";
 import {ALScrollock} from "./ALScrollock";
 import {XMarkIcon} from "../assets/icons";
 
@@ -45,6 +45,20 @@ export class Dialog {
 		this.confirmCallback = confirmCallback;
 		this.header.replaceChildren(title);
 		this.content.replaceChildren(content);
+		this.open();
+	}
+
+	static prompt(callback: (value: string) => void, title = "Insert Value", placeholder?: string) {
+		if (!this.dialogWrapper) {
+			this.initialize()
+		}
+
+		this.header.replaceChildren(title);
+		const input = InputField("", () => {}, "w-100", {placeholder});
+		this.content.replaceChildren(input);
+		this.confirmCallback = () => {
+			callback(input.value);
+		};
 		this.open();
 	}
 

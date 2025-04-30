@@ -117,7 +117,7 @@ export const defaultSettings: IOptions = {
 	pasteEnabled: {
 		defaultValue: false,
 		description:
-			"Automatically wrap pasted links and images with link and image tags.",
+			"Wrap pasted image links with image tags.",
 		category: categories.paste,
 	},
 	pasteWrapImagesWithLink: {
@@ -275,5 +275,11 @@ export const defaultSettings: IOptions = {
 		description: "Scroll to reply if it is specified in the URL.",
 		category: categories.activity,
 		authRequired: false
-	}
+	},
+	markdownTaskbarEnabled: {
+		defaultValue: false,
+		description: "Add a taskbar to markdown editors.",
+		category: categories.activity,
+		authRequired: false
+	},
 };

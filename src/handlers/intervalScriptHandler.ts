@@ -23,6 +23,7 @@ import {QuickStartHandler} from "./quickStart/quickStartHandler";
 import {Vue} from "../utils/vue";
 import {QuoteHandler} from "./quoteHandler";
 import {DomDataHandler} from "./domDataHandler";
+import {MarkdownTaskbarHandler} from "./markdownTaskbarHandler";
 
 interface IIntervalScriptsHandler {
 	styleHandler: any;
@@ -121,6 +122,7 @@ export class IntervalScriptHandler implements IIntervalScriptsHandler {
 		QuoteHandler.addQuoteClickHandlers();
 		DomDataHandler.scrollToReply();
 		QuoteHandler.addDirectLinksToReplies();
+		MarkdownTaskbarHandler.addTaskbars();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();

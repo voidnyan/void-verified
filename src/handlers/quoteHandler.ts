@@ -4,7 +4,6 @@ import {DOM} from "../utils/DOM";
 import {ArrowTurnLeftIcon, CheckIcon, LinkIcon} from "../assets/icons";
 import {DomDataHandler} from "./domDataHandler";
 import {StaticSettings} from "../utils/staticSettings";
-import {isNumber} from "node:util";
 
 export const ScrollIntoViewOptions: ScrollIntoViewOptions = {
 	behavior: "smooth",
@@ -43,7 +42,7 @@ export class QuoteHandler extends ClassWithTooltip {
 			? range.commonAncestorContainer
 			: range.commonAncestorContainer.parentElement) as HTMLElement).closest(".markdown");
 
-		if (!markdown) {
+		if (!markdown || (!markdown.closest(".reply") && !markdown.closest(".activity-entry"))) {
 			return;
 		}
 		const rect = range.getBoundingClientRect();
@@ -72,6 +71,10 @@ export class QuoteHandler extends ClassWithTooltip {
 
 		const blockquotes = document.querySelectorAll("blockquote[href]:not(.void-quote)");
 		for (const blockquote of blockquotes as NodeListOf<HTMLQuoteElement>) {
+			if (!blockquote.closest(".reply") && !blockquote.closest(".activity-entry")) {
+				continue;
+			}
+
 			let activityId, replyId;
 			const ref = blockquote.getAttribute("href");
 			const isReply = ref.includes("/");
@@ -131,7 +134,7 @@ export class QuoteHandler extends ClassWithTooltip {
 			return;
 		}
 
-		const replies = document.querySelectorAll(".reply[void-reply-id]:not(:has(.void-reply-direct-link)):not(.preview)");
+		const replies = document.querySelectorAll(".activity-entry .reply[void-reply-id]:not(:has(.void-reply-direct-link)):not(.preview)");
 		for (const reply of replies) {
 			const replyId = DomDataHandler.getIdFromElement(reply);
 			const activity = reply.closest(".activity-entry");

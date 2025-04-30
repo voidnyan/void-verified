@@ -4,6 +4,10 @@ import { ImgbbAPI } from "./imgbbAPI";
 import { ImgurAPI } from "./imgurAPI";
 export class ImageApiFactory {
 	getImageHostInstance() {
+		return ImageApiFactory.getImageHostInstance();
+	}
+
+	static getImageHostInstance() {
 		const imageHostService = new ImageHostService();
 		switch (imageHostService.getSelectedHost()) {
 			case imageHosts.imgbb:

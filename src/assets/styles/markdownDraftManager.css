@@ -1,0 +1,20 @@
+.void-markdown-draft-manager {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.void-markdown-draft-list {
+    max-height: 80px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 160px min-content min-content min-content;
+    column-gap: 4px;
+}
+
+.void-markdown-draft-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /*max-width: 50px;*/
+}
