@@ -38,6 +38,17 @@ export class Dialog {
 		document.body.append(this.dialogWrapper);
 	}
 
+	static inform(content: string, title: string = "Notice") {
+		if (!this.dialogWrapper) {
+			this.initialize();
+		}
+
+		this.confirmCallback = () => {};
+		this.header.replaceChildren(title);
+		this.content.replaceChildren(content);
+		this.open();
+	}
+
 	static confirm(confirmCallback: () => void, content: string = "Are you sure you want to do this?", title: string = "Warning") {
 		if (!this.dialogWrapper) {
 			this.initialize();

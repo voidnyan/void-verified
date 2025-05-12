@@ -550,7 +550,6 @@ export class AnilistAPI {
 				// The API seems to return 500 with message (bad request) sometimes
 				// to not make this confusing for the user, replace the message that ends up in UI
 				if (response.status !== 500) {
-					console.log(data);
 					message = data?.errors?.map(x => x.message)?.join(", ");
 				}
 				throw new AnilistAPIError([{

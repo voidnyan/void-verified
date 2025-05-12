@@ -56,7 +56,6 @@ export class AceEditorInitializer {
 			const searchInput = InputField("", (event => {
 				const searchword = event.target.value;
 				editor.find(searchword);
-				console.log(event.target.value);
 			}));
 			container.append(searchInput);
 		}, 160);

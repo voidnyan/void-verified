@@ -389,7 +389,7 @@ export const KeyInput = (currentKey, bindingScope, onFocusOut) => {
 	return keyInput;
 }
 
-const transformClasses = (base, additional) => {
+export const transformClasses = (base, additional) => {
 	let classes = base;
 	if (additional && additional !== "") {
 		classes += ` ${additional}`;

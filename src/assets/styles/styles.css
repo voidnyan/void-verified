@@ -113,6 +113,23 @@
     color: rgb(var(--color-peach));
 }
 
+.void-options-legend {
+    margin-top: 8px;
+    display: flex;
+    gap: 5px;
+}
+
+span.void-auth-required {
+    color: rgb(var(--color-peach));
+}
+span.void-api-auth-required {
+    color: rgb(var(--color-orange));
+}
+
+.void-setting-label-container.void-api-auth-required .void-setting-label {
+    color: rgb(var(--color-orange));
+}
+
 .void-setting-label-container .void-checkbox {
     vertical-align: middle;
 }
@@ -366,6 +383,11 @@ a.void-link {
     vertical-align: top;
     margin-top: 15px;
     margin-right: 10px;
+}
+
+a.void-button:visited,
+a.void-button:hover {
+    color: rgb(var(--color-text-bright));
 }
 
 .void-button[disabled="true"] {
@@ -1453,10 +1475,6 @@ body:has(.void-modal-background[open]) {
     background: rgb(var(--color-foreground-grey));
 }
 
-.void-w-100 {
-    width: 100%;
-}
-
 .void-image-preview-container {
     display: none;
     position: fixed;
@@ -1597,16 +1615,4 @@ body:has(.void-modal-background[open]) {
 
 .void-icon-rotate-90 svg {
     transform: rotate(90deg);
-}
-
-.void-flex {
-    display: flex;
-}
-
-.void-justify-center {
-    justify-content: center;
-}
-
-.void-p-6 {
-    padding: 6px;
 }

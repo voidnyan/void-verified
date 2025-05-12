@@ -3,6 +3,7 @@ import {Select, Toast, Option, Button, Label} from "../components/components";
 import {LocalStorageKeys} from "../assets/localStorageKeys";
 import {AnilistAPIError} from "../api/anilistAPI";
 import {SelectComponent} from "../components/selectComponent";
+import {VoidApiError} from "../api/voidApi";
 
 export const toastTypes = {
 	info: "info",
@@ -53,6 +54,8 @@ class ToastInstance {
 
 		if (this.error && this.error instanceof AnilistAPIError) {
 			toast.append(` (${this.error.errors[0].message})`);
+		} else if (this.error && this.error instanceof VoidApiError) {
+			toast.append(` (${this.error.message})`);
 		}
 
 		// this.durationLeft = this.duration;
@@ -127,7 +130,7 @@ export class Toaster {
 		);
 	}
 
-	static warning(message) {
+	static warning(message, error?: Error) {
 		if (!this.#shouldToast(toastTypes.warning)) {
 			return;
 		}
@@ -137,6 +140,7 @@ export class Toaster {
 				message,
 				toastTypes.warning,
 				this.#config.duration,
+				error
 			).toast(),
 		);
 	}

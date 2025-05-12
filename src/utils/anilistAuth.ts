@@ -2,6 +2,8 @@ import {imageHosts, ImageHostService} from "../api/imageHostConfiguration";
 import {ImgurAPI} from "../api/imgurAPI";
 import {DOM} from "./DOM";
 import {StaticSettings} from "./staticSettings";
+import {ButtonComponent} from "../components/ButtonComponent";
+import {VoidApi} from "../api/voidApi";
 
 export class AnilistAuth {
 	private static localStorageAuth = "void-verified-auth";
@@ -41,18 +43,22 @@ export class AnilistAuth {
 				);
 			new ImgurAPI(imgurConfig).handleAuth();
 		}
-		if (path !== "void_auth") {
-			return;
+
+		if (path === "void_api_auth") {
+			VoidApi.token = token;
+			localStorage.setItem("void-verified-api-token", token);
 		}
 
-		const expiresDate = new Date(
-			new Date().getTime() + Number(expiress.split("=")[1]) * 1000,
-		);
+		if (path === "void_auth") {
+			const expiresDate = new Date(
+				new Date().getTime() + Number(expiress.split("=")[1]) * 1000,
+			);
 
-		this.saveAuthToken({
-			token: token.split("=")[1],
-			expires: expiresDate,
-		});
+			this.saveAuthToken({
+				token: token.split("=")[1],
+				expires: expiresDate,
+			});
+		}
 
 		window.history.replaceState(
 			null,
@@ -83,11 +89,11 @@ export class AnilistAuth {
 
 		const clientId = 15519;
 
-		const header = DOM.create("h3", null, "Authorize VoidVerified");
+		const header = DOM.create("h3", null, "Authorize (AniList API)");
 		const description = DOM.create(
 			"p",
 			null,
-			"Some features of VoidVerified might need your access token to work correctly or fully. Below is a list of features using your access token. If you do not wish to use any of these features, you do not need to authenticate. If revoking authentication, be sure to revoke VoidVerified from Anilist Apps as well.",
+			"Some features of VoidVerified might need your access token to work correctly or fully. Below is a list of features using your access token. If you do not wish to use any of these features, you do not need to authorize. If revoking authentication, be sure to revoke VoidVerified from Anilist Apps as well.",
 		);
 
 		const list = DOM.create("ul");
@@ -100,7 +106,7 @@ export class AnilistAuth {
 		// DOM.create uses Vue router so don't use that here
 		const authLink = document.createElement("a");
 		authLink.classList.add("void-button");
-		authLink.append("Authenticate VoidVerified");
+		authLink.append("Authorize VoidVerified");
 		authLink.setAttribute(
 			"href",
 			`https://anilist.co/api/v2/oauth/authorize?client_id=${clientId}&response_type=token`,
@@ -123,6 +129,9 @@ export class AnilistAuth {
 		this.settingsContainer.append(
 			!isAuthenticated ? authLink : removeAuthButton,
 		);
+
+
+		this.settingsContainer.append(VoidApi.createSettings());
 	}
 
 	static 	removeAuthToken() {

@@ -135,4 +135,22 @@ export class Time {
 
 		return container;
 	}
+
+	static toUpcomingString(date: Date | string): string {
+		const d = this.convertToDate(date);
+		const now = new Date();
+		const diffMs = d.getTime() - now.getTime();
+
+		if (diffMs <= 0) return "now";
+
+		const seconds = Math.floor(diffMs / 1000);
+		const minutes = Math.floor(seconds / 60);
+		const hours = Math.floor(minutes / 60);
+		const days = Math.floor(hours / 24);
+
+		if (seconds < 60) return `in ${seconds} second${seconds !== 1 ? 's' : ''}`;
+		if (minutes < 60) return `in ${minutes} minute${minutes !== 1 ? 's' : ''}`;
+		if (hours < 24) return `in ${hours} hour${hours !== 1 ? 's' : ''}`;
+		return `in ${days} day${days !== 1 ? 's' : ''}`;
+	}
 }

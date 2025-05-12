@@ -10,6 +10,7 @@ export class Option implements IOption {
 	description: string;
 	category: string;
 	authRequired: boolean;
+	voidApiAuthRequired: boolean;
 
 	constructor(option: IOption) {
 		this.defaultValue = option.defaultValue;
@@ -17,6 +18,7 @@ export class Option implements IOption {
 		this.category = option.category ?? categories.misc;
 		this.authRequired = option.authRequired;
 		this.key = option.key;
+		this.voidApiAuthRequired = option.voidApiAuthRequired ?? false;
 	}
 
 	getValue() {

@@ -64,6 +64,10 @@ export class SettingsUi {
 		this.renderCategories();
 		this.renderOptions();
 		this.container.append(this.options);
+		this.container.append(DOM.createDiv("options-legend", [
+			DOM.create("span", "auth-required", "Auth (AniList)"),
+			DOM.create("span", "api-auth-required", "Auth (VoidVerified API)")
+		]))
 		this.renderSubcategoriesNav();
 		this.container.append(this.subCategoryNav);
 		this.renderSubCategory();
@@ -97,10 +101,10 @@ export class SettingsUi {
 	private static renderCategories() {
 		const nav = new SelectComponent("all",
 			["all", ...Object.values(categories)],
-				(value: string) => {
-					this.activeCategory = value;
-					this.renderOptions();
-				});
+			(value: string) => {
+				this.activeCategory = value;
+				this.renderOptions();
+			});
 
 		this.container.append(DOM.createDiv("nav", nav.element));
 	}
@@ -149,6 +153,11 @@ export class SettingsUi {
 		if (option.authRequired) {
 			settingLabel.classList.add("void-auth-required");
 		}
+
+		if (option.voidApiAuthRequired) {
+			settingLabel.classList.add("void-api-auth-required");
+		}
+
 		return settingLabel;
 	}
 

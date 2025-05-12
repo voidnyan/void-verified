@@ -18,6 +18,7 @@ class Feature {
 
 export const changeLog = [
 	new Version("1.24", [
+		new Feature("Create and vote on polls (requires VoidVerified API authorization).", "pollsEnabled"),
 		new Feature("Add a taskbar to markdown editors.", "markdownTaskbarEnabled")
 	]),
 	new Version("1.23", [
