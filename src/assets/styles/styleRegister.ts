@@ -12,6 +12,8 @@ import dropdownMenu from "./dropdownMenu.css";
 import markdownTaskbar from "./markdownTaskbar.css";
 import fileInput from "./fileInput.css";
 import markdownDraftManager from "./markdownDraftManager.css";
+import utilityClasses from "./utility-classes.css";
+import poll from "./poll.css";
 
 import {StyleHandler} from "../../handlers/styleHandler";
 import {Settings} from "../../utils/settings";
@@ -33,7 +35,9 @@ export class StyleRegister {
 			dropdownMenu,
 			markdownTaskbar,
 			fileInput,
-			markdownDraftManager
+			markdownDraftManager,
+			utilityClasses,
+			poll
 		];
 		styleHandler.createStyleLink(css.join("\n"), "script");
 	}

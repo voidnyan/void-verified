@@ -281,4 +281,11 @@ export const defaultSettings: IOptions = {
 		category: categories.activity,
 		authRequired: false
 	},
+	pollsEnabled: {
+		defaultValue: false,
+		description: "Create and vote on polls.",
+		category: categories.activity,
+		authRequired: false,
+		voidApiAuthRequired: true
+	}
 };

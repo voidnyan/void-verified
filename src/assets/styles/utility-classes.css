@@ -1,0 +1,55 @@
+.void-flex {
+    display: flex;
+}
+
+.void-flex-column {
+    flex-direction: column;
+}
+
+.void-justify-center {
+    justify-content: center;
+}
+
+.void-justify-between {
+    justify-content: space-between;
+}
+
+.void-justify-end {
+    justify-content: flex-end;
+}
+
+.void-items-start {
+    align-items: flex-start;
+}
+
+.void-items-center {
+    align-items: center;
+}
+
+.void-p-6 {
+    padding: 6px;
+}
+
+.void-mt-10 {
+    margin-top: 10px;
+}
+
+.void-gap-5 {
+    gap: 5px;
+}
+
+.void-gap-10 {
+    gap: 10px;
+}
+
+.void-cursor-pointer {
+    cursor: pointer;
+}
+
+.void-w-100 {
+    width: 100%;
+}
+
+.void-w-max-content {
+    width: max-content;
+}

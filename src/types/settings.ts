@@ -35,6 +35,7 @@ export interface IOption {
 	description: string;
 	category: string;
 	authRequired?: boolean;
+	voidApiAuthRequired?: boolean,
 	getValue?: () => string | number | boolean;
 	setValue?: (value: string | number | boolean) => void;
 }
@@ -89,4 +90,5 @@ export interface IOptions {
 	replyDirectLinksEnabled: IOption;
 	scrollToReplyEnabled: IOption;
 	markdownTaskbarEnabled: IOption;
+	pollsEnabled: IOption;
 }

@@ -23,6 +23,7 @@ import {QuoteHandler} from "./quoteHandler";
 import {DomDataHandler} from "./domDataHandler";
 import {MarkdownTaskbarHandler} from "./markdownTaskbarHandler";
 import {SettingsUi} from "./settingsUi";
+import {PollHandler} from "./pollHandler/pollHandler";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -89,6 +90,8 @@ export class IntervalScriptHandler {
 		DomDataHandler.scrollToReply();
 		QuoteHandler.addDirectLinksToReplies();
 		MarkdownTaskbarHandler.addTaskbars();
+		PollHandler.addPollForms();
+		PollHandler.replacePollImages();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();
