@@ -17,6 +17,9 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.25", [
+		new Feature("Sync GIFs and images with your other devices through VoidAPI (requires VoidVerified API authorization)", "syncGifsToVoidApi")
+	]),
 	new Version("1.24", [
 		new Feature("Create and vote on polls (requires VoidVerified API authorization).", "pollsEnabled"),
 		new Feature("Add a taskbar to markdown editors.", "markdownTaskbarEnabled")

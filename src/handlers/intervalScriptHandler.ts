@@ -1,11 +1,11 @@
 import { GlobalCSS } from "./globalCSS";
-import { ActivityHandler } from "./activityHandler.js";
+import { ActivityHandler } from "./activityHandler";
 import { StyleHandler } from "./styleHandler.js";
 import { QuickAccess } from "./quickAccessHandler.js";
 import { LayoutDesigner } from "./layoutDesigner";
 import { Toaster } from "../utils/toaster";
 import {Link} from "../components/components.js";
-import { GifKeyboardHandler } from "./gifKeyboardHandler.js";
+import { GifKeyboardHandler } from "./gifKeyboardHandler";
 import { AnilistFeedFixHandler } from "./anilistFeedFixHandler.js";
 import { NotificationQuickAccessHandler } from "./notifications/notificationQuickAccessHandler";
 import { NotificationFeedHandler } from "./notifications/notificationFeedHandler.js";
@@ -27,10 +27,8 @@ import {PollHandler} from "./pollHandler/pollHandler";
 
 export class IntervalScriptHandler {
 	styleHandler;
-	activityHandler;
 	settings;
 	quickAccess;
-	gifKeyboard;
 	anilistFeedFixHandler;
 	notificationQuickAccessHandler;
 	notificationFeedHandler;
@@ -41,9 +39,7 @@ export class IntervalScriptHandler {
 		this.settings = settings;
 
 		this.styleHandler = new StyleHandler(settings);
-		this.gifKeyboard = new GifKeyboardHandler(settings);
 
-		this.activityHandler = new ActivityHandler(settings);
 		this.quickAccess = new QuickAccess(settings);
 		this.anilistFeedFixHandler = new AnilistFeedFixHandler(settings);
 		this.notificationQuickAccessHandler =
@@ -72,19 +68,19 @@ export class IntervalScriptHandler {
 		DomDataHandler.addReplyIdsToDom();
 
 		QuickStartHandler.addNavigationButtons();
-		intervalScriptHandler.activityHandler.moveAndDisplaySubscribeButton();
-		intervalScriptHandler.activityHandler.addSelfMessageButton();
-		intervalScriptHandler.activityHandler.removeBlankFromAnilistLinks();
-		intervalScriptHandler.activityHandler.addCollapseReplyButtons();
-		intervalScriptHandler.gifKeyboard.handleGifKeyboard();
+		ActivityHandler.moveAndDisplaySubscribeButton();
+		ActivityHandler.addSelfMessageButton();
+		ActivityHandler.removeBlankFromAnilistLinks();
+		ActivityHandler.addCollapseReplyButtons();
+		GifKeyboardHandler.handleGifKeyboard();
 		LayoutDesigner.renderLayoutPreview();
 		intervalScriptHandler.anilistFeedFixHandler.handleFix();
 		intervalScriptHandler.notificationFeedHandler.renderNotificationsFeed();
 		intervalScriptHandler.markdownHotkeys.renderSettings();
 		intervalScriptHandler.pasteHandler.registerDragAndDropInputs();
-		intervalScriptHandler.activityHandler.handleImageLinkPreview();
+		ActivityHandler.handleImageLinkPreview();
 		MiniProfileHandler.addUserHoverListeners();
-		intervalScriptHandler.activityHandler.addTooltipsToTimestamps();
+		ActivityHandler.addTooltipsToTimestamps();
 		VideoFixer.replaceVideosWithLinks();
 		QuoteHandler.addQuoteClickHandlers();
 		DomDataHandler.scrollToReply();

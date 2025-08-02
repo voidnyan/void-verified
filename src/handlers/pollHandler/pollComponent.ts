@@ -1,4 +1,4 @@
-import {IPoll, IPollOption, VoidApi} from "../../api/voidApi";
+import {IPoll, IPollOption} from "../../api/voidApi/types/pollInterfaces";
 import {DOM} from "../../utils/DOM";
 import {Toaster} from "../../utils/toaster";
 import {ArrowTopRightOnSquareIcon, XMarkIcon} from "../../assets/icons";
@@ -6,6 +6,7 @@ import {IconButton} from "../../components/components";
 import {Dialog} from "../../utils/dialog";
 import {Time} from "../../utils/time";
 import {DomPurify} from "../../utils/domPurify";
+import {VoidApi} from "../../api/voidApi";
 
 export class PollComponent {
 	element: HTMLDivElement;
@@ -60,6 +61,9 @@ export class PollComponent {
 			openLink.setAttribute("href", href);
 			openLink.classList.add("void-poll-option-link");
 			openLink.append(ArrowTopRightOnSquareIcon());
+			openLink.addEventListener("click", (event) => {
+				event.stopPropagation();
+			})
 			desc.append(openLink);
 		}
 

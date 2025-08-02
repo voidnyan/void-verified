@@ -20,6 +20,7 @@ import {GlobalCSS} from "./handlers/globalCSS";
 import {AnilistAuth} from "./utils/anilistAuth";
 import {LayoutDesigner} from "./handlers/layoutDesigner";
 import {MiniProfileHandler} from "./handlers/miniProfileHandler";
+import {GifKeyboardHandler} from "./handlers/gifKeyboardHandler";
 
 ImageHostService.initialize();
 AnilistAuth.initialize();
@@ -41,6 +42,7 @@ styleHandler.refreshStyles();
 StyleRegister.registerStyles();
 CloseOverlaysHandler.initialize();
 QuoteHandler.addSelectionListener();
+GifKeyboardHandler.getGifsFromApi();
 
 try {
 	const intervalScriptHandler = new IntervalScriptHandler(StaticSettings.settingsInstance);

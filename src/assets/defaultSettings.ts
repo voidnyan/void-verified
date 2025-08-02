@@ -1,4 +1,5 @@
 import {IOptions} from "../types/settings";
+import {GifKeyboardHandler} from "../handlers/gifKeyboardHandler";
 
 export const categories = {
 	users: "users",
@@ -154,12 +155,20 @@ export const defaultSettings: IOptions = {
 	gifKeyboardEnabled: {
 		defaultValue: false,
 		description: "Add a GIF keyboard to activity editor.",
-		category: categories.paste,
+		category: categories.paste
 	},
 	gifKeyboardLikeButtonsEnabled: {
 		defaultValue: true,
 		description: "Add like buttons to add media to GIF keyboard.",
 		category: categories.paste,
+	},
+	syncGifsToVoidApi: {
+		defaultValue: false,
+		description: "Sync GIFs and images with your other devices through VoidAPI",
+		category: categories.paste,
+		authRequired: false,
+		voidApiAuthRequired: true,
+		onValueSet: GifKeyboardHandler.syncGifs
 	},
 	changeLogEnabled: {
 		defaultValue: true,

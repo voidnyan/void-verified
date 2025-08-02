@@ -55,6 +55,7 @@ class ToastInstance {
 		if (this.error && this.error instanceof AnilistAPIError) {
 			toast.append(` (${this.error.errors[0].message})`);
 		} else if (this.error && this.error instanceof VoidApiError) {
+			console.log(this.error);
 			toast.append(` (${this.error.message})`);
 		}
 

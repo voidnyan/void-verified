@@ -9,24 +9,19 @@ import {StaticTooltip} from "../utils/staticTooltip";
 import {Time} from "../utils/time";
 import {CollapsedComments} from "../utils/collapsedReplies";
 import {DomDataHandler} from "./domDataHandler";
+import {AnilistAuth} from "../utils/anilistAuth";
 
 export class ActivityHandler {
-	settings;
-
-	constructor(settings) {
-		this.settings = settings;
-	}
-
-	moveAndDisplaySubscribeButton() {
-		if (!this.settings.options.moveSubscribeButtons.getValue()) {
+	static moveAndDisplaySubscribeButton() {
+		if (!StaticSettings.options.moveSubscribeButtons.getValue()) {
 			return;
 		}
 
-		const subscribeButtons = document.querySelectorAll(
+		const subscribeButtons = document.querySelectorAll<HTMLSpanElement>(
 			"span[label='Unsubscribe'], span[label='Subscribe']",
 		);
 		for (const subscribeButton of subscribeButtons) {
-			if (subscribeButton.parentNode.classList.contains("actions")) {
+			if ((subscribeButton.parentNode as HTMLDivElement).classList.contains("actions")) {
 				continue;
 			}
 
@@ -36,14 +31,14 @@ export class ActivityHandler {
 		}
 	}
 
-	addSelfMessageButton() {
-		if (!this.settings.options.selfMessageEnabled.getValue()) {
+	static addSelfMessageButton() {
+		if (!StaticSettings.options.selfMessageEnabled.getValue()) {
 			return;
 		}
 
 		if (
 			!window.location.pathname.startsWith(
-				`/user/${this.settings.anilistUser}`,
+				`/user/${AnilistAuth.name}`,
 			)
 		) {
 			return;
@@ -70,8 +65,8 @@ export class ActivityHandler {
 		);
 	}
 
-	addCollapseReplyButtons() {
-		if (!this.settings.options.collapsibleReplies.getValue()) {
+	static addCollapseReplyButtons() {
+		if (!StaticSettings.options.collapsibleReplies.getValue()) {
 			return;
 		}
 
@@ -82,7 +77,7 @@ export class ActivityHandler {
 		}
 	}
 
-	#addCollapseReplyButton(reply) {
+	static #addCollapseReplyButton(reply) {
 		const button = DOM.create("div", "reply-collapse");
 		const replyId = DomDataHandler.getIdFromElement(reply);
 		button.addEventListener("click", () => {
@@ -97,11 +92,11 @@ export class ActivityHandler {
 		replyContent.append(reply.querySelector(".header"), reply.querySelector(".reply-markdown"));
 		reply.append(replyContent);
 		let isCollapsed = false;
-		if (this.settings.options.autoCollapseLiked.getValue()) {
+		if (StaticSettings.options.autoCollapseLiked.getValue()) {
 			isCollapsed =  reply.querySelector(".action.likes .button").classList.contains("liked");
 		}
-		if (!isCollapsed && this.settings.options.autoCollapseSelf.getValue()) {
-			isCollapsed = !reply.classList.contains("preview") && reply.querySelector("a.name").innerText.trim() === this.settings.anilistUser || isCollapsed;
+		if (!isCollapsed && StaticSettings.options.autoCollapseSelf.getValue()) {
+			isCollapsed = !reply.classList.contains("preview") && reply.querySelector("a.name").innerText.trim() === AnilistAuth.name || isCollapsed;
 		}
 		if (StaticSettings.options.rememberCollapsedReplies.getValue()) {
 			const isManuallyCollapsed = CollapsedComments.isCollapsed(replyId);
@@ -110,13 +105,13 @@ export class ActivityHandler {
 		reply.setAttribute("collapsed", isCollapsed);
 	}
 
-	async #handleSelfMessage() {
-		const message = document.querySelector(
+	static async #handleSelfMessage() {
+		const message = document.querySelector<HTMLTextAreaElement>(
 			".activity-feed-wrap > .activity-edit textarea",
 		).value;
 		try {
 			Toaster.debug("Self-publishing a message.");
-			const response = await AnilistAPI.selfMessage();
+			const response = await AnilistAPI.selfMessage(message);
 			Toaster.success("Message self-published.");
 			if (Vue.router) {
 				Vue.router.push(`/activity/${response.id}`);
@@ -130,39 +125,40 @@ export class ActivityHandler {
 		}
 	}
 
-	removeBlankFromAnilistLinks() {
-		if (!this.settings.options.removeAnilistBlanks.getValue()) {
+	static removeBlankFromAnilistLinks() {
+		if (!StaticSettings.options.removeAnilistBlanks.getValue()) {
 			return;
 		}
 
-		const anilistLinks = document.querySelectorAll(
+		const anilistLinks = document.querySelectorAll<HTMLAnchorElement>(
 			"a:not(.void-link)[href^='https://anilist.co'][target='_blank']",
 		);
 
 		for (const link of anilistLinks) {
 			link.removeAttribute("target");
 			link.addEventListener("click", (event) => {
+				const target = event.target as HTMLAnchorElement;
 				event.preventDefault();
-				const path = event.target.pathname + event.target.search;
+				const path = target.pathname + target.search;
 				Vue.router.push(path);
 			})
 		}
 	}
 
-	handleImageLinkPreview() {
+	static handleImageLinkPreview() {
 		if (!StaticSettings.options.imagePreviewEnabled.getValue()) {
 			return;
 		}
 
-		let imageContainer = document.querySelector(".void-image-preview-container");
+		let imageContainer = document.querySelector<HTMLDivElement>(".void-image-preview-container");
 
 		if (!imageContainer) {
-			imageContainer = DOM.create("div", "image-preview-container");
+			imageContainer = DOM.createDiv("image-preview-container");
 			document.body.append(imageContainer);
 		}
 
 
-		const imageLinks = document.querySelectorAll(
+		const imageLinks = document.querySelectorAll<HTMLAnchorElement>(
 			ImageFormats.map(format => `.markdown a:not([void-link-preview])[href$='.${format}' i]:not(:has(img))`).join()
 		)
 
@@ -175,8 +171,8 @@ export class ActivityHandler {
 		}
 	}
 
-	#handleLinkHover(event) {
-		let imageContainer = document.querySelector(".void-image-preview-container");
+	static #handleLinkHover(event) {
+		let imageContainer = document.querySelector<HTMLDivElement>(".void-image-preview-container");
 		imageContainer.replaceChildren();
 		const href = event.target.getAttribute("href");
 		const image = DOM.create("img");
@@ -188,7 +184,7 @@ export class ActivityHandler {
 		imageContainer.style.top = position;
 	}
 
-	addTooltipsToTimestamps() {
+	static addTooltipsToTimestamps() {
 		if (!StaticSettings.options.activityTimestampTooltipsEnabled.getValue()) {
 			return;
 		}

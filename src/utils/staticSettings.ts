@@ -2,6 +2,8 @@ import {IOption, IOptions, ISettings} from "../types/settings";
 import {categories, defaultSettings} from "../assets/defaultSettings";
 import {Settings} from "./settings";
 import {LocalStorageKeys} from "../assets/localStorageKeys";
+import {AnilistAuth} from "./anilistAuth";
+import {VoidApi} from "../api/voidApi";
 
 export class Option implements IOption {
 	key: string;
@@ -11,6 +13,7 @@ export class Option implements IOption {
 	category: string;
 	authRequired: boolean;
 	voidApiAuthRequired: boolean;
+	onValueSet: () => void;
 
 	constructor(option: IOption) {
 		this.defaultValue = option.defaultValue;
@@ -19,9 +22,16 @@ export class Option implements IOption {
 		this.authRequired = option.authRequired;
 		this.key = option.key;
 		this.voidApiAuthRequired = option.voidApiAuthRequired ?? false;
+		this.onValueSet = option.onValueSet;
 	}
 
 	getValue() {
+		if (this.authRequired && !AnilistAuth.token) {
+			return false;
+		}
+		if (this.voidApiAuthRequired && !VoidApi.token) {
+			return false;
+		}
 		if (this.value === "") {
 			return this.defaultValue;
 		}
@@ -44,6 +54,10 @@ export class Option implements IOption {
 				JSON.stringify(settings),
 			);
 			return;
+		}
+
+		if (this.value === true && this.onValueSet) {
+			this.onValueSet();
 		}
 
 		localSettings[this.key] = { value };
@@ -72,7 +86,6 @@ export class StaticSettings {
 
 		for (const [key, val] of Object.entries(settingsInLocalStorage)) {
 			const value = val as IOption;
-			value.key = key;
 			if (!this.options[key]) {
 				continue;
 			}

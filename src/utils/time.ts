@@ -153,4 +153,25 @@ export class Time {
 		if (hours < 24) return `in ${hours} hour${hours !== 1 ? 's' : ''}`;
 		return `in ${days} day${days !== 1 ? 's' : ''}`;
 	}
+
+	static hasTimePassed(
+		sinceDate: Date,
+		time: {
+			days?: number;
+			hours?: number;
+			minutes?: number;
+			seconds?: number;
+		}
+	): boolean {
+		const now = new Date();
+		const elapsed = now.getTime() - sinceDate.getTime(); // milliseconds
+
+		const millisecondsToCompare =
+			(time.days ?? 0) * 24 * 60 * 60 * 1000 +
+			(time.hours ?? 0) * 60 * 60 * 1000 +
+			(time.minutes ?? 0) * 60 * 1000 +
+			(time.seconds ?? 0) * 1000;
+
+		return elapsed >= millisecondsToCompare;
+	}
 }

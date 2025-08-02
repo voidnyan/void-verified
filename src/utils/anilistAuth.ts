@@ -2,7 +2,6 @@ import {imageHosts, ImageHostService} from "../api/imageHostConfiguration";
 import {ImgurAPI} from "../api/imgurAPI";
 import {DOM} from "./DOM";
 import {StaticSettings} from "./staticSettings";
-import {ButtonComponent} from "../components/ButtonComponent";
 import {VoidApi} from "../api/voidApi";
 
 export class AnilistAuth {
