@@ -2,42 +2,9 @@ import {DOM} from "../utils/DOM";
 import {StaticSettings} from "../utils/staticSettings";
 import {IOption} from "../types/settings";
 import {ButtonComponent} from "../components/ButtonComponent";
+import {ICreatePoll, IPoll, IVotePoll} from "./voidApi/types/pollInterfaces";
+import {IAddGifDto, IGif} from "./voidApi/types/gifInterfaces";
 
-export interface ICreatePoll {
-	title: string,
-	options: ICreatePollOption[],
-	allowMultipleVotes: boolean,
-	closesAt?: Date | string,
-}
-
-export interface ICreatePollOption {
-	description: string,
-	link?: string,
-}
-
-export interface IVotePoll {
-	pollId: number,
-	optionId: number,
-	isVoted: boolean
-}
-
-export interface IPoll {
-	id: number,
-	title: string,
-	options: IPollOption[],
-	allowMultipleVotes: boolean,
-	closesAt?: Date
-	isOwner: boolean,
-	isClosed: boolean
-}
-
-export interface IPollOption {
-	id: number,
-	description: string,
-	link?: string,
-	voteCount: number,
-	isVoted: boolean
-}
 
 export class VoidApiError extends Error {
 	constructor(data: { error: string }) {
@@ -49,9 +16,9 @@ export class VoidApiError extends Error {
 export class VoidApi {
 	static token: string = localStorage.getItem("void-verified-api-token");
 
-	static readonly clientId = "17382";
-	static readonly callbackUrl = "https://voidnyan.net/auth/oauth"
-	static readonly url = "https://voidnyan.net/api"
+	static readonly clientId = GM_info.script.version === "DEV" ? "26757" : "17382";
+	static readonly callbackUrl = GM_info.script.version === "DEV" ? "https://localhost:7013/auth/oauth" : "https://voidnyan.net/auth/oauth";
+	static readonly url = GM_info.script.version === "DEV" ? "https://localhost:7013/api" : "https://voidnyan.net/api";
 
 	static async createPoll(poll: ICreatePoll): Promise<IPoll> {
 		return await this.authPost("/polls/create-poll", poll);
@@ -67,6 +34,22 @@ export class VoidApi {
 
 	static async deletePoll(id: number): Promise<void> {
 		return await this.authPost("/polls/delete-poll", {pollId: id});
+	}
+
+	static async addGifs(gifs: IAddGifDto[]): Promise<IGif[]> {
+		return await this.authPost("/gifs/add-gifs", gifs);
+	}
+
+	static async getGifs(): Promise<IGif[]> {
+		return await this.get("/gifs/get-gifs");
+	}
+
+	static async addGif(gif: IAddGifDto): Promise<void> {
+		return await this.authPost("/gifs/add-gif", gif);
+	}
+
+	static async deleteGif(gif: IGif): Promise<void> {
+		return await this.authPost("/gifs/delete-gif", gif);
 	}
 
 	private static async authPost(path: string, body: object) {

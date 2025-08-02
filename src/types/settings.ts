@@ -38,6 +38,7 @@ export interface IOption {
 	voidApiAuthRequired?: boolean,
 	getValue?: () => string | number | boolean;
 	setValue?: (value: string | number | boolean) => void;
+	onValueSet?: () => void;
 }
 
 export interface IOptions {
@@ -69,6 +70,7 @@ export interface IOptions {
 	removeAnilistBlanks: IOption;
 	gifKeyboardEnabled: IOption;
 	gifKeyboardLikeButtonsEnabled: IOption;
+	syncGifsToVoidApi: IOption;
 	changeLogEnabled: IOption;
 	selfMessageEnabled: IOption;
 	hideMessagesFromListFeed: IOption;

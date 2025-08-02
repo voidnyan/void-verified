@@ -242,11 +242,11 @@ export class QuickStartHandler {
 						SettingLabel(
 							option.description,
 							Checkbox(option.getValue(), (event) => {
-								StaticSettings.settingsInstance.saveSettingToLocalStorage(key, event.target.checked);
+								option.setValue(event.target.checked);
 							})));
 				}
 				const input = InputField(option.getValue(), (event) => {
-					StaticSettings.settingsInstance.saveSettingToLocalStorage(key, event.target.value);
+					option.setValue(event.target.value);
 				}, "quick-access-option-input");
 				return DOM.create("div", "quick-start-result", SettingLabel(option.description, input));
 			});

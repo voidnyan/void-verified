@@ -314,7 +314,7 @@ export class NotificationFeedHandler {
 		const header = DOM.create(
 			"h3",
 			"notification-type-list-header",
-			"Notification Types",
+			"Custom Feed",
 		);
 		container.append(header);
 

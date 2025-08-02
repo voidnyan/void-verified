@@ -3,7 +3,8 @@ import {IconButton, Label} from "../../components/components";
 import {ChatBubbleLeftRightIcon, XMarkIcon} from "../../assets/icons";
 import {DOM} from "../../utils/DOM";
 import {ButtonComponent} from "../../components/ButtonComponent";
-import {ICreatePoll, VoidApi} from "../../api/voidApi";
+import {VoidApi} from "../../api/voidApi";
+import {ICreatePoll} from "../../api/voidApi/types/pollInterfaces";
 import {Toaster} from "../../utils/toaster";
 import {Dialog} from "../../utils/dialog";
 import {SelectComponent} from "../../components/selectComponent";
@@ -118,7 +119,7 @@ class PollFormComponent {
 
 		try {
 			const poll = await VoidApi.createPoll(createPoll);
-			this.textarea.setRangeText(`[ img100%(${VoidApi.url}/polls/poll-image/${poll.id}) ](${VoidApi.url.replace("/api", "")})`);
+			this.textarea.setRangeText(`[ img100%(${VoidApi.url}/polls/poll-image/${poll.id}) ](${VoidApi.url.replace("/api", "")}/polls/poll/${poll.id})`);
 			this.textarea.dispatchEvent(new Event('input', {bubbles: true}));
 		} catch (error) {
 			Toaster.error("Failed to create a poll.", error);

@@ -1,6 +1,7 @@
 import { Checkbox, Modal, Note, SettingLabel } from "../components/components";
 import { changeLog } from "../assets/changeLog";
 import { DOM } from "./DOM";
+import {StaticSettings} from "./staticSettings";
 
 export class ChangeLog {
 	#lastVersion;
@@ -112,7 +113,7 @@ export class ChangeLog {
 
 	#handleOptionChange(event, option) {
 		const value = event.target.checked;
-		this.#settings.saveSettingToLocalStorage(option, value);
+		StaticSettings.options[option].setValue(value);
 	}
 
 	#handleClose(_changeLog) {
