@@ -69,7 +69,7 @@ export class GifKeyboardHandler {
 			return;
 		}
 
-		if (this.config.lastSyncTime && !Time.hasTimePassed(this.config.lastSyncTime, {minutes: 15})) {
+		if (this.config.lastSyncTime && !Time.hasTimePassed(this.config.lastSyncTime, {minutes: 60})) {
 			return;
 		}
 
@@ -98,11 +98,10 @@ export class GifKeyboardHandler {
 			for (const gif of gifsFromApi) {
 				const isGif = gif.url.endsWith(".gif");
 				GifKeyboardHandler.addMedia(gif.url, isGif ? keyboardTabs.gifs : keyboardTabs.images);
-				GifKeyboardHandler.config.lastSyncTime = new Date();
-				GifKeyboardHandler.config.save();
 			}
+			GifKeyboardHandler.config.lastSyncTime = new Date();
+			GifKeyboardHandler.config.save();
 		} catch (error) {
-			console.error(error);
 			Toaster.error("Failed to upload gifs to VoidAPI.", error);
 		}
 	}
