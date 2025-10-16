@@ -57,7 +57,7 @@ export class ListActivityComponent extends BaseActivityComponent{
 		const list = DOM.createDiv(".list");
 		const cover = DOM.create("a", ".cover");
 		cover.setAttribute("style", `background-image: url("${this.activity.media.coverImage.large}");`);
-		cover.setAttribute("href", `/${this.activity.type.toLocaleLowerCase()}/${this.activity.media.id}`);
+		cover.setAttribute("href", `/${this.activity.media.type.toLocaleLowerCase()}/${this.activity.media.id}`);
 
 		const details = DOM.create("div", ".details");
 
@@ -78,7 +78,7 @@ export class ListActivityComponent extends BaseActivityComponent{
 	private createStatus(): HTMLDivElement {
 		const status = DOM.createDiv(".status", this.getProgress());
 		const title = DOM.create("a", ".title", this.activity.media.title.userPreferred);
-		title.setAttribute("href", `/${this.activity.type.toLocaleLowerCase()}/${this.activity.media.id}`);
+		title.setAttribute("href", `/${this.activity.media.type.toLocaleLowerCase()}/${this.activity.media.id}`);
 		status.append(title);
 		return status;
 	}
