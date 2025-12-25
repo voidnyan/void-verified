@@ -439,7 +439,7 @@ a.void-button:hover {
     margin: 0px;
 }
 
-.markdown-editor[style*="display: none;"] + .void-gif-keyboard-container,
+.markdown-editor[style*="display: none;"] ~ .void-gif-keyboard-container,
 .home > .activity-feed-wrap > .activity-edit:has(.markdown-editor[style*="display: none;"]) .void-activity-reply-controls-container
 {
     display: none;
