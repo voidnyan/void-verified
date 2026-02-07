@@ -242,6 +242,12 @@ export const defaultSettings: IOptions = {
 		category: categories.users,
 		authRequired: false
 	},
+	miniMediaEnabled: {
+		defaultValue: false,
+		description: "Hover over media to view an overview.",
+		category: categories.misc,
+		authRequired: false
+	},
 	replaceVideosWithLinksEnabled: {
 		defaultValue: false,
 		description: "Replace videos with video links (mobile fix).",

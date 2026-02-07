@@ -21,6 +21,7 @@ import {AnilistAuth} from "./utils/anilistAuth";
 import {LayoutDesigner} from "./handlers/layoutDesigner";
 import {MiniProfileHandler} from "./handlers/miniProfileHandler";
 import {GifKeyboardHandler} from "./handlers/gifKeyboardHandler";
+import {MiniMediaHandler} from "./handlers/miniMediaHandler";
 
 ImageHostService.initialize();
 AnilistAuth.initialize();
@@ -32,6 +33,7 @@ Vue.ensureIsRegistered();
 StaticTooltip.initialize();
 LayoutDesigner.initialize();
 MiniProfileHandler.initialize();
+MiniMediaHandler.initialize();
 
 GoalsHandler.initialize();
 new MarkdownHotkeys(StaticSettings.settingsInstance).setupMarkdownHotkeys();

@@ -6,23 +6,21 @@ import {ColorFunctions} from "../utils/colorFunctions";
 import {Toaster} from "../utils/toaster";
 import {Markdown} from "../utils/markdown";
 import {LocalStorageKeys} from "../assets/localStorageKeys";
+import {MiniPopupHandlerBase} from "./miniPopupHandlerBase";
 
-export class MiniProfileHandler {
-	protected static miniProfileContainer: HTMLElement;
-	private static queryInProgress = false;
-	private static isVisible = false;
+export class MiniProfileHandler extends MiniPopupHandlerBase {
 	static config: MiniProfileConfig;
 
 	static initialize() {
-		this.miniProfileContainer = DOM.create("div", "mini-profile-container mini-profile-hidden");
-		this.miniProfileContainer.addEventListener("mouseover", () => {
+		this.container = DOM.create("div", "mini-profile-container mini-profile-hidden");
+		this.container.addEventListener("mouseover", () => {
 			this.isVisible = true;
-			this.showMiniProfile();
+			this.showContainer();
 		});
-		this.miniProfileContainer.addEventListener("mouseleave", () => {
-			this.hideMiniProfile();
+		this.container.addEventListener("mouseleave", () => {
+			this.hideContainer();
 		});
-		document.body.append(this.miniProfileContainer);
+		document.body.append(this.container);
 		this.config = new MiniProfileConfig();
 	}
 	static addUserHoverListeners() {
@@ -46,17 +44,17 @@ export class MiniProfileHandler {
 				}, 100);
 			});
 			element.addEventListener("mouseleave", () => {
-				this.hideMiniProfile();
+				this.hideContainer();
 			});
 			element.addEventListener("click", () => {
-				this.hideMiniProfile();
+				this.hideContainer();
 			})
 			element.setAttribute("void-mini", "true");
 		}
 	}
 
 	static async #hoverUser(element: Element) {
-		this.miniProfileContainer.replaceChildren();
+		this.container.replaceChildren();
 		if (this.queryInProgress) {
 			return;
 		}
@@ -84,24 +82,24 @@ export class MiniProfileHandler {
 			this.queryInProgress = false;
 		}
 
-		this.miniProfileContainer.style.backgroundImage = `url(${user.bannerImage})`;
-		this.miniProfileContainer.style.setProperty("--color-blue", ColorFunctions.handleAnilistColor(user.options.profileColor));
+		this.container.style.backgroundImage = `url(${user.bannerImage})`;
+		this.container.style.setProperty("--color-blue", ColorFunctions.handleAnilistColor(user.options.profileColor));
 
 		this.createHeader(user);
 		this.createContent(user);
 
 		const elementRect = element.getBoundingClientRect();
-		const containerRect = this.miniProfileContainer.getBoundingClientRect();
-		this.miniProfileContainer.style.left = `${elementRect.left + window.scrollX + elementRect.width}px`;
-		this.miniProfileContainer.style.maxWidth = `${window.innerWidth - elementRect.right - 30}px`;
+		const containerRect = this.container.getBoundingClientRect();
+		this.container.style.left = `${elementRect.left + window.scrollX + elementRect.width}px`;
+		this.container.style.maxWidth = `${window.innerWidth - elementRect.right - 30}px`;
 		if (this.config.position === "top") {
-			this.miniProfileContainer.style.top = `${elementRect.top + window.scrollY + elementRect.height - containerRect.height}px`;
+			this.container.style.top = `${elementRect.top + window.scrollY + elementRect.height - containerRect.height}px`;
 		} else if (this.config.position === "center") {
-			this.miniProfileContainer.style.top = `${elementRect.top + window.scrollY + (elementRect.height / 2) - (containerRect.height / 2)}px`;
+			this.container.style.top = `${elementRect.top + window.scrollY + (elementRect.height / 2) - (containerRect.height / 2)}px`;
 		} else {
-			this.miniProfileContainer.style.top = `${elementRect.top + window.scrollY}px`;
+			this.container.style.top = `${elementRect.top + window.scrollY}px`;
 		}
-		this.showMiniProfile();
+		this.showContainer();
 	}
 
 	private static addMissingTypes(data) {
@@ -125,7 +123,6 @@ export class MiniProfileHandler {
 
 		this.handleFollowBadge(user, header);
 
-
 		if (user.donatorTier > 0) {
 			const donatorBadge = DOM.create("div", "mini-profile-donator-badge", user.donatorTier > 3 ? user.donatorBadge : "Donator");
 			if (user.donatorTier > 4) {
@@ -133,7 +130,7 @@ export class MiniProfileHandler {
 			}
 			header.append(donatorBadge);
 		}
-		this.miniProfileContainer.append(header);
+		this.container.append(header);
 	}
 
 	private static handleFollowBadge(user, header: HTMLElement) {
@@ -173,7 +170,7 @@ export class MiniProfileHandler {
 			content.prepend(this.addBio(user));
 		}
 
-		this.miniProfileContainer.append(content);
+		this.container.append(content);
 	}
 
 	private static addFavourites(favourites: any[]) {
@@ -191,7 +188,7 @@ export class MiniProfileHandler {
 	}
 
 	private static addBio(user) {
-		const rect = this.miniProfileContainer.getBoundingClientRect();
+		const rect = this.container.getBoundingClientRect();
 		const bioMaxWidth = Math.max(rect.width, 500);
 		const markdown = DOM.createDiv(".markdown");
 		markdown.innerHTML = Markdown.parse(user.about);
@@ -199,22 +196,6 @@ export class MiniProfileHandler {
 		const container = DOM.create("div", "mini-profile-section mini-profile-about", markdown);
 		container.setAttribute("style", `max-width: ${bioMaxWidth}px`);
 		return container;
-	}
-
-	private static showMiniProfile() {
-		if (!this.isVisible) {
-			return;
-		}
-		this.miniProfileContainer.classList.remove("void-mini-profile-hidden");
-	}
-
-	private static hideMiniProfile() {
-		this.isVisible = false;
-		setTimeout(() => {
-			if (!this.isVisible) {
-				this.miniProfileContainer.classList.add("void-mini-profile-hidden");
-			}
-		}, 300);
 	}
 
 	static renderSettings() {

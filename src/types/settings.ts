@@ -83,6 +83,7 @@ export interface IOptions {
 	goalsEnabled: IOption;
 	imagePreviewEnabled: IOption;
 	miniProfileEnabled: IOption;
+	miniMediaEnabled: IOption;
 	replaceNotifications: IOption;
 	replaceVideosWithLinksEnabled: IOption;
 	messageFeedEnabled: IOption;

@@ -8,7 +8,8 @@ const ignoredKeys = [
 	LocalStorageKeys.notificationRelationsCache,
 	LocalStorageKeys.notificationDeadLinkRelationsCache,
 	LocalStorageKeys.readNotifications,
-	LocalStorageKeys.collapsedContainers
+	LocalStorageKeys.collapsedContainers,
+	LocalStorageKeys.mediaOverviewCache,
 ]
 
 export class ConfigHandler {

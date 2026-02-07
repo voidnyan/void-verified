@@ -1616,3 +1616,7 @@ body:has(.void-modal-background[open]) {
 .void-icon-rotate-90 svg {
     transform: rotate(90deg);
 }
+
+.void-text-transform-unset {
+    text-transform: unset;
+}

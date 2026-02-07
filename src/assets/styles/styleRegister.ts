@@ -14,6 +14,7 @@ import fileInput from "./fileInput.css";
 import markdownDraftManager from "./markdownDraftManager.css";
 import utilityClasses from "./utility-classes.css";
 import poll from "./poll.css";
+import miniMedia from "./miniMedia.css";
 
 import {StyleHandler} from "../../handlers/styleHandler";
 import {Settings} from "../../utils/settings";
@@ -37,7 +38,8 @@ export class StyleRegister {
 			fileInput,
 			markdownDraftManager,
 			utilityClasses,
-			poll
+			poll,
+			miniMedia
 		];
 		styleHandler.createStyleLink(css.join("\n"), "script");
 	}

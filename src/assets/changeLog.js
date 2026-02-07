@@ -17,6 +17,9 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("1.26", [
+		new Feature("Hover over media to view an overview.", "miniMediaEnabled")
+	]),
 	new Version("1.25", [
 		new Feature("Sync GIFs and images with your other devices through VoidAPI (requires VoidVerified API authorization)", "syncGifsToVoidApi")
 	]),

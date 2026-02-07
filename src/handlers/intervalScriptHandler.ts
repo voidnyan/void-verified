@@ -24,6 +24,7 @@ import {DomDataHandler} from "./domDataHandler";
 import {MarkdownTaskbarHandler} from "./markdownTaskbarHandler";
 import {SettingsUi} from "./settingsUi";
 import {PollHandler} from "./pollHandler/pollHandler";
+import {MiniMediaHandler} from "./miniMediaHandler";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -80,6 +81,7 @@ export class IntervalScriptHandler {
 		intervalScriptHandler.pasteHandler.registerDragAndDropInputs();
 		ActivityHandler.handleImageLinkPreview();
 		MiniProfileHandler.addUserHoverListeners();
+		MiniMediaHandler.addMediaHoverListeners();
 		ActivityHandler.addTooltipsToTimestamps();
 		VideoFixer.replaceVideosWithLinks();
 		QuoteHandler.addQuoteClickHandlers();

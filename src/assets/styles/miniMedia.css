@@ -1,0 +1,232 @@
+.void-mini-media-container {
+    min-width: 250px; /* for loader */
+    max-width: 900px;
+}
+
+.void-media-overview-banner {
+    width: 100%;
+    height: 150px;
+    background-position: center;
+    background-size: cover;
+}
+
+.void-media-overview-content {
+    display: flex;
+    margin: 16px;
+    gap: 16px;
+    height: 420px;
+}
+
+.void-media-overview-content h1 {
+    color: rgb(var(--color-text));
+    margin: 0;
+    padding: 0;
+    font-size: 1.9rem;
+    font-weight: 400;
+    width: fit-content;
+}
+
+.void-media-overview-content p {
+    color: rgb(var(--color-text-light));
+    font-size: 1.4rem;
+    line-height: 1.5;
+    margin: 4px 0;
+    overflow-x: auto;
+    max-height: 150px;
+}
+
+.void-media-overview-no-banner .void-media-overview-poster {
+    margin-top: 0;
+}
+
+.void-media-overview-poster {
+    aspect-ratio: 85 / 115;
+    width: 100%;
+    margin-top: -70px;
+}
+
+.void-media-overview-data {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    /*max-height: 186px;*/
+    border-radius: 4px;
+    padding: 10px;
+    /*min-width: 160px;*/
+    /*max-width: 160px;*/
+    width: 100%;
+    gap: 10px;
+    background-color: rgb(var(--color-foreground));
+}
+.void-media-overview-data-set {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.void-media-overview-data-set-type {
+    font-size: 1.3rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.void-media-overview-data-set-value {
+    font-size: 1.2rem;
+    color: rgb(var(--color-text-lighter));
+    line-height: 1.3;
+    text-transform: capitalize;
+    display: flex;
+    flex-direction: column;
+}
+
+.void-media-overview-data-set-value.void-text-transform-unset {
+    text-transform: unset;
+}
+
+
+.void-media-overview-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.void-media-overview-left {
+    min-width: 120px;
+    max-width: 120px;
+}
+
+.void-media-overview-center {
+    min-width: 500px;
+    max-width: 500px;
+}
+
+.void-media-overview-right {
+    min-width: 150px;
+    max-width: 150px;
+}
+
+.void-media-overview-tags-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    gap: 6px;
+}
+
+.void-media-overview-tag {
+    background: rgb(var(--color-foreground));
+    border-radius: 3px;
+    font-size: 1.2rem;
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.void-media-overview-tag-name {
+    word-break: break-word;
+}
+
+.void-media-overview-tag-spoiler .void-media-overview-tag-name {
+    color: rgb(var(--color-red));
+}
+
+.void-media-overview-tags-spoiler-btn {
+    color: rgb(var(--color-red));
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.void-media-overview-horizontal-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+}
+
+.void-media-overview-horizontal-scroll-container > * {
+    flex-shrink: 0;
+}
+
+.void-media-overview-card {
+    display: flex;
+    background-color: rgb(var(--color-foreground));
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.void-media-overview-card-cover {
+    width: 65px;
+    height: 88px;
+    background-size: cover;
+    background-position: center;
+}
+
+.void-media-overview-card-data {
+    max-width: 200px;
+    min-width: 100px;
+    padding: 8px;
+    font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.void-media-overview-relation-type {
+    color: rgb(var(--color-blue));
+    text-transform: capitalize;
+    padding-bottom: 4px;
+}
+
+.void-media-overview-card-info {
+    margin-top: auto;
+    text-transform: capitalize;
+}
+
+.void-media-overview-character-data {
+    gap: 25px;
+    max-width: 400px;
+    flex-direction: row;
+}
+
+.void-media-overview-card-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.void-media-overview-collection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+}
+
+.void-media-overview-collection > * {
+    flex-shrink: 0;
+}
+
+.void-media-overview-section-header {
+    font-size: 1.4rem;
+    font-weight: 500;;
+    color: rgb(var(--color-text));
+    padding: 0;
+    margin: 0 0 6px;
+}
+
+.void-media-overview-adult-label {
+    align-items: center;
+    background: rgb(var(--color-red-400));
+    color: rgb(var(--color-white));
+    border-radius: 4px;
+    display: inline-flex;
+    font-size: 1rem;
+    font-weight: 800;
+    justify-content: center;
+    letter-spacing: 0.3px;
+    line-height: 1rem;
+    margin-left: 5px;
+    padding: 4px 5px 3px;
+    text-transform: uppercase;
+    top: -3px;
+    position: relative;
+}

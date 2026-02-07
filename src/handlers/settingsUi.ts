@@ -16,6 +16,7 @@ import {VerifiedUsers} from "../utils/verifiedUsers";
 import {GlobalCSS} from "./globalCSS";
 import {ImageHostService} from "../api/imageHostConfiguration";
 import {LayoutDesigner} from "./layoutDesigner";
+import {MiniMediaHandler} from "./miniMediaHandler";
 
 const subCategories = {
 	users: "users",
@@ -26,6 +27,7 @@ const subCategories = {
 	goals: "goals",
 	toasts: "toasts",
 	miniProfile: "mini profile",
+	miniMedia: "mini media",
 	quickStart: "quickStart",
 	importExport: "Import/Export",
 	time: "time"
@@ -190,6 +192,8 @@ export class SettingsUi {
 				return StaticSettings.options.goalsEnabled.getValue();
 			case subCategories.miniProfile:
 				return StaticSettings.options.miniProfileEnabled.getValue();
+			case subCategories.miniMedia:
+				return StaticSettings.options.miniMediaEnabled.getValue();
 			case subCategories.quickStart:
 				return StaticSettings.options.quickStartEnabled.getValue();
 		}
@@ -217,6 +221,8 @@ export class SettingsUi {
 				return GoalsHandler.renderSettings();
 			case subCategories.miniProfile:
 				return MiniProfileHandler.renderSettings();
+			case subCategories.miniMedia:
+				return MiniMediaHandler.renderSettings();
 			case subCategories.importExport:
 				return ConfigHandler.renderSettings();
 			case subCategories.time:

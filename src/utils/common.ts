@@ -22,6 +22,16 @@ export class Common {
 		}
 	}
 
+	static getTypeAndIdFromUrl(url: string): any[]{
+		const match = url.match(/([^/]+)\/(\d+)/);
+		if (match) {
+			const type = match[1]; // "anime"
+			const id = match[2];   // "180675"
+			return [type.toUpperCase(), +id];
+		}
+		return [null, null];
+	}
+
 	static getDayDifference(date1, date2) {
 		return Math.round((date2 - date1) / (1000 * 60 * 60 * 24));
 	}

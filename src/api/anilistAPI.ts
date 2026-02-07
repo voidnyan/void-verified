@@ -5,7 +5,6 @@ import queryActivityReplies, {IActivityReply} from "./queries/queryActivityRepli
 import queryMessages from "./queries/queryMessages";
 import {IMessageActivity} from "./types/messageActivity";
 import replyToActivityQuery from "./queries/replyToActivityQuery";
-import {LocalStorageKeys} from "../assets/localStorageKeys";
 import {IUserSearchResult} from "./types/IUserSearchResult";
 import SearchUsersQuery from "./queries/searchUsersQuery";
 import {IPageInfo} from "./types/IPageInfo";
@@ -16,7 +15,7 @@ import DeleteActivityQuery from "./queries/deleteActivityQuery";
 import DeleteActivityReplyQuery from "./queries/deleteActivityReplyQuery";
 import {AnilistAuth} from "../utils/anilistAuth";
 import {VerifiedUsers} from "../utils/verifiedUsers";
-import {IUser} from "./types/user";
+import mediaOverviewQuery, {IMediaOverview, MediaType} from "./queries/mediaOverviewQuery";
 
 // [
 // 	{
@@ -529,6 +528,16 @@ export class AnilistAPI {
 		const options = this.getMutationOptions(query, variables);
 		const data = await this.fetch(options);
 		return data.ToggleActivitySubscription;
+	}
+
+	static async getMediaOverview(id: number, type: MediaType) : Promise<IMediaOverview> {
+		const query = mediaOverviewQuery;
+
+		const variables = {mediaId: id, type, sort: "ROLE", language: "JAPANESE"};
+		console.log(variables);
+		const options = this.getQueryOptions(query, variables);
+		const data = await this.fetch(options);
+		return data.Media;
 	}
 
 	static async query(query: string, params: object): Promise<any> {

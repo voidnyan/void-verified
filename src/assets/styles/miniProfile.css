@@ -1,6 +1,6 @@
 .void-mini-profile-container {
     position: absolute;
-    z-index: 9999;
+    z-index: 9499;
     background-color: rgb(var(--color-foreground-grey));
     border-radius: 4px;
     background-size: cover;
@@ -10,6 +10,7 @@
     opacity: 1;
     transition: opacity 0.2s ease-in-out, visibility 0.2s;
     box-shadow: rgb(var(--color-shadow-blue)) 0px 0px 4px;
+    overflow: hidden;
 }
 
 .void-mini-profile-container.void-mini-profile-hidden {
