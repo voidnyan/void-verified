@@ -28,6 +28,7 @@
     top: 40px;
     transition: .25s ease;
     width: 660px;
+    height: 54px;
     z-index: 1;
 }
 
