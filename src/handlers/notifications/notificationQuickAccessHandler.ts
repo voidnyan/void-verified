@@ -13,6 +13,7 @@ import { NotificationConfig } from "./notificationConfig";
 import { notificationTypes } from "./notificationTypes";
 import { NotificationsCache } from "./notificationsCache";
 import {LocalStorageKeys} from "../../assets/localStorageKeys";
+import {CacheTimes} from "../../assets/cacheTimes";
 
 export class NotificationQuickAccessHandler {
 	#settings;
@@ -117,7 +118,7 @@ export class NotificationQuickAccessHandler {
 			() => {
 				this.#shouldQuery = true;
 			},
-			3 * 60 * 1000,
+			CacheTimes.notificationTimer
 		);
 		let notifications = [];
 		try {

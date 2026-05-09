@@ -237,9 +237,10 @@ export const GifKeyboard = (header) => {
 	const container = DOM.create("div", "gif-keyboard-container");
 	container.append(header);
 	const gifList = DOM.create("div", "gif-keyboard-list");
-	const controls = DOM.create("div", "gif-keyboard-control-container");
+	const controls = DOM.create("div", "gif-keyboard-control-container gif-keyboard-top-controls");
+	const bottonControls = DOM.create("div", "gif-keyboard-control-container gif-keyboard-bottom-controls");
 	container.append(
-		DOM.create("div", "gif-keyboard-list-container", [controls, gifList]),
+		DOM.create("div", "gif-keyboard-list-container", [controls, gifList, bottonControls]),
 	);
 
 	return container;
@@ -288,8 +289,10 @@ export const Pagination = (currentPage, maxPage, onClick) => {
 		return container;
 	}
 
+	const paginationSize = 5;
+
 	let displayedPages = [];
-	if (maxPage >= 3) {
+	if (maxPage >= paginationSize) {
 		container.append(
 			IconButton(
 				DoubleChevronLeftIcon(),
@@ -299,13 +302,29 @@ export const Pagination = (currentPage, maxPage, onClick) => {
 				`pagination-skip ${currentPage === 0 && "active"}`,
 			),
 		);
-		if (currentPage >= maxPage - 1) {
-			displayedPages.push(maxPage - 2, maxPage - 1, maxPage);
-		} else if (currentPage === 0) {
-			displayedPages.push(currentPage, currentPage + 1, currentPage + 2);
-		} else {
-			displayedPages.push(currentPage - 1, currentPage, currentPage + 1);
+
+		const half = Math.floor(paginationSize / 2);
+
+		let leftMostPage = currentPage - half;
+		let rightMostPage = currentPage + half;
+
+		if (leftMostPage < 0) {
+			rightMostPage += -leftMostPage;
+			leftMostPage = 0;
 		}
+
+		if (rightMostPage > maxPage) {
+			leftMostPage -= rightMostPage - maxPage;
+			rightMostPage = maxPage;
+		}
+
+		leftMostPage = Math.max(0, leftMostPage);
+		rightMostPage = Math.min(maxPage, rightMostPage);
+
+		for (let i = leftMostPage; i <= rightMostPage; i++) {
+			displayedPages.push(i);
+		}
+
 	} else {
 		for (let i = 0; i <= maxPage; i++) {
 			displayedPages.push(i);
@@ -324,7 +343,7 @@ export const Pagination = (currentPage, maxPage, onClick) => {
 		);
 	}
 
-	if (maxPage >= 3) {
+	if (maxPage >= paginationSize) {
 		container.append(
 			IconButton(
 				DoubleChevronRightIcon(),

@@ -466,10 +466,15 @@ a.void-button:hover {
     padding: 12px 12px 0px 12px;
 }
 
+.void-gif-keyboard-bottom-controls {
+    display: flex;
+    justify-content: end;
+}
+
 .void-gif-keyboard-list-container {
-    height: 300px;
+    height: 400px;
     min-height: 200px;
-    max-height: 500px;
+    max-height: 1000px;
     overflow-y: scroll;
     resize: vertical;
     user-select: none;
@@ -547,6 +552,11 @@ a.void-button:hover {
 
 .void-hidden {
     display: none;
+}
+
+.void-pagination-container {
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .void-pagination-container .void-icon-button.void-active,

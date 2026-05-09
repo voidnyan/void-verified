@@ -47,11 +47,11 @@ export class Markdown {
 
 		// Images
 		html = html.replace(/!\[([^\]]*)\]\(([^\)]+)\)/g, '<img alt="$1" src="$2" />');
-		html = html.replace(/img(\d+%?)\(([^)]+)\)/g, function (_, width, url) {
+		html = html.replace(/img(\d+%?)\(([^)]+)\)/gi, function (_, width, url) {
 			const unit = width.endsWith("%") ? "%" : "px";
 			return `<img src="${url}" width="${width}" />`;
 		});
-		html = html.replace(/img\(([^)]+)\)/g, '<img src="$1" />');
+		html = html.replace(/img\(([^)]+)\)/gi, '<img src="$1" />');
 
 		// Links
 		html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
@@ -76,7 +76,7 @@ export class Markdown {
 
 
 		// YouTube Embeds
-		html = html.replace(/youtube\(([^)]+)\)/g, (_, src) => {
+		html = html.replace(/youtube\(([^)]+)\)/gi, (_, src) => {
 			const id = this.getYoutubeVideoId(src);
 			if (!id) {
 				return "";
@@ -85,7 +85,7 @@ export class Markdown {
 		});
 
 		// WebM Embeds
-		html = html.replace(/webm\(([^)]+)\)/g, '<video autoplay loop muted controls><source src="$1" type="video/webm"></video>');
+		html = html.replace(/webm\(([^)]+)\)/gi, '<video autoplay loop muted controls><source src="$1" type="video/webm"></video>');
 
 		// Horizontal Rules
 		html = html.replace(/---/g, '<hr>');

@@ -10,9 +10,10 @@ import {BasicCache} from "../utils/basicCache";
 import {LocalStorageKeys} from "../assets/localStorageKeys";
 import {Common} from "../utils/common";
 import {Checkbox, Label} from "../components/components";
+import {CacheTimes} from "../assets/cacheTimes";
 
 export class MiniMediaHandler extends MiniPopupHandlerBase {
-	static cache: BasicCache<IMediaOverview> = new BasicCache(LocalStorageKeys.mediaOverviewCache, 12 * 60);
+	static cache: BasicCache<IMediaOverview> = new BasicCache(LocalStorageKeys.mediaOverviewCache, CacheTimes.miniMediaTimer);
 	static config: MiniMediaConfig;
 
 	static initialize(){
