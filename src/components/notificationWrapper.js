@@ -7,7 +7,7 @@ import {StaticTooltip} from "../utils/staticTooltip";
 export const NotificationWrapper = (notification, addReadListener = false) => {
 	const wrapper = DOM.create("div", "notification-wrapper");
 	const previewWrapper = createPreview(notification);
-	const context = createContext(notification);
+	const context = createContext(notification, true);
 
 	const timestamp = DOM.create(
 		"div",

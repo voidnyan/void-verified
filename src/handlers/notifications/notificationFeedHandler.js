@@ -11,6 +11,7 @@ import { notificationTypes } from "./notificationTypes";
 import { NotificationsCache } from "./notificationsCache";
 import {LocalStorageKeys} from "../../assets/localStorageKeys";
 import {FuzzyMatch} from "../../utils/fuzzyMatch";
+import {CacheTimes} from "../../assets/cacheTimes";
 
 export class NotificationFeedHandler {
 	#settings;
@@ -45,7 +46,7 @@ export class NotificationFeedHandler {
 				() => {
 					this.#handleUnreadNotificationsCount(this);
 				},
-				3 * 60 * 1000,
+				CacheTimes.notificationTimer,
 			);
 		}
 	}

@@ -1,10 +1,10 @@
 export class BasicCache<T> {
 	private localStorageKey: string;
-	private cacheTimeInMinutes: number;
+	private cacheTimeInMilliseconds: number;
 
-	constructor(localStorageKey: string, cacheTimeInMinutes: number) {
+	constructor(localStorageKey: string, cacheTimeInMilliseconds: number) {
 		this.localStorageKey = localStorageKey;
-		this.cacheTimeInMinutes = cacheTimeInMinutes;
+		this.cacheTimeInMilliseconds = cacheTimeInMilliseconds;
 	}
 
 	getItem(predicate: (item: T) => boolean): T | null {
@@ -16,10 +16,9 @@ export class BasicCache<T> {
 		}
 
 		const expiresAt = new Date(entry.cachedAt);
-		expiresAt.setMinutes(expiresAt.getMinutes() + this.cacheTimeInMinutes);
-
+		expiresAt.setMilliseconds(expiresAt.getMilliseconds() + this.cacheTimeInMilliseconds);
+		console.log(expiresAt, entry.item);
 		if (expiresAt < new Date()) {
-			// expired → remove it
 			this.setCache(cache.filter(c => c !== entry));
 			return null;
 		}

@@ -224,6 +224,7 @@ export class GifKeyboardHandler {
 		const options = Object.values(keyboardTabs).map((option) =>
 			Option(option, option === this.#activeTab, (event) => {
 				this.#activeTab = option;
+				this.#paginationPage = 0;
 				const keyboard =
 					event.target.parentElement.parentElement.parentElement; // oh god
 				this.refreshKeyboard(keyboard);
@@ -377,11 +378,16 @@ export class GifKeyboardHandler {
 
 	private static renderControls(keyboard, markdownEditor) {
 		const container = keyboard.querySelector(
-			".void-gif-keyboard-control-container",
+			".void-gif-keyboard-top-controls",
 		);
 		const mediaField = this.createMediaAddField(keyboard, markdownEditor);
 		const pagination = this.createPagination(keyboard, markdownEditor);
 		container.replaceChildren(mediaField, pagination);
+
+		const bottomContainer = keyboard.querySelector(".void-gif-keyboard-bottom-controls");
+		const bottomPagination = this.createPagination(keyboard, markdownEditor);
+		bottomContainer.replaceChildren(bottomPagination);
+
 	}
 
 	private static createMediaAddField(keyboard, markdownEditor) {

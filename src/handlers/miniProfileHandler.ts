@@ -7,6 +7,7 @@ import {Toaster} from "../utils/toaster";
 import {Markdown} from "../utils/markdown";
 import {LocalStorageKeys} from "../assets/localStorageKeys";
 import {MiniPopupHandlerBase} from "./miniPopupHandlerBase";
+import {CacheTimes} from "../assets/cacheTimes";
 
 export class MiniProfileHandler extends MiniPopupHandlerBase {
 	static config: MiniProfileConfig;
@@ -286,7 +287,7 @@ class MiniProfileCache {
 		}
 
 		const cachedAt = new Date(user.cachedAt);
-		cachedAt.setHours(cachedAt.getHours() + 12)
+		cachedAt.setMilliseconds(cachedAt.getMilliseconds() + CacheTimes.miniProfileTimer);
 
 		if (cachedAt < new Date()) {
 			this.#removeUser(user)

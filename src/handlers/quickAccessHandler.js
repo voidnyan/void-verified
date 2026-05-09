@@ -5,6 +5,7 @@ import { DOM } from "../utils/DOM";
 import { Toaster } from "../utils/toaster";
 import {StaticSettings} from "../utils/staticSettings";
 import {FuzzyMatch} from "../utils/fuzzyMatch";
+import {CacheTimes} from "../assets/cacheTimes";
 
 export class QuickAccess {
 	settings;
@@ -12,8 +13,7 @@ export class QuickAccess {
 	#lastFetched;
 	#queryInProgress = false;
 
-	#apiQueryTimeoutInMinutes = 15;
-	#apiQueryTimeout = this.#apiQueryTimeoutInMinutes * 60 * 1000;
+	#apiQueryTimeout = CacheTimes.quickAccessUser;
 	constructor(settings) {
 		this.settings = settings;
 		const fetched = localStorage.getItem(this.#lastFetchedLocalStorage);
@@ -102,6 +102,12 @@ export class QuickAccess {
 		);
 		const timeLeftInSeconds = Math.floor((nextQuery - new Date()) / 1000);
 		const timeLeftInMinutes = timeLeftInSeconds / 60;
+
+		if (timeLeftInMinutes > 60) {
+			const timeLeftInHours = Math.floor(timeLeftInMinutes / 60);
+			timer.replaceChildren(`${timeLeftInHours}h`);
+			return;
+		}
 
 		if (timeLeftInMinutes > 1) {
 			timer.replaceChildren(`${Math.floor(timeLeftInSeconds / 60)}m`);
