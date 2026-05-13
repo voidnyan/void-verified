@@ -93,6 +93,13 @@ export const defaultSettings: IOptions = {
 		category: categories.misc,
 		authRequired: true,
 	},
+	syncReadNotifications: {
+		defaultValue: false,
+		description: "Sync read notifications with your other devices through VoidAPI.",
+		category: categories.misc,
+		authRequired: false,
+		voidApiAuthRequired: true
+	},
 	quickAccessNotificationsEnabled: {
 		defaultValue: false,
 		description: "Display quick access of notifications in home page.",
