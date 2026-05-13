@@ -131,7 +131,7 @@ export class NotificationFeedHandler {
 			NotificationFeedHandler.notifications = notifications;
 
 			const unreadNotificationsCount =
-				ReadNotifications.getUnreadNotificationsCount(notifications);
+				await ReadNotifications.getUnreadNotificationsCount(notifications);
 			document
 				.querySelector(".nav .user .void-notification-dot")
 				?.remove();

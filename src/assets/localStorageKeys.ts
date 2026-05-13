@@ -21,3 +21,7 @@ export const LocalStorageKeys = {
 	timeConfig: "void-verified-time-config",
 	drafts: "void-verified-markdown-drafts"
 }
+
+export const LocalStorageCacheKeys = {
+	notificationsLastSyncTime: "void-verified-notifications-last-sync-time"
+}

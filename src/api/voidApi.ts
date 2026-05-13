@@ -4,6 +4,7 @@ import {IOption} from "../types/settings";
 import {ButtonComponent} from "../components/ButtonComponent";
 import {ICreatePoll, IPoll, IVotePoll} from "./voidApi/types/pollInterfaces";
 import {IAddGifDto, IGif} from "./voidApi/types/gifInterfaces";
+import {IReadNotification} from "./voidApi/types/readNotificationInterfaces";
 
 
 export class VoidApiError extends Error {
@@ -50,6 +51,18 @@ export class VoidApi {
 
 	static async deleteGif(gif: IGif): Promise<void> {
 		return await this.authPost("/gifs/delete-gif", gif);
+	}
+
+	static async getReadNotifications(lastSyncTime?: Date): Promise<IReadNotification[]> {
+		let path = "/notifications";
+		if (lastSyncTime) {
+			path += `?lastSyncTime=${lastSyncTime}`;
+		}
+		return await this.get(path);
+	}
+
+	static async toggleReadNotifications(notificationIds: number[], isRead: boolean): Promise<void> {
+		return await this.authPost("/notifications/toggleReadNotifications", {notificationIds, isRead});
 	}
 
 	private static async authPost(path: string, body: object) {
