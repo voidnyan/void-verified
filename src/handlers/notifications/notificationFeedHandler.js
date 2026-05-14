@@ -9,7 +9,7 @@ import { StyleHandler } from "../styleHandler";
 import { NotificationConfig } from "./notificationConfig";
 import { notificationTypes } from "./notificationTypes";
 import { NotificationsCache } from "./notificationsCache";
-import {LocalStorageKeys} from "../../assets/localStorageKeys";
+import {LocalStorageCacheKeys, LocalStorageKeys} from "../../assets/localStorageKeys";
 import {FuzzyMatch} from "../../utils/fuzzyMatch";
 import {CacheTimes} from "../../assets/cacheTimes";
 
@@ -46,7 +46,7 @@ export class NotificationFeedHandler {
 				() => {
 					this.#handleUnreadNotificationsCount(this);
 				},
-				CacheTimes.notificationTimer,
+				10 * 1000,
 			);
 		}
 	}
@@ -113,6 +113,17 @@ export class NotificationFeedHandler {
 		return notifications;
 	}
 
+	#shouldFetchNotificationsCount() {
+		const lastFetchTimeString = localStorage.getItem(LocalStorageCacheKeys.notificationsCountLastFetchTime);
+		if (!lastFetchTimeString) {
+			return true;
+		}
+		const lastFetchTime = new Date(lastFetchTimeString);
+		lastFetchTime.setMilliseconds(lastFetchTime.getMilliseconds() + CacheTimes.notificationTimer);
+
+		return new Date() > lastFetchTime;
+	}
+
 	async #handleUnreadNotificationsCount(notificationFeedHandler) {
 		if (
 			!this.#settings.options.replaceNotifications.getValue() ||
@@ -121,37 +132,47 @@ export class NotificationFeedHandler {
 			return;
 		}
 
-		try {
-			let [notifications] = await AnilistAPI.getNotifications(
-				notificationFeedHandler.#config.notificationTypes,
-				1,
-				this.#config.resetDefaultNotifications,
-			);
 
-			NotificationFeedHandler.notifications = notifications;
+		let notifications = JSON.parse(localStorage.getItem(LocalStorageCacheKeys.notificationsCountItems)) ?? [];
 
-			const unreadNotificationsCount =
-				await ReadNotifications.getUnreadNotificationsCount(notifications);
-			document
-				.querySelector(".nav .user .void-notification-dot")
-				?.remove();
-			if (unreadNotificationsCount === 0) {
-				return;
+		if (this.#shouldFetchNotificationsCount()) {
+			localStorage.setItem(LocalStorageCacheKeys.notificationsCountLastFetchTime, new Date());
+
+			Toaster.debug("Querying notifications count.");
+			try {
+				[notifications] = await AnilistAPI.getNotifications(
+					notificationFeedHandler.#config.notificationTypes,
+					1,
+					this.#config.resetDefaultNotifications,
+				);
+
+				localStorage.setItem(LocalStorageCacheKeys.notificationsCountItems, JSON.stringify(notifications));
+			} catch (error) {
+				Toaster.error("There was an error querying unread notifications", error);
 			}
-			const notificationDot = DOM.create(
-				"a",
-				"notification-dot",
-				unreadNotificationsCount,
-			);
-			notificationDot.setAttribute(
-				"href",
-				"/notifications",
-			);
-
-			document.querySelector(".nav .user")?.append(notificationDot);
-		} catch (error) {
-			Toaster.error("There was an error querying unread notifications", error);
 		}
+
+		NotificationFeedHandler.notifications = notifications;
+
+		const unreadNotificationsCount =
+			await ReadNotifications.getUnreadNotificationsCount(notifications);
+		document
+			.querySelector(".nav .user .void-notification-dot")
+			?.remove();
+		if (unreadNotificationsCount === 0) {
+			return;
+		}
+		const notificationDot = DOM.create(
+			"a",
+			"notification-dot",
+			unreadNotificationsCount,
+		);
+		notificationDot.setAttribute(
+			"href",
+			"/notifications",
+		);
+
+		document.querySelector(".nav .user")?.append(notificationDot);
 	}
 
 	#createSideBar() {
