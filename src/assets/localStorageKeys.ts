@@ -19,12 +19,14 @@ export const LocalStorageKeys = {
 	toasterConfig: "void-verified-toaster-config",
 	collapsedContainers: "void-verified-collapsed-containers",
 	timeConfig: "void-verified-time-config",
-	drafts: "void-verified-markdown-drafts"
+	drafts: "void-verified-markdown-drafts",
+	inProgressCategories: "void-verified-in-progress-categories"
 }
 
 export const LocalStorageCacheKeys = {
 	notificationsLastSyncTime: "void-verified-notifications-last-sync-time",
 	notificationsCountLastFetchTime: "void-verified-notifications-last-fetch-time",
 	notificationsCountItems: "void-verified-notifications-count-items",
-	anilistApiExponentialBackoff: "void-verified-anilist-exponential-backoff"
+	anilistApiExponentialBackoff: "void-verified-anilist-exponential-backoff",
+	inProgressMediaLists: "void-verified-in-progress-media-lists"
 }

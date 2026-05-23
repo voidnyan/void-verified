@@ -19,6 +19,8 @@ import mediaOverviewQuery, {IMediaOverview, MediaType} from "./queries/mediaOver
 import {ExponentialBackoff} from "../utils/exponentialBackoff";
 import {LocalStorageCacheKeys} from "../assets/localStorageKeys";
 import {StaticSettings} from "../utils/staticSettings";
+import inProgressMediaListQuery from "./queries/inProgressMediaListQuery";
+import {IMediaList} from "./types/IMediaList";
 
 export class AnilistAPI {
 	private static url = "https://graphql.anilist.co";
@@ -536,6 +538,39 @@ export class AnilistAPI {
 		const options = this.getQueryOptions(query, variables);
 		const data = await this.fetch(options);
 		return data.Media;
+
+	}
+
+	static async getInProgressMediaLists(): Promise<[IMediaList[], IMediaList[]]> {
+		const query = inProgressMediaListQuery;
+
+		const variables = {
+			forceSingleCompletedList: true,
+			statusIn: ["CURRENT", "REPEATING"],
+			notYetAired: true,
+			page: 1,
+			perPage: 1,
+			userId: AnilistAuth.id,
+		};
+
+		const options = this.getMutationOptions(query, variables);
+		const data = await this.fetch(options);
+
+		return [
+			this.getUniqueMediaListEntries(data.anime),
+			this.getUniqueMediaListEntries(data.manga),
+		];
+	}
+
+	private static getUniqueMediaListEntries(collection: any): IMediaList[] {
+		const seen = new Set<number>();
+		return (collection?.lists ?? [])
+			.flatMap((x: any) => x.entries)
+			.filter((entry: any) => {
+				if (seen.has(entry.media.id)) return false;
+				seen.add(entry.media.id);
+				return true;
+			});
 	}
 
 	static async query(query: string, params: object): Promise<any> {
