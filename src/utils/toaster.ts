@@ -20,6 +20,10 @@ export const toastLevels = {
 	error: 3,
 };
 
+const toastTypesByLevel = Object.fromEntries(
+	Object.entries(toastLevels).map(([type, level]) => [level, type]),
+);
+
 const toastDurations = [1, 3, 5, 10];
 
 const toastLocations = ["top-left", "top-right", "bottom-left", "bottom-right"];
@@ -205,15 +209,23 @@ export class Toaster {
 			),
 		);
 
-		const toastTypeSelect = new SelectComponent(this.#config.toastLevel, Object.values(toastTypes), (value) => {
-			this.#handleLevelChange(value);
-		} );
+		const toastTypeSelect = new SelectComponent(
+			toastTypesByLevel[this.#config.toastLevel],
+			Object.values(toastTypes),
+			(value) => {
+				this.#handleLevelChange(value);
+			},
+		);
 
 		container.append(Label("Toast level", toastTypeSelect.element));
 
-		const locationSelect = new SelectComponent(this.#config.location, toastLocations, (value) => {
-			this.#handleLocationChange(location);
-		})
+		const locationSelect = new SelectComponent(
+			this.#config.location,
+			toastLocations,
+			(value) => {
+				this.#handleLocationChange(value);
+			},
+		);
 
 		container.append(Label("Toast location", locationSelect.element));
 
