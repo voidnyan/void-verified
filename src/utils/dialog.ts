@@ -8,6 +8,8 @@ export class Dialog {
 	private static dialog: HTMLDivElement;
 	private static header: HTMLDivElement;
 	private static content: HTMLDivElement;
+	private static cancelButton: HTMLButtonElement;
+
 	private static confirmCallback: () => void;
 	static initialize() {
 		this.dialogWrapper = DOM.create("div", "dialog-wrapper");
@@ -24,14 +26,14 @@ export class Dialog {
 		this.dialog.append(this.content);
 
 		const actions = DOM.create("div", "dialog-actions");
-		const cancelButton = Button("Cancel", () => {
+		this.cancelButton = Button("Cancel", () => {
 			this.close();
-		},"error slim");
+		},"error slim") as HTMLButtonElement;
 		const confirmButton = Button("Ok", () => {
 			this.confirmCallback();
 			this.close();
 		}, "slim");
-		actions.append(cancelButton, confirmButton);
+		actions.append(this.cancelButton, confirmButton);
 		this.dialog.append(actions);
 
 		this.dialogWrapper.append(this.dialog);
@@ -46,6 +48,7 @@ export class Dialog {
 		this.confirmCallback = () => {};
 		this.header.replaceChildren(title);
 		this.content.replaceChildren(content);
+		this.cancelButton.classList.add("void-hidden");
 		this.open();
 	}
 
@@ -56,6 +59,7 @@ export class Dialog {
 		this.confirmCallback = confirmCallback;
 		this.header.replaceChildren(title);
 		this.content.replaceChildren(content);
+		this.cancelButton.classList.remove("void-hidden");
 		this.open();
 	}
 
@@ -70,6 +74,7 @@ export class Dialog {
 		this.confirmCallback = () => {
 			callback(input.value);
 		};
+		this.cancelButton.classList.remove("void-hidden");
 		this.open();
 	}
 

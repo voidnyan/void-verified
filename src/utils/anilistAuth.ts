@@ -3,6 +3,7 @@ import {ImgurAPI} from "../api/imgurAPI";
 import {DOM} from "./DOM";
 import {StaticSettings} from "./staticSettings";
 import {VoidApi} from "../api/voidApi";
+import {Dialog} from "./dialog";
 
 export class AnilistAuth {
 	private static localStorageAuth = "void-verified-auth";
@@ -19,6 +20,14 @@ export class AnilistAuth {
 		if (auth) {
 			this.token = auth.token;
 			this.expires = new Date(auth.expires);
+			const currentDate = new Date();
+			if (this.expires < currentDate) {
+				Dialog.inform("Your AniList authorization token has expired. VoidVerified uses this token to make API calls on your behalf. Go to VoidVerified settings to reauthorize VoidVerified.",
+					"AniList Authorization Expired");
+				this.token = null;
+				this.expires = null;
+				localStorage.removeItem(this.localStorageAuth);
+			}
 		}
 
 
