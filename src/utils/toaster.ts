@@ -4,6 +4,7 @@ import {LocalStorageKeys} from "../assets/localStorageKeys";
 import {AnilistAPIError} from "../api/anilistAPI";
 import {SelectComponent} from "../components/selectComponent";
 import {VoidApiError} from "../api/voidApi";
+import {ExponentialBackoffError} from "./exponentialBackoff";
 
 export const toastTypes = {
 	info: "info",
@@ -139,6 +140,10 @@ export class Toaster {
 			return;
 		}
 
+		if (error instanceof ExponentialBackoffError) {
+			return;
+		}
+
 		DOM.get("#toast-container").append(
 			new ToastInstance(
 				message,
@@ -151,6 +156,10 @@ export class Toaster {
 
 	static error(message: string, error?: Error) {
 		if (!this.#shouldToast(toastTypes.error)) {
+			return;
+		}
+
+		if (error instanceof ExponentialBackoffError) {
 			return;
 		}
 

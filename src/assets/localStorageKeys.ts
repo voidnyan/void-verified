@@ -25,5 +25,6 @@ export const LocalStorageKeys = {
 export const LocalStorageCacheKeys = {
 	notificationsLastSyncTime: "void-verified-notifications-last-sync-time",
 	notificationsCountLastFetchTime: "void-verified-notifications-last-fetch-time",
-	notificationsCountItems: "void-verified-notifications-count-items"
+	notificationsCountItems: "void-verified-notifications-count-items",
+	anilistApiExponentialBackoff: "void-verified-anilist-exponential-backoff"
 }

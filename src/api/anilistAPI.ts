@@ -16,23 +16,21 @@ import DeleteActivityReplyQuery from "./queries/deleteActivityReplyQuery";
 import {AnilistAuth} from "../utils/anilistAuth";
 import {VerifiedUsers} from "../utils/verifiedUsers";
 import mediaOverviewQuery, {IMediaOverview, MediaType} from "./queries/mediaOverviewQuery";
-
-// [
-// 	{
-// 		"message": "Invalid token",
-// 		"status": 400
-// 	}
-// ]
+import {ExponentialBackoff} from "../utils/exponentialBackoff";
+import {LocalStorageCacheKeys} from "../assets/localStorageKeys";
+import {StaticSettings} from "../utils/staticSettings";
 
 export class AnilistAPI {
 	private static url = "https://graphql.anilist.co";
 
+	public static exponentialBackoff = new ExponentialBackoff(LocalStorageCacheKeys.anilistApiExponentialBackoff);
+
 	static async getUserAbout(username: string): Promise<string> {
-		const response = await this.getUserCssAndColour(username);
+		const response = await this.getUserAboutAndColour(username);
 		return response?.about;
 	}
 
-	static async getUserCssAndColour(username) {
+	static async getUserAboutAndColour(username) {
 		const query = `query ($username: String) {
             User(name: $username) {
                 about
@@ -547,6 +545,10 @@ export class AnilistAPI {
 	}
 
 	private static async fetch(options) {
+		if (StaticSettings.options.aniListApiExponentialBackoff.getValue()) {
+			this.exponentialBackoff.throwIfDisabled();
+		}
+
 		try {
 			const response = await fetch(this.url, options);
 			this.setApiLimitRemaining(response);
@@ -577,6 +579,7 @@ export class AnilistAPI {
 			} else if (!(error instanceof AnilistAPIError)) {
 				console.error(error);
 			}
+			this.exponentialBackoff.handleExponentialBackOff();
 			throw error;
 		}
 	}

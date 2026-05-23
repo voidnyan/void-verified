@@ -9,6 +9,11 @@ export const categories = {
 };
 
 export const defaultSettings: IOptions = {
+	aniListApiExponentialBackoff: {
+		defaultValue: true,
+		description: "Temporarily pause AniList requests after repeated errors.",
+		category: categories.misc
+	},
 	copyColorFromProfile: {
 		defaultValue: true,
 		description: "Copy user color from their profile.",
@@ -37,7 +42,7 @@ export const defaultSettings: IOptions = {
 	},
 	defaultSign: {
 		defaultValue: "✔",
-		description: "The default sign displayed next to a username.",
+		description: "The default sign displayed next to a user.",
 		category: categories.users,
 	},
 	highlightEnabled: {
