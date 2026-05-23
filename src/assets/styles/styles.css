@@ -571,6 +571,8 @@ a.void-button:hover {
 .void-quick-access {
     display: flex;
     flex-direction: column;
+    gap: 25px;
+    margin-bottom: 25px;
 }
 
 .void-quick-access .void-quick-access-wrap {
@@ -580,13 +582,11 @@ a.void-button:hover {
     grid-template-rows: repeat(auto-fill, 80px);
     gap: 15px;
     padding: 15px;
-    margin-bottom: 25px;
     border-radius: 4px;
 }
 
 .void-quick-access .void-quick-access-notifications-wrapper {
     order: 2;
-    margin-bottom: 25px;
 }
 
 .void-quick-access .void-quick-access-notifications {

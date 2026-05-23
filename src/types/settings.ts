@@ -96,4 +96,5 @@ export interface IOptions {
 	scrollToReplyEnabled: IOption;
 	markdownTaskbarEnabled: IOption;
 	pollsEnabled: IOption;
+	replaceInProgressEnabled: IOption;
 }

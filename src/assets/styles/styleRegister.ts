@@ -14,6 +14,7 @@ import fileInput from "./fileInput.css";
 import markdownDraftManager from "./markdownDraftManager.css";
 import utilityClasses from "./utility-classes.css";
 import poll from "./poll.css";
+import inProgress from "./inProgress.css";
 import miniMedia from "./miniMedia.css";
 
 import {StyleHandler} from "../../handlers/styleHandler";
@@ -39,6 +40,7 @@ export class StyleRegister {
 			markdownDraftManager,
 			utilityClasses,
 			poll,
+			inProgress,
 			miniMedia
 		];
 		styleHandler.createStyleLink(css.join("\n"), "script");

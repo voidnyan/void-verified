@@ -314,5 +314,11 @@ export const defaultSettings: IOptions = {
 		category: categories.activity,
 		authRequired: false,
 		voidApiAuthRequired: true
+	},
+	replaceInProgressEnabled: {
+		defaultValue: false,
+		description: "Replace In Progress sections in home feed.",
+		category: categories.misc,
+		authRequired: true,
 	}
 };

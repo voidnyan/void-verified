@@ -24,6 +24,7 @@ import {DomDataHandler} from "./domDataHandler";
 import {MarkdownTaskbarHandler} from "./markdownTaskbarHandler";
 import {SettingsUi} from "./settingsUi";
 import {PollHandler} from "./pollHandler/pollHandler";
+import {InProgressHandler} from "./inProgressHandler";
 import {MiniMediaHandler} from "./miniMediaHandler";
 
 export class IntervalScriptHandler {
@@ -97,6 +98,7 @@ export class IntervalScriptHandler {
 			intervalScriptHandler.notificationQuickAccessHandler.renderNotifications();
 			intervalScriptHandler.activityPostHandler.render();
 			MessageFeedHandler.addFeedFilter();
+			InProgressHandler.replaceInProgressSection();
 
 		} else {
 			intervalScriptHandler.notificationQuickAccessHandler.resetShouldRender();

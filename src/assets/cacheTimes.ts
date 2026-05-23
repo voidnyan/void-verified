@@ -10,6 +10,7 @@ export class CacheTimes {
 	public static readonly notificationTimer: number = 3 * CacheTimes.minute;
 	public static readonly miniProfileTimer: number = CacheTimes.week;
 	public static readonly miniMediaTimer: number = CacheTimes.month;
+	public static readonly inProgressMediaLists: number = CacheTimes.hour;
 
 
 }
