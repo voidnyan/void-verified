@@ -913,6 +913,24 @@ a.void-button:hover {
     width:20px
 }
 
+.void-mobile-notification-dot {
+    align-items: center;
+    background: rgb(var(--color-peach));
+    border-radius: 50px;
+    box-sizing: border-box;
+    color: rgb(var(--color-text-bright));
+    display: flex;
+    font-size: 12px;
+    height: 16px;
+    justify-content: center;
+    line-height: 1;
+    position: absolute;
+    right: -3px;
+    text-align: center;
+    top: -3px;
+    width: 16px;
+}
+
 .void-notification-dot:visited,
 .void-notification-dot:hover {
     color:#fff2f2;

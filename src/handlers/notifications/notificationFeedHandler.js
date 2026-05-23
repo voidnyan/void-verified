@@ -156,9 +156,16 @@ export class NotificationFeedHandler {
 
 		const unreadNotificationsCount =
 			await ReadNotifications.getUnreadNotificationsCount(notifications);
+
+		this.#handleDesktopNotificationDot(unreadNotificationsCount);
+		this.#handleMobileNotificationDot(unreadNotificationsCount);
+	}
+
+	#handleDesktopNotificationDot(unreadNotificationsCount) {
 		document
 			.querySelector(".nav .user .void-notification-dot")
 			?.remove();
+
 		if (unreadNotificationsCount === 0) {
 			return;
 		}
@@ -173,6 +180,23 @@ export class NotificationFeedHandler {
 		);
 
 		document.querySelector(".nav .user")?.append(notificationDot);
+	}
+
+	#handleMobileNotificationDot(unreadNotificationsCount) {
+		document
+			.querySelector(".hamburger .void-mobile-notification-dot")
+			?.remove();
+
+		if (unreadNotificationsCount === 0) {
+			return;
+		}
+		const notificationDot = DOM.create(
+			"div",
+			"mobile-notification-dot",
+			unreadNotificationsCount,
+		);
+
+		document.querySelector(".hamburger")?.append(notificationDot);
 	}
 
 	#createSideBar() {
@@ -246,6 +270,7 @@ export class NotificationFeedHandler {
 						);
 					});
 				document.querySelector(".void-notification-dot")?.remove();
+				document.querySelector(".void-mobile-notification-dot")?.remove();
 				if (!this.#config.resetDefaultNotifications) {
 					try {
 						Toaster.debug("Resetting notification count.");
@@ -253,6 +278,7 @@ export class NotificationFeedHandler {
 						document.body
 							.querySelector(".user .notification-dot")
 							?.remove();
+						document.body.querySelector(".hamburger .notification-dot")?.remove();
 						Toaster.success("Notifications count reset.");
 					} catch (error) {
 						Toaster.error(
@@ -569,6 +595,10 @@ const filters = [
 const notificationReplacementStyles = `
     .nav .user .notification-dot {
         display: none;
+    }
+
+    .hamburger .notification-dot {
+    	display: none;
     }
 
     .notifications-feed.container .filters,
