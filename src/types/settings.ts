@@ -42,6 +42,7 @@ export interface IOption {
 }
 
 export interface IOptions {
+	aniListApiExponentialBackoff: IOption;
 	copyColorFromProfile: IOption;
 	moveSubscribeButtons: IOption;
 	hideLikeCount: IOption;
