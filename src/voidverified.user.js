@@ -21,9 +21,11 @@ import {LayoutDesigner} from "./handlers/layoutDesigner";
 import {MiniProfileHandler} from "./handlers/miniProfileHandler";
 import {GifKeyboardHandler} from "./handlers/gifKeyboardHandler";
 import {MiniMediaHandler} from "./handlers/miniMediaHandler";
+import {VoidApi} from "./api/voidApi";
 
 (async () => {
 	ImageHostService.initialize();
+	await VoidApi.initialize();
 	await AnilistAuth.initialize();
 	VerifiedUsers.initialize();
 	StaticSettings.initialize();

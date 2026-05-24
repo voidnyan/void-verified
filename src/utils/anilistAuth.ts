@@ -69,8 +69,7 @@ export class AnilistAuth {
 		}
 
 		if (path === "void_api_auth") {
-			VoidApi.token = token;
-			localStorage.setItem("void-verified-api-token", token);
+			await VoidApi.saveAuthToken(token);
 		}
 
 		if (path === "void_auth") {
