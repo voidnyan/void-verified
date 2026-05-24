@@ -22,51 +22,53 @@ import {MiniProfileHandler} from "./handlers/miniProfileHandler";
 import {GifKeyboardHandler} from "./handlers/gifKeyboardHandler";
 import {MiniMediaHandler} from "./handlers/miniMediaHandler";
 
-ImageHostService.initialize();
-AnilistAuth.initialize();
-VerifiedUsers.initialize();
-StaticSettings.initialize();
-GlobalCSS.initialize();
-Vue.ensureIsRegistered();
-StaticTooltip.initialize();
-LayoutDesigner.initialize();
-MiniProfileHandler.initialize();
-MiniMediaHandler.initialize();
+(async () => {
+	ImageHostService.initialize();
+	await AnilistAuth.initialize();
+	VerifiedUsers.initialize();
+	StaticSettings.initialize();
+	GlobalCSS.initialize();
+	Vue.ensureIsRegistered();
+	StaticTooltip.initialize();
+	LayoutDesigner.initialize();
+	MiniProfileHandler.initialize();
+	MiniMediaHandler.initialize();
 
-GoalsHandler.initialize();
-new MarkdownHotkeys(StaticSettings.settingsInstance).setupMarkdownHotkeys();
-QuickStartHandler.initialize();
-Toaster.initializeToaster(StaticSettings.settingsInstance);
-const styleHandler = new StyleHandler(StaticSettings.settingsInstance);
-styleHandler.refreshStyles();
-StyleRegister.registerStyles();
-CloseOverlaysHandler.initialize();
-QuoteHandler.addSelectionListener();
-GifKeyboardHandler.getGifsFromApi();
+	GoalsHandler.initialize();
+	new MarkdownHotkeys(StaticSettings.settingsInstance).setupMarkdownHotkeys();
+	QuickStartHandler.initialize();
+	Toaster.initializeToaster(StaticSettings.settingsInstance);
+	const styleHandler = new StyleHandler(StaticSettings.settingsInstance);
+	styleHandler.refreshStyles();
+	StyleRegister.registerStyles();
+	CloseOverlaysHandler.initialize();
+	QuoteHandler.addSelectionListener();
+	GifKeyboardHandler.getGifsFromApi();
 
-try {
-	const intervalScriptHandler = new IntervalScriptHandler(StaticSettings.settingsInstance);
-	intervalScriptHandler.enableScriptIntervalHandling();
-} catch (error) {
-	Toaster.critical(
-		"A critical error has occured setting up intervalScriptHandler. Please check developer console and contact voidnyan.",
-	);
-	console.error(error);
-}
+	try {
+		const intervalScriptHandler = new IntervalScriptHandler(StaticSettings.settingsInstance);
+		intervalScriptHandler.enableScriptIntervalHandling();
+	} catch (error) {
+		Toaster.critical(
+			"A critical error has occured setting up intervalScriptHandler. Please check developer console and contact voidnyan.",
+		);
+		console.error(error);
+	}
 
-try {
-	const pasteHandler = new PasteHandler(StaticSettings.settingsInstance);
-	pasteHandler.setup();
-} catch (error) {
-	Toaster.critical(
-		"A critical error has occured setting up pasteHandler. Please check developer console and contact voidnyan.",
-	);
-}
+	try {
+		const pasteHandler = new PasteHandler(StaticSettings.settingsInstance);
+		pasteHandler.setup();
+	} catch (error) {
+		Toaster.critical(
+			"A critical error has occured setting up pasteHandler. Please check developer console and contact voidnyan.",
+		);
+	}
 
-new ChangeLog(StaticSettings.settingsInstance).renderChangeLog();
+	new ChangeLog(StaticSettings.settingsInstance).renderChangeLog();
 
-new ImgurAPI(
-	ImageHostService.getImageHostConfiguration(imageHosts.imgur),
-).refreshAuthToken();
+	new ImgurAPI(
+		ImageHostService.getImageHostConfiguration(imageHosts.imgur),
+	).refreshAuthToken();
 
-console.log(`VoidVerified ${StaticSettings.settingsInstance.version} loaded.`);
+	console.log(`VoidVerified ${StaticSettings.settingsInstance.version} loaded.`);
+})();

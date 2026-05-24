@@ -6,7 +6,6 @@ import {AnilistAuth} from "./anilistAuth";
 
 export class Settings implements ISettings {
 	localStorageSettings = LocalStorageKeys.settings;
-	localStorageAuth = "void-verified-auth";
 	version;
 	auth = {
 		token: AnilistAuth.token,
@@ -35,7 +34,7 @@ export class Settings implements ISettings {
 
 	removeAuthToken() {
 		this.auth = null;
-		localStorage.removeItem(this.localStorageAuth);
+		void AnilistAuth.removeAuthToken();
 	}
 
 	saveSettingToLocalStorage(key: string, value: string | boolean) {
