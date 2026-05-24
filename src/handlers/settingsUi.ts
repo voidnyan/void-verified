@@ -42,8 +42,8 @@ export class SettingsUi {
 	static subCategoryNav: HTMLDivElement = DOM.createDiv("nav");
 	static subCategoryContainer: HTMLDivElement = DOM.createDiv();
 
-	static render() {
-		AnilistAuth.checkAuthFromUrl();
+	static async render() {
+		await AnilistAuth.checkAuthFromUrl();
 		const container = document.querySelector(
 			".settings.container > .content",
 		);

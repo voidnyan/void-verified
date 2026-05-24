@@ -6,7 +6,7 @@ import {VoidApi} from "../api/voidApi";
 import {Dialog} from "./dialog";
 
 export class AnilistAuth {
-	private static localStorageAuth = "void-verified-auth";
+	private static storageAuth = "void-verified-auth";
 	static token: string = null;
 	static expires: Date = null;
 
@@ -15,8 +15,8 @@ export class AnilistAuth {
 
 	private static settingsContainer = DOM.createDiv();
 
-	static initialize() {
-		const auth = JSON.parse(localStorage.getItem(this.localStorageAuth)) ?? null;
+	static async initialize() {
+		const auth = await this.getStoredAuth();
 		if (auth) {
 			this.token = auth.token;
 			this.expires = new Date(auth.expires);
@@ -26,7 +26,7 @@ export class AnilistAuth {
 					"AniList Authorization Expired");
 				this.token = null;
 				this.expires = null;
-				localStorage.removeItem(this.localStorageAuth);
+				await GM.deleteValue(this.storageAuth);
 			}
 		}
 
@@ -36,7 +36,23 @@ export class AnilistAuth {
 		this.id = alAuth?.id;
 	}
 
-	static checkAuthFromUrl() {
+	private static async getStoredAuth() {
+		const storedAuth = await GM.getValue(this.storageAuth);
+		if (typeof storedAuth === "string") {
+			return JSON.parse(storedAuth) ?? null;
+		}
+
+		const localStorageAuth = localStorage.getItem(this.storageAuth);
+		if (localStorageAuth) {
+			await GM.setValue(this.storageAuth, localStorageAuth);
+			localStorage.removeItem(this.storageAuth);
+			return JSON.parse(localStorageAuth) ?? null;
+		}
+
+		return null;
+	}
+
+	static async checkAuthFromUrl() {
 		const hash = window.location.hash.substring(1);
 		if (!hash) {
 			return;
@@ -62,7 +78,7 @@ export class AnilistAuth {
 				new Date().getTime() + Number(expiress.split("=")[1]) * 1000,
 			);
 
-			this.saveAuthToken({
+			await this.saveAuthToken({
 				token: token.split("=")[1],
 				expires: expiresDate,
 			});
@@ -75,13 +91,10 @@ export class AnilistAuth {
 		);
 	}
 
-	static saveAuthToken(tokenObject: {token: string, expires: Date}) {
+	static async saveAuthToken(tokenObject: {token: string, expires: Date}) {
 		this.token = tokenObject.token;
 		this.expires = tokenObject.expires;
-		localStorage.setItem(
-			this.localStorageAuth,
-			JSON.stringify(tokenObject),
-		);
+		await GM.setValue(this.storageAuth, JSON.stringify(tokenObject));
 	}
 
 	static createSettings() {
@@ -126,8 +139,8 @@ export class AnilistAuth {
 			"Revoke auth token",
 		);
 		removeAuthButton.classList.add("button");
-		removeAuthButton.addEventListener("click", () => {
-			this.removeAuthToken();
+		removeAuthButton.addEventListener("click", async () => {
+			await this.removeAuthToken();
 			this.renderSettings();
 		});
 
@@ -142,9 +155,9 @@ export class AnilistAuth {
 		this.settingsContainer.append(VoidApi.createSettings());
 	}
 
-	static 	removeAuthToken() {
+	static async removeAuthToken() {
 		this.token = null;
 		this.expires = null;
-		localStorage.removeItem(this.localStorageAuth);
+		await GM.deleteValue(this.storageAuth);
 	}
 }
