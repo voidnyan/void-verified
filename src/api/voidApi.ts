@@ -5,6 +5,7 @@ import {ButtonComponent} from "../components/ButtonComponent";
 import {ICreatePoll, IPoll, IVotePoll} from "./voidApi/types/pollInterfaces";
 import {IAddGifDto, IGif} from "./voidApi/types/gifInterfaces";
 import {IReadNotification} from "./voidApi/types/readNotificationInterfaces";
+import {Dialog} from "../utils/dialog";
 
 
 export class VoidApiError extends Error {
@@ -24,6 +25,11 @@ export class VoidApi {
 
 	static async initialize() {
 		this.token = await this.getStoredToken();
+		if (this.token && this.isTokenExpired(this.token)) {
+			Dialog.inform("Your VoidVerified API authorization token has expired. VoidVerified uses this token to make API calls on your behalf. Go to VoidVerified settings to reauthorize VoidVerified.",
+				"VoidVerified API Authorization Expired");
+			await this.removeAuthToken();
+		}
 	}
 
 	private static async getStoredToken() {
@@ -50,6 +56,30 @@ export class VoidApi {
 	static async removeAuthToken() {
 		this.token = null;
 		await GM.deleteValue(this.storageToken);
+	}
+
+	private static isTokenExpired(token: string) {
+		const payload = this.parseJwtPayload(token);
+		if (typeof payload?.exp !== "number") {
+			return false;
+		}
+
+		return payload.exp * 1000 <= Date.now();
+	}
+
+	private static parseJwtPayload(token: string): { exp?: number } {
+		try {
+			const payload = token.split(".")[1];
+			if (!payload) {
+				return {};
+			}
+
+			const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+			const paddedBase64 = base64.padEnd(Math.ceil(base64.length / 4) * 4, "=");
+			return JSON.parse(atob(paddedBase64));
+		} catch {
+			return {};
+		}
 	}
 
 	static async createPoll(poll: ICreatePoll): Promise<IPoll> {
