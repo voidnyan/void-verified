@@ -15,11 +15,42 @@ export class VoidApiError extends Error {
 }
 
 export class VoidApi {
-	static token: string = localStorage.getItem("void-verified-api-token");
+	private static storageToken = "void-verified-api-token";
+	static token: string = null;
 
 	static readonly clientId = GM_info.script.version === "DEV" ? "26757" : "17382";
 	static readonly callbackUrl = GM_info.script.version === "DEV" ? "https://localhost:7013/auth/oauth" : "https://voidnyan.net/auth/oauth";
 	static readonly url = GM_info.script.version === "DEV" ? "https://localhost:7013/api" : "https://voidnyan.net/api";
+
+	static async initialize() {
+		this.token = await this.getStoredToken();
+	}
+
+	private static async getStoredToken() {
+		const storedToken = await GM.getValue(this.storageToken);
+		if (typeof storedToken === "string") {
+			return storedToken;
+		}
+
+		const localStorageToken = localStorage.getItem(this.storageToken);
+		if (localStorageToken) {
+			await GM.setValue(this.storageToken, localStorageToken);
+			localStorage.removeItem(this.storageToken);
+			return localStorageToken;
+		}
+
+		return null;
+	}
+
+	static async saveAuthToken(token: string) {
+		this.token = token;
+		await GM.setValue(this.storageToken, token);
+	}
+
+	static async removeAuthToken() {
+		this.token = null;
+		await GM.deleteValue(this.storageToken);
+	}
 
 	static async createPoll(poll: ICreatePoll): Promise<IPoll> {
 		return await this.authPost("/polls/create-poll", poll);
@@ -85,10 +116,9 @@ export class VoidApi {
 		const headers = {
 			"Content-Type": "application/json"
 		}
-		const token = localStorage.getItem("void-verified-api-token");
-		if (token) {
+		if (this.token) {
 			// @ts-ignore
-			headers.Authorization = "Bearer " + token;
+			headers.Authorization = "Bearer " + this.token;
 		}
 
 		const options = {
@@ -148,9 +178,8 @@ export class VoidApi {
 		container.querySelectorAll("a").forEach(x => x.setAttribute("target", "_blank"));
 
 		if (this.token) {
-			const button = new ButtonComponent("Remove auth token", () => {
-				this.token = undefined;
-				localStorage.removeItem("void-verified-api-token");
+			const button = new ButtonComponent("Remove auth token", async () => {
+				await this.removeAuthToken();
 				button.element.replaceWith(this.createAuthButton());
 			})
 			container.append(button.element);
