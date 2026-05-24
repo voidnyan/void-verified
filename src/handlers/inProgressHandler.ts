@@ -70,7 +70,7 @@ export class InProgressHandler {
 		} else {
 			const sections = [
 				...this.createAnimeSections(),
-				...this.createMangaSections(this.manga, this.categories.Manga, "Manga")
+				...this.createMangaSections(this.manga, this.categories.Manga)
 			];
 			const toggleButton = this.createManagerToggleButton();
 			sections[0]?.querySelector(".section-header")?.append(DOM.create("span", null, toggleButton));
