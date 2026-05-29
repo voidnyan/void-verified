@@ -10,6 +10,7 @@ import {Time} from "../utils/time";
 import {CollapsedComments} from "../utils/collapsedReplies";
 import {DomDataHandler} from "./domDataHandler";
 import {AnilistAuth} from "../utils/anilistAuth";
+import {MiniPopupHandlerBase} from "./miniPopupHandlerBase";
 
 export class ActivityHandler {
 	static moveAndDisplaySubscribeButton() {
@@ -150,38 +151,15 @@ export class ActivityHandler {
 			return;
 		}
 
-		let imageContainer = document.querySelector<HTMLDivElement>(".void-image-preview-container");
-
-		if (!imageContainer) {
-			imageContainer = DOM.createDiv("image-preview-container");
-			document.body.append(imageContainer);
-		}
-
+		ImageLinkHoverHandler.initialize();
 
 		const imageLinks = document.querySelectorAll<HTMLAnchorElement>(
 			ImageFormats.map(format => `.markdown a:not([void-link-preview])[href$='.${format}' i]:not(:has(img))`).join()
 		)
 
 		for (const link of imageLinks) {
-			link.setAttribute("void-link-preview", "true");
-			link.addEventListener("mouseover", (event) => {this.#handleLinkHover(event);});
-			link.addEventListener("mouseout", () => {
-				imageContainer.style.display = "none";
-			})
+			ImageLinkHoverHandler.register(link);
 		}
-	}
-
-	static #handleLinkHover(event) {
-		let imageContainer = document.querySelector<HTMLDivElement>(".void-image-preview-container");
-		imageContainer.replaceChildren();
-		const href = event.target.getAttribute("href");
-		const image = DOM.create("img");
-		image.setAttribute("src", href);
-		image.setAttribute("loading", "lazy");
-		imageContainer.append(image);
-		imageContainer.style.display = "block";
-		const position = event.clientY < window.innerHeight / 2 ? `${event.clientY + 20}px` : `${event.clientY - image.clientHeight - 20}px`;
-		imageContainer.style.top = position;
 	}
 
 	static addTooltipsToTimestamps() {
@@ -200,5 +178,36 @@ export class ActivityHandler {
 			StaticTooltip.register(timestamp, time);
 			timestamp.removeAttribute("title");
 		}
+	}
+}
+
+class ImageLinkHoverHandler extends MiniPopupHandlerBase {
+	static initialize(){
+		if (this.container) {
+			return;
+		}
+		this.container = DOM.createDiv("mini-profile-container mini-profile-hidden image-preview-container");
+		this.initializeBase();
+	}
+
+	static register(anchor: HTMLAnchorElement){
+		anchor.setAttribute("void-link-preview", "true");
+		this.addAnchorEventListeners(anchor, () => {
+			this.handleLinkHover(anchor)
+		});
+	}
+
+
+	private static handleLinkHover(anchor: HTMLAnchorElement) {
+		this.container.replaceChildren();
+		const href = anchor.getAttribute("href");
+		const image = DOM.create("img");
+		image.setAttribute("src", href);
+		this.container.append(image);
+		image.onload = () => {
+			this.positionContainer(anchor);
+			this.showContainer();
+		}
+		//image.setAttribute("loading", "lazy");
 	}
 }

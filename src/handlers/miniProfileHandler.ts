@@ -14,14 +14,7 @@ export class MiniProfileHandler extends MiniPopupHandlerBase {
 
 	static initialize() {
 		this.container = DOM.create("div", "mini-profile-container mini-profile-hidden");
-		this.container.addEventListener("mouseover", () => {
-			this.isVisible = true;
-			this.showContainer();
-		});
-		this.container.addEventListener("mouseleave", () => {
-			this.hideContainer();
-		});
-		document.body.append(this.container);
+		this.initializeBase();
 		this.config = new MiniProfileConfig();
 	}
 	static addUserHoverListeners() {
@@ -35,21 +28,9 @@ export class MiniProfileHandler extends MiniPopupHandlerBase {
 		}
 
 		for (const element of elements) {
-			element.addEventListener("mouseover", () => {
-				this.isVisible = true;
-				setTimeout(() => {
-					if (!this.isVisible) {
-						return;
-					}
-					this.#hoverUser(element);
-				}, 100);
+			this.addAnchorEventListeners(element, () => {
+				this.#hoverUser(element);
 			});
-			element.addEventListener("mouseleave", () => {
-				this.hideContainer();
-			});
-			element.addEventListener("click", () => {
-				this.hideContainer();
-			})
 			element.setAttribute("void-mini", "true");
 		}
 	}
@@ -89,17 +70,7 @@ export class MiniProfileHandler extends MiniPopupHandlerBase {
 		this.createHeader(user);
 		this.createContent(user);
 
-		const elementRect = element.getBoundingClientRect();
-		const containerRect = this.container.getBoundingClientRect();
-		this.container.style.left = `${elementRect.left + window.scrollX + elementRect.width}px`;
-		this.container.style.maxWidth = `${window.innerWidth - elementRect.right - 30}px`;
-		if (this.config.position === "top") {
-			this.container.style.top = `${elementRect.top + window.scrollY + elementRect.height - containerRect.height}px`;
-		} else if (this.config.position === "center") {
-			this.container.style.top = `${elementRect.top + window.scrollY + (elementRect.height / 2) - (containerRect.height / 2)}px`;
-		} else {
-			this.container.style.top = `${elementRect.top + window.scrollY}px`;
-		}
+		this.positionContainer(element);
 		this.showContainer();
 	}
 
@@ -209,18 +180,6 @@ export class MiniProfileHandler extends MiniPopupHandlerBase {
 		container.replaceChildren();
 		container.append(DOM.create("h3", null, "Mini Profile Configuration"));
 
-		const positionOptions = ["top", "center", "bottom"].map(position =>
-			Option(position,
-				config.position === position,
-				() => {
-					config.position = position as "top" | "center" | "bottom";
-					config.save();
-					this.renderSettingsContainer(container, config);
-				}));
-
-		const positionSelect = Select(positionOptions);
-		container.append(Label("Position", positionSelect));
-
 		const numberOfFavourites = RangeField(
 			config.numberOfFavourites,
 			(event) => {
@@ -326,7 +285,6 @@ class MiniProfileCache {
 
 class MiniProfileConfig {
 	numberOfFavourites: number;
-	position: "top" | "center" | "bottom";
 	hoverTags: boolean;
 	displayAnime: boolean;
 	displayManga: boolean;
@@ -339,7 +297,6 @@ class MiniProfileConfig {
 	constructor() {
 		const config = JSON.parse(localStorage.getItem(this.#localStorage));
 		this.numberOfFavourites = config?.numberOfFavourites ?? 6;
-		this.position = config?.position ?? "bottom";
 		this.hoverTags = config?.hoverTags ?? true;
 		this.displayBio = config?.displayBio ?? true;
 		this.displayAnime = config?.displayAnime ?? true;

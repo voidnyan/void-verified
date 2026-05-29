@@ -1504,14 +1504,7 @@ body:has(.void-modal-background[open]) {
 }
 
 .void-image-preview-container {
-    display: none;
-    position: fixed;
-    max-width: 55%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 4px;
-    overflow: hidden;
-    z-index: 9500;
+    max-width: 90vw;
 }
 
 .void-image-preview-container img {

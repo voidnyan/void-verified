@@ -19,14 +19,7 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 	static initialize(){
 		this.config = new MiniMediaConfig();
 		this.container = DOM.createDiv("mini-profile-container mini-profile-hidden mini-media-container");
-		this.container.addEventListener("mouseover", () => {
-			this.isVisible = true;
-			this.showContainer();
-		});
-		this.container.addEventListener("mouseleave", () => {
-			this.hideContainer();
-		});
-		document.body.append(this.container);
+		this.initializeBase();
 	}
 
 	static addMediaHoverListeners(){
@@ -47,21 +40,9 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 		}
 
 		for (const element of elements){
-			element.addEventListener("mouseover", () => {
-				this.isVisible = true;
-				setTimeout(() => {
-					if (!this.isVisible) {
-						return;
-					}
-					this.hoverMedia(element);
-				}, 100);
+			this.addAnchorEventListeners(element, () => {
+				this.hoverMedia(element);
 			});
-			element.addEventListener("mouseleave", () => {
-				this.hideContainer();
-			});
-			element.addEventListener("click", () => {
-				this.hideContainer();
-			})
 			element.setAttribute("void-mini", "true");
 		}
 	}
@@ -71,7 +52,7 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 		if (this.queryInProgress) {
 			return;
 		}
-		this.positionContainer(element);
+		this.positionAndShowContainer(element);
 
 		const [type, id] = Common.getTypeAndIdFromUrl(element.getAttribute("href"));
 		if (!type || !id) {
@@ -90,6 +71,7 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 			this.queryInProgress = false;
 		}
 		this.container.replaceChildren(new MediaOverviewComponent(media, this.config).element);
+		this.positionAndShowContainer(element);
 	}
 
 	private static async getMediaOverview(id: number, type: MediaType): Promise<IMediaOverview> {
@@ -110,13 +92,8 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 		return media;
 	}
 
-	private static positionContainer(anchor: Element){
-		const anchorRect = anchor.getBoundingClientRect();
-
-		const leftPosition = Math.min(anchorRect.left + window.scrollX - 30, window.innerWidth - 900);
-		this.container.style.left = `${leftPosition}px`;
-
-		this.container.style.top = `${anchorRect.bottom + window.scrollY + 10}px`;
+	private static positionAndShowContainer(anchor: Element){
+		this.positionContainer(anchor);
 		this.showContainer();
 	}
 
@@ -170,9 +147,9 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 		container.append(Label("Show when hovering media titles in activities", hoverActivityTitles));
 		container.append(Label("Show when hovering embeds", hoverEmbeds));
 		container.append(Label("Show when hovering relations in media page", hoverRelations));
-		container.append(Label("Display Relations", displayRelations));
-		container.append(Label("Display Characters", displayCharacters));
-		container.append(Label("Display Staff", displayStaff));
+		container.append(Label("Hide Relations", displayRelations));
+		container.append(Label("Hide Characters", displayCharacters));
+		container.append(Label("Hide Staff", displayStaff));
 		container.append(Label("Hide Banner", hideBanner));
 		container.append(Label("Hide Cover", hideCover));
 		container.append(Label("Hide Tags", hideTags));
