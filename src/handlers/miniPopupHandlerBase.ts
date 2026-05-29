@@ -58,4 +58,10 @@ export class MiniPopupHandlerBase {
 
 		this.container.style.top = `${anchorRect.bottom + window.scrollY + 10}px`;
 	}
+
+	protected static setContainerMaxHeight(anchor: Element) {
+		const anchorRect = anchor.getBoundingClientRect();
+
+		this.container.style.maxHeight = window.innerHeight - anchorRect.bottom - 30 + "px";
+	}
 }

@@ -206,6 +206,7 @@ class ImageLinkHoverHandler extends MiniPopupHandlerBase {
 		this.container.append(image);
 		image.onload = () => {
 			this.positionContainer(anchor);
+			this.setContainerMaxHeight(anchor);
 			this.showContainer();
 		}
 		//image.setAttribute("loading", "lazy");

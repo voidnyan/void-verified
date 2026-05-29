@@ -1503,8 +1503,10 @@ body:has(.void-modal-background[open]) {
     background: rgb(var(--color-foreground-grey));
 }
 
-.void-image-preview-container {
-    max-width: 90vw;
+.void-mini-profile-container.void-image-preview-container {
+    max-width: min(1200px, 90vw);
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .void-image-preview-container img {
