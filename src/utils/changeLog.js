@@ -61,7 +61,6 @@ export class ChangeLog {
 
 		// This is a loop for some reason? 2024 voidnyan really did some messed up stuff
 		for (const [majorVersion, minorVersion] of versions) {
-			console.log(majorVersion, minorVersion);
 			if (
 				Number(majorVersion) > Number(lastMajorVersion) ||
 				(Number(majorVersion) === Number(lastMajorVersion) &&
