@@ -14,7 +14,6 @@ import {
 } from "./activityPostHandler";
 import {MarkdownHotkeys} from "./markdownHotkeys";
 import {PasteHandler} from "./pasteHandler";
-import {GoalsHandler} from "./goalsHandler";
 import {MiniProfileHandler} from "./miniProfileHandler";
 import {VideoFixer} from "./videoFixer";
 import {MessageFeedHandler} from "./messageFeed/messageFeedHandler";
@@ -112,13 +111,10 @@ export class IntervalScriptHandler {
 			return;
 		}
 
-		GoalsHandler.removeGoalsContainer();
-
 		if (path.startsWith("/user/")) {
 			intervalScriptHandler.quickAccess.clearBadge();
 			intervalScriptHandler.styleHandler.verifyProfile();
 			intervalScriptHandler.anilistFeedFixHandler.handleFilters();
-			GoalsHandler.renderGoals();
 		} else {
 			intervalScriptHandler.styleHandler.clearStyles("profile");
 		}

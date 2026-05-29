@@ -83,7 +83,6 @@ Configuration can also be imported and exported from the VoidVerified settings p
 
 - Add custom global CSS.
 - Use the layout designer from the settings panel.
-- Display animanga goals on profile overview pages.
 - Configure toast notifications.
 - Configure local time formatting.
 - Show a changelog after updates.

@@ -8,7 +8,6 @@ import { ChangeLog } from "./utils/changeLog";
 import {MarkdownHotkeys} from "./handlers/markdownHotkeys";
 import {StyleRegister} from "./assets/styles/styleRegister";
 import {StaticSettings} from "./utils/staticSettings";
-import {GoalsHandler} from "./handlers/goalsHandler";
 import {QuickStartHandler} from "./handlers/quickStart/quickStartHandler";
 import {Vue} from "./utils/vue";
 import {StaticTooltip} from "./utils/staticTooltip";
@@ -36,7 +35,6 @@ import {VoidApi} from "./api/voidApi";
 	MiniProfileHandler.initialize();
 	MiniMediaHandler.initialize();
 
-	GoalsHandler.initialize();
 	new MarkdownHotkeys(StaticSettings.settingsInstance).setupMarkdownHotkeys();
 	QuickStartHandler.initialize();
 	Toaster.initializeToaster(StaticSettings.settingsInstance);

@@ -236,12 +236,6 @@ export const defaultSettings: IOptions = {
 		category: categories.activity,
 		authRequired: false,
 	},
-	goalsEnabled: {
-		defaultValue: false,
-		description: "Display animanga goals in profile overview.",
-		category: categories.misc,
-		authRequired: true,
-	},
 	imagePreviewEnabled: {
 		defaultValue: false,
 		description: "Hover image links to preview.",

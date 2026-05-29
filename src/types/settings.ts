@@ -81,7 +81,6 @@ export interface IOptions {
 	rememberCollapsedReplies: IOption;
 	autoCollapseLiked: IOption;
 	autoCollapseSelf: IOption;
-	goalsEnabled: IOption;
 	imagePreviewEnabled: IOption;
 	miniProfileEnabled: IOption;
 	miniMediaEnabled: IOption;

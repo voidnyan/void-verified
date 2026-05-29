@@ -8,7 +8,6 @@ export const LocalStorageKeys = {
 	quickStartConfig: "void-verified-quick-start-config",
 	gifKeyboardConfig: "void-verified-gif-keyboard",
 	globalCSS:  "void-verified-global-css",
-	goalsConfig: "void-verified-goals",
 	layouts: "void-verified-layouts",
 	miniProfileCache: "void-verified-mini-profile-cache",
 	mediaOverviewCache: "void-verified-media-overview-cache",
