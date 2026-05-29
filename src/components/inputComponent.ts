@@ -18,6 +18,10 @@ export class InputComponent {
 		this.element.addEventListener("change", callback);
 	}
 
+	addKeyUpListener(callback: (event: any) => void) {
+		this.element.addEventListener("keyup", callback);
+	}
+
 	setValue(value: string) {
 		this.element.value = value;
 	}

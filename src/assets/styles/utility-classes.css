@@ -34,6 +34,10 @@
     margin-top: 10px;
 }
 
+.void-mb-6 {
+    margin-bottom: 6px;
+}
+
 .void-gap-5 {
     gap: 5px;
 }

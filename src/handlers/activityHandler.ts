@@ -209,6 +209,5 @@ class ImageLinkHoverHandler extends MiniPopupHandlerBase {
 			this.setContainerMaxHeight(anchor);
 			this.showContainer();
 		}
-		//image.setAttribute("loading", "lazy");
 	}
 }

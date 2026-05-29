@@ -16,6 +16,8 @@ import {GlobalCSS} from "./globalCSS";
 import {ImageHostService} from "../api/imageHostConfiguration";
 import {LayoutDesigner} from "./layoutDesigner";
 import {MiniMediaHandler} from "./miniMediaHandler";
+import {InputComponent} from "../components/inputComponent";
+import {FuzzyMatch} from "../utils/fuzzyMatch";
 
 const subCategories = {
 	users: "users",
@@ -34,6 +36,8 @@ const subCategories = {
 export class SettingsUi {
 	private static activeCategory = "all";
 	private static activeSubCategory = "users";
+
+	private static optionsFilter = "";
 
 	static container: HTMLDivElement = DOM.createDiv("settings");
 	static options: HTMLDivElement = DOM.createDiv("settings-list");
@@ -62,6 +66,7 @@ export class SettingsUi {
 		this.container.replaceChildren();
 		this.createScriptInfo();
 		this.renderCategories();
+		this.renderOptionsFilter();
 		this.renderOptions();
 		this.container.append(this.options);
 		this.container.append(DOM.createDiv("options-legend", [
@@ -109,10 +114,21 @@ export class SettingsUi {
 		this.container.append(DOM.createDiv("nav", nav.element));
 	}
 
+	private static renderOptionsFilter() {
+		const filter = new InputComponent("mb-6", "Filter options...");
+		this.container.append(filter.element);
+		this.optionsFilter = "";
+		filter.addKeyUpListener((event)=> {
+			this.optionsFilter = event.target.value;
+			this.renderOptions();
+		});
+	}
+
 	private static renderOptions() {
 		this.createOption = this.createOption.bind(this);
 		const options = Object.values(StaticSettings.options)
-			.filter((option: IOption) => option.category === this.activeCategory || this.activeCategory === "all")
+			.filter((option: IOption) => (option.category === this.activeCategory || this.activeCategory === "all") &&
+				(this.optionsFilter === "" || FuzzyMatch.match(this.optionsFilter, option.description)))
 			.map(this.createOption);
 
 		this.options.replaceChildren(...options);

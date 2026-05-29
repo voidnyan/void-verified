@@ -22,6 +22,7 @@ export const changeLog = [
 		new Feature("Temporarily pause AniList requests after repeated errors.", "aniListApiExponentialBackoff"),
 		new Feature("Replace notification dot on mobile navigation when using VV notifications feature"),
 		new Feature("Improved image preview overlay."),
+		new Feature("Added an input field to filter options in settings page."),
 		new Feature("Removed the feature to display goals on user profile.")
 	]),
 	new Version("1.27", [
