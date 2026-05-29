@@ -1,7 +1,6 @@
 ﻿import styles from "./styles.css";
 import markdownDialog from "./markdownDialog.css";
 import keyInput from "./keyInput.css";
-import goals from "./goals.css";
 import miniProfile from "./miniProfile.css";
 import quickStart from "./quickStart.css";
 import activity from "./activity.css";
@@ -27,7 +26,6 @@ export class StyleRegister {
 			styles,
 			markdownDialog,
 			keyInput,
-			goals,
 			miniProfile,
 			quickStart,
 			activity,

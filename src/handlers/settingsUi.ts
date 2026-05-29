@@ -7,7 +7,6 @@ import {categories} from "../assets/defaultSettings";
 import {SelectComponent} from "../components/selectComponent";
 import {IOption} from "../types/settings";
 import {Toaster} from "../utils/toaster";
-import {GoalsHandler} from "./goalsHandler";
 import {MiniProfileHandler} from "./miniProfileHandler";
 import {ConfigHandler} from "./ConfigHandler";
 import {Time} from "../utils/time";
@@ -24,7 +23,6 @@ const subCategories = {
 	imageHost: "image host",
 	layout: "layout",
 	globalCss: "global CSS",
-	goals: "goals",
 	toasts: "toasts",
 	miniProfile: "mini profile",
 	miniMedia: "mini media",
@@ -188,8 +186,6 @@ export class SettingsUi {
 				return StaticSettings.options.globalCssEnabled.getValue();
 			case subCategories.toasts:
 				return StaticSettings.options.toasterEnabled.getValue();
-			case subCategories.goals:
-				return StaticSettings.options.goalsEnabled.getValue();
 			case subCategories.miniProfile:
 				return StaticSettings.options.miniProfileEnabled.getValue();
 			case subCategories.miniMedia:
@@ -217,8 +213,6 @@ export class SettingsUi {
 				return GlobalCSS.renderEditor();
 			case subCategories.toasts:
 				return Toaster.renderSettings();
-			case subCategories.goals:
-				return GoalsHandler.renderSettings();
 			case subCategories.miniProfile:
 				return MiniProfileHandler.renderSettings();
 			case subCategories.miniMedia:
