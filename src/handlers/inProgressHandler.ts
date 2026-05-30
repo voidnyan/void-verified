@@ -5,7 +5,7 @@ import {InProgressEntry} from "../components/InProgressEntry";
 import {IMediaList} from "../api/types/IMediaList";
 import {Toaster} from "../utils/toaster";
 import {LocalStorageCacheKeys, LocalStorageKeys} from "../assets/localStorageKeys";
-import {CogIcon} from "../assets/icons";
+import {CogIcon, RefreshIcon} from "../assets/icons";
 import {IconButton} from "../components/components";
 import {CacheTimes} from "../assets/cacheTimes";
 import {
@@ -24,11 +24,11 @@ export class InProgressHandler {
 	private static categories: InProgressCategoriesConfig;
 	private static managerOpen = false;
 
-	static async replaceInProgressSection(){
+	static async replaceInProgressSection(forceRerender = false){
 		if (
 			!StaticSettings.options.replaceInProgressEnabled.getValue() ||
 			this.renderInProgress ||
-			this.hasRendered()
+			(this.hasRendered() && !forceRerender)
 		) {
 			return;
 		}
@@ -36,7 +36,7 @@ export class InProgressHandler {
 		this.renderInProgress = true;
 
 		try {
-			const [anime, manga] = await InProgressMediaListCache.get();
+			const [anime, manga] = await InProgressMediaListCache.get(forceRerender);
 			this.anime = anime;
 			this.manga = manga;
 			this.categories = InProgressCategoryStorage.load();
@@ -73,7 +73,9 @@ export class InProgressHandler {
 				...this.createMangaSections(this.manga, this.categories.Manga)
 			];
 			const toggleButton = this.createManagerToggleButton();
-			sections[0]?.querySelector(".section-header")?.append(DOM.create("span", null, toggleButton));
+			const refreshButton = this.createRefreshButton();
+			sections[0]?.querySelector(".section-header")
+				?.append(DOM.create("span", null, [refreshButton, toggleButton]));
 			content.append(...sections);
 		}
 
@@ -172,6 +174,14 @@ export class InProgressHandler {
 		return toggleButton;
 	}
 
+	private static createRefreshButton() {
+		const refreshButton = IconButton(RefreshIcon(), () => {
+			this.replaceInProgressSection(true);
+		});
+		refreshButton.setAttribute("title", "Refresh in progress entries.");
+		return refreshButton;
+	}
+
 	private static createInProgressSection(items: IMediaList[], title: string) {
 		let entries = [...items];
 		entries = entries.sort((a, b) => {
@@ -192,8 +202,8 @@ export class InProgressHandler {
 
 		for (const mediaList of entries) {
 			const item = new InProgressEntry(mediaList, {
-				onProgressSaved: (updatedMediaList, progress, completed) => {
-					InProgressMediaListCache.updateProgress(updatedMediaList.media.id, progress, completed);
+				onProgressSaved: (entry, progress, completed) => {
+					InProgressMediaListCache.updateProgress(entry.media.id, progress, completed);
 				}
 			});
 			container.append(item.element);
@@ -255,9 +265,9 @@ interface InProgressMediaListCacheItem {
 }
 
 class InProgressMediaListCache {
-	static async get(): Promise<[IMediaList[], IMediaList[]]> {
+	static async get(forceReQuery: boolean): Promise<[IMediaList[], IMediaList[]]> {
 		const cachedLists = this.getCachedLists();
-		if (cachedLists) {
+		if (cachedLists && !forceReQuery) {
 			return [cachedLists.anime, cachedLists.manga];
 		}
 

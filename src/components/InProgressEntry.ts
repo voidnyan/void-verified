@@ -27,7 +27,7 @@ export class InProgressEntry {
 	}
 
 	private addCover() {
-		const cover = DOM.createAnchor(`${this.mediaList.media.type}/${this.mediaList.media.id}`, "in-progress-cover");
+		const cover = DOM.createAnchor(`${this.mediaList.media.type.toLowerCase()}/${this.mediaList.media.id}`, "in-progress-cover");
 		cover.setAttribute("style", `background-image: url("${this.mediaList.media.coverImage.medium}");`);
 		this.element.append(cover);
 
