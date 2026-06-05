@@ -473,7 +473,7 @@ export class ActivitySearchMode {
 					return new TextActivityComponent(x as ITextActivity | IMessageActivity).element
 			}
 		});
-		if (this.activities.length < this.pageInfo.total) {
+		if (this.pageInfo && this.activities.length < this.pageInfo.total) {
 			activityElements.push(this.createLoadMoreButton());
 		}
 		if (clear) {

@@ -6,19 +6,13 @@ import {FuzzyMatch} from "../../utils/fuzzyMatch";
 import {StaticSettings} from "../../utils/staticSettings";
 import {Checkbox, InputField, KeyInput, Label, SettingLabel} from "../../components/components";
 import {IOption} from "../../types/settings";
-import {QuickAccess} from "../quickAccessHandler";
-import {NotificationFeedHandler} from "../notifications/notificationFeedHandler";
-import {NotificationWrapper} from "../../components/notificationWrapper";
-import {ReadNotifications} from "../../components/readNotifications";
-import {NotificationConfig} from "../notifications/notificationConfig";
-import {NotificationsCache} from "../notifications/notificationsCache";
 import {QuickStartConfig} from "./quickStartConfig";
-import {LocalStorageKeys} from "../../assets/localStorageKeys";
 import {ActivitySearchMode} from "./modes/activitySearchMode";
 import {Debouncer} from "../../utils/debouncer";
 import {SelectComponent} from "../../components/selectComponent";
 import {Typescript} from "../../utils/typescript";
 import {ALScrollock} from "../../utils/ALScrollock";
+import {DashboardMode} from "./modes/dashboardMode";
 
 export enum QuickStartMode {
 	Dashboard,
@@ -31,8 +25,6 @@ export class QuickStartHandler {
 	private static modeSelect: SelectComponent;
 	static headContainer: HTMLDivElement;
 	static resultsContainer: HTMLDivElement;
-	private static quickAccessUsers: HTMLDivElement;
-	private static notificationsContainer: HTMLDivElement;
 	private static configContainer: HTMLDivElement;
 
 	static config: QuickStartConfig;
@@ -149,25 +141,16 @@ export class QuickStartHandler {
 	private static handleModes() {
 		switch (this.mode) {
 			case QuickStartMode.Dashboard:
-				this.handleDefaultMode();
+				this.handleDashboardMode();
 				break;
 			case QuickStartMode.ActivitySearch:
 				this.handleActivitySearchMode();
 		}
 	}
 
-	private static handleDefaultMode() {
-		this.quickAccessUsers = DOM.create("div");
-		this.headContainer.append(this.quickAccessUsers);
-
-		this.notificationsContainer = DOM.create("div", "quick-start-notifications");
-		this.headContainer.append(this.notificationsContainer);
-		this.handleNotifications();
-		this.handleQuickAccessUsers();
-		if (this.config.displayAllResultsOnEmpty) {
-			this.handleAnilistLinks("");
-			this.handleVoidSettings("");
-		}
+	private static handleDashboardMode() {
+		const [quickAccessUsers, notifications] = DashboardMode.handleMode();
+		this.headContainer.append(quickAccessUsers, notifications);
 	}
 
 	private static handleActivitySearchMode() {
@@ -196,112 +179,11 @@ export class QuickStartHandler {
 				ActivitySearchMode.handleCommand(command);
 				return;
 			case QuickStartMode.Dashboard:
-				break;
+				DashboardMode.handleCommand(command);
+				return;
 		}
 
-		this.resultsContainer.replaceChildren();
-		this.handleQuickAccessUsers(command);
-		this.handleNotifications(command);
-		if (command.length === 0 && !this.config.displayAllResultsOnEmpty) {
-			return;
-		}
 
-		this.handleAnilistLinks(command);
-		this.handleVoidSettings(command);
-	}
-
-	private static handleAnilistLinks(command: string) {
-		if (!this.config.anilistLinksEnabled) {
-			return;
-		}
-		const paths = AnilistPaths.filter(x => FuzzyMatch.match(command, x.name));
-		if (paths.length > 0) {
-			const pathResults = paths.map(x => {
-				const link = DOM.create("a", "quick-start-result", x.name);
-				link.setAttribute("href", x.path);
-				link.addEventListener("click", () => {
-					this.closeQuickStart();
-				})
-				return link;
-			});
-			this.resultsContainer.append(DOM.create("div", "quick-start-results-list", [DOM.create("h3", "quick-start-results-title", "AniList Links"), ...pathResults]));
-		}
-	}
-
-	private static handleVoidSettings(command: string) {
-		if (!this.config.voidSettingsEnabled) {
-			return;
-		}
-		const voidSettings = Object.entries(StaticSettings.options).filter(([_, value]) => FuzzyMatch.match(command, value.description));
-		if (voidSettings.length > 0) {
-			const options = voidSettings.map(([key, option]: [key: string, option: IOption]) => {
-				if (typeof option.getValue() === "boolean") {
-					return DOM.create(
-						"div",
-						"quick-start-result",
-						SettingLabel(
-							option.description,
-							Checkbox(option.getValue(), (event) => {
-								option.setValue(event.target.checked);
-							})));
-				}
-				const input = InputField(option.getValue(), (event) => {
-					option.setValue(event.target.value);
-				}, "quick-access-option-input");
-				return DOM.create("div", "quick-start-result", SettingLabel(option.description, input));
-			});
-			this.resultsContainer.append(DOM.create("div", "quick-start-results-list", [DOM.create("h3", "quick-start-results-title", "VoidVerified Settings"), ...options]));
-		}
-	}
-
-	private static handleQuickAccessUsers(command?: string) {
-		if (!this.config.usersEnabled) {
-			this.quickAccessUsers.setAttribute("void-disabled", "true");
-			this.quickAccessUsers.replaceChildren();
-			return;
-		}
-		this.quickAccessUsers.removeAttribute("void-disabled");
-		this.quickAccessUsers.replaceChildren(QuickAccess.renderUsers(command));
-	}
-
-	private static handleNotifications(command?: string) {
-		if (!StaticSettings.options.replaceNotifications.getValue() || !this.config.notificationsEnabled) {
-			this.notificationsContainer.setAttribute("void-disabled", "true");
-			this.notificationsContainer.replaceChildren();
-			return;
-		}
-		this.notificationsContainer.removeAttribute("void-disabled");
-		if (!NotificationFeedHandler.notifications) {
-			return;
-		}
-		const notificationConfig = new NotificationConfig(
-			LocalStorageKeys.notificationsConfig,
-		);
-
-		let notifications = [...NotificationFeedHandler.notifications];
-
-		if (this.config.onlyIncludeUnreadNotifications) {
-			notifications = notifications.filter(x => !ReadNotifications.isRead(x.id));
-		}
-
-		notifications = NotificationFeedHandler.filterNotifications(notifications, command);
-
-		if (notifications.length > 0 && notificationConfig.groupNotifications) {
-			const activityIds = new Set(
-				notifications
-					.filter((x) => x.activityId)
-					.filter((x) => x.type !== "ACTIVITY_MESSAGE")
-					.map((x) => x.activityId),
-			);
-			const [relations] = NotificationsCache.getCachedRelations(Array.from(activityIds));
-			notifications = notifications.map((notification) => {
-				notification.activity = relations.find((relation) => notification.activityId === relation.id);
-				return notification;
-			});
-		}
-
-		this.notificationsContainer.replaceChildren(...notifications
-			.map(x => NotificationWrapper(x, true)));
 	}
 
 	static createConfigContainer() {
