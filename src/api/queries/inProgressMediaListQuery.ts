@@ -23,6 +23,7 @@ const mediaListCollection = `
         notes
         progress
         id
+        status
       }
       name
       status
