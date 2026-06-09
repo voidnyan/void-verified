@@ -87,7 +87,7 @@ export class InProgressEntry {
 		this.saveButton.setAttribute("disabled", "true");
 		try {
 			const completed = this.isCompleted();
-			await AnilistAPI.updateMediaProgress(this.mediaList.id, this.mediaList.media.id, completed ? "COMPLETED" : null, this.progress);
+			await AnilistAPI.updateMediaProgress(this.mediaList.id, this.mediaList.media.id, completed ? "COMPLETED" : this.mediaList.status, this.progress);
 			this.mediaList.progress = this.progress;
 			this.onProgressSaved?.(this.mediaList, this.progress, completed);
 			Toaster.success("Progress updated.");

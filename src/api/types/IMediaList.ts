@@ -2,7 +2,8 @@ export interface IMediaList {
 	media: IMedia,
 	notes: string,
 	progress: number,
-	id: number
+	id: number,
+	status: string
 }
 
 export interface IMedia {
