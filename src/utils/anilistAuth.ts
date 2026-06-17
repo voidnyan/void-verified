@@ -4,6 +4,7 @@ import {DOM} from "./DOM";
 import {StaticSettings} from "./staticSettings";
 import {VoidApi} from "../api/voidApi";
 import {Dialog} from "./dialog";
+import {Note} from "../components/components";
 
 export class AnilistAuth {
 	private static storageAuth = "void-verified-auth";
@@ -150,6 +151,10 @@ export class AnilistAuth {
 			!isAuthenticated ? authLink : removeAuthButton,
 		);
 
+		if (isAuthenticated) {
+			const expires = Note(`Auth expires ${this.expires}`);
+			this.settingsContainer.append(expires);
+		}
 
 		this.settingsContainer.append(VoidApi.createSettings());
 	}
