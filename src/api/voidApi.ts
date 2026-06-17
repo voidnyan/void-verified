@@ -6,6 +6,7 @@ import {ICreatePoll, IPoll, IVotePoll} from "./voidApi/types/pollInterfaces";
 import {IAddGifDto, IGif} from "./voidApi/types/gifInterfaces";
 import {IReadNotification} from "./voidApi/types/readNotificationInterfaces";
 import {Dialog} from "../utils/dialog";
+import {Note} from "../components/components";
 
 
 export class VoidApiError extends Error {
@@ -213,6 +214,11 @@ export class VoidApi {
 				button.element.replaceWith(this.createAuthButton());
 			})
 			container.append(button.element);
+			const parsedToken = this.parseJwtPayload(this.token);
+			const expires = new Date(parsedToken.exp * 1000);
+			const expiresNote = Note(`Auth expires ${expires}`);
+			container.append(expiresNote);
+
 		} else {
 			container.append(this.createAuthButton());
 		}
