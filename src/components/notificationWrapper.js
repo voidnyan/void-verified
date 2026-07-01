@@ -3,6 +3,7 @@ import { Link } from "./components";
 import { ReadNotifications } from "./readNotifications";
 import {Time} from "../utils/time";
 import {StaticTooltip} from "../utils/staticTooltip";
+import {MiniProfileHandler} from "../handlers/miniProfileHandler";
 
 export const NotificationWrapper = (notification, addReadListener = false) => {
 	const wrapper = DOM.create("div", "notification-wrapper");
@@ -149,6 +150,10 @@ const createContext = (notification, addReadListener) => {
 		"notification-context-actor",
 		notification.user.name,
 	);
+
+	if (MiniProfileHandler.config.hoverNotifications) {
+		MiniProfileHandler.addUserHoverListener(highlight);
+	}
 
 	const context = DOM.create("a", "notification-context", [
 		highlight,

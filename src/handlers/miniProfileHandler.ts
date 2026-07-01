@@ -28,11 +28,15 @@ export class MiniProfileHandler extends MiniPopupHandlerBase {
 		}
 
 		for (const element of elements) {
-			this.addAnchorEventListeners(element, () => {
-				this.#hoverUser(element);
-			});
-			element.setAttribute("void-mini", "true");
+			this.addUserHoverListener(element);
 		}
+	}
+
+	static addUserHoverListener(element: Element) {
+		this.addAnchorEventListeners(element, () => {
+			this.#hoverUser(element);
+		});
+		element.setAttribute("void-mini", "true");
 	}
 
 	static async #hoverUser(element: Element) {
@@ -200,6 +204,13 @@ export class MiniProfileHandler extends MiniPopupHandlerBase {
 
 		container.append(Label("Show when hovering @", hoverTagsCheckbox));
 
+		const hoverNotificationsCheckbox = Checkbox(config.hoverNotifications, (event) => {
+			config.hoverNotifications = event.target.checked;
+			config.save();
+		});
+
+		container.append(Label("Show when hovering notifications", hoverNotificationsCheckbox));
+
 		const bioCheckBox = Checkbox(config.displayBio, (event) => {
 			config.displayBio = event.target.checked;
 			config.save();
@@ -286,6 +297,7 @@ class MiniProfileCache {
 class MiniProfileConfig {
 	numberOfFavourites: number;
 	hoverTags: boolean;
+	hoverNotifications: boolean;
 	displayAnime: boolean;
 	displayManga: boolean;
 	displayCharacters: boolean;
@@ -298,6 +310,7 @@ class MiniProfileConfig {
 		const config = JSON.parse(localStorage.getItem(this.#localStorage));
 		this.numberOfFavourites = config?.numberOfFavourites ?? 6;
 		this.hoverTags = config?.hoverTags ?? true;
+		this.hoverNotifications = config?.hoverNotifications ?? false;
 		this.displayBio = config?.displayBio ?? true;
 		this.displayAnime = config?.displayAnime ?? true;
 		this.displayManga = config?.displayManga ?? true;
