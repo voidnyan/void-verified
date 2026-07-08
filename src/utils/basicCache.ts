@@ -1,5 +1,5 @@
 export class BasicCache<T> {
-	private localStorageKey: string;
+	private readonly localStorageKey: string;
 	private cacheTimeInMilliseconds: number;
 
 	constructor(localStorageKey: string, cacheTimeInMilliseconds: number) {
@@ -7,8 +7,8 @@ export class BasicCache<T> {
 		this.cacheTimeInMilliseconds = cacheTimeInMilliseconds;
 	}
 
-	getItem(predicate: (item: T) => boolean): T | null {
-		const cache = this.getCache();
+	async getItem(predicate: (item: T) => boolean): Promise<T | null> {
+		const cache = await this.getCache();
 		const entry = cache.find(c => predicate(c.item));
 
 		if (!entry) {
@@ -17,23 +17,22 @@ export class BasicCache<T> {
 
 		const expiresAt = new Date(entry.cachedAt);
 		expiresAt.setMilliseconds(expiresAt.getMilliseconds() + this.cacheTimeInMilliseconds);
-		console.log(expiresAt, entry.item);
 		if (expiresAt < new Date()) {
-			this.setCache(cache.filter(c => c !== entry));
+			await this.setCache(cache.filter(c => c !== entry));
 			return null;
 		}
 
 		return entry.item;
 	}
 
-	setItem(item: T): void {
-		const cache = this.getCache();
+	async setItem(item: T): Promise<void> {
+		const cache = await this.getCache();
 		cache.push(new CacheItem(item));
-		this.setCache(cache);
+		await this.setCache(cache);
 	}
 
-	private getCache(): CacheItem<T>[] {
-		const raw = localStorage.getItem(this.localStorageKey);
+	private async getCache(): Promise<CacheItem<T>[]> {
+		const raw = await GM.getValue(this.localStorageKey, null);
 		if (!raw) return [];
 
 		return JSON.parse(raw).map(
@@ -41,8 +40,8 @@ export class BasicCache<T> {
 		);
 	}
 
-	private setCache(cache: CacheItem<T>[]): void {
-		localStorage.setItem(this.localStorageKey, JSON.stringify(cache));
+	private async setCache(cache: CacheItem<T>[]): Promise<void> {
+		await GM.setValue(this.localStorageKey, JSON.stringify(cache));
 	}
 }
 
