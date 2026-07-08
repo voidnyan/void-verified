@@ -20,6 +20,7 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 		this.config = new MiniMediaConfig();
 		this.container = DOM.createDiv("mini-profile-container mini-profile-hidden mini-media-container");
 		this.initializeBase();
+		localStorage.removeItem(LocalStorageKeys.mediaOverviewCache);
 	}
 
 	static addMediaHoverListeners(){
@@ -76,7 +77,7 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 
 	private static async getMediaOverview(id: number, type: MediaType): Promise<IMediaOverview> {
 		let media: IMediaOverview = null;
-		const cachedItem = this.cache.getItem(x => x.id === id && x.type === type);
+		const cachedItem = await this.cache.getItem(x => x.id === id && x.type === type);
 		if (cachedItem) {
 			media = cachedItem;
 		} else {
@@ -87,7 +88,7 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 				return;
 			}
 			media = data;
-			this.cache.setItem(media);
+			await this.cache.setItem(media);
 		}
 		return media;
 	}
