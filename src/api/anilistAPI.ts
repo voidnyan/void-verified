@@ -21,6 +21,7 @@ import {LocalStorageCacheKeys} from "../assets/localStorageKeys";
 import {StaticSettings} from "../utils/staticSettings";
 import inProgressMediaListQuery from "./queries/inProgressMediaListQuery";
 import {IMediaList} from "./types/IMediaList";
+import {IViewer} from "./types/IViewer";
 
 export class AnilistAPI {
 	private static url = "https://graphql.anilist.co";
@@ -541,7 +542,7 @@ export class AnilistAPI {
 
 	}
 
-	static async getInProgressMediaLists(): Promise<[IMediaList[], IMediaList[]]> {
+	static async getInProgressMediaLists(): Promise<[IMediaList[], IMediaList[], IViewer]> {
 		const query = inProgressMediaListQuery;
 
 		const variables = {
@@ -559,6 +560,7 @@ export class AnilistAPI {
 		return [
 			this.getUniqueMediaListEntries(data.anime),
 			this.getUniqueMediaListEntries(data.manga),
+			data.viewer
 		];
 	}
 

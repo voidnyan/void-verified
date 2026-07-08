@@ -5,7 +5,7 @@ import {InProgressEntry} from "../components/InProgressEntry";
 import {IMediaList} from "../api/types/IMediaList";
 import {Toaster} from "../utils/toaster";
 import {LocalStorageCacheKeys, LocalStorageKeys} from "../assets/localStorageKeys";
-import {CogIcon, RefreshIcon} from "../assets/icons";
+import {CogIcon, ListBulletIcon, RefreshIcon} from "../assets/icons";
 import {IconButton} from "../components/components";
 import {CacheTimes} from "../assets/cacheTimes";
 import {
@@ -15,14 +15,17 @@ import {
 	InProgressCategoryManager,
 	InProgressMediaType
 } from "../components/InProgressCategoryManager";
+import {ListSettingsManager} from "../components/listSettingsManager";
+import {IViewer} from "../api/types/IViewer";
 
 export class InProgressHandler {
 	private static renderInProgress = false;
 	private static anime: IMediaList[] = [];
 	private static manga: IMediaList[] = [];
+	private static viewer: IViewer;
 	private static quickAccessContainer: HTMLDivElement;
 	private static categories: InProgressCategoriesConfig;
-	private static managerOpen = false;
+	private static activeTab = 0;
 
 	static async replaceInProgressSection(forceRerender = false){
 		if (
@@ -36,9 +39,10 @@ export class InProgressHandler {
 		this.renderInProgress = true;
 
 		try {
-			const [anime, manga] = await InProgressMediaListCache.get(forceRerender);
+			const [anime, manga, viewer] = await InProgressMediaListCache.get(forceRerender);
 			this.anime = anime;
 			this.manga = manga;
+			this.viewer = viewer;
 			this.categories = InProgressCategoryStorage.load();
 			this.removeMissingEntriesFromCategories();
 			this.quickAccessContainer = DOM.getOrCreate(
@@ -65,17 +69,20 @@ export class InProgressHandler {
 			}
 		});
 		const content = DOM.createDiv("in-progress-content");
-		if (this.managerOpen) {
+		if (this.activeTab === 1) {
 			content.append(this.createManagerSection(categoryManager.element));
+		} else if (this.activeTab === 2) {
+			content.append(this.createListSettingsSection());
 		} else {
 			const sections = [
 				...this.createAnimeSections(),
 				...this.createMangaSections(this.manga, this.categories.Manga)
 			];
-			const toggleButton = this.createManagerToggleButton();
+			const managerToggleButton = this.createManagerToggleButton();
 			const refreshButton = this.createRefreshButton();
+			const activitySettingsButton = this.createListSettingsButton();
 			sections[0]?.querySelector(".section-header")
-				?.append(DOM.create("span", null, [refreshButton, toggleButton]));
+				?.append(DOM.create("span", null, [refreshButton, activitySettingsButton, managerToggleButton]));
 			content.append(...sections);
 		}
 
@@ -167,11 +174,33 @@ export class InProgressHandler {
 
 	private static createManagerToggleButton() {
 		const toggleButton = IconButton(CogIcon(), () => {
-			this.managerOpen = !this.managerOpen;
+			this.activeTab = this.activeTab !== 1 ? 1 : 0;
 			this.render();
 		});
 		toggleButton.setAttribute("title", "Manage in progress categories");
 		return toggleButton;
+	}
+
+	private static createListSettingsSection() {
+		const wrapper = DOM.createDiv("in-progress-wrapper");
+		const sectionHeader = DOM.createDiv(".section-header", [
+			DOM.create("h2", null, "List Settings"),
+			DOM.create("span", null, this.createListSettingsButton())
+		]);
+
+		const listSettingsManager = new ListSettingsManager(this.viewer);
+
+		wrapper.append(sectionHeader, listSettingsManager.element);
+		return wrapper;
+	}
+
+	private static createListSettingsButton() {
+		const button = IconButton(ListBulletIcon(), () => {
+			this.activeTab = this.activeTab !== 2 ? 2 : 0;
+			this.render();
+		})
+		button.setAttribute("Title", "List activity settings");
+		return button;
 	}
 
 	private static createRefreshButton() {
@@ -261,19 +290,20 @@ export class InProgressHandler {
 interface InProgressMediaListCacheItem {
 	anime: IMediaList[];
 	manga: IMediaList[];
+	viewer: IViewer;
 	cachedAt: string;
 }
 
 class InProgressMediaListCache {
-	static async get(forceReQuery: boolean): Promise<[IMediaList[], IMediaList[]]> {
+	static async get(forceReQuery: boolean): Promise<[IMediaList[], IMediaList[], IViewer]> {
 		const cachedLists = this.getCachedLists();
 		if (cachedLists && !forceReQuery) {
-			return [cachedLists.anime, cachedLists.manga];
+			return [cachedLists.anime, cachedLists.manga, cachedLists.viewer];
 		}
 
-		const [anime, manga] = await AnilistAPI.getInProgressMediaLists();
-		this.save(anime, manga);
-		return [anime, manga];
+		const [anime, manga, viewer] = await AnilistAPI.getInProgressMediaLists();
+		this.save(anime, manga, viewer);
+		return [anime, manga, viewer];
 	}
 
 	private static getCachedLists() {
@@ -284,7 +314,7 @@ class InProgressMediaListCache {
 
 		try {
 			const cache = JSON.parse(raw) as InProgressMediaListCacheItem;
-			if (!Array.isArray(cache?.anime) || !Array.isArray(cache?.manga) || !cache.cachedAt) {
+			if (!Array.isArray(cache?.anime) || !Array.isArray(cache?.manga) || !cache.viewer || !cache.cachedAt) {
 				localStorage.removeItem(LocalStorageCacheKeys.inProgressMediaLists);
 				return null;
 			}
@@ -303,10 +333,11 @@ class InProgressMediaListCache {
 		}
 	}
 
-	private static save(anime: IMediaList[], manga: IMediaList[]) {
+	private static save(anime: IMediaList[], manga: IMediaList[], viewer: IViewer) {
 		localStorage.setItem(LocalStorageCacheKeys.inProgressMediaLists, JSON.stringify({
 			anime,
 			manga,
+			viewer,
 			cachedAt: new Date()
 		}));
 	}
