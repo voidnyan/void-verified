@@ -17,6 +17,9 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("2.2", [
+		new Feature("Display media overview when hovering VoidVerified In Progress entries. Enable this in the Mini Media subcategory in VoidVerified settings.")
+	]),
 	new Version("2.1", [
 		new Feature("Change list activity settings from the in-progress section settings in home feed.")
 	]),
