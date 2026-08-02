@@ -12,6 +12,10 @@ export class ButtonComponent {
 	}
 
 	setIsDisabled(disabled: boolean) {
-		this.element.setAttribute("disabled", `${disabled}`);
+		if (disabled) {
+			this.element.setAttribute("disabled", "true");
+		} else {
+			this.element.removeAttribute("disabled");
+		}
 	}
 }

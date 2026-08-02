@@ -113,7 +113,8 @@ export class InProgressCategoryManager {
 			{value: 2880, label: "2 Days"},
 			{value: 4320, label: "3 Days"},
 			{value: 10080, label: "1 Week"},
-			{value: 20160, label: "2 Weeks"}
+			{value: 20160, label: "2 Weeks"},
+			{value: 29160, label: "Always"}
 		];
 
 		const dropdown = DOM.create<HTMLSelectElement>("select");
