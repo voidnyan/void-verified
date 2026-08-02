@@ -40,15 +40,29 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 			elements = [...elements, ...document.querySelectorAll('.relations .media-preview-card a.title:not([void-mini="true"])')];
 		}
 
-		for (const element of elements){
-			this.addAnchorEventListeners(element, () => {
-				this.hoverMedia(element);
-			});
-			element.setAttribute("void-mini", "true");
+		/*if (this.config.hoverFavourites) {
+			elements = [...elements, ...document.querySelectorAll('.favourites a.favourite')];
+		}*/
+
+		for (const element of elements) {
+			this.addMediaHoverListener(element);
 		}
 	}
 
-	private static async hoverMedia(element: Element){
+	/**
+	 * Adds an event listener that triggers querying and displaying a media overview popup.
+	 * @param anchor - Anchor element with AniList media link as href
+	 * @param positionElement - Optionally position the overlay relative to another element. Null value positions
+	 * the overlay relative to the anchor element.
+	 */
+	static addMediaHoverListener(anchor: HTMLAnchorElement, positionElement: HTMLElement = null) {
+		this.addAnchorEventListeners(anchor, async () => {
+			await this.hoverMedia(anchor, positionElement);
+		});
+		anchor.setAttribute("void-mini", "true");
+	}
+
+	private static async hoverMedia(element: Element, positionElement: Element = null){
 		this.container.replaceChildren(Loader());
 		if (this.queryInProgress) {
 			return;
@@ -72,7 +86,7 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 			this.queryInProgress = false;
 		}
 		this.container.replaceChildren(new MediaOverviewComponent(media, this.config).element);
-		this.positionAndShowContainer(element);
+		this.positionAndShowContainer(positionElement ?? element);
 	}
 
 	private static async getMediaOverview(id: number, type: MediaType): Promise<IMediaOverview> {
@@ -120,6 +134,14 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 			this.config.hoverActivityTitles = event.target.checked;
 			this.config.save();
 		});
+		/*const hoverFavourites = Checkbox(this.config.hoverFavourites, (event) => {
+			this.config.hoverFavourites = event.target.checked;
+			this.config.save();
+		});*/
+		const hoverInProgress = Checkbox(this.config.hoverInProgress, (event) => {
+			this.config.hoverInProgress = event.target.checked;
+			this.config.save();
+		});
 		const displayRelations = Checkbox(this.config.hideRelations, (event) => {
 			this.config.hideRelations = event.target.checked;
 			this.config.save();
@@ -148,6 +170,8 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 		container.append(Label("Show when hovering media titles in activities", hoverActivityTitles));
 		container.append(Label("Show when hovering embeds", hoverEmbeds));
 		container.append(Label("Show when hovering relations in media page", hoverRelations));
+		//container.append(Label("Show when hovering profile favourites", hoverFavourites));
+		container.append(Label("Show when hovering media in VV in progress section", hoverInProgress));
 		container.append(Label("Hide Relations", displayRelations));
 		container.append(Label("Hide Characters", displayCharacters));
 		container.append(Label("Hide Staff", displayStaff));
@@ -161,6 +185,8 @@ export class MiniMediaConfig {
 	hoverEmbeds: boolean;
 	hoverRelations: boolean;
 	hoverActivityTitles: boolean;
+	hoverInProgress: boolean;
+	hoverFavourites: boolean;
 
 	hideRelations: boolean;
 	hideCharacters: boolean;
@@ -177,6 +203,9 @@ export class MiniMediaConfig {
 		this.hoverEmbeds = config?.hoverEmbeds ?? false;
 		this.hoverRelations = config?.hoverRelations ?? false;
 		this.hoverActivityTitles = config?.hoverActivityTitles ?? true;
+		this.hoverFavourites = config?.hoverFavourites ?? false;
+		this.hoverInProgress = config?.hoverInProgress ?? false;
+
 		this.hideRelations = config?.hideRelations ?? false;
 		this.hideCharacters = config?.hideCharacters ?? false;
 		this.hideStaff = config?.hideStaff ?? false;

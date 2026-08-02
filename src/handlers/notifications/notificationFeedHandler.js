@@ -46,7 +46,7 @@ export class NotificationFeedHandler {
 				() => {
 					this.#handleUnreadNotificationsCount(this);
 				},
-				10 * 1000,
+				180 * 1000,
 			);
 		}
 	}

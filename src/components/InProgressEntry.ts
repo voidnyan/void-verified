@@ -5,6 +5,7 @@ import {CheckIcon} from "../assets/icons";
 import {Time} from "../utils/time";
 import {Toaster} from "../utils/toaster";
 import {StaticTooltip} from "../utils/staticTooltip";
+import {MiniMediaHandler} from "../handlers/miniMediaHandler";
 
 interface InProgressEntryOptions {
 	onProgressSaved?: (mediaList: IMediaList, progress: number, completed: boolean) => void;
@@ -46,6 +47,10 @@ export class InProgressEntry {
 			]));
 		}
 
+		if (MiniMediaHandler.config.hoverInProgress) {
+			MiniMediaHandler.addMediaHoverListener(cover, this.element);
+			return;
+		}
 		StaticTooltip.register(cover, this.mediaList.media.title.userPreferred);
 	}
 
