@@ -17,6 +17,9 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("2.1", [
+		new Feature("Change list activity settings from the in-progress section settings in home feed.")
+	]),
 	new Version("2.0", [
 		new Feature("Replace In Progress sections in home feed.", "replaceInProgressEnabled"),
 		new Feature("Temporarily pause AniList requests after repeated errors.", "aniListApiExponentialBackoff"),

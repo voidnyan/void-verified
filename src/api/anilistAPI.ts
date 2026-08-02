@@ -21,6 +21,7 @@ import {LocalStorageCacheKeys} from "../assets/localStorageKeys";
 import {StaticSettings} from "../utils/staticSettings";
 import inProgressMediaListQuery from "./queries/inProgressMediaListQuery";
 import {IMediaList} from "./types/IMediaList";
+import {IViewer} from "./types/IViewer";
 
 export class AnilistAPI {
 	private static url = "https://graphql.anilist.co";
@@ -534,14 +535,35 @@ export class AnilistAPI {
 		const query = mediaOverviewQuery;
 
 		const variables = {mediaId: id, type, sort: "ROLE", language: "JAPANESE"};
-		console.log(variables);
 		const options = this.getQueryOptions(query, variables);
 		const data = await this.fetch(options);
 		return data.Media;
-
 	}
 
-	static async getInProgressMediaLists(): Promise<[IMediaList[], IMediaList[]]> {
+	static async updateMediaListActivitySettings(viewer: IViewer): Promise<void> {
+		const query = `mutation UpdateUser(
+			  $activityMergeTime: Int
+			  $disabledListActivity: [ListActivityOptionInput]
+			) {
+			  UpdateUser(
+				activityMergeTime: $activityMergeTime
+				disabledListActivity: $disabledListActivity
+			  ) {
+				options {
+				  activityMergeTime
+				  disabledListActivity {
+					type
+					disabled
+				  }
+				}
+			  }
+			}`;
+
+		const variables = {activityMergeTime: viewer.options.activityMergeTime, disabledListActivity: viewer.options.disabledListActivity};
+		const options = this.getMutationOptions(query, variables);
+		await this.fetch(options);
+	}
+	static async getInProgressMediaLists(): Promise<[IMediaList[], IMediaList[], IViewer]> {
 		const query = inProgressMediaListQuery;
 
 		const variables = {
@@ -559,6 +581,7 @@ export class AnilistAPI {
 		return [
 			this.getUniqueMediaListEntries(data.anime),
 			this.getUniqueMediaListEntries(data.manga),
+			data.viewer
 		];
 	}
 

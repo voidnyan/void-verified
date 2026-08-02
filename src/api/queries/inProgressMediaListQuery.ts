@@ -30,6 +30,16 @@ const mediaListCollection = `
     }
 `;
 
+const listOptionsQuery = `Viewer {
+    options {
+      activityMergeTime
+      disabledListActivity {
+        disabled
+        type
+      }
+    }
+  }`;
+
 export default `
 query InProgressMediaLists($userId: Int, $forceSingleCompletedList: Boolean, $statusIn: [MediaListStatus], $notYetAired: Boolean, $page: Int, $perPage: Int) {
   anime: MediaListCollection(userId: $userId, forceSingleCompletedList: $forceSingleCompletedList, type: ANIME, status_in: $statusIn) {
@@ -38,5 +48,6 @@ query InProgressMediaLists($userId: Int, $forceSingleCompletedList: Boolean, $st
   manga: MediaListCollection(userId: $userId, forceSingleCompletedList: $forceSingleCompletedList, type: MANGA, status_in: $statusIn) {
     ${mediaListCollection}
   }
+  viewer: ${listOptionsQuery}
 }
 `;

@@ -15,11 +15,13 @@ import {
 	InProgressCategoryManager,
 	InProgressMediaType
 } from "../components/InProgressCategoryManager";
+import {IViewer} from "../api/types/IViewer";
 
 export class InProgressHandler {
 	private static renderInProgress = false;
 	private static anime: IMediaList[] = [];
 	private static manga: IMediaList[] = [];
+	private static viewer: IViewer;
 	private static quickAccessContainer: HTMLDivElement;
 	private static categories: InProgressCategoriesConfig;
 	private static managerOpen = false;
@@ -36,9 +38,10 @@ export class InProgressHandler {
 		this.renderInProgress = true;
 
 		try {
-			const [anime, manga] = await InProgressMediaListCache.get(forceRerender);
+			const [anime, manga, viewer] = await InProgressMediaListCache.get(forceRerender);
 			this.anime = anime;
 			this.manga = manga;
+			this.viewer = viewer;
 			this.categories = InProgressCategoryStorage.load();
 			this.removeMissingEntriesFromCategories();
 			this.quickAccessContainer = DOM.getOrCreate(
@@ -59,6 +62,7 @@ export class InProgressHandler {
 			anime: this.anime,
 			manga: this.manga,
 			categories: this.categories,
+			viewer: this.viewer,
 			onChange: categories => {
 				this.categories = categories;
 				this.persistAndRender();
@@ -261,19 +265,20 @@ export class InProgressHandler {
 interface InProgressMediaListCacheItem {
 	anime: IMediaList[];
 	manga: IMediaList[];
+	viewer: IViewer;
 	cachedAt: string;
 }
 
-class InProgressMediaListCache {
-	static async get(forceReQuery: boolean): Promise<[IMediaList[], IMediaList[]]> {
+export class InProgressMediaListCache {
+	static async get(forceReQuery: boolean): Promise<[IMediaList[], IMediaList[], IViewer]> {
 		const cachedLists = this.getCachedLists();
 		if (cachedLists && !forceReQuery) {
-			return [cachedLists.anime, cachedLists.manga];
+			return [cachedLists.anime, cachedLists.manga, cachedLists.viewer];
 		}
 
-		const [anime, manga] = await AnilistAPI.getInProgressMediaLists();
-		this.save(anime, manga);
-		return [anime, manga];
+		const [anime, manga, viewer] = await AnilistAPI.getInProgressMediaLists();
+		this.save(anime, manga, viewer);
+		return [anime, manga, viewer];
 	}
 
 	private static getCachedLists() {
@@ -284,7 +289,7 @@ class InProgressMediaListCache {
 
 		try {
 			const cache = JSON.parse(raw) as InProgressMediaListCacheItem;
-			if (!Array.isArray(cache?.anime) || !Array.isArray(cache?.manga) || !cache.cachedAt) {
+			if (!Array.isArray(cache?.anime) || !Array.isArray(cache?.manga) || !cache.viewer || !cache.cachedAt) {
 				localStorage.removeItem(LocalStorageCacheKeys.inProgressMediaLists);
 				return null;
 			}
@@ -303,10 +308,11 @@ class InProgressMediaListCache {
 		}
 	}
 
-	private static save(anime: IMediaList[], manga: IMediaList[]) {
+	private static save(anime: IMediaList[], manga: IMediaList[], viewer: IViewer) {
 		localStorage.setItem(LocalStorageCacheKeys.inProgressMediaLists, JSON.stringify({
 			anime,
 			manga,
+			viewer,
 			cachedAt: new Date()
 		}));
 	}
@@ -319,6 +325,15 @@ class InProgressMediaListCache {
 
 		cache.anime = this.updateListProgress(cache.anime, mediaId, progress, completed);
 		cache.manga = this.updateListProgress(cache.manga, mediaId, progress, completed);
+		localStorage.setItem(LocalStorageCacheKeys.inProgressMediaLists, JSON.stringify(cache));
+	}
+
+	static updateViewer(viewer: IViewer) {
+		const cache = this.getCachedLists();
+		if (!cache) {
+			return;
+		}
+		cache.viewer = viewer;
 		localStorage.setItem(LocalStorageCacheKeys.inProgressMediaLists, JSON.stringify(cache));
 	}
 

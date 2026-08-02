@@ -53,11 +53,16 @@
 }
 
 .void-in-progress-category-settings {
-    display: grid;
-    gap: 8px;
     padding: 8px;
     background: rgb(var(--color-foreground-grey));
     border-radius: 4px;
+}
+
+.void-in-progress-activity-merge-time {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
 }
 
 .void-in-progress-category-actions {
