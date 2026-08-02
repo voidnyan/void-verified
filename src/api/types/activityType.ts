@@ -1,0 +1,8 @@
+export enum ActivityType {
+	"CURRENT" = "CURRENT",
+	"PLANNING" = "PLANNING",
+	"COMPLETED" = "COMPLETED",
+	"DROPPED" = "DROPPED",
+	"PAUSED" = "PAUSED",
+	"REPEATING" = "REPEATING"
+}

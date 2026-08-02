@@ -2,6 +2,12 @@ import {IMediaList} from "../api/types/IMediaList";
 import {Checkbox, SettingLabel} from "./components";
 import {DOM} from "../utils/DOM";
 import {Toaster} from "../utils/toaster";
+import {IViewer} from "../api/types/IViewer";
+import {CheckboxComponent} from "./checkboxComponent";
+import {ActivityType} from "../api/types/activityType";
+import {ButtonComponent} from "./ButtonComponent";
+import {AnilistAPI} from "../api/anilistAPI";
+import {InProgressMediaListCache} from "../handlers/inProgressHandler";
 
 export type InProgressMediaType = "Anime" | "Manga";
 
@@ -26,6 +32,7 @@ interface CategoryEditorState {
 interface InProgressCategoryManagerOptions {
 	anime: IMediaList[];
 	manga: IMediaList[];
+	viewer: IViewer;
 	categories: InProgressCategoriesConfig;
 	onChange: (categories: InProgressCategoriesConfig) => void;
 }
@@ -37,10 +44,11 @@ interface NavigatorWithUserAgentData extends Navigator {
 }
 
 export class InProgressCategoryManager {
-	private anime: IMediaList[];
-	private manga: IMediaList[];
-	private categories: InProgressCategoriesConfig;
-	private onChange: (categories: InProgressCategoriesConfig) => void;
+	private readonly anime: IMediaList[];
+	private readonly manga: IMediaList[];
+	private readonly categories: InProgressCategoriesConfig;
+	private readonly onChange: (categories: InProgressCategoriesConfig) => void;
+	private readonly viewer: IViewer;
 	private categoryEditorState: CategoryEditorState = {
 		type: "Anime",
 		editingId: null
@@ -51,6 +59,7 @@ export class InProgressCategoryManager {
 		this.anime = options.anime;
 		this.manga = options.manga;
 		this.categories = options.categories;
+		this.viewer = {...options.viewer};
 		this.onChange = options.onChange;
 		this.element = DOM.createDiv("in-progress-category-manager");
 		this.render();
@@ -63,8 +72,9 @@ export class InProgressCategoryManager {
 			this.createCategoryList("Anime"),
 			this.createCategoryList("Manga")
 		]);
+		const listActivitySettings = this.createActivityListSettings();
 
-		this.element.replaceChildren(editor, airingSettings, lists);
+		this.element.replaceChildren(editor, airingSettings, lists, listActivitySettings);
 	}
 
 	private createAiringSettings() {
@@ -86,6 +96,87 @@ export class InProgressCategoryManager {
 
 		container.append(autoAiringCategory, includeCustomCategoryEntriesInAiring);
 		return container;
+	}
+
+	private createActivityListSettings() {
+		const container = DOM.createDiv("in-progress-category-settings");
+
+		const activityMergeTimeOptions = [
+			{value: 0, label: "Never"},
+			{value: 30, label: "30 Minutes"},
+			{value: 60, label: "1 Hour"},
+			{value: 120, label: "2 Hours"},
+			{value: 180, label: "3 Hours"},
+			{value: 360, label: "6 Hours"},
+			{value: 720, label: "12 Hours"},
+			{value: 1440, label: "1 Day"},
+			{value: 2880, label: "2 Days"},
+			{value: 4320, label: "3 Days"},
+			{value: 10080, label: "1 Week"},
+			{value: 20160, label: "2 Weeks"}
+		];
+
+		const dropdown = DOM.create<HTMLSelectElement>("select");
+
+		for (const o of activityMergeTimeOptions) {
+			const option = DOM.create<HTMLOptionElement>("option",
+				null, o.label, {value: o.value});
+			if (o.value === this.viewer.options.activityMergeTime) {
+				option.setAttribute("selected", "");
+			}
+			dropdown.append(option);
+		}
+
+		dropdown.addEventListener("change", (event) => {
+			// @ts-ignore
+			this.viewer.options.activityMergeTime = +event.target.value;
+		})
+
+		const label = DOM.createDiv("in-progress-activity-merge-time", ["Activity Merge Time", dropdown]);
+		container.append(label);
+
+		for (const activityType of this.viewer.options.disabledListActivity) {
+			const checkbox = new CheckboxComponent(!activityType.disabled, (checked) => {
+				activityType.disabled = !checked;
+			})
+			const label = SettingLabel(this.mapActivityTypeToListOption(activityType.type), checkbox.element);
+			container.append(label);
+		}
+
+		const saveButton = new ButtonComponent("Save", async () => {
+			try {
+				Toaster.debug("Saving activity settings.")
+				saveButton.setIsDisabled(true);
+				await AnilistAPI.updateMediaListActivitySettings(this.viewer);
+				InProgressMediaListCache.updateViewer(this.viewer);
+				Toaster.success("Activity settings saved.")
+			} catch (error) {
+				Toaster.error(error);
+			} finally {
+				saveButton.setIsDisabled(false);
+			}
+		});
+
+		container.append(saveButton.element);
+		return container;
+	}
+
+	private mapActivityTypeToListOption(activityType: ActivityType): string {
+		switch (activityType) {
+			case ActivityType.CURRENT:
+				return "Watching/Reading activity";
+			case ActivityType.PLANNING:
+				return "Planning to watch/read activity";
+			case ActivityType.COMPLETED:
+				return "Completed activity";
+			case ActivityType.DROPPED:
+				return "Dropped activity";
+			case ActivityType.PAUSED:
+				return "Paused activity";
+			case ActivityType.REPEATING:
+				return "Repeating activity";
+
+		}
 	}
 
 	private createCategoryEditor() {

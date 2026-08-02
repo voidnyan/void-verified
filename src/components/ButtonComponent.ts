@@ -10,4 +10,8 @@ export class ButtonComponent {
 	setText(text: string) {
 		this.element.replaceChildren(text);
 	}
+
+	setIsDisabled(disabled: boolean) {
+		this.element.setAttribute("disabled", `${disabled}`);
+	}
 }
