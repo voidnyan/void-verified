@@ -23,8 +23,21 @@ export class MediaListHandler {
 	private static queryInProgress = false;
 	private static cache: BasicCache<ISocialTab> = new BasicCache<ISocialTab>(LocalStorageCacheKeys.socialTab, CacheTimes.socialTabCache);
 
-	static async handleSocialTab() {
-		if (!StaticSettings.options.socialTabEnhancementEnabled.getValue() || this.queryInProgress) {
+	static handleMediaListNotes() {
+		const notes = document.querySelectorAll<HTMLSpanElement>(".entry.row .notes");
+
+		for (const note of notes) {
+			const noteText = note.getAttribute("label");
+			const title = note.parentNode.querySelector("a").innerText.trim();
+			note.addEventListener("click", (e) => {
+				Dialog.markdown(Markdown.parse(noteText), title);
+			});
+			note.setAttribute("void-media-list-note", "true");
+		}
+	}
+
+	static async handleSocialTab(forceRequery = false) {
+		if ((!StaticSettings.options.socialTabEnhancementEnabled.getValue() || this.queryInProgress && !forceRequery) ) {
 			return;
 		}
 
@@ -40,11 +53,11 @@ export class MediaListHandler {
 		}
 
 		const following = document.querySelector(".following[void-social-tab='true']");
-		if (following) {
+		if (following && !forceRequery) {
 			return;
 		}
 
-		const socialTab = await this.getSocialTabMediaLists(id);
+		const socialTab = await this.getSocialTabMediaLists(id, forceRequery);
 		this.renderSocialTabEnhancements(socialTab);
 	}
 
@@ -55,7 +68,18 @@ export class MediaListHandler {
 			})
 		}
 
-		document.querySelector(".following").setAttribute("void-social-tab", "true");
+		Common.waitToRender(".following", () => {
+			const following = document.querySelector(".following");
+			following.setAttribute("void-social-tab", "true");
+
+			const refreshButton = IconButton(RefreshIcon(), async () => {
+				await this.handleSocialTab(true);
+			});
+
+			const header = following.parentNode.querySelector("h2");
+			if (header && !header.querySelector(".void-icon-button"))
+				header.append(refreshButton);
+		});
 	}
 
 	private static renderSocialTabEnhancement(mediaList: IMediaList) {
@@ -67,18 +91,33 @@ export class MediaListHandler {
 		if (mediaList.media.chapters || mediaList.media.episodes)
 			progress += `/${mediaList.media.episodes ?? mediaList.media.chapters}`;
 
-		const progressContainer = DOM.createDiv("social-tab-data", progress);
-		entryElement.querySelector(".status").after(progressContainer);
+		let progressContainer = entryElement.querySelector(".void-social-tab-progress");
+		if (progressContainer) {
+			progressContainer.replaceChildren(progress);
+		} else {
+			progressContainer = DOM.createDiv("social-tab-data social-tab-progress", progress);
+			entryElement.querySelector(".status").after(progressContainer);
+		}
 
-		const repeatContainer = DOM.createDiv("social-tab-data");
+		let repeatContainer = entryElement.querySelector(".void-social-tab-repeat");
+		if (!repeatContainer) {
+			repeatContainer = DOM.createDiv("social-tab-data social-tab-repeat");
+			progressContainer.after(repeatContainer);
+		}
+		repeatContainer.replaceChildren();
 		if (mediaList.repeat > 0) {
 			const repeatIcon = RepeatIcon();
 			StaticTooltip.register(repeatIcon, mediaList.repeat);
 			repeatContainer.append(repeatIcon);
 		}
-		progressContainer.after(repeatContainer);
 
-		const noteContainer = DOM.createDiv("social-tab-data");
+		let noteContainer = entryElement.querySelector(".void-social-tab-notes");
+		if (!noteContainer) {
+			noteContainer = DOM.createDiv("social-tab-data social-tab-notes cursor-pointer");
+			repeatContainer.after(noteContainer);
+		}
+		noteContainer.replaceChildren();
+
 		if (mediaList.notes) {
 			const noteIcon = NoteIcon();
 			noteIcon.addEventListener("click", (e: Event) => {
@@ -88,13 +127,16 @@ export class MediaListHandler {
 			});
 			noteContainer.append(noteIcon);
 		}
-		repeatContainer.after(noteContainer);
 	}
 
-	private static async getSocialTabMediaLists(id: number) : Promise<ISocialTab> {
-		const cachedMediaList = await this.cache.getItem(x => x.mediaId === id);
-		if (cachedMediaList)
-			return cachedMediaList;
+	private static async getSocialTabMediaLists(id: number, forceRequery: boolean) : Promise<ISocialTab> {
+		if (!forceRequery) {
+			const cachedMediaList = await this.cache.getItem(x => x.mediaId === id);
+			if (cachedMediaList)
+				return cachedMediaList;
+		} else {
+			await this.cache.removeItem(x => x.mediaId === id);
+		}
 
 		const socialTab: ISocialTab = {
 			mediaId: id,
@@ -104,7 +146,7 @@ export class MediaListHandler {
 		try {
 			this.queryInProgress = true;
 			Toaster.debug("Querying social tab");
-			const [data, pageInfo] = await AnilistAPI.getSocialTabFollowingList(id);
+			const [data, _] = await AnilistAPI.getSocialTabFollowingList(id);
 			socialTab.mediaLists.push(...data);
 		} catch (e) {
 			Toaster.error("Failed to query social tab", e);
@@ -112,6 +154,7 @@ export class MediaListHandler {
 		} finally {
 			this.queryInProgress = false;
 		}
+		await this.cache.setItem(socialTab);
 		return socialTab;
 	}
 }

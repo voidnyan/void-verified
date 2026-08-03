@@ -18,6 +18,8 @@ class Feature {
 
 export const changeLog = [
 	new Version("2.2", [
+		new Feature("Add progress, repeat and notes to media's social tab.", "socialTabEnhancementEnabled"),
+		new Feature("Replace media list note tooltip with a dialog.", "replaceNotes"),
 		new Feature("Display media overview when hovering VoidVerified In Progress entries. Enable this in the Mini Media subcategory in VoidVerified settings."),
 		new Feature("Fixed some cases where Media Overview failed to render due to data field not existing.")
 	]),

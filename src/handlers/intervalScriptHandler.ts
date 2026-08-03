@@ -92,6 +92,7 @@ export class IntervalScriptHandler {
 		PollHandler.addPollForms();
 		PollHandler.replacePollImages();
 		MediaListHandler.handleSocialTab();
+		MediaListHandler.handleMediaListNotes();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();
