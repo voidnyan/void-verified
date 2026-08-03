@@ -25,6 +25,7 @@ import {SettingsUi} from "./settingsUi";
 import {PollHandler} from "./pollHandler/pollHandler";
 import {InProgressHandler} from "./inProgressHandler";
 import {MiniMediaHandler} from "./miniMediaHandler";
+import {MediaListHandler} from "./mediaListHandler";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -90,6 +91,7 @@ export class IntervalScriptHandler {
 		MarkdownTaskbarHandler.addTaskbars();
 		PollHandler.addPollForms();
 		PollHandler.replacePollImages();
+		MediaListHandler.handleSocialTab();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();

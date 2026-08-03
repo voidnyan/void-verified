@@ -52,6 +52,21 @@ export class Dialog {
 		this.open();
 	}
 
+	static markdown(content: string, title: string) {
+		if (!this.dialogWrapper) {
+			this.initialize();
+		}
+
+		const markdown = DOM.createDiv("dialog-markdown .markdown");
+		markdown.innerHTML = content;
+
+		this.confirmCallback = () => {};
+		this.header.replaceChildren(title);
+		this.content.replaceChildren(markdown);
+		this.cancelButton.classList.add("void-hidden");
+		this.open();
+	}
+
 	static confirm(confirmCallback: () => void, content: string = "Are you sure you want to do this?", title: string = "Warning") {
 		if (!this.dialogWrapper) {
 			this.initialize();

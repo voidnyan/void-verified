@@ -22,6 +22,7 @@ import {StaticSettings} from "../utils/staticSettings";
 import inProgressMediaListQuery from "./queries/inProgressMediaListQuery";
 import {IMediaList} from "./types/IMediaList";
 import {IViewer} from "./types/IViewer";
+import {socialTabFollowingQuery} from "./queries/socialTabFollowingQuery";
 
 export class AnilistAPI {
 	private static url = "https://graphql.anilist.co";
@@ -594,6 +595,19 @@ export class AnilistAPI {
 				seen.add(entry.media.id);
 				return true;
 			});
+	}
+
+	static async getSocialTabFollowingList(mediaId: number): Promise<[IMediaList[], IPageInfo]> {
+		const query = socialTabFollowingQuery;
+		const variables = {
+			page: 1,
+			perPage: 50,
+			isFollowing: true,
+			mediaId
+		};
+		const options = this.getMutationOptions(query, variables);
+		const data = await this.fetch(options);
+		return [data.Page.mediaList, data.Page.pageInfo];
 	}
 
 	static async query(query: string, params: object): Promise<any> {

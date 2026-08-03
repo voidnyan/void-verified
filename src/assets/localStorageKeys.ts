@@ -27,5 +27,6 @@ export const LocalStorageCacheKeys = {
 	notificationsCountLastFetchTime: "void-verified-notifications-last-fetch-time",
 	notificationsCountItems: "void-verified-notifications-count-items",
 	anilistApiExponentialBackoff: "void-verified-anilist-exponential-backoff",
-	inProgressMediaLists: "void-verified-in-progress-media-lists"
+	inProgressMediaLists: "void-verified-in-progress-media-lists",
+	socialTab: "void-verified-social-tab-cache"
 }

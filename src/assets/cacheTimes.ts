@@ -11,6 +11,7 @@ export class CacheTimes {
 	public static readonly miniProfileTimer: number = CacheTimes.week;
 	public static readonly miniMediaTimer: number = CacheTimes.month;
 	public static readonly inProgressMediaLists: number = CacheTimes.hour;
+	public static readonly socialTabCache: number = CacheTimes.week;
 
 
 }

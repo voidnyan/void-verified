@@ -20,6 +20,7 @@
     background: rgb(var(--color-foreground));
     max-width: 420px;
     width: 100%;
+    max-height: 80vh;
     border-radius: 4px;
     overflow: hidden;
 }
@@ -51,4 +52,13 @@
     justify-content: flex-end;
     gap: 10px;
     padding: 5px 15px;
+}
+
+.void-dialog:has(.void-dialog-markdown) {
+    max-width: 80%;
+    width: fit-content;
+}
+
+.void-dialog-markdown {
+    overflow-y: auto;
 }
