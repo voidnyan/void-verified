@@ -320,5 +320,11 @@ export const defaultSettings: IOptions = {
 		description: "Add progress, repeat and notes to media's social tab.",
 		category: categories.misc,
 		authRequired: true
+	},
+	replaceNotes: {
+		defaultValue: false,
+		description: "Replace media list note tooltip with a dialog.",
+		category: categories.misc,
+		authRequired: false
 	}
 };

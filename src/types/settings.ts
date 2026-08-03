@@ -97,4 +97,5 @@ export interface IOptions {
 	pollsEnabled: IOption;
 	replaceInProgressEnabled: IOption;
 	socialTabEnhancementEnabled: IOption;
+	replaceNotes: IOption;
 }

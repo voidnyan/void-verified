@@ -11,11 +11,16 @@ export class Common {
 		return window.location.pathname.match(/^\/user\/([^/]*)\/?/)[1];
 	}
 
-	static waitToRender(querySelector: string, renderer: (element: Element) => void) {
+	static waitToRender(querySelector: string, renderer: (element: Element) => void, tryCount = 0) {
+		const maxTries = 30;
+		if (tryCount > maxTries)
+			return;
+
 		const elementToWait = document.querySelector(querySelector);
+
 		if (!elementToWait) {
 			setTimeout(() => {
-				this.waitToRender(querySelector, renderer);
+				this.waitToRender(querySelector, renderer, tryCount + 1);
 			}, 250);
 		} else {
 			renderer(elementToWait);

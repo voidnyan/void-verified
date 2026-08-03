@@ -1652,3 +1652,11 @@ body:has(.void-modal-background[open]) {
 .void-social-tab-data {
     text-align: center;
 }
+
+.notes[void-media-list-note="true"]::before {
+    content: unset !important;
+}
+
+.notes[void-media-list-note="true"] {
+    cursor: pointer;
+}

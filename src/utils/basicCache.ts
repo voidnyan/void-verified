@@ -25,6 +25,12 @@ export class BasicCache<T> {
 		return entry.item;
 	}
 
+	async removeItem(predicate: (item: T) => boolean): Promise<void> {
+		const cache = await this.getCache();
+		const entry = cache.find(c => predicate(c.item));
+		await this.setCache(cache.filter(c => c !== entry));
+	}
+
 	async setItem(item: T): Promise<void> {
 		const cache = await this.getCache();
 		cache.push(new CacheItem(item));
