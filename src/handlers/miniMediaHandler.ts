@@ -85,7 +85,13 @@ export class MiniMediaHandler extends MiniPopupHandlerBase {
 		finally {
 			this.queryInProgress = false;
 		}
-		this.container.replaceChildren(new MediaOverviewComponent(media, this.config).element);
+		try {
+			this.container.replaceChildren(new MediaOverviewComponent(media, this.config).element);
+		} catch (e) {
+			Toaster.error("Rendering Media Overview failed.", e);
+			this.container.replaceChildren();
+			return;
+		}
 		this.positionAndShowContainer(positionElement ?? element);
 	}
 

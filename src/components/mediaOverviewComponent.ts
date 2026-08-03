@@ -99,23 +99,28 @@ export class MediaOverviewComponent {
 		if (this.media.volumes)
 			dataContainer.append(this.createDataSet("Volumes", this.media.volumes));
 
-		if (this.media.type === "ANIME")
+		if (this.media.type === "ANIME" && this.media.duration)
 			dataContainer.append(this.createDataSet("Duration", this.formatDuration(this.media.duration)));
 
-		dataContainer.append(this.createDataSet("Status", this.media.status.toLowerCase()));
+		if (this.media.status) {
+			dataContainer.append(this.createDataSet("Status", this.media.status.toLowerCase()));
+		}
 
 		if (this.media.startDate?.year || this.media.startDate?.month || this.media.startDate?.day)
-		dataContainer.append(this.createDataSet(this.media.format === "MOVIE" ? "Release Date" : "Start Date", this.formatDate(this.media.startDate)));
+			dataContainer.append(this.createDataSet(this.media.format === "MOVIE" ? "Release Date" : "Start Date", this.formatDate(this.media.startDate)));
 
 		if (this.media.format !== "MOVIE" && (this.media.endDate?.year || this.media.endDate?.month || this.media.endDate?.day))
 			dataContainer.append(this.createDataSet("End Date", this.formatDate(this.media.endDate)));
 
-		if (this.media.type === "ANIME"){
+		if (this.media.type === "ANIME" && this.media.season && this.media.seasonYear){
 			dataContainer.append(this.createDataSet("Season", `${this.media.season.toLowerCase()} ${this.media.seasonYear}`));
 		}
 
-		dataContainer.append(this.createDataSet("Average Score", `${this.media.averageScore}%`));
-		dataContainer.append(this.createDataSet("Mean Score", `${this.media.meanScore}%`));
+		if (this.media.averageScore)
+			dataContainer.append(this.createDataSet("Average Score", `${this.media.averageScore}%`));
+
+		if (this.media.meanScore)
+			dataContainer.append(this.createDataSet("Mean Score", `${this.media.meanScore}%`));
 
 		if (this.media.type === "ANIME") {
 			const studios = this.media.studios.edges.filter(x => x.isMain);
