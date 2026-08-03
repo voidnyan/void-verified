@@ -1,7 +1,11 @@
+import {IUser} from "./user";
+
 export interface IMediaList {
 	media: IMedia,
+	user: IUser,
 	notes: string,
 	progress: number,
+	repeat: number,
 	id: number,
 	status: string
 }

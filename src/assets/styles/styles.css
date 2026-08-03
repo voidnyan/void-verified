@@ -1643,3 +1643,12 @@ body:has(.void-modal-background[open]) {
 .void-text-transform-unset {
     text-transform: unset;
 }
+
+.following[void-social-tab="true"] a.follow {
+    grid-template-columns: 30px 2fr 1fr 1fr 0.5fr 0.5fr 1fr;
+    gap: 5px;
+}
+
+.void-social-tab-data {
+    text-align: center;
+}

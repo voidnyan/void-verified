@@ -314,5 +314,11 @@ export const defaultSettings: IOptions = {
 		description: "Replace In Progress sections in home feed.",
 		category: categories.misc,
 		authRequired: true,
+	},
+	socialTabEnhancementEnabled: {
+		defaultValue: false,
+		description: "Add progress, repeat and notes to media's social tab.",
+		category: categories.misc,
+		authRequired: true
 	}
 };

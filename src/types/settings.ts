@@ -96,4 +96,5 @@ export interface IOptions {
 	markdownTaskbarEnabled: IOption;
 	pollsEnabled: IOption;
 	replaceInProgressEnabled: IOption;
+	socialTabEnhancementEnabled: IOption;
 }
