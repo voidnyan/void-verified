@@ -6,6 +6,7 @@ import { Toaster } from "../utils/toaster";
 import {StaticSettings} from "../utils/staticSettings";
 import {FuzzyMatch} from "../utils/fuzzyMatch";
 import {CacheTimes} from "../assets/cacheTimes";
+import {CollapsibleHelper} from "../utils/collapsibleHelper";
 
 export class QuickAccess {
 	settings;
@@ -52,6 +53,8 @@ export class QuickAccess {
 		const users = QuickAccess.renderUsers();
 
 		container.append(sectionHeader, users);
+
+		CollapsibleHelper.makeCollapsible(users, sectionHeader, "quick-access-users");
 
 		this.#insertIntoDOM(quickAccessContainer, container);
 	}

@@ -21,6 +21,9 @@ export const changeLog = [
 		new Feature("Add progress, repeat and notes to media's social tab.", "socialTabEnhancementEnabled"),
 		new Feature("Replace media list note tooltip with a dialog.", "replaceNotes"),
 		new Feature("Display media overview when hovering VoidVerified In Progress entries. Enable this in the Mini Media subcategory in VoidVerified settings."),
+		new Feature("Added an option to create automatic categories for rewatching and rereading in In Progress settings."),
+		new Feature("In Progress sections are now collapsible by clicking their header."),
+		new Feature("Quick Access Users section is now collapsible by clicking the Users header."),
 		new Feature("Fixed some cases where Media Overview failed to render due to data field not existing.")
 	]),
 	new Version("2.1", [

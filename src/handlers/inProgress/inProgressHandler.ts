@@ -15,6 +15,8 @@ import {IViewer} from "../../api/types/IViewer";
 import {InProgressCategoryStorage} from "./inProgressCategoryStorage";
 import {InProgressMediaListCache} from "./inProgressMediaListCache";
 import {ActivityType} from "../../api/types/activityType";
+import {CollapsibleContainer} from "../../components/collapsibleContainer";
+import {CollapsibleHelper} from "../../utils/collapsibleHelper";
 
 export class InProgressHandler {
 	private static renderInProgress = false;
@@ -189,7 +191,9 @@ export class InProgressHandler {
 	}
 
 	private static createManagerToggleButton() {
-		const toggleButton = IconButton(CogIcon(), () => {
+		const toggleButton = IconButton(CogIcon(), (e: Event) => {
+			e.preventDefault();
+			e.stopPropagation();
 			this.managerOpen = !this.managerOpen;
 			this.render();
 		});
@@ -198,7 +202,9 @@ export class InProgressHandler {
 	}
 
 	private static createRefreshButton() {
-		const refreshButton = IconButton(RefreshIcon(), () => {
+		const refreshButton = IconButton(RefreshIcon(), (e: Event) => {
+			e.preventDefault();
+			e.stopPropagation();
 			this.replaceInProgressSection(true);
 		});
 		refreshButton.setAttribute("title", "Refresh in progress entries.");
@@ -236,6 +242,8 @@ export class InProgressHandler {
 		const sectionHeader = DOM.createDiv(".section-header", DOM.create("h2", null, title))
 
 		wrapper.append(sectionHeader, container);
+
+		CollapsibleHelper.makeCollapsible(container, sectionHeader, `in-progress-${title}`);
 
 		return wrapper;
 	}
