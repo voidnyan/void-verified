@@ -11,7 +11,8 @@ export class CollapsibleContainer {
 	private collapseIconContainer: HTMLDivElement;
 	private isCollapsed = false;
 	private readonly emptyContent;
-	private collapseId?: string;
+	private readonly collapseId?: string;
+
 	constructor(head?: any, body?: any, classes?: {head?: string, body?: string}, emptyContent?: any, collapseId?: string) {
 		this.emptyContent = emptyContent;
 		this.collapseId = collapseId;
@@ -19,7 +20,6 @@ export class CollapsibleContainer {
 			this.isCollapsed = CollapseStatus.getIsCollapsed(this.collapseId);
 		}
 		this.element = DOM.create("div", "collapsible-container");
-
 		this.createHead(head);
 		this.createBody(body);
 
@@ -36,12 +36,10 @@ export class CollapsibleContainer {
 			this.handleCollapse(!this.isCollapsed);
 		})
 		if (head) {
-			if (head) {
-				if (Array.isArray(head)) {
-					this.head.append(...head);
-				} else {
-					this.head.append(head);
-				}
+			if (Array.isArray(head)) {
+				this.head.append(...head);
+			} else {
+				this.head.append(head);
 			}
 		}
 		this.headWrap.append(this.head, this.collapseIconContainer);
@@ -106,7 +104,6 @@ export class CollapsibleContainer {
 		observer.observe(document.body, { childList: true, subtree: true });
 	}
 
-
 	private setClasses(classes?: {head?: string, body?: string}) {
 		if (classes?.head) {
 			DOM.transformClasses(this.head, classes.head)
@@ -117,7 +114,7 @@ export class CollapsibleContainer {
 	}
 }
 
-class CollapseStatus {
+export class CollapseStatus {
 	static save(collapseId: string, collapsed: boolean) {
 		let collapseItems = JSON.parse(localStorage.getItem(LocalStorageKeys.collapsedContainers)) ?? [];
 		if (collapseItems.find(x => x.collapseId === collapseId)) {

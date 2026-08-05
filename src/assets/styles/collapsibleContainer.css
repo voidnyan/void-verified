@@ -37,6 +37,18 @@
     overflow: hidden;
 }
 
-.void-collapsible-container-body-wrap.void-collapsed {
+.void-collapsible-container-body-wrap.void-collapsed,
+.void-collapsible-item[void-collapsed="true"]{
     max-height: 0px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.void-collapsible-item {
+    max-height: var(--max-height);
+    overflow: hidden;
+}
+
+.void-collapsible-item-animation {
+    transition: max-height 0.3s ease, padding 0.3s ease;
 }
