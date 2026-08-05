@@ -7,7 +7,7 @@ import {CheckboxComponent} from "./checkboxComponent";
 import {ActivityType} from "../api/types/activityType";
 import {ButtonComponent} from "./ButtonComponent";
 import {AnilistAPI} from "../api/anilistAPI";
-import {InProgressMediaListCache} from "../handlers/inProgressHandler";
+import {InProgressMediaListCache} from "../handlers/inProgress/inProgressMediaListCache";
 
 export type InProgressMediaType = "Anime" | "Manga";
 

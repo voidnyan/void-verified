@@ -1,21 +1,19 @@
-import {StaticSettings} from "../utils/staticSettings";
-import {AnilistAPI} from "../api/anilistAPI";
-import {DOM} from "../utils/DOM";
-import {InProgressEntry} from "../components/InProgressEntry";
-import {IMediaList} from "../api/types/IMediaList";
-import {Toaster} from "../utils/toaster";
-import {LocalStorageCacheKeys, LocalStorageKeys} from "../assets/localStorageKeys";
-import {CogIcon, RefreshIcon} from "../assets/icons";
-import {IconButton} from "../components/components";
-import {CacheTimes} from "../assets/cacheTimes";
+import {StaticSettings} from "../../utils/staticSettings";
+import {DOM} from "../../utils/DOM";
+import {InProgressEntry} from "../../components/InProgressEntry";
+import {IMediaList} from "../../api/types/IMediaList";
+import {Toaster} from "../../utils/toaster";
+import {CogIcon, RefreshIcon} from "../../assets/icons";
+import {IconButton} from "../../components/components";
 import {
-	createInProgressCategoryId,
 	InProgressCategoriesConfig,
 	InProgressCategory,
 	InProgressCategoryManager,
 	InProgressMediaType
-} from "../components/InProgressCategoryManager";
-import {IViewer} from "../api/types/IViewer";
+} from "../../components/InProgressCategoryManager";
+import {IViewer} from "../../api/types/IViewer";
+import {InProgressCategoryStorage} from "./inProgressCategoryStorage";
+import {InProgressMediaListCache} from "./inProgressMediaListCache";
 
 export class InProgressHandler {
 	private static renderInProgress = false;
@@ -259,139 +257,5 @@ export class InProgressHandler {
 			});
 
 		return removedEntries;
-	}
-}
-
-interface InProgressMediaListCacheItem {
-	anime: IMediaList[];
-	manga: IMediaList[];
-	viewer: IViewer;
-	cachedAt: string;
-}
-
-export class InProgressMediaListCache {
-	static async get(forceReQuery: boolean): Promise<[IMediaList[], IMediaList[], IViewer]> {
-		const cachedLists = this.getCachedLists();
-		if (cachedLists && !forceReQuery) {
-			return [cachedLists.anime, cachedLists.manga, cachedLists.viewer];
-		}
-
-		const [anime, manga, viewer] = await AnilistAPI.getInProgressMediaLists();
-		this.save(anime, manga, viewer);
-		return [anime, manga, viewer];
-	}
-
-	private static getCachedLists() {
-		const raw = localStorage.getItem(LocalStorageCacheKeys.inProgressMediaLists);
-		if (!raw) {
-			return null;
-		}
-
-		try {
-			const cache = JSON.parse(raw) as InProgressMediaListCacheItem;
-			if (!Array.isArray(cache?.anime) || !Array.isArray(cache?.manga) || !cache.viewer || !cache.cachedAt) {
-				localStorage.removeItem(LocalStorageCacheKeys.inProgressMediaLists);
-				return null;
-			}
-
-			const expiresAt = new Date(cache.cachedAt);
-			expiresAt.setMilliseconds(expiresAt.getMilliseconds() + CacheTimes.inProgressMediaLists);
-			if (expiresAt < new Date()) {
-				localStorage.removeItem(LocalStorageCacheKeys.inProgressMediaLists);
-				return null;
-			}
-
-			return cache;
-		} catch {
-			localStorage.removeItem(LocalStorageCacheKeys.inProgressMediaLists);
-			return null;
-		}
-	}
-
-	private static save(anime: IMediaList[], manga: IMediaList[], viewer: IViewer) {
-		localStorage.setItem(LocalStorageCacheKeys.inProgressMediaLists, JSON.stringify({
-			anime,
-			manga,
-			viewer,
-			cachedAt: new Date()
-		}));
-	}
-
-	static updateProgress(mediaId: number, progress: number, completed: boolean) {
-		const cache = this.getCachedLists();
-		if (!cache) {
-			return;
-		}
-
-		cache.anime = this.updateListProgress(cache.anime, mediaId, progress, completed);
-		cache.manga = this.updateListProgress(cache.manga, mediaId, progress, completed);
-		localStorage.setItem(LocalStorageCacheKeys.inProgressMediaLists, JSON.stringify(cache));
-	}
-
-	static updateViewer(viewer: IViewer) {
-		const cache = this.getCachedLists();
-		if (!cache) {
-			return;
-		}
-		cache.viewer = viewer;
-		localStorage.setItem(LocalStorageCacheKeys.inProgressMediaLists, JSON.stringify(cache));
-	}
-
-	private static updateListProgress(items: IMediaList[], mediaId: number, progress: number, completed: boolean) {
-		if (completed) {
-			return items.filter(item => item.media.id !== mediaId);
-		}
-
-		return items.map(item => {
-			if (item.media.id !== mediaId) {
-				return item;
-			}
-			return {
-				...item,
-				progress
-			};
-		});
-	}
-}
-
-class InProgressCategoryStorage {
-	static load(): InProgressCategoriesConfig {
-		const fallback = {
-			Anime: [],
-			Manga: [],
-			autoAiringCategory: true,
-			includeCustomCategoryEntriesInAiring: false
-		};
-
-		try {
-			const categories = JSON.parse(localStorage.getItem(LocalStorageKeys.inProgressCategories));
-			return {
-				Anime: this.normalizeCategories(categories?.Anime),
-				Manga: this.normalizeCategories(categories?.Manga),
-				autoAiringCategory: categories?.autoAiringCategory ?? fallback.autoAiringCategory,
-				includeCustomCategoryEntriesInAiring: categories?.includeCustomCategoryEntriesInAiring ?? fallback.includeCustomCategoryEntriesInAiring
-			};
-		} catch (error) {
-			Toaster.error("Failed to load in progress categories.", error);
-			return fallback;
-		}
-	}
-
-	static save(categories: InProgressCategoriesConfig) {
-		localStorage.setItem(LocalStorageKeys.inProgressCategories, JSON.stringify(categories));
-	}
-
-	private static normalizeCategories(categories: InProgressCategory[]) {
-		if (!Array.isArray(categories)) {
-			return [];
-		}
-
-		return categories
-			.filter(category => category?.title && Array.isArray(category.mediaIds))
-			.map(category => ({
-				id: category.id ?? createInProgressCategoryId(),
-				title: category.title,
-				mediaIds: category.mediaIds.filter(mediaId => Number.isInteger(mediaId))
-			}));
 	}
 }
