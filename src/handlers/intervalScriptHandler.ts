@@ -23,7 +23,7 @@ import {DomDataHandler} from "./domDataHandler";
 import {MarkdownTaskbarHandler} from "./markdownTaskbarHandler";
 import {SettingsUi} from "./settingsUi";
 import {PollHandler} from "./pollHandler/pollHandler";
-import {InProgressHandler} from "./inProgressHandler";
+import {InProgressHandler} from "./inProgress/inProgressHandler";
 import {MiniMediaHandler} from "./miniMediaHandler";
 import {MediaListHandler} from "./mediaListHandler";
 
