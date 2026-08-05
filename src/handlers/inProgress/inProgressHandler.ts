@@ -14,6 +14,7 @@ import {
 import {IViewer} from "../../api/types/IViewer";
 import {InProgressCategoryStorage} from "./inProgressCategoryStorage";
 import {InProgressMediaListCache} from "./inProgressMediaListCache";
+import {ActivityType} from "../../api/types/activityType";
 
 export class InProgressHandler {
 	private static renderInProgress = false;
@@ -56,18 +57,18 @@ export class InProgressHandler {
 	}
 
 	private static render() {
-		const categoryManager = new InProgressCategoryManager({
-			anime: this.anime,
-			manga: this.manga,
-			categories: this.categories,
-			viewer: this.viewer,
-			onChange: categories => {
-				this.categories = categories;
-				this.persistAndRender();
-			}
-		});
 		const content = DOM.createDiv("in-progress-content");
 		if (this.managerOpen) {
+			const categoryManager = new InProgressCategoryManager({
+				anime: this.anime,
+				manga: this.manga,
+				categories: this.categories,
+				viewer: this.viewer,
+				onChange: categories => {
+					this.categories = categories;
+					this.persistAndRender();
+				}
+			});
 			content.append(this.createManagerSection(categoryManager.element));
 		} else {
 			const sections = [
@@ -116,14 +117,23 @@ export class InProgressHandler {
 			airingEntries = airingEntries.filter(item => !customCategoryIds.includes(item.media.id));
 		}
 
-		const airingIds = airingEntries.map(item => item.media.id);
+		let autoCategoryIds: number[] = [];
 		if (this.categories.autoAiringCategory && airingEntries.length > 0) {
 			sections.push(this.createInProgressSection(airingEntries, "Airing"));
+			autoCategoryIds.push(...airingEntries.map(item => item.media.id));
 		}
 
-		const excludedIds = this.categories.autoAiringCategory
-			? [...customCategoryIds, ...airingIds]
-			: customCategoryIds;
+		let rewatchingEntries = this.anime.filter(item => item.status === ActivityType.REPEATING);
+		if (!this.categories.includeCustomCategoryEntriesInAiring) {
+			rewatchingEntries = rewatchingEntries.filter(item => !customCategoryIds.includes(item.media.id));
+		}
+
+		if (this.categories.autoRewatchingCategory && rewatchingEntries.length > 0) {
+			sections.push(this.createInProgressSection(rewatchingEntries, "Rewatching"));
+			autoCategoryIds.push(...rewatchingEntries.map(item => item.media.id));
+		}
+
+		const excludedIds = [...customCategoryIds, ...autoCategoryIds];
 		const remainingEntries = this.anime.filter(x => !excludedIds.includes(x.media.id));
 		if (remainingEntries.length > 0) {
 			sections.push(this.createInProgressSection(remainingEntries, "Anime In Progress"));
@@ -134,6 +144,7 @@ export class InProgressHandler {
 
 	private static createMangaSections(items: IMediaList[], categories: InProgressCategory[]) {
 		const sections: HTMLDivElement[] = [];
+		const customCategoryIds = this.categories.Manga.map(x => x.mediaIds).flat();
 
 		for (const category of categories) {
 			const entries = items.filter(x => category.mediaIds.includes(x.media.id));
@@ -143,9 +154,19 @@ export class InProgressHandler {
 			sections.push(this.createInProgressSection(entries, category.title));
 		}
 
-		const allIds = categories.map(x => x.mediaIds).flat();
+		let rereadingIds = this.manga.filter(item => item.status === ActivityType.REPEATING);
+		if (!this.categories.includeCustomCategoryEntriesInAiring) {
+			rereadingIds = rereadingIds.filter(item => !customCategoryIds.includes(item.media.id));
+		}
 
-		const remainingEntries = items.filter(x => !allIds.includes(x.media.id));
+		const autoCategoryIds: number[] = [];
+		if (this.categories.autoRewatchingCategory && rereadingIds.length > 0) {
+			sections.push(this.createInProgressSection(rereadingIds, "Rereading"));
+			autoCategoryIds.push(...rereadingIds.map(item => item.media.id));
+		}
+
+		const excludedIds = [...customCategoryIds, ...autoCategoryIds];
+		const remainingEntries = items.filter(x => !excludedIds.includes(x.media.id));
 		if (remainingEntries.length === 0) return sections;
 
 		sections.push(this.createInProgressSection(remainingEntries, `Manga In Progress`));

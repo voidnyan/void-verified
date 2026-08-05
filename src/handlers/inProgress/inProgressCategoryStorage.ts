@@ -9,20 +9,24 @@ import {Toaster} from "../../utils/toaster";
 export
 class InProgressCategoryStorage {
 	static load(): InProgressCategoriesConfig {
-		const fallback = {
+		const fallback: InProgressCategoriesConfig = {
 			Anime: [],
 			Manga: [],
 			autoAiringCategory: true,
-			includeCustomCategoryEntriesInAiring: false
+			includeCustomCategoryEntriesInAiring: false,
+			autoRewatchingCategory: false,
+			autoRereadingCategory: false
 		};
 
 		try {
-			const categories = JSON.parse(localStorage.getItem(LocalStorageKeys.inProgressCategories));
+			const categories: InProgressCategoriesConfig = JSON.parse(localStorage.getItem(LocalStorageKeys.inProgressCategories));
 			return {
 				Anime: this.normalizeCategories(categories?.Anime),
 				Manga: this.normalizeCategories(categories?.Manga),
 				autoAiringCategory: categories?.autoAiringCategory ?? fallback.autoAiringCategory,
-				includeCustomCategoryEntriesInAiring: categories?.includeCustomCategoryEntriesInAiring ?? fallback.includeCustomCategoryEntriesInAiring
+				includeCustomCategoryEntriesInAiring: categories?.includeCustomCategoryEntriesInAiring ?? fallback.includeCustomCategoryEntriesInAiring,
+				autoRewatchingCategory: categories?.autoRewatchingCategory ?? fallback.autoRewatchingCategory,
+				autoRereadingCategory: categories?.autoRereadingCategory ?? fallback.autoRereadingCategory
 			};
 		} catch (error) {
 			Toaster.error("Failed to load in progress categories.", error);

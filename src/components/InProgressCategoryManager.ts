@@ -22,6 +22,8 @@ export interface InProgressCategoriesConfig {
 	Manga: InProgressCategory[];
 	autoAiringCategory: boolean;
 	includeCustomCategoryEntriesInAiring: boolean;
+	autoRewatchingCategory: boolean;
+	autoRereadingCategory: boolean;
 }
 
 interface CategoryEditorState {
@@ -87,14 +89,30 @@ export class InProgressCategoryManager {
 			})
 		);
 		const includeCustomCategoryEntriesInAiring = SettingLabel(
-			"Include custom category entries in Airing.",
+			"Include custom category entries in auto categories.",
 			Checkbox(this.categories.includeCustomCategoryEntriesInAiring, () => {
 				this.categories.includeCustomCategoryEntriesInAiring = !this.categories.includeCustomCategoryEntriesInAiring;
 				this.onChange(this.categories);
 			})
 		);
 
-		container.append(autoAiringCategory, includeCustomCategoryEntriesInAiring);
+		const autoRewatchingCategory = SettingLabel(
+			"Automatically create a Rewatching anime category.",
+			Checkbox(this.categories.autoRewatchingCategory, (event) => {
+				this.categories.autoRewatchingCategory = event.target.checked;
+				this.onChange(this.categories)
+			})
+		);
+
+		const autoRereadingCategory = SettingLabel(
+			"Automatically create a Rereading manga category.",
+			Checkbox(this.categories.autoRereadingCategory, (event) => {
+				this.categories.autoRereadingCategory = event.target.checked;
+				this.onChange(this.categories);
+			})
+		);
+
+		container.append(autoAiringCategory, autoRewatchingCategory, autoRereadingCategory, includeCustomCategoryEntriesInAiring);
 		return container;
 	}
 
@@ -176,7 +194,6 @@ export class InProgressCategoryManager {
 				return "Paused activity";
 			case ActivityType.REPEATING:
 				return "Repeating activity";
-
 		}
 	}
 
