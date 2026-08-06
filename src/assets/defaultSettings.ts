@@ -326,5 +326,10 @@ export const defaultSettings: IOptions = {
 		description: "Replace media list note tooltip with a dialog.",
 		category: categories.misc,
 		authRequired: false
+	},
+	verifyButtonInProfile: {
+		defaultValue: false,
+		description: "Add a verify button to profiles.",
+		category: categories.users,
 	}
 };

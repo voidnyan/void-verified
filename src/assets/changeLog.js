@@ -20,6 +20,7 @@ export const changeLog = [
 	new Version("2.2", [
 		new Feature("Add progress, repeat and notes to media's social tab.", "socialTabEnhancementEnabled"),
 		new Feature("Replace media list note tooltip with a dialog.", "replaceNotes"),
+		new Feature("Add a verify button to profiles.", "verifyButtonInProfile"),
 		new Feature("Display media overview when hovering VoidVerified In Progress entries. Enable this in the Mini Media subcategory in VoidVerified settings."),
 		new Feature("Added an option to create automatic categories for rewatching and rereading in In Progress settings."),
 		new Feature("In Progress sections are now collapsible by clicking their header."),
