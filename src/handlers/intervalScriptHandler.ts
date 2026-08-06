@@ -26,6 +26,7 @@ import {PollHandler} from "./pollHandler/pollHandler";
 import {InProgressHandler} from "./inProgress/inProgressHandler";
 import {MiniMediaHandler} from "./miniMediaHandler";
 import {MediaListHandler} from "./mediaListHandler";
+import {ProfileHandler} from "./profileHandler";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -118,6 +119,7 @@ export class IntervalScriptHandler {
 			intervalScriptHandler.quickAccess.clearBadge();
 			intervalScriptHandler.styleHandler.verifyProfile();
 			intervalScriptHandler.anilistFeedFixHandler.handleFilters();
+			ProfileHandler.addVerifyButtonToProfile();
 		} else {
 			intervalScriptHandler.styleHandler.clearStyles("profile");
 		}

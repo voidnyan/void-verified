@@ -98,4 +98,5 @@ export interface IOptions {
 	replaceInProgressEnabled: IOption;
 	socialTabEnhancementEnabled: IOption;
 	replaceNotes: IOption;
+	verifyButtonInProfile: IOption;
 }

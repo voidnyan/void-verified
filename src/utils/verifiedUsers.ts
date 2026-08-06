@@ -223,7 +223,6 @@ export class VerifiedUsers {
 
 		const usernameInput = DOM.get("#verified-add-user") as HTMLInputElement;
 		const username = usernameInput.value;
-		console.log(username);
 		await this.verifyUser(username);
 		usernameInput.value = "";
 		this.renderUserTable();
@@ -372,5 +371,9 @@ export class VerifiedUsers {
 		} catch (error) {
 			Toaster.error("Failed to query new user.", error);
 		}
+	}
+
+	static isVerified(username: string): boolean {
+		return this.users.some(x => x.username.toLowerCase() === username.toLowerCase());
 	}
 }
