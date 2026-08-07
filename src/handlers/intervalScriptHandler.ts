@@ -27,6 +27,7 @@ import {InProgressHandler} from "./inProgress/inProgressHandler";
 import {MiniMediaHandler} from "./miniMediaHandler";
 import {MediaListHandler} from "./mediaListHandler";
 import {ProfileHandler} from "./profileHandler";
+import {ToudaiHandler} from "./toudaiHandler";
 
 export class IntervalScriptHandler {
 	styleHandler;
@@ -94,6 +95,7 @@ export class IntervalScriptHandler {
 		PollHandler.replacePollImages();
 		MediaListHandler.handleSocialTab();
 		MediaListHandler.handleMediaListNotes();
+		ToudaiHandler.replaceLinksWithLighthouseCard();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();

@@ -526,3 +526,20 @@ export const NoteIcon = () => {
 `, "text/html",).body.childNodes[0];
 	return icon;
 }
+
+export const CarouselLeftIcon = () => {
+	const icon = new DOMParser().parseFromString(`<svg viewBox="0 0 24 24" class="image-nav-icon" aria-hidden="true">
+    <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" fill="currentColor"></path>
+</svg>
+`, "text/html",).body.childNodes[0];
+	return icon;
+}
+
+export const CarouselRightIcon = () => {
+	const icon = new DOMParser().parseFromString(`<svg viewBox="0 0 24 24" class="image-nav-icon" aria-hidden="true">
+    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" fill="currentColor"></path>
+</svg>
+`, "text/html",).body.childNodes[0];
+	return icon;
+}
+

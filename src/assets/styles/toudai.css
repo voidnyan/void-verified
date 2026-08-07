@@ -1,0 +1,101 @@
+.void-toudai-card {
+    max-width: 400px;
+    background-color: rgb(var(--color-background));
+    border-radius: 4px;
+    padding: 10px;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.void-toudai-card-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.void-toudai-card-direct-link svg {
+    height: 1.4rem !important;
+    width: 1.4rem !important;
+}
+
+.void-toudai-card-image-wrap {
+    max-height: 200px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.void-toudai-card-image {
+    object-fit: contain;
+    border-radius: 4px;
+    z-index: 0;
+}
+
+.void-toudai-card-image-nav-btn {
+    position: absolute;
+    z-index: 1;
+    transform: translateY(-50%);
+    top: 50%;
+    width: 3rem;
+    height: 3rem;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    border-radius: 9999px;
+    background-color: rgb(var(--color-foreground-blue-dark), 0.5);
+}
+
+.void-toudai-card-image-nav-btn:hover {
+    color: rgb(var(--color-blue));
+    background-color: rgb(var(--color-foreground-blue-dark), 0.8);
+}
+
+.void-toudai-card-image-nav-btn:first-of-type {
+    left: 6px;
+}
+
+.void-toudai-card-image-nav-btn:last-of-type {
+    right: 6px;
+}
+
+.void-toudai-card-title {
+    display: flex;
+    justify-content: space-between;
+    line-height: 1;
+}
+
+.void-toudai-card-title-text {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: rgb(var(--color-text-light));
+}
+
+.void-toudai-card-meta-row {
+    margin-top: -6px;
+}
+
+.void-toudai-card .void-toudai-card-multi-image-indicator svg {
+    width: 1.8rem !important;
+    height: 1.8rem !important;
+}
+
+.void-toudai-card-lighthouse-name,
+.void-toudai-card-notes-label{
+    font-weight: 700;
+    color: rgb(var(--color-text-light));
+}
+
+.void-toudai-card-lighthouse-block > div {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.void-toudai-card-meta-row img,
+.void-toudai-card-lighthouse-block img {
+    height: 1.6rem;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    margin-right: 4px;
+}

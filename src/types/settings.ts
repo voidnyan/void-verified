@@ -99,4 +99,6 @@ export interface IOptions {
 	socialTabEnhancementEnabled: IOption;
 	replaceNotes: IOption;
 	verifyButtonInProfile: IOption;
+	lighthouseTabEnabled: IOption;
+	lighthouseCardEnabled: IOption;
 }
