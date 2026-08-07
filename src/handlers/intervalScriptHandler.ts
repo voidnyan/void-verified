@@ -96,6 +96,7 @@ export class IntervalScriptHandler {
 		MediaListHandler.handleSocialTab();
 		MediaListHandler.handleMediaListNotes();
 		ToudaiHandler.replaceLinksWithLighthouseCard();
+		ToudaiHandler.addLighthouseTab();
 
 		if (path === "/home") {
 			intervalScriptHandler.styleHandler.refreshHomePage();

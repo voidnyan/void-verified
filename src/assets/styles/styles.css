@@ -1660,3 +1660,16 @@ body:has(.void-modal-background[open]) {
 .notes[void-media-list-note="true"] {
     cursor: pointer;
 }
+
+.void-media-nav-item {
+    padding: 15px;
+    color: rgb(var(--color-text-lighter));
+    text-decoration: none;
+    transition: .15s;
+    outline: 0;
+    cursor: pointer;
+}
+
+.void-media-nav-item:hover {
+    color: rgb(var(--color-blue));
+}
