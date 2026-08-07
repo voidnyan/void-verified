@@ -165,7 +165,7 @@ export class ToudaiCard {
 	}
 
 	private createIcon(imgSrc: string): HTMLImageElement {
-		const icon = DOM.create<HTMLImageElement>("img");
+		const icon = DOM.create<HTMLImageElement>("img", "toudai-card-link-icon");
 		icon.setAttribute("src", imgSrc);
 		return icon;
 	}
