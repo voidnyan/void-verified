@@ -331,5 +331,15 @@ export const defaultSettings: IOptions = {
 		defaultValue: false,
 		description: "Add a verify button to profiles.",
 		category: categories.users,
+	},
+	lighthouseTabEnabled: {
+		defaultValue: false,
+		description: "Add a Lighthouses tab to media pages (toudai.moe).",
+		category: categories.misc
+	},
+	lighthouseCardEnabled: {
+		defaultValue: false,
+		description: "Replace toudai.moe links with a lighthouse card.",
+		category: categories.misc
 	}
 };

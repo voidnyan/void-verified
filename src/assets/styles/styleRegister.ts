@@ -15,6 +15,7 @@ import utilityClasses from "./utility-classes.css";
 import poll from "./poll.css";
 import inProgress from "./inProgress.css";
 import miniMedia from "./miniMedia.css";
+import toudai from "./toudai.css";
 
 import {StyleHandler} from "../../handlers/styleHandler";
 import {Settings} from "../../utils/settings";
@@ -39,7 +40,8 @@ export class StyleRegister {
 			utilityClasses,
 			poll,
 			inProgress,
-			miniMedia
+			miniMedia,
+			toudai
 		];
 		styleHandler.createStyleLink(css.join("\n"), "script");
 	}

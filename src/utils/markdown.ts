@@ -54,7 +54,7 @@ export class Markdown {
 		html = html.replace(/img\(([^)]+)\)/gi, '<img src="$1" />');
 
 		// Links
-		html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+		html = this.parseLinks(html);
 
 		// Bold & Italic
 		html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
@@ -127,6 +127,10 @@ export class Markdown {
 		for (const anchor of markdownElement.querySelectorAll("a")) {
 			anchor.setAttribute("target", "_blank");
 		}
+	}
+
+	static parseLinks(markdown: string): string {
+		return markdown.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
 	}
 
 	private static getYoutubeVideoId(url: string) {

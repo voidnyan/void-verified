@@ -29,9 +29,13 @@ export class DOM {
 		return el;
 	}
 
-	static createAnchor(href, classes = null, children = null): HTMLAnchorElement {
+	static createAnchor(href: string, classes = null, children = null, newTab = false): HTMLAnchorElement {
 		const anchor = this.create<HTMLAnchorElement>("a", classes, children);
 		anchor.setAttribute("href", href);
+		if (newTab) {
+			anchor.setAttribute("target", "_blank");
+			anchor.setAttribute("referrer", "noreferrer");
+		}
 		return anchor;
 	}
 
