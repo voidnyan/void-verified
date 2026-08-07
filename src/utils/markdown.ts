@@ -130,7 +130,12 @@ export class Markdown {
 	}
 
 	static parseLinks(markdown: string): string {
-		return markdown.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+		let html = markdown;
+		html =  html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+
+		// @ts-ignore
+		html = DOMPurify.sanitize(html);
+		return html;
 	}
 
 	private static getYoutubeVideoId(url: string) {
