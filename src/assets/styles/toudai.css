@@ -30,6 +30,7 @@
     object-fit: contain;
     border-radius: 4px;
     z-index: 0;
+    max-width: 80%;
 }
 
 .void-toudai-card-image-nav-btn {
@@ -98,4 +99,26 @@
     aspect-ratio: 1 / 1;
     object-fit: contain;
     margin-right: 4px;
+}
+
+/* ----- Lighthouse tab CSS ------*/
+.media:has(.nav[void-lighthouse-tab-selected="true"]) .content.container > div:not(.sidebar, .void-lighthouse-tab) {
+    display: none;
+}
+
+.void-lighthouse-tab {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+}
+
+.void-lighthouse-tab .void-toudai-card {
+    max-width: 700px;
+    background-color: rgb(var(--color-foreground));
+}
+
+.void-lighthouse-tab .void-toudai-card .void-toudai-card-image-wrap {
+    max-height: 500px;
 }

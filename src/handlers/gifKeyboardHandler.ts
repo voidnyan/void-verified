@@ -116,7 +116,7 @@ export class GifKeyboardHandler {
 		}
 
 		const gifs = document.querySelectorAll(
-			":is(.activity-markdown, .reply-markdown) .markdown img[src$='.gif']",
+			":is(.activity-markdown, .reply-markdown) .markdown img[src$='.gif']:not(.void-toudai-card-image)",
 		);
 		for (const gif of gifs) {
 			this.addMediaLikeButton(gif, keyboardTabs.gifs, this.config.gifs);
@@ -125,7 +125,7 @@ export class GifKeyboardHandler {
 		const images = ImageFormats.map((format) => {
 			return [
 				...document.querySelectorAll(
-					`:is(.activity-markdown, .reply-markdown) .markdown img[src$='.${format}']`,
+					`:is(.activity-markdown, .reply-markdown) .markdown img[src$='.${format}']:not(.void-toudai-card-image)`,
 				),
 			];
 		}).flat(1);
