@@ -2,6 +2,7 @@ import {ILighthouseSighting} from "../api/toudaiAPI";
 import {DOM} from "../utils/DOM";
 import {CarouselLeftIcon, CarouselRightIcon, ImageIcon, LinkIcon} from "../assets/icons";
 import {Markdown} from "../utils/markdown";
+import {AnilistAuth} from "../utils/anilistAuth";
 
 export class ToudaiCard {
 	private readonly sighting: ILighthouseSighting;
@@ -70,14 +71,33 @@ export class ToudaiCard {
 
 	private createTitle() {
 		const wrapper = DOM.createDiv("toudai-card-title");
-		// TODO: could get the preferred language of the user
-		const titleText = DOM.create("span", "toudai-card-title-text", this.sighting.title_r);
+		const titleText = DOM.create("span", "toudai-card-title-text", this.getTitle());
 		wrapper.append(titleText);
 		if (this.sighting.image_link.length > 1) {
 			const multiImageIndicator = DOM.create("span", "toudai-card-multi-image-indicator", ImageIcon());
 			wrapper.append(multiImageIndicator)
 		}
 		this.element.append(wrapper);
+	}
+
+	private getTitle(): string {
+		let title: string;
+		switch (AnilistAuth.titleLanguage) {
+			case "ROMAJI":
+				title = this.sighting.title_r;
+				break;
+			case "ENGLISH":
+				title = this.sighting.title_en;
+				break;
+			case "NATIVE":
+				title = this.sighting.title_jp;
+				break;
+		}
+
+		if (!title) {
+			title = this.sighting.title_r ?? this.sighting.title_en ?? this.sighting.title_jp;
+		}
+		return title;
 	}
 
 	private createMetaRow() {
