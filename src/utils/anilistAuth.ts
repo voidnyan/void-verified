@@ -13,6 +13,7 @@ export class AnilistAuth {
 
 	static name: string;
 	static id: number;
+	static titleLanguage: "ROMAJI" | "ENGLISH" | "NATIVE";
 
 	private static settingsContainer = DOM.createDiv();
 
@@ -35,6 +36,7 @@ export class AnilistAuth {
 		const alAuth = JSON.parse(localStorage.getItem("auth"));
 		this.name = alAuth?.name;
 		this.id = alAuth?.id;
+		this.titleLanguage = alAuth?.options?.titleLanguage;
 	}
 
 	private static async getStoredAuth() {
