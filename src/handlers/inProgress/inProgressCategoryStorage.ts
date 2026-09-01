@@ -1,7 +1,7 @@
 import {
 	createInProgressCategoryId,
 	InProgressCategoriesConfig,
-	InProgressCategory
+	InProgressCategory, ISavedMediaListConfig
 } from "../../components/InProgressCategoryManager";
 import {LocalStorageKeys} from "../../assets/localStorageKeys";
 import {Toaster} from "../../utils/toaster";
@@ -15,7 +15,8 @@ class InProgressCategoryStorage {
 			autoAiringCategory: true,
 			includeCustomCategoryEntriesInAiring: false,
 			autoRewatchingCategory: false,
-			autoRereadingCategory: false
+			autoRereadingCategory: false,
+			savedMediaListConfigs: []
 		};
 
 		try {
@@ -26,7 +27,8 @@ class InProgressCategoryStorage {
 				autoAiringCategory: categories?.autoAiringCategory ?? fallback.autoAiringCategory,
 				includeCustomCategoryEntriesInAiring: categories?.includeCustomCategoryEntriesInAiring ?? fallback.includeCustomCategoryEntriesInAiring,
 				autoRewatchingCategory: categories?.autoRewatchingCategory ?? fallback.autoRewatchingCategory,
-				autoRereadingCategory: categories?.autoRereadingCategory ?? fallback.autoRereadingCategory
+				autoRereadingCategory: categories?.autoRereadingCategory ?? fallback.autoRereadingCategory,
+				savedMediaListConfigs: categories?.savedMediaListConfigs ?? fallback.savedMediaListConfigs
 			};
 		} catch (error) {
 			Toaster.error("Failed to load in progress categories.", error);
@@ -35,6 +37,12 @@ class InProgressCategoryStorage {
 	}
 
 	static save(categories: InProgressCategoriesConfig) {
+		localStorage.setItem(LocalStorageKeys.inProgressCategories, JSON.stringify(categories));
+	}
+
+	static saveMediaListConfigs(configs: ISavedMediaListConfig []) {
+		const categories: InProgressCategoriesConfig = JSON.parse(localStorage.getItem(LocalStorageKeys.inProgressCategories));
+		categories.savedMediaListConfigs = configs;
 		localStorage.setItem(LocalStorageKeys.inProgressCategories, JSON.stringify(categories));
 	}
 

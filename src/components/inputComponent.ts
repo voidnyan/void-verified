@@ -27,6 +27,6 @@ export class InputComponent {
 	}
 
 	getValue(): string {
-		return this.element.value;
+		return this.element.value.trim();
 	}
 }

@@ -1,5 +1,5 @@
 import {IMediaList} from "../api/types/IMediaList";
-import {Checkbox, SettingLabel} from "./components";
+import {Checkbox, IconButton, SettingLabel} from "./components";
 import {DOM} from "../utils/DOM";
 import {Toaster} from "../utils/toaster";
 import {IViewer} from "../api/types/IViewer";
@@ -8,6 +8,10 @@ import {ActivityType} from "../api/types/activityType";
 import {ButtonComponent} from "./ButtonComponent";
 import {AnilistAPI} from "../api/anilistAPI";
 import {InProgressMediaListCache} from "../handlers/inProgress/inProgressMediaListCache";
+import {InputComponent} from "./inputComponent";
+import {Dialog} from "../utils/dialog";
+import {InProgressCategoryStorage} from "../handlers/inProgress/inProgressCategoryStorage";
+import {TrashcanIcon} from "../assets/icons";
 
 export type InProgressMediaType = "Anime" | "Manga";
 
@@ -17,6 +21,11 @@ export interface InProgressCategory {
 	title: string;
 }
 
+export interface ISavedMediaListConfig {
+	name: string;
+	viewer: IViewer
+}
+
 export interface InProgressCategoriesConfig {
 	Anime: InProgressCategory[];
 	Manga: InProgressCategory[];
@@ -24,6 +33,7 @@ export interface InProgressCategoriesConfig {
 	includeCustomCategoryEntriesInAiring: boolean;
 	autoRewatchingCategory: boolean;
 	autoRereadingCategory: boolean;
+	savedMediaListConfigs: ISavedMediaListConfig[]
 }
 
 interface CategoryEditorState {
@@ -50,7 +60,7 @@ export class InProgressCategoryManager {
 	private readonly manga: IMediaList[];
 	private readonly categories: InProgressCategoriesConfig;
 	private readonly onChange: (categories: InProgressCategoriesConfig) => void;
-	private readonly viewer: IViewer;
+	private viewer: IViewer;
 	private categoryEditorState: CategoryEditorState = {
 		type: "Anime",
 		editingId: null
@@ -117,7 +127,10 @@ export class InProgressCategoryManager {
 	}
 
 	private createActivityListSettings() {
+		const wrapper = DOM.createDiv();
 		const container = DOM.createDiv("in-progress-category-settings");
+		wrapper.append(DOM.create("h3", null, "Activity List Settings"));
+		wrapper.append(container);
 
 		const activityMergeTimeOptions = [
 			{value: 0, label: "Never"},
@@ -163,21 +176,80 @@ export class InProgressCategoryManager {
 		}
 
 		const saveButton = new ButtonComponent("Save", async () => {
-			try {
-				Toaster.debug("Saving activity settings.")
-				saveButton.setIsDisabled(true);
-				await AnilistAPI.updateMediaListActivitySettings(this.viewer);
-				InProgressMediaListCache.updateViewer(this.viewer);
-				Toaster.success("Activity settings saved.")
-			} catch (error) {
-				Toaster.error(error);
-			} finally {
-				saveButton.setIsDisabled(false);
-			}
+			await this.saveMediaListOptions(saveButton, this.viewer);
 		});
 
-		container.append(saveButton.element);
-		return container;
+		const saveAsQuickSettingButton = new ButtonComponent("Save Config", () => {
+			Dialog.prompt((value) => {
+				this.saveMediaListConfig(value);
+				this.render();
+			}, "Name the config");
+		});
+
+		container.append(this.createConfigButtons());
+
+		container.append(saveButton.element, saveAsQuickSettingButton.element);
+
+		return wrapper;
+	}
+
+	private createConfigButtons() {
+		const configButtons = DOM.createDiv("flex gap-5 mt-5");
+
+		for (const savedConfig of this.categories.savedMediaListConfigs) {
+			const configButton = new ButtonComponent(savedConfig.name, async () => {
+				await this.saveMediaListOptions(configButton, savedConfig.viewer);
+				this.viewer = savedConfig.viewer;
+				this.render();
+			}, "small slim");
+			configButton.element.append(IconButton(TrashcanIcon(), (event: Event) => {
+				event.stopPropagation();
+				event.stopImmediatePropagation();
+				this.removeSavedMediaListConfig(savedConfig.name);
+				configButton.element.remove();
+			}))
+			configButtons.append(configButton.element);
+		}
+		return configButtons;
+	}
+
+	private async saveMediaListOptions(button: ButtonComponent, viewer: IViewer) {
+		try {
+			Toaster.debug("Saving activity settings.")
+			button.setIsDisabled(true);
+			await AnilistAPI.updateMediaListActivitySettings(viewer);
+			InProgressMediaListCache.updateViewer(viewer);
+			Toaster.success("Activity settings saved.")
+		} catch (error) {
+			Toaster.error(error);
+		} finally {
+			button.setIsDisabled(false);
+		}
+	}
+
+	private saveMediaListConfig(name: string): void {
+		if (this.categories.savedMediaListConfigs.some(x => x.name.trim().toLowerCase() === name.toLowerCase())) {
+			Dialog.inform("A saved config with the given name already exists.");
+			return;
+		}
+
+		if (name.trim().length === 0) {
+			Dialog.inform("Name cannot be empty");
+			return;
+		}
+
+		const config: ISavedMediaListConfig = {
+			viewer: JSON.parse(JSON.stringify(this.viewer)),
+			name
+		};
+
+		this.categories.savedMediaListConfigs.push(config);
+		InProgressCategoryStorage.saveMediaListConfigs(this.categories.savedMediaListConfigs);
+	}
+
+	private removeSavedMediaListConfig(name: string): void {
+		this.categories.savedMediaListConfigs = this.categories.savedMediaListConfigs.filter(x => x.name !== name);
+		InProgressCategoryStorage.saveMediaListConfigs(this.categories.savedMediaListConfigs);
 	}
 
 	private mapActivityTypeToListOption(activityType: ActivityType): string {

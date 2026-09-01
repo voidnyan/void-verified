@@ -53,6 +53,7 @@ export class ReadNotifications {
 		if (StaticSettings.options.syncReadNotifications.getValue()){
 			try {
 				VoidApi.toggleReadNotifications([...newlyReadNotifications], true);
+				localStorage.setItem(LocalStorageCacheKeys.notificationsLastSyncTime, JSON.stringify(new Date()));
 			} catch (error){
 				Toaster.error("Failed to sync read notifications with VoidAPI" ,error);
 			}
@@ -68,6 +69,7 @@ export class ReadNotifications {
 		if (StaticSettings.options.syncReadNotifications.getValue()){
 			try {
 				VoidApi.toggleReadNotifications([...notifications], true);
+				localStorage.setItem(LocalStorageCacheKeys.notificationsLastSyncTime, JSON.stringify(new Date()));
 			} catch (error){
 				Toaster.error("Failed to sync read notifications with VoidAPI" ,error);
 			}
@@ -83,6 +85,7 @@ export class ReadNotifications {
 		if (StaticSettings.options.syncReadNotifications.getValue()){
 			try {
 				VoidApi.toggleReadNotifications([...notifications], false);
+				localStorage.setItem(LocalStorageCacheKeys.notificationsLastSyncTime, JSON.stringify(new Date()));
 			} catch (error){
 				Toaster.error("Failed to sync read notifications with VoidAPI" ,error);
 			}
