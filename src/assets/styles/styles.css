@@ -1245,6 +1245,10 @@ body:has(.void-modal-background[open]) {
     font-family: inherit;
 }
 
+.void-button.void-small {
+    padding: 4px 6px;
+}
+
 .void-button.void-self-message {
     margin-left: 18px;
     font-weight: 900;

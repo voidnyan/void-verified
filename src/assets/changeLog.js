@@ -17,6 +17,9 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("2.3", [
+		new Feature("Allow saving configs for In Progress list activity settings.")
+	]),
 	new Version("2.2", [
 		new Feature("Replace toudai.moe links with a lighthouse card.", "lighthouseCardEnabled"),
 		new Feature("Add a Lighthouses tab to media pages (toudai.moe).", "lighthouseTabEnabled"),

@@ -78,7 +78,7 @@ export class Dialog {
 		this.open();
 	}
 
-	static prompt(callback: (value: string) => void, title = "Insert Value", placeholder?: string) {
+	static prompt(callback: (value: string) => void, title = "Insert Value", placeholder = "") {
 		if (!this.dialogWrapper) {
 			this.initialize()
 		}
@@ -91,6 +91,7 @@ export class Dialog {
 		};
 		this.cancelButton.classList.remove("void-hidden");
 		this.open();
+		input.focus();
 	}
 
 	static open() {
