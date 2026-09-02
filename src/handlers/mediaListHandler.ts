@@ -7,12 +7,9 @@ import {IMediaList} from "../api/types/IMediaList";
 import {LocalStorageCacheKeys} from "../assets/localStorageKeys";
 import {CacheTimes} from "../assets/cacheTimes";
 import {DOM} from "../utils/DOM";
-import {AddIcon, NoteIcon, RefreshIcon, RepeatIcon} from "../assets/icons";
+import { RefreshIcon, RepeatIcon} from "../assets/icons";
 import {StaticTooltip} from "../utils/staticTooltip";
-import {Dialog} from "../utils/dialog";
 import {IconButton} from "../components/components";
-import {DomPurify} from "../utils/domPurify";
-import {Markdown} from "../utils/markdown";
 
 interface ISocialTab {
 	mediaId: number;
@@ -22,19 +19,6 @@ interface ISocialTab {
 export class MediaListHandler {
 	private static queryInProgress = false;
 	private static cache: BasicCache<ISocialTab> = new BasicCache<ISocialTab>(LocalStorageCacheKeys.socialTab, CacheTimes.socialTabCache);
-
-	static handleMediaListNotes() {
-		const notes = document.querySelectorAll<HTMLSpanElement>(".entry.row .notes");
-
-		for (const note of notes) {
-			const noteText = note.getAttribute("label");
-			const title = note.parentNode.querySelector("a").innerText.trim();
-			note.addEventListener("click", (e) => {
-				Dialog.markdown(Markdown.parse(noteText), title);
-			});
-			note.setAttribute("void-media-list-note", "true");
-		}
-	}
 
 	static async handleSocialTab(forceRequery = false) {
 		if ((!StaticSettings.options.socialTabEnhancementEnabled.getValue() || this.queryInProgress && !forceRequery) ) {
@@ -98,34 +82,8 @@ export class MediaListHandler {
 			progressContainer = DOM.createDiv("social-tab-data social-tab-progress", progress);
 			entryElement.querySelector(".status").after(progressContainer);
 		}
-
-		let repeatContainer = entryElement.querySelector(".void-social-tab-repeat");
-		if (!repeatContainer) {
-			repeatContainer = DOM.createDiv("social-tab-data social-tab-repeat");
-			progressContainer.after(repeatContainer);
-		}
-		repeatContainer.replaceChildren();
 		if (mediaList.repeat > 0) {
-			const repeatIcon = RepeatIcon();
-			StaticTooltip.register(repeatIcon, mediaList.repeat);
-			repeatContainer.append(repeatIcon);
-		}
-
-		let noteContainer = entryElement.querySelector(".void-social-tab-notes");
-		if (!noteContainer) {
-			noteContainer = DOM.createDiv("social-tab-data social-tab-notes cursor-pointer");
-			repeatContainer.after(noteContainer);
-		}
-		noteContainer.replaceChildren();
-
-		if (mediaList.notes) {
-			const noteIcon = NoteIcon();
-			noteIcon.addEventListener("click", (e: Event) => {
-				e.stopPropagation();
-				e.preventDefault();
-				Dialog.markdown(Markdown.parse(mediaList.notes), `${mediaList.user.name}'s notes`);
-			});
-			noteContainer.append(noteIcon);
+			StaticTooltip.register(progressContainer, `Repeat: ${mediaList.repeat}`);
 		}
 	}
 

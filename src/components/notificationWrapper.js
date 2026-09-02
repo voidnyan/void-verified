@@ -20,12 +20,12 @@ export const NotificationWrapper = (notification, addReadListener = false) => {
 
 	wrapper.append(previewWrapper, context, timestamp);
 	if (addReadListener) {
-		wrapper.addEventListener("click", () => {
+		wrapper.addEventListener("click", async (e) => {
 			if (wrapper.classList.contains("void-unread-notification")) {
-				markAsRead(notification);
+				await markAsRead(notification);
 				wrapper.classList.remove("void-unread-notification");
 			} else {
-				markAsUnread(notification);
+				await markAsUnread(notification);
 				wrapper.classList.add("void-unread-notification");
 			}
 		});
@@ -33,7 +33,7 @@ export const NotificationWrapper = (notification, addReadListener = false) => {
 	return wrapper;
 };
 
-const markAsRead = (notification) => {
+const markAsRead = async (notification) => {
 	try {
 		const notifications = [
 			notification.id,
@@ -41,18 +41,18 @@ const markAsRead = (notification) => {
 		if (notification.group) {
 			notifications.push(...notification.group.map((item) => item.notificationId));
 		}
-		ReadNotifications.markMultipleAsRead(notifications);
+		await ReadNotifications.markMultipleAsRead(notifications);
 	} catch (error) {
 		console.error(error);
 	}
 };
 
-const markAsUnread = (notification) => {
+const markAsUnread = async (notification) => {
 	const notifications = [
 		notification.id,
 		...notification.group?.map((item) => item.notificationId),
 	];
-	ReadNotifications.markMultipleAsUnread(notifications);
+	await ReadNotifications.markMultipleAsUnread(notifications);
 };
 
 const createPreview = (notification) => {
@@ -171,9 +171,11 @@ const createContext = (notification, addReadListener) => {
 
 	context.setAttribute("href", getNotificationUrl(notification));
 	if (addReadListener) {
-		context.addEventListener("click", (event) => {
+		context.addEventListener("click", async (event) => {
 			event.stopPropagation();
-			markAsRead(notification);
+			event.preventDefault();
+			await markAsRead(notification);
+			window.location.href = context.getAttribute("href");
 		});
 	}
 
@@ -236,9 +238,12 @@ const createMediaContext = (notification, addReadListener) => {
 		context.append(reason);
 	}
 	if (addReadListener) {
-		context.addEventListener("click", (event) => {
+		context.addEventListener("click", async (event) => {
 			event.stopPropagation();
-			markAsRead(notification);
+			event.preventDefault();
+			await markAsRead(notification);
+			if (!notification.deletedMediaTitle)
+				window.location.href = context.getAttribute("href");
 		});
 	}
 	return context;

@@ -6,7 +6,6 @@ import { LayoutDesigner } from "./layoutDesigner";
 import { Toaster } from "../utils/toaster";
 import {Link} from "../components/components.js";
 import { GifKeyboardHandler } from "./gifKeyboardHandler";
-import { AnilistFeedFixHandler } from "./anilistFeedFixHandler.js";
 import { NotificationQuickAccessHandler } from "./notifications/notificationQuickAccessHandler";
 import { NotificationFeedHandler } from "./notifications/notificationFeedHandler.js";
 import {
@@ -33,7 +32,6 @@ export class IntervalScriptHandler {
 	styleHandler;
 	settings;
 	quickAccess;
-	anilistFeedFixHandler;
 	notificationQuickAccessHandler;
 	notificationFeedHandler;
 	activityPostHandler;
@@ -45,7 +43,6 @@ export class IntervalScriptHandler {
 		this.styleHandler = new StyleHandler(settings);
 
 		this.quickAccess = new QuickAccess(settings);
-		this.anilistFeedFixHandler = new AnilistFeedFixHandler(settings);
 		this.notificationQuickAccessHandler =
 			new NotificationQuickAccessHandler(settings);
 		this.notificationFeedHandler = new NotificationFeedHandler(settings);
@@ -78,7 +75,6 @@ export class IntervalScriptHandler {
 		ActivityHandler.addCollapseReplyButtons();
 		GifKeyboardHandler.handleGifKeyboard();
 		LayoutDesigner.renderLayoutPreview();
-		intervalScriptHandler.anilistFeedFixHandler.handleFix();
 		intervalScriptHandler.notificationFeedHandler.renderNotificationsFeed();
 		intervalScriptHandler.markdownHotkeys.renderSettings();
 		intervalScriptHandler.pasteHandler.registerDragAndDropInputs();
@@ -94,7 +90,6 @@ export class IntervalScriptHandler {
 		PollHandler.addPollForms();
 		PollHandler.replacePollImages();
 		MediaListHandler.handleSocialTab();
-		MediaListHandler.handleMediaListNotes();
 		ToudaiHandler.replaceLinksWithLighthouseCard();
 		ToudaiHandler.addLighthouseTab();
 
@@ -121,7 +116,6 @@ export class IntervalScriptHandler {
 		if (path.startsWith("/user/")) {
 			intervalScriptHandler.quickAccess.clearBadge();
 			intervalScriptHandler.styleHandler.verifyProfile();
-			intervalScriptHandler.anilistFeedFixHandler.handleFilters();
 			ProfileHandler.addVerifyButtonToProfile();
 		} else {
 			intervalScriptHandler.styleHandler.clearStyles("profile");

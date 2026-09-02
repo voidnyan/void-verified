@@ -60,7 +60,7 @@ export class ReadNotifications {
 		}
 	}
 
-	static markMultipleAsRead(notifications) {
+	static async markMultipleAsRead(notifications) {
 		const readNotifications = this.#getReadNotifications();
 		notifications.forEach((notification) => {
 			readNotifications.add(notification);
@@ -68,7 +68,7 @@ export class ReadNotifications {
 		this.#saveReadNotifications(readNotifications);
 		if (StaticSettings.options.syncReadNotifications.getValue()){
 			try {
-				VoidApi.toggleReadNotifications([...notifications], true);
+				await VoidApi.toggleReadNotifications([...notifications], true);
 				localStorage.setItem(LocalStorageCacheKeys.notificationsLastSyncTime, JSON.stringify(new Date()));
 			} catch (error){
 				Toaster.error("Failed to sync read notifications with VoidAPI" ,error);
@@ -76,7 +76,7 @@ export class ReadNotifications {
 		}
 	}
 
-	static markMultipleAsUnread(notifications) {
+	static async markMultipleAsUnread(notifications) {
 		const readNotifications = this.#getReadNotifications();
 		notifications.forEach((notification) => {
 			readNotifications.delete(notification);
@@ -84,7 +84,7 @@ export class ReadNotifications {
 		this.#saveReadNotifications(readNotifications);
 		if (StaticSettings.options.syncReadNotifications.getValue()){
 			try {
-				VoidApi.toggleReadNotifications([...notifications], false);
+				await VoidApi.toggleReadNotifications([...notifications], false);
 				localStorage.setItem(LocalStorageCacheKeys.notificationsLastSyncTime, JSON.stringify(new Date()));
 			} catch (error){
 				Toaster.error("Failed to sync read notifications with VoidAPI" ,error);

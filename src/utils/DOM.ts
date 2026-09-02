@@ -4,11 +4,15 @@ export class DOM {
 	static create<T extends HTMLElement = HTMLElement>(element: string, classes?: string, children?: any, options = {}) : T {
 		const el = document.createElement(element) as T;
 
-		if (element.toLowerCase() === "a") {
-			el.addEventListener("click", (event) => {
-				Vue.handleAnchorClickEvent(event);
-			})
-		}
+		// The commented code below allows VV anchors to behave the same as native Vue router links.
+		// However, there is a seeming side effect where other event listener code like syncing notification
+		// read status does not (always) work, possibly because the API call was interrupted.
+
+		// if (element.toLowerCase() === "a") {
+		// 	el.addEventListener("click", (event) => {
+		// 		Vue.handleAnchorClickEvent(event);
+		// 	})
+		// }
 
 		this.transformClasses(el, classes);
 

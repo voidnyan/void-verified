@@ -18,7 +18,10 @@ class Feature {
 
 export const changeLog = [
 	new Version("2.3", [
-		new Feature("Allow saving configs for In Progress list activity settings.")
+		new Feature("Allow saving configs for In Progress list activity settings."),
+		new Feature("Removed replacing media list note tooltip with a dialog after AniList implemented this feature."),
+		new Feature("Removed a fix where private messages where shown in profile activity feed with the List filter after AniList fixed this bug."),
+		new Feature("Fixed not syncing notification read status between devices when clicking its link in some cases.")
 	]),
 	new Version("2.2", [
 		new Feature("Replace toudai.moe links with a lighthouse card.", "lighthouseCardEnabled"),

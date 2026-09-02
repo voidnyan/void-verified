@@ -74,7 +74,6 @@ export interface IOptions {
 	syncGifsToVoidApi: IOption;
 	changeLogEnabled: IOption;
 	selfMessageEnabled: IOption;
-	hideMessagesFromListFeed: IOption;
 	replyActivityUpdate: IOption;
 	markdownHotkeys: IOption;
 	collapsibleReplies: IOption;
@@ -97,7 +96,6 @@ export interface IOptions {
 	pollsEnabled: IOption;
 	replaceInProgressEnabled: IOption;
 	socialTabEnhancementEnabled: IOption;
-	replaceNotes: IOption;
 	verifyButtonInProfile: IOption;
 	lighthouseTabEnabled: IOption;
 	lighthouseCardEnabled: IOption;

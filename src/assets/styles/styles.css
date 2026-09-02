@@ -1649,7 +1649,7 @@ body:has(.void-modal-background[open]) {
 }
 
 .following[void-social-tab="true"] a.follow {
-    grid-template-columns: 30px 2fr 1fr 1fr 0.5fr 0.5fr 1fr;
+    grid-template-columns: 30px 1.5fr 1fr 1fr 0.5fr 1fr;
     gap: 5px;
 }
 

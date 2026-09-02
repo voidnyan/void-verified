@@ -194,12 +194,6 @@ export const defaultSettings: IOptions = {
 		category: categories.activity,
 		authRequired: true,
 	},
-	hideMessagesFromListFeed: {
-		defaultValue: false,
-		description:
-			"Fix AniList bug where private messages are displayed in List activity feed.",
-		category: categories.activity,
-	},
 	replyActivityUpdate: {
 		defaultValue: false,
 		description: "Add insta-reply to activity update in home feed.",
@@ -320,12 +314,6 @@ export const defaultSettings: IOptions = {
 		description: "Add progress, repeat and notes to media's social tab.",
 		category: categories.misc,
 		authRequired: true
-	},
-	replaceNotes: {
-		defaultValue: false,
-		description: "Replace media list note tooltip with a dialog.",
-		category: categories.misc,
-		authRequired: false
 	},
 	verifyButtonInProfile: {
 		defaultValue: false,
