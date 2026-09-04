@@ -214,6 +214,10 @@ export class BaseActivityComponent {
 		return actions;
 	}
 
+	toggleReplies() {
+		this.activityReplies.classList.toggle("void-hidden");
+	}
+
 	createLikeAction(id: number, type: "ACTIVITY" | "ACTIVITY_REPLY", likes: IUser[], likeCount: number, isLiked: boolean) {
 		const likesContainer = DOM.create("div", ".action .likes");
 		const likeWrapActivity = DOM.create("div", ".like-wrap .activity");

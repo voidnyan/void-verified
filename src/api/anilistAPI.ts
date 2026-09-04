@@ -23,6 +23,9 @@ import inProgressMediaListQuery from "./queries/inProgressMediaListQuery";
 import {IMediaList} from "./types/IMediaList";
 import {IViewer} from "./types/IViewer";
 import {socialTabFollowingQuery} from "./queries/socialTabFollowingQuery";
+import {IListActivity} from "./types/IListActivity";
+import {ITextActivity} from "./types/ITextActivity";
+import {CreateActivityQuery} from "./queries/activityQuery";
 
 export class AnilistAPI {
 	private static url = "https://graphql.anilist.co";
@@ -564,6 +567,16 @@ export class AnilistAPI {
 		const options = this.getMutationOptions(query, variables);
 		await this.fetch(options);
 	}
+
+	static async queryActivity(activityId: number, includeReplies = false): Promise<IListActivity | ITextActivity | IMessageActivity> {
+		const query = CreateActivityQuery(includeReplies);
+		const variables = {activityId};
+
+		const options = this.getMutationOptions(query, variables);
+		const data = await this.fetch(options);
+		return data.Activity;
+	}
+
 	static async getInProgressMediaLists(): Promise<[IMediaList[], IMediaList[], IViewer]> {
 		const query = inProgressMediaListQuery;
 
