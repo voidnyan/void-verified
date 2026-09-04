@@ -105,6 +105,13 @@ export const defaultSettings: IOptions = {
 		authRequired: false,
 		voidApiAuthRequired: true
 	},
+	openNotificationInOverlay: {
+		defaultValue: false,
+		description: "Open activity in an overlay from VV notifications (requires QuickStart to be enabled).",
+		category: categories.misc,
+		authRequired: true,
+		voidApiAuthRequired: false
+	},
 	quickAccessNotificationsEnabled: {
 		defaultValue: false,
 		description: "Display quick access of notifications in home page.",

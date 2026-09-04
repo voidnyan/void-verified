@@ -36,7 +36,7 @@ export class QuickStartHandler {
 	private static configContainer: HTMLDivElement;
 
 	static config: QuickStartConfig;
-	static mode = QuickStartMode.Dashboard;
+	static mode: QuickStartMode | null  = QuickStartMode.Dashboard;
 	private static debouncer = new Debouncer();
 
 	static initialize() {
@@ -110,6 +110,14 @@ export class QuickStartHandler {
 		hotkeys(this.config.openQuickStartKeybind, "all", this.openQuickStart);
 	}
 
+	static openWithElement(element: HTMLDivElement) {
+		this.headContainer.replaceChildren(element);
+		this.resultsContainer.replaceChildren();
+		this.mode = null;
+		this.modeSelect.updateActive(null);
+		this.open();
+	}
+
 	private static bindOpenQuickStart(newBind: string, oldBind: string) {
 		if (oldBind) {
 			// @ts-ignore
@@ -130,14 +138,22 @@ export class QuickStartHandler {
 		}
 		QuickStartHandler.headContainer.replaceChildren();
 		QuickStartHandler.resultsContainer.replaceChildren();
-		QuickStartHandler.container.classList.add("void-visible");
-		ALScrollock.lock();
+		QuickStartHandler.open();
 		QuickStartHandler.commandInput.focus();
 		QuickStartHandler.handleModes();
 		QuickStartHandler.modeSelect.updateActive(QuickStartMode[QuickStartHandler.mode]);
 	}
 
+	static open() {
+		QuickStartHandler.container.classList.add("void-visible");
+		ALScrollock.lock();
+	}
+
 	private static cycleMode() {
+		if (this.mode === null) {
+			this.mode = QuickStartMode.Dashboard;
+			return;
+		}
 		const modes = Object.values(QuickStartMode).filter(value => typeof value === "number") as QuickStartMode[];
 		if (this.mode + 1 >= modes.length) {
 			this.mode = QuickStartMode.Dashboard;

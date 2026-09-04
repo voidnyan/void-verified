@@ -85,6 +85,7 @@ export interface IOptions {
 	miniMediaEnabled: IOption;
 	replaceNotifications: IOption;
 	syncReadNotifications: IOption;
+	openNotificationInOverlay: IOption;
 	replaceVideosWithLinksEnabled: IOption;
 	messageFeedEnabled: IOption;
 	quickStartEnabled: IOption;

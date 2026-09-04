@@ -17,6 +17,9 @@ class Feature {
 }
 
 export const changeLog = [
+	new Version("2,4", [
+		new Feature("Open activity in an overlay from VV notifications (requires QuickStart to be enabled).", "openNotificationInOverlay")
+	]),
 	new Version("2.3", [
 		new Feature("Allow saving configs for In Progress list activity settings."),
 		new Feature("Removed replacing media list note tooltip with a dialog after AniList implemented this feature."),
@@ -27,7 +30,7 @@ export const changeLog = [
 		new Feature("Replace toudai.moe links with a lighthouse card.", "lighthouseCardEnabled"),
 		new Feature("Add a Lighthouses tab to media pages (toudai.moe).", "lighthouseTabEnabled"),
 		new Feature("Add progress, repeat and notes to media's social tab.", "socialTabEnhancementEnabled"),
-		new Feature("Replace media list note tooltip with a dialog.", "replaceNotes"),
+		new Feature("Replace media list note tooltip with a dialog."),
 		new Feature("Add a verify button to profiles.", "verifyButtonInProfile"),
 		new Feature("Display media overview when hovering VoidVerified In Progress entries. Enable this in the Mini Media subcategory in VoidVerified settings."),
 		new Feature("Added an option to create automatic categories for rewatching and rereading in In Progress settings."),

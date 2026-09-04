@@ -1,9 +1,12 @@
 import { DOM } from "../utils/DOM";
-import { Link } from "./components";
+import {IconButton, Link} from "./components";
 import { ReadNotifications } from "./readNotifications";
 import {Time} from "../utils/time";
 import {StaticTooltip} from "../utils/staticTooltip";
 import {MiniProfileHandler} from "../handlers/miniProfileHandler";
+import {ListBulletIcon} from "../assets/icons";
+import {ActivityMode} from "../handlers/quickStart/modes/ActivityMode";
+import {StaticSettings} from "../utils/staticSettings";
 
 export const NotificationWrapper = (notification, addReadListener = false) => {
 	const wrapper = DOM.create("div", "notification-wrapper");
@@ -159,6 +162,20 @@ const createContext = (notification, addReadListener) => {
 		highlight,
 		`\u00A0${notification.context.trim()}`,
 	]);
+
+	if (notification.activityId &&
+		StaticSettings.options.openNotificationInOverlay.getValue() &&
+		StaticSettings.options.quickStartEnabled.getValue()) {
+		const activityButton = IconButton(ListBulletIcon(), async (event) => {
+			event.stopPropagation();
+			event.stopImmediatePropagation();
+			event.preventDefault();
+			await ActivityMode.openActivity(notification.activityId);
+			await markAsRead(notification);
+			context.parentElement.classList.remove("void-unread-notification");
+		});
+		context.append(activityButton);
+	}
 
 	if (notification.thread) {
 		const thread = DOM.create(

@@ -21,9 +21,10 @@ export class SelectComponent {
 		};
 	}
 
-	updateActive(value: string | number) {
+	updateActive(value: string | number | null) {
 		this.activeValue = value;
 		this.element.querySelector(".active")?.classList.remove("active");
-		this.element.querySelector(`.void-option[value="${this.activeValue}"]`)?.classList.add("active");
+		if (value !== null)
+			this.element.querySelector(`.void-option[value="${this.activeValue}"]`)?.classList.add("active");
 	}
 }
