@@ -1,29 +1,21 @@
 import { Checkbox, Modal, Note, SettingLabel } from "../components/components";
-import { changeLog } from "../assets/changeLog";
+import {changeLog, Feature, Version} from "../assets/changeLog";
 import { DOM } from "./DOM";
 import {StaticSettings} from "./staticSettings";
 
 export class ChangeLog {
-	#lastVersion;
-	#settings;
-	#lastVersionInLocalStorage = "void-verified-changelog-last-version";
+	static #lastVersion = localStorage.getItem("void-verified-changelog-last-version");
+	static #lastVersionInLocalStorage = "void-verified-changelog-last-version";
 
-	constructor(settings) {
-		this.#settings = settings;
-		this.#lastVersion = localStorage.getItem(
-			this.#lastVersionInLocalStorage,
-		);
-	}
-
-	renderChangeLog(forceDisplay = false) {
+	static renderChangeLog(forceDisplay = false) {
 		if (
-			!this.#settings.options.changeLogEnabled.getValue() &&
+			!StaticSettings.settingsInstance.options.changeLogEnabled.getValue() &&
 			!forceDisplay
 		) {
 			return;
 		}
 
-		if (!this.#newVersionExists() && !forceDisplay) {
+		if (!this.newVersionExists() && !forceDisplay) {
 			return;
 		}
 
@@ -37,23 +29,23 @@ export class ChangeLog {
 			),
 		];
 		modalBody.push(
-			...changeLog.map((version) => {
-				return this.#createModalContent(version);
+			...changeLog().map((version) => {
+				return this.createModalContent(version);
 			}),
 		);
 
 		document.body.append(
 			Modal(modalBody, () => {
-				this.#handleClose(this);
+				this.handleClose(this);
 			}),
 		);
 	}
 
-	#newVersionExists() {
+	private static newVersionExists() {
 		if (!this.#lastVersion) {
 			return true;
 		}
-		const versions = changeLog.map((version) =>
+		const versions = changeLog().map((version) =>
 			version.versionNumber.split("."),
 		);
 		const [lastMajorVersion, lastMinorVersion] =
@@ -73,7 +65,7 @@ export class ChangeLog {
 		return false;
 	}
 
-	#createModalContent(version) {
+	private static createModalContent(version: Version) {
 		const container = DOM.create("div");
 		const header = DOM.create(
 			"h3",
@@ -83,22 +75,23 @@ export class ChangeLog {
 		container.append(header);
 		const list = DOM.create("ul", "change-log-list");
 		const listItems = version.featureList.map((feature) => {
-			return this.#createFeatureListItem(feature);
+			return this.createFeatureListItem(feature);
 		});
 		list.append(...listItems);
 		container.append(list);
 		return container;
 	}
 
-	#createFeatureListItem(feature) {
+	private static createFeatureListItem(feature: Feature) {
 		const container = DOM.create("li");
 		if (feature.option) {
-			const value = this.#settings.options[feature.option].getValue();
+			console.log(feature.option);
+			const value = feature.option.getValue() as boolean;
 			container.append(
 				SettingLabel(
-					feature.description,
+					feature.option.description,
 					Checkbox(value, (event) => {
-						this.#handleOptionChange(event, feature.option);
+						feature.option.setValue(event.target.checked);
 					}),
 				),
 			);
@@ -113,12 +106,7 @@ export class ChangeLog {
 		return container;
 	}
 
-	#handleOptionChange(event, option) {
-		const value = event.target.checked;
-		StaticSettings.options[option].setValue(value);
-	}
-
-	#handleClose(_changeLog) {
+	private static handleClose(_changeLog) {
 		const version = changeLog[0].versionNumber;
 		_changeLog.#lastVersion = version;
 		localStorage.setItem(_changeLog.#lastVersionInLocalStorage, version);
