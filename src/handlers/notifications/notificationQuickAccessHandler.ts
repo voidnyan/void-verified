@@ -199,7 +199,10 @@ export class NotificationQuickAccessHandler {
 				prevNotification.activityId === notification.activityId &&
 				notification.user
 			) {
-				prevNotification.group.push(notification.user);
+				prevNotification.group.push({
+					...notification.user,
+					notificationId: notification.id,
+				});
 				notificationsToRemove.push(i);
 			} else {
 				prevNotification = { ...notification };

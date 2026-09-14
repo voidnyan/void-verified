@@ -96,7 +96,7 @@ export class SettingsUi {
 		]);
 
 		const changeLogButton = Button("View Changelog", () => {
-			new ChangeLog(StaticSettings.settingsInstance).renderChangeLog(true);
+			ChangeLog.renderChangeLog(true);
 		});
 
 		headerContainer.append(header, versionInfo, author, changeLogButton);

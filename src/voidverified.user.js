@@ -64,7 +64,7 @@ import {VoidApi} from "./api/voidApi";
 		);
 	}
 
-	new ChangeLog(StaticSettings.settingsInstance).renderChangeLog();
+	ChangeLog.renderChangeLog();
 
 	new ImgurAPI(
 		ImageHostService.getImageHostConfiguration(imageHosts.imgur),
