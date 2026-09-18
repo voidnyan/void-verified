@@ -39,6 +39,7 @@ export interface IOption {
 	getValue?: () => string | number | boolean;
 	setValue?: (value: string | number | boolean) => void;
 	onValueSet?: () => void;
+	createOption?: (onValueChange?: () => void) => HTMLDivElement;
 }
 
 export interface IOptions {

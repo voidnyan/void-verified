@@ -7,7 +7,7 @@ import {Loader} from "../../../components/loader";
 export class ActivityMode {
 	static async openActivity(activityId: number){
 		const container = this.renderLoader();
-		const activity = await AnilistAPI.queryActivity(activityId, false);
+		const activity = await AnilistAPI.queryActivity(activityId, true);
 		const activityComponent = ActivityFactory.createActivityComponent(activity);
 		container.replaceChildren(activityComponent.element);
 	}

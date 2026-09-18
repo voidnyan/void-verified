@@ -251,20 +251,7 @@ export class QuickStartHandler {
 		const voidSettings = Object.entries(StaticSettings.options).filter(([_, value]) => FuzzyMatch.match(command, value.description));
 		if (voidSettings.length > 0) {
 			const options = voidSettings.map(([key, option]: [key: string, option: IOption]) => {
-				if (typeof option.getValue() === "boolean") {
-					return DOM.create(
-						"div",
-						"quick-start-result",
-						SettingLabel(
-							option.description,
-							Checkbox(option.getValue(), (event) => {
-								option.setValue(event.target.checked);
-							})));
-				}
-				const input = InputField(option.getValue(), (event) => {
-					option.setValue(event.target.value);
-				}, "quick-access-option-input");
-				return DOM.create("div", "quick-start-result", SettingLabel(option.description, input));
+				return DOM.create("div", "quick-start-result", option.createOption());
 			});
 			this.resultsContainer.append(DOM.create("div", "quick-start-results-list", [DOM.create("h3", "quick-start-results-title", "VoidVerified Settings"), ...options]));
 		}

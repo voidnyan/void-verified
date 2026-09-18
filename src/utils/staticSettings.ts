@@ -4,6 +4,7 @@ import {Settings} from "./settings";
 import {LocalStorageKeys} from "../assets/localStorageKeys";
 import {AnilistAuth} from "./anilistAuth";
 import {VoidApi} from "../api/voidApi";
+import {Checkbox, InputField, SettingLabel} from "../components/components";
 
 export class Option implements IOption {
 	key: string;
@@ -23,6 +24,41 @@ export class Option implements IOption {
 		this.key = option.key;
 		this.voidApiAuthRequired = option.voidApiAuthRequired ?? false;
 		this.onValueSet = option.onValueSet;
+	}
+
+	createOption(onValueChange?: () => void): HTMLDivElement {
+		const value = this.getValue();
+		const type = typeof value;
+
+		let input: HTMLInputElement;
+		if (type === "boolean") {
+			input = Checkbox(value, (event) => {
+				this.setValue(event.target.checked);
+				onValueChange();
+
+			}) as HTMLInputElement;
+		} else if (type === "string" || type === "number") {
+			input = InputField(value, (event) => {
+				this.setValue(event.target.value);
+				onValueChange();
+			}) as HTMLInputElement;
+			if (type === "number") {
+				input.setAttribute("type", type);
+			}
+		}
+
+		input.setAttribute("id", this.key);
+		const settingLabel = SettingLabel(this.description, input) as HTMLDivElement;
+
+		if (this.authRequired) {
+			settingLabel.classList.add("void-auth-required");
+		}
+
+		if (this.voidApiAuthRequired) {
+			settingLabel.classList.add("void-api-auth-required");
+		}
+
+		return settingLabel;
 	}
 
 	getValue() {
@@ -45,6 +81,10 @@ export class Option implements IOption {
 
 		StaticSettings.options[this.key].value = value;
 
+		if (this.value === true && this.onValueSet) {
+			this.onValueSet();
+		}
+
 		if (localSettings === null) {
 			const settings = {
 				[this.key]: value,
@@ -56,11 +96,7 @@ export class Option implements IOption {
 			return;
 		}
 
-		if (this.value === true && this.onValueSet) {
-			this.onValueSet();
-		}
-
-		localSettings[this.key] = { value };
+		localSettings[this.key] = {value};
 		localStorage.setItem(
 			LocalStorageKeys.settings,
 			JSON.stringify(localSettings),

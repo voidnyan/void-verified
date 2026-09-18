@@ -135,46 +135,13 @@ export class SettingsUi {
 	}
 
 	private static createOption(option: IOption): HTMLDivElement {
-		const value = option.getValue();
-		const type = typeof value;
-
-		let input: HTMLInputElement;
-		if (type === "boolean") {
-			input = Checkbox(value, (event) => {
-				option.setValue(event.target.checked);
-				if (!this.shouldRenderSubcategory(this.activeSubCategory)) {
-					this.activeSubCategory = subCategories.users;
-					this.renderSubCategory();
-				}
-				this.renderSubcategoriesNav();
-			}) as HTMLInputElement;
-		} else if (type === "string" || type === "number") {
-			input = InputField(value, (event) => {
-				option.setValue(event.target.value);
-				if (!this.shouldRenderSubcategory(this.activeSubCategory)) {
-					this.activeSubCategory = subCategories.users;
-					this.renderSubCategory();
-				}
-				this.renderSubcategoriesNav();
-			}) as HTMLInputElement;
-			if (type === "number") {
-				input.setAttribute("type", type);
+		return option.createOption(() => {
+			if (!this.shouldRenderSubcategory(this.activeSubCategory)) {
+				this.activeSubCategory = subCategories.users;
+				this.renderSubCategory();
 			}
-		}
-
-		input.setAttribute("id", option.key);
-
-		const settingLabel = SettingLabel(option.description, input) as HTMLDivElement;
-
-		if (option.authRequired) {
-			settingLabel.classList.add("void-auth-required");
-		}
-
-		if (option.voidApiAuthRequired) {
-			settingLabel.classList.add("void-api-auth-required");
-		}
-
-		return settingLabel;
+			this.renderSubcategoriesNav();
+		});
 	}
 
 	private static renderSubcategoriesNav() {
