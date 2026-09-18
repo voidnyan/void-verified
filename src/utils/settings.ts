@@ -12,7 +12,7 @@ export class Settings implements ISettings {
 		expires: AnilistAuth.expires
 	};
 	anilistUser: string;
-	userId;
+	userId = AnilistAuth.id;
 
 	verifiedUsers = VerifiedUsers.users;
 
@@ -20,7 +20,6 @@ export class Settings implements ISettings {
 
 	constructor() {
 		this.version = GM_info.script.version;
-
 	}
 
 	isAuthorized() {

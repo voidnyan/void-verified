@@ -7,6 +7,7 @@ import {ITextActivity} from "../../api/types/ITextActivity";
 import {StaticSettings} from "../../utils/staticSettings";
 import {DropdownMenuComponent, IDropdownMenuOption} from "../dropdownComponent";
 import {IUser} from "../../api/types/user";
+import {AnilistAuth} from "../../utils/anilistAuth";
 
 export class TextActivityComponent extends BaseActivityComponent {
 	element: HTMLDivElement;
@@ -22,19 +23,23 @@ export class TextActivityComponent extends BaseActivityComponent {
 
 		const time = this.createTime(activity.createdAt);
 		const directLink = this.createDirectLink(activity);
-		const tailButton = this.createTailButton(activity);
 		const subscribeButton = this.createSubscribeButton(activity);
 		const dropdownTrigger = DOM.create("div", "action .action activity-dropdown-trigger", EllipsisHorizontalIcon());
 
 		const dropdownItems: IDropdownMenuOption[] = [
-			{item: directLink, value: "directlink"},
-			{item: tailButton, value: "tailButton"}
+			{item: directLink, value: "directlink"}
 		];
+
+		if (StaticSettings.options.tailRepliesEnabled.getValue()) {
+			const tailButton = this.createTailButton(activity);
+			dropdownItems.push({item: tailButton, value: "tailButton"});
+		}
+
 		const message = activity as IMessageActivity;
 		const textActivity = activity as ITextActivity;
 
-		if (message.messenger?.id === StaticSettings.settingsInstance.userId ||
-			textActivity.user?.id === StaticSettings.settingsInstance.userId) {
+		if (AnilistAuth.id && (message.messenger?.id === AnilistAuth.id ||
+			textActivity.user?.id === AnilistAuth.id)) {
 			const editButton = this.createEditButton(activity, (editedValue) => {
 				this.markdown.innerHTML = Markdown.parse(editedValue);
 				Markdown.applyFunctions(this.markdown);
@@ -43,9 +48,9 @@ export class TextActivityComponent extends BaseActivityComponent {
 			dropdownItems.push({item: editButton, value: "edit"});
 		}
 
-		if (message.recipient?.id === StaticSettings.settingsInstance.userId ||
-			message.messenger?.id === StaticSettings.settingsInstance.userId ||
-			textActivity.user?.id === StaticSettings.settingsInstance.userId) {
+		if (AnilistAuth.id && (message.recipient?.id === AnilistAuth.id ||
+			message.messenger?.id === AnilistAuth.id ||
+			textActivity.user?.id === AnilistAuth.id)) {
 			const deleteButton = this.createDeleteButton("ACTIVITY", activity.id, () => {
 				this.element.remove();
 			})

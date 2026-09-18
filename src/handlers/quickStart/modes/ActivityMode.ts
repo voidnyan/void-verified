@@ -9,6 +9,7 @@ export class ActivityMode {
 		const container = this.renderLoader();
 		const activity = await AnilistAPI.queryActivity(activityId, true);
 		const activityComponent = ActivityFactory.createActivityComponent(activity);
+		activityComponent.toggleReplies();
 		container.replaceChildren(activityComponent.element);
 	}
 

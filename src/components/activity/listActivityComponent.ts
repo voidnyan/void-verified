@@ -4,6 +4,7 @@ import {BaseActivityComponent} from "./baseActivityComponent";
 import {StaticSettings} from "../../utils/staticSettings";
 import {EllipsisHorizontalIcon} from "../../assets/icons";
 import {DropdownMenuComponent, IDropdownMenuOption} from "../dropdownComponent";
+import {AnilistAuth} from "../../utils/anilistAuth";
 
 export class ListActivityComponent extends BaseActivityComponent{
 	element: HTMLDivElement;
@@ -22,13 +23,16 @@ export class ListActivityComponent extends BaseActivityComponent{
 		time.prepend(this.createSubscribeButton(activity), dropdownTrigger);
 
 		const directLink = this.createDirectLink(activity);
-		const tailButton = this.createTailButton(activity);
 		const dropdownItems: IDropdownMenuOption[] = [
-			{item: directLink, value: "directlink"},
-			{item: tailButton, value: "tailButton"}
+			{item: directLink, value: "directlink"}
 		];
 
-		if (activity.user.id === StaticSettings.settingsInstance.userId) {
+		if (StaticSettings.options.tailRepliesEnabled.getValue()) {
+			const tailButton = this.createTailButton(activity);
+			dropdownItems.push({item: tailButton, value: "tailButton"});
+		}
+
+		if (AnilistAuth.id && activity.user.id === AnilistAuth.id) {
 			const deleteButton = this.createDeleteButton("ACTIVITY", activity.id, () => {
 				this.element.remove();
 			})
