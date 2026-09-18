@@ -86,6 +86,32 @@
     margin-bottom: 0;
 }
 
+.void-activity-entry .void-reply-notice {
+    background: rgb(var(--color-red));
+    color: rgb(var(--color-text-bright));
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.void-native-activity-dropdown-list-item {
+    align-items: center;
+    display: grid;
+    grid-gap: 8px;
+    grid-template-columns: 20px 1fr;
+    padding: 2px 12px;
+    padding-right: 17px;
+    font-size: 14px;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+.void-native-activity-dropdown-list-item:hover {
+    background: rgb(var(--color-blue));
+    color: rgb(var(--color-text-bright));
+}
+
 .void-activity-entry .text .markdown:hover,
 .void-activity-entry .reply .markdown:hover,
 .void-activity-entry .markdown:hover {

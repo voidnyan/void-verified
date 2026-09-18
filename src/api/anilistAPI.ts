@@ -468,13 +468,13 @@ export class AnilistAPI {
 		};
 	}
 
-	static async queryActivityReplies(id: number, page: number = 1): Promise<{
+	static async queryActivityReplies(id: number, page: number = 1, perPage = 50): Promise<{
 		replies: IActivityReply[],
 		pageInfo: IPageInfo
 	}> {
 		const query = queryActivityReplies;
 
-		const variables = {activityId: id, perPage: 50, page};
+		const variables = {activityId: id, perPage, page};
 		const options = this.getQueryOptions(query, variables);
 		const data = await this.fetch(options);
 		return {

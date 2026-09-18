@@ -22,10 +22,14 @@ export class TextActivityComponent extends BaseActivityComponent {
 
 		const time = this.createTime(activity.createdAt);
 		const directLink = this.createDirectLink(activity);
+		const tailButton = this.createTailButton(activity);
 		const subscribeButton = this.createSubscribeButton(activity);
 		const dropdownTrigger = DOM.create("div", "action .action activity-dropdown-trigger", EllipsisHorizontalIcon());
 
-		const dropdownItems: IDropdownMenuOption[] = [{item: directLink, value: "directlink"}];
+		const dropdownItems: IDropdownMenuOption[] = [
+			{item: directLink, value: "directlink"},
+			{item: tailButton, value: "tailButton"}
+		];
 		const message = activity as IMessageActivity;
 		const textActivity = activity as ITextActivity;
 
