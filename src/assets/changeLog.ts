@@ -23,7 +23,8 @@ export class Version {
 
 export const changeLog = () => [
 	new Version("2,4", [
-		new Feature(StaticSettings.settingsInstance.options.openNotificationInOverlay)
+		new Feature(StaticSettings.settingsInstance.options.openNotificationInOverlay),
+		new Feature(StaticSettings.options.tailRepliesEnabled)
 	]),
 	new Version("2.3", [
 		new Feature("Allow saving configs for In Progress list activity settings."),

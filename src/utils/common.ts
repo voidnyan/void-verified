@@ -37,6 +37,11 @@ export class Common {
 		return [null, null];
 	}
 
+	static getActivityIdFromUrl(url: string): number {
+		const match = url.match(/\/activity\/(\d+)\/?/)[1];
+		return +match;
+	}
+
 	static getDayDifference(date1, date2) {
 		return Math.round((date2 - date1) / (1000 * 60 * 60 * 24));
 	}

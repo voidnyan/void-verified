@@ -1,5 +1,5 @@
 import {AnilistAPI} from "../api/anilistAPI";
-import {Button} from "../components/components";
+import {Button, IconButton} from "../components/components";
 import {Toaster} from "../utils/toaster";
 import {DOM} from "../utils/DOM";
 import {StaticSettings} from "../utils/staticSettings";
@@ -11,6 +11,9 @@ import {CollapsedComments} from "../utils/collapsedReplies";
 import {DomDataHandler} from "./domDataHandler";
 import {AnilistAuth} from "../utils/anilistAuth";
 import {MiniPopupHandlerBase} from "./miniPopupHandlerBase";
+import {ActivityMode} from "./quickStart/modes/ActivityMode";
+import {Common} from "../utils/common";
+import {ArrowUTurnUp} from "../assets/icons";
 
 export class ActivityHandler {
 	static moveAndDisplaySubscribeButton() {
@@ -177,6 +180,33 @@ export class ActivityHandler {
 			const time = Time.toLocaleString(new Date(dateString));
 			StaticTooltip.register(timestamp, time);
 			timestamp.removeAttribute("title");
+		}
+	}
+
+	static addTailButtons() {
+		if (!StaticSettings.options.tailRepliesEnabled.getValue()) {
+			return;
+		}
+
+		const activities = document.querySelectorAll<HTMLDivElement>(".activity-entry:not([void-tail='true'])");
+
+		for (const activity of activities) {
+			activity.setAttribute("void-tail", "true");
+			const dropdown = activity.querySelector<HTMLUListElement>(".time .extras-dropdown ul");
+			if (!dropdown)
+				continue;
+			const tailButton = DOM.createDiv("native-activity-dropdown-list-item", [
+				DOM.createDiv(".icon", IconButton(ArrowUTurnUp())),
+				"Tail Activity"
+			]);
+			const directLink = dropdown.querySelector("[href^='/activity/']");
+			console.log(directLink.getAttribute("href"));
+			const activityId = Common.getActivityIdFromUrl(directLink.getAttribute("href"));
+			const numberOfReplies = +activity.querySelector(".action.replies .count")?.innerHTML.trim();
+			tailButton.addEventListener("click", async () => {
+				await ActivityMode.tailReplies(activityId, numberOfReplies);
+			});
+			dropdown.append(tailButton);
 		}
 	}
 }

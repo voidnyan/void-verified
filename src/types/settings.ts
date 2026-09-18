@@ -100,4 +100,5 @@ export interface IOptions {
 	verifyButtonInProfile: IOption;
 	lighthouseTabEnabled: IOption;
 	lighthouseCardEnabled: IOption;
+	tailRepliesEnabled: IOption;
 }

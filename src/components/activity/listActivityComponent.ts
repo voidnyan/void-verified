@@ -21,9 +21,12 @@ export class ListActivityComponent extends BaseActivityComponent{
 		const dropdownTrigger = DOM.create("div", "action .action activity-dropdown-trigger", EllipsisHorizontalIcon());
 		time.prepend(this.createSubscribeButton(activity), dropdownTrigger);
 
-		const directLink = this.createDirectLink(activity)
-		const dropdownItems: IDropdownMenuOption[] = [{item: directLink, value: "directlink"}];
-
+		const directLink = this.createDirectLink(activity);
+		const tailButton = this.createTailButton(activity);
+		const dropdownItems: IDropdownMenuOption[] = [
+			{item: directLink, value: "directlink"},
+			{item: tailButton, value: "tailButton"}
+		];
 
 		if (activity.user.id === StaticSettings.settingsInstance.userId) {
 			const deleteButton = this.createDeleteButton("ACTIVITY", activity.id, () => {

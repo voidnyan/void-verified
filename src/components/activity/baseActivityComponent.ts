@@ -2,7 +2,7 @@ import {IUser, ModeratorRole} from "../../api/types/user";
 import {DOM} from "../../utils/DOM";
 import {Time} from "../../utils/time";
 import {
-	AdminIcon, AnimeDataModIcon, CharacterDataModIcon,
+	AdminIcon, AnimeDataModIcon, ArrowUTurnUp, CharacterDataModIcon,
 	CommunityModIcon, DeveloperIcon, DiscordModIcon,
 	LikeIcon,
 	LinkIcon, MangaDataModIcon,
@@ -23,10 +23,13 @@ import {ITextActivity} from "../../api/types/ITextActivity";
 import {IPageInfo} from "../../api/types/IPageInfo";
 import {StaticTooltip} from "../../utils/staticTooltip";
 import {Dialog} from "../../utils/dialog";
+import {ActivityMode} from "../../handlers/quickStart/modes/ActivityMode";
 
 export class BaseActivityComponent {
 	private replyMarkdownEditor: MarkdownEditor;
 	activityReplies: HTMLDivElement;
+	repliesAction: HTMLDivElement;
+	repliesLoader: HTMLSpanElement;
 	activityId: number;
 
 	editMarkdownEditor: MarkdownEditor;
@@ -180,27 +183,35 @@ export class BaseActivityComponent {
 		return directLink;
 	}
 
+	createTailButton(activity: IListActivity | IMessageActivity | ITextActivity): HTMLDivElement {
+		const tailButton = DOM.createDiv(null, [ArrowUTurnUp(), "Tail Replies"]);
+		tailButton.addEventListener("click", async () => {
+			await ActivityMode.tailReplies(activity.id, activity.replyCount);
+		});
+		return tailButton;
+	}
+
 	createActions(activity: IListActivity | IMessageActivity | ITextActivity): HTMLDivElement {
 		const actions = DOM.createDiv(".actions");
 
-		const replies = DOM.create("div", ".action .replies");
+		this.repliesAction = DOM.create("div", ".action .replies");
 		const replyCount = DOM.create("span", ".count", activity.replyCount);
 		const replyIcon = ReplyIcon();
-		replies.append(replyCount, replyIcon);
+		this.repliesAction.append(replyCount, replyIcon);
 
-		replies.addEventListener("click", async () => {
+		this.repliesAction.addEventListener("click", async () => {
 			if (!this.activityReplies) {
 				return;
 			}
 			this.activityReplies.classList.toggle("void-hidden");
-			if (replies.getAttribute("queried") === "true") {
+			if (this.repliesAction.getAttribute("queried") === "true") {
 				return;
 			}
 			try {
 				const repliesData = await AnilistAPI.queryActivityReplies(activity.id);
 				this.activityReplies.replaceChildren();
 				this.appendReplies(repliesData.replies, repliesData.pageInfo);
-				replies.setAttribute("queried", "true");
+				this.setRepliesAsQueried()
 			} catch (error) {
 				Toaster.error("Failed to query activity replies.", error);
 				this.activityReplies?.classList.add("void-hidden");
@@ -210,7 +221,7 @@ export class BaseActivityComponent {
 
 		const likes = this.createLikeAction(activity.id, "ACTIVITY", activity.likes, activity.likeCount, activity.isLiked);
 
-		actions.append(replies, likes);
+		actions.append(this.repliesAction, likes);
 		return actions;
 	}
 
@@ -267,13 +278,15 @@ export class BaseActivityComponent {
 	createReplyWrap() {
 		const replyWrap = DOM.create("div", ".reply-wrap");
 		this.activityReplies = DOM.create("div", ".activity-replies hidden");
-		this.activityReplies.append(Loader());
+		this.repliesLoader = Loader() as HTMLSpanElement;
+		this.activityReplies.append(this.repliesLoader);
 
 		replyWrap.append(this.activityReplies);
 		return replyWrap;
 	}
 
 	appendReplies(replies: IActivityReply[], pageInfo?: IPageInfo) {
+		this.repliesLoader?.remove();
 		for (const reply of replies) {
 			this.activityReplies.append(this.createReply(reply));
 		}
@@ -281,6 +294,10 @@ export class BaseActivityComponent {
 		this.addLoadMoreRepliesButton(pageInfo);
 
 		this.activityReplies.append(this.replyMarkdownEditor.element);
+	}
+
+	setRepliesAsQueried() {
+		this.repliesAction.setAttribute("queried", "true");
 	}
 
 	private addLoadMoreRepliesButton(pageInfo?: IPageInfo) {

@@ -17,8 +17,6 @@ export class DropdownMenuComponent extends PopOverComponentBase {
 	) {
 		super(trigger, direction);
 		this.createMenu(options, callback, initialValue);
-
-
 	}
 
 	private createMenu(options: string[] | IDropdownMenuOption[], callback: (value: string | IDropdownMenuOption) => void, initialValue?: string) {
