@@ -22,7 +22,7 @@ export class Version {
 }
 
 export const changeLog = () => [
-	new Version("2,4", [
+	new Version("2.4", [
 		new Feature(StaticSettings.settingsInstance.options.openNotificationInOverlay),
 		new Feature(StaticSettings.options.tailRepliesEnabled)
 	]),

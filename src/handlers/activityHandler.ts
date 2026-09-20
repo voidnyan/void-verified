@@ -200,7 +200,6 @@ export class ActivityHandler {
 				"Tail Activity"
 			]);
 			const directLink = dropdown.querySelector("[href^='/activity/']");
-			console.log(directLink.getAttribute("href"));
 			const activityId = Common.getActivityIdFromUrl(directLink.getAttribute("href"));
 			const numberOfReplies = +activity.querySelector(".action.replies .count")?.innerHTML.trim();
 			tailButton.addEventListener("click", async () => {
