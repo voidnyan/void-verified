@@ -18,6 +18,7 @@ import {IAddGifDto} from "../api/voidApi/types/gifInterfaces";
 import {VoidApi} from "../api/voidApi";
 import {StaticSettings} from "../utils/staticSettings";
 import {Time} from "../utils/time";
+import {NativeMarkdownEditor} from "../components/nativeMarkdownEditor/nativeMarkdownEditor";
 
 const keyboardTabs = {
 	gifs: "GIFS",
@@ -107,11 +108,8 @@ export class GifKeyboardHandler {
 	}
 
 	private static addMediaLikeButtons() {
-		if (!StaticSettings.options.gifKeyboardEnabled.getValue()) {
-			return;
-		}
-
-		if (!StaticSettings.options.gifKeyboardLikeButtonsEnabled.getValue()) {
+		if (!StaticSettings.options.gifKeyboardEnabled.getValue() ||
+			!StaticSettings.options.gifKeyboardLikeButtonsEnabled.getValue()) {
 			return;
 		}
 
@@ -173,84 +171,29 @@ export class GifKeyboardHandler {
 			return;
 		}
 
-		const markdownEditors = document.querySelectorAll(".markdown-editor");
+		const markdownEditors = document.querySelectorAll<HTMLDivElement>(".markdown-editor");
 		for (const markdownEditor of markdownEditors) {
 			if (markdownEditor.querySelector(".void-gif-button")) {
 				continue;
 			}
 
-			const gifKeyboard = GifKeyboard(this.createKeyboardHeader());
+			const editor = new NativeMarkdownEditor(markdownEditor);
+			editor.injectToDom();
 
-			gifKeyboard.classList.add("void-hidden");
-			this.renderMediaList(gifKeyboard, markdownEditor);
-			this.renderControls(gifKeyboard, markdownEditor);
-
-			const iconButton = IconButton(
-				GifIcon(),
-				() => {
-					this.toggleKeyboardVisibility(
-						gifKeyboard
-					);
-				},
-				"gif-button",
-			);
-			iconButton.setAttribute("title", "GIF Keyboard");
-			markdownEditor.append(iconButton);
-
-			markdownEditor.parentNode.insertBefore(
-				gifKeyboard,
-				markdownEditor.nextSibling,
-			);
 		}
 	}
 
 	private static refreshKeyboards() {
-		const keyboards = DOM.getAll("gif-keyboard-container");
-		for (const keyboard of keyboards) {
-			this.refreshKeyboard(keyboard);
-		}
+		// TODO: do we need this still? it is mostly an edge case, but signaling to
+		// keyboards that there is a new item could be a smoother user experience
+
+		// const keyboards = DOM.getAll("gif-keyboard-container");
+		// for (const keyboard of keyboards) {
+		// 	this.refreshKeyboard(keyboard);
+		// }
 	}
 
-	private static refreshKeyboard(keyboard) {
-		const markdownEditor =
-			keyboard.parentElement.querySelector(".markdown-editor");
-		this.renderControls(keyboard, markdownEditor);
-		this.renderMediaList(keyboard, markdownEditor);
-	}
-
-	private static createKeyboardHeader = () => {
-		const header = DOM.create("div", "gif-keyboard-header");
-
-		const options = Object.values(keyboardTabs).map((option) =>
-			Option(option, option === this.#activeTab, (event) => {
-				this.#activeTab = option;
-				this.#paginationPage = 0;
-				const keyboard =
-					event.target.parentElement.parentElement.parentElement; // oh god
-				this.refreshKeyboard(keyboard);
-				event.target.parentElement.parentElement.replaceWith(
-					this.createKeyboardHeader(),
-				);
-			}),
-		);
-		header.append(Select(options));
-
-		header.append(
-			RangeField(
-				this.config.gifSize,
-				(event) => {
-					this.config.gifSize = event.target.value;
-					this.config.save();
-				},
-				600,
-				10,
-				10,
-			),
-		);
-		return header;
-	};
-
-	private static addOrRemoveMedia(url, mediaType) {
+	static addOrRemoveMedia(url, mediaType) {
 		let mediaList =
 			mediaType === keyboardTabs.gifs
 				? this.config.gifs
@@ -315,142 +258,5 @@ export class GifKeyboardHandler {
 				break;
 		}
 		this.config.save();
-	}
-
-	private static toggleKeyboardVisibility(keyboard) {
-		if (keyboard.classList.contains("void-hidden")) {
-			this.refreshKeyboard(keyboard);
-			keyboard.classList.remove("void-hidden");
-		} else {
-			keyboard.classList.add("void-hidden");
-		}
-	}
-
-	private static renderMediaList(keyboard, markdownEditor) {
-		if (!keyboard || !markdownEditor) {
-			return;
-		}
-		const mediaItems = keyboard.querySelector(".void-gif-keyboard-list");
-		const columns = [1, 2, 3].map(() => {
-			return DOM.create("div", "gif-keyboard-list-column");
-		});
-		mediaItems.replaceChildren(...columns);
-		const textarea = markdownEditor.parentElement.querySelector("textarea");
-		const mediaList =
-			this.#activeTab === keyboardTabs.gifs
-				? this.config.gifs
-				: this.config.images;
-		if (mediaList.length === 0) {
-			mediaItems.replaceChildren(
-				DOM.create(
-					"div",
-					"gif-keyboard-list-placeholder",
-					this.#activeTab === keyboardTabs.gifs
-						? "It's pronounced GIF."
-						: "You have no funny memes :c",
-				),
-			);
-		}
-		for (const [index, media] of mediaList
-			.slice(
-				this.#paginationPage * this.#pageSize,
-				this.#paginationPage * this.#pageSize + this.#pageSize,
-			)
-			.entries()) {
-			mediaItems.children.item(index % 3).append(
-				GifItem(
-					media,
-					() => {
-						textarea.setRangeText(
-							`img${this.config.gifSize}(${media})`,
-						);
-						textarea.dispatchEvent(new Event('input', {bubbles: true}));
-					},
-					() => {
-						this. addOrRemoveMedia(media, this.#activeTab);
-						this.config.save();
-					},
-					mediaList,
-				),
-			);
-		}
-	}
-
-	private static renderControls(keyboard, markdownEditor) {
-		const container = keyboard.querySelector(
-			".void-gif-keyboard-top-controls",
-		);
-		const mediaField = this.createMediaAddField(keyboard, markdownEditor);
-		const pagination = this.createPagination(keyboard, markdownEditor);
-		container.replaceChildren(mediaField, pagination);
-
-		const bottomContainer = keyboard.querySelector(".void-gif-keyboard-bottom-controls");
-		const bottomPagination = this.createPagination(keyboard, markdownEditor);
-		bottomContainer.replaceChildren(bottomPagination);
-
-	}
-
-	private static createMediaAddField(keyboard, markdownEditor) {
-		const actionfield = ActionInputField(
-			"",
-			(_, inputField) => {
-				this.handleAddMediaField(inputField, keyboard, markdownEditor);
-			},
-			AddIcon(),
-		);
-		actionfield
-			.querySelector("input")
-			.setAttribute("placeholder", "Add media...");
-
-		return actionfield;
-	}
-
-	private static handleAddMediaField(inputField, keyboard, markdownEditor) {
-		const url = inputField.value;
-		inputField.value = "";
-
-		let format;
-		if (url.toLowerCase().endsWith(".gif")) {
-			format = keyboardTabs.gifs;
-		} else if (
-			ImageFormats.some((imgFormat) =>
-				url.toLowerCase().endsWith(imgFormat.toLocaleLowerCase()),
-			)
-		) {
-			format = keyboardTabs.images;
-		}
-		if (!format) {
-			Toaster.error("Url was not recognized as image or GIF.");
-			return;
-		}
-
-		Toaster.success(`Added media to ${format}`);
-		this. addOrRemoveMedia(url, format);
-		this.config.save();
-		this.refreshKeyboard(keyboard);
-	}
-
-	private static createPagination(keyboard, markdownEditor) {
-		const container = DOM.create(
-			"div",
-			"gif-keyboard-pagination-container",
-		);
-		const mediaList =
-			this.#activeTab === keyboardTabs.gifs
-				? this.config.gifs
-				: this.config.images;
-		const maxPages = Math.ceil(mediaList.length / this.#pageSize) - 1;
-
-		if (this.#paginationPage > maxPages) {
-			this.#paginationPage = maxPages;
-		}
-
-		container.append(
-			Pagination(this.#paginationPage, maxPages, (page) => {
-				this.#paginationPage = page;
-				this.refreshKeyboards();
-			}),
-		);
-		return container;
 	}
 }
