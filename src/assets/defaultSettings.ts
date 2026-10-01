@@ -245,7 +245,7 @@ export const defaultSettings: IOptions = {
 	},
 	tailRepliesEnabled: {
 		defaultValue: false,
-		description: "Add Tail button to Activity actions to load last 10 replies in an overlay.",
+		description: "Add Tail button to Activity actions to load last replies in an overlay (requires QuickStart).",
 		category: categories.activity,
 		authRequired: true,
 		voidApiAuthRequired: false
