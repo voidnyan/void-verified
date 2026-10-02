@@ -85,7 +85,6 @@ export class ChangeLog {
 	private static createFeatureListItem(feature: Feature) {
 		const container = DOM.create("li");
 		if (feature.option) {
-			console.log(feature.option);
 			const value = feature.option.getValue() as boolean;
 			container.append(
 				SettingLabel(
@@ -107,7 +106,7 @@ export class ChangeLog {
 	}
 
 	private static handleClose(_changeLog) {
-		const version = changeLog[0].versionNumber;
+		const version = changeLog()[0].versionNumber;
 		_changeLog.#lastVersion = version;
 		localStorage.setItem(_changeLog.#lastVersionInLocalStorage, version);
 	}
