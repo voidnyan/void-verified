@@ -200,10 +200,16 @@ export class ActivityHandler {
 				"Tail Activity"
 			]);
 			const directLink = dropdown.querySelector("[href^='/activity/']");
+<<<<<<< Updated upstream
 			const url = directLink.getAttribute("href");
 			if (!url)
 				continue;
 			const activityId = Common.getActivityIdFromUrl(url);
+=======
+			if (!directLink)
+				continue;
+			const activityId = Common.getActivityIdFromUrl(directLink.getAttribute("href"));
+>>>>>>> Stashed changes
 			const numberOfReplies = +activity.querySelector(".action.replies .count")?.innerHTML.trim();
 			tailButton.addEventListener("click", async () => {
 				await ActivityMode.tailReplies(activityId, numberOfReplies);
