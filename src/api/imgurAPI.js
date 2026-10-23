@@ -13,7 +13,8 @@ export class ImgurAPI extends ImageHostBase {
 	}
 
 	async uploadImage(image) {
-		const file = await this.conventToBase64(image);
+		const convertedImage = await this.convertWebPToJpg(image);
+		const file = await this.conventToBase64(convertedImage);
 		if (!file.result) {
 			return;
 		}
