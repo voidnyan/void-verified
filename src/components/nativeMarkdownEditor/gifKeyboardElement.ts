@@ -24,7 +24,6 @@ export class GifKeyboardElement {
 		this.renderControls();
 	}
 
-
 	private createKeyboardHeader() {
 		const header = DOM.create("div", "gif-keyboard-header");
 

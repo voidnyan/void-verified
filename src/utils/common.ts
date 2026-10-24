@@ -54,4 +54,20 @@ export class Common {
 		}
 		return 0;
 	}
+
+	static scrollIntoView(element: HTMLElement, parent: HTMLElement) {
+		const elementRect = element.getBoundingClientRect();
+		const parentRect = parent.getBoundingClientRect();
+
+		const top =
+			parent.scrollTop +
+			elementRect.top -
+			parentRect.top -
+			parent.clientTop;
+
+		parent.scrollTo({
+			top,
+			behavior: "smooth"
+		});
+	}
 }

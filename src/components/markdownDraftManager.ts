@@ -1,6 +1,6 @@
 import {DOM} from "../utils/DOM";
 import {Dialog} from "../utils/dialog";
-import {DocumentArrowDownIcon, DocumentArrowUpIcon, RefreshIcon, XMarkIcon} from "../assets/icons";
+import {DocumentArrowDownIcon, DocumentArrowUpIcon, XMarkIcon} from "../assets/icons";
 import {Button} from "./components";
 import {LocalStorageKeys} from "../assets/localStorageKeys";
 import {Toaster} from "../utils/toaster";

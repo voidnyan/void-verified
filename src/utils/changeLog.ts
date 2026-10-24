@@ -51,6 +51,8 @@ export class ChangeLog {
 		const [lastMajorVersion, lastMinorVersion] =
 			this.#lastVersion.split(".");
 
+		console.log(this.#lastVersion);
+
 		// This is a loop for some reason? 2024 voidnyan really did some messed up stuff
 		for (const [majorVersion, minorVersion] of versions) {
 			if (

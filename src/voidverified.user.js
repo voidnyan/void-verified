@@ -21,6 +21,7 @@ import {MiniProfileHandler} from "./handlers/miniProfileHandler";
 import {GifKeyboardHandler} from "./handlers/gifKeyboardHandler";
 import {MiniMediaHandler} from "./handlers/miniMediaHandler";
 import {VoidApi} from "./api/voidApi";
+import {EmojiKeyboard} from "./components/nativeMarkdownEditor/emojiKeyboard";
 
 (async () => {
 	ImageHostService.initialize();
@@ -44,6 +45,7 @@ import {VoidApi} from "./api/voidApi";
 	CloseOverlaysHandler.initialize();
 	QuoteHandler.addSelectionListener();
 	GifKeyboardHandler.getGifsFromApi();
+	EmojiKeyboard.loadEmojis();
 
 	try {
 		const intervalScriptHandler = new IntervalScriptHandler(StaticSettings.settingsInstance);
@@ -68,7 +70,7 @@ import {VoidApi} from "./api/voidApi";
 
 	new ImgurAPI(
 		ImageHostService.getImageHostConfiguration(imageHosts.imgur),
-	).refreshAuthToken();
+	).refreshAuthToken()
 
 	console.log(`VoidVerified ${StaticSettings.settingsInstance.version} loaded.`);
 })();

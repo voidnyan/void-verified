@@ -70,6 +70,7 @@ export interface IOptions {
 	pasteImagesToHostService: IOption;
 	toasterEnabled: IOption;
 	removeAnilistBlanks: IOption;
+	emojiKeyboardEnabled: IOption;
 	gifKeyboardEnabled: IOption;
 	gifKeyboardLikeButtonsEnabled: IOption;
 	syncGifsToVoidApi: IOption;
