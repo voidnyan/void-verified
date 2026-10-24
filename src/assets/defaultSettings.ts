@@ -171,6 +171,11 @@ export const defaultSettings: IOptions = {
 		description: "Open AniList links in the same tab.",
 		category: categories.misc,
 	},
+	emojiKeyboardEnabled: {
+		defaultValue: false,
+		description: "Add an emoji keyboard to activity editor.",
+		category: categories.activity
+	},
 	gifKeyboardEnabled: {
 		defaultValue: false,
 		description: "Add a GIF keyboard to activity editor.",

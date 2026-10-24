@@ -30,5 +30,6 @@ export const LocalStorageCacheKeys = {
 	inProgressMediaLists: "void-verified-in-progress-media-lists",
 	socialTab: "void-verified-social-tab-cache",
 	lighthouses: "void-verified-toudai-cache",
-	lighthousesTab: "void-verified-toudai-tab-cache"
+	lighthousesTab: "void-verified-toudai-tab-cache",
+	frequentlyUsedEmojis: "void-verified-frequently-used-emojis"
 }
