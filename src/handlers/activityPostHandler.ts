@@ -144,7 +144,8 @@ export class ActivityPostHandler {
 			this.mediaActivity.progress = Number(event.target.value);
 		});
 		progressInput.setAttribute("type", "number");
-		progressInput.setAttribute("max", this.mediaActivity.maxProgress.toString());
+		if (this.mediaActivity.maxProgress)
+			progressInput.setAttribute("max", this.mediaActivity.maxProgress.toString());
 		progressInput.setAttribute("min", "0");
 		progressContainer.append(DOM.create("div", null, progressInput));
 	};
