@@ -1,4 +1,4 @@
-import {AnilistAPI} from "../api/anilistAPI";
+import {AnilistAPI, AnilistAPIError} from "../api/anilistAPI";
 import {Button, IconButton, Image, InputField, Label, Link, Option, Select} from "../components/components";
 import {ISettings} from "../types/settings";
 import {DOM} from "../utils/DOM";
@@ -203,25 +203,26 @@ export class ActivityPostHandler {
 		this.selectedSearchResult = result;
 		try {
 			const mediaProgress = await AnilistAPI.getMediaProgress(result.id);
-			if (mediaProgress) {
-				this.mediaActivity = {
-					status: mediaProgress.status,
-					progress: mediaProgress.progress,
-					maxProgress: mediaProgress.media.episodes ?? mediaProgress.media.chapters,
-					mediaListId: mediaProgress.id
-				};
-			} else {
+			this.mediaActivity = {
+				status: mediaProgress.status,
+				progress: mediaProgress.progress,
+				maxProgress: mediaProgress.media.episodes ?? mediaProgress.media.chapters,
+				mediaListId: mediaProgress.id
+			};
+			this.#createStatusAndProgressControl();
+		} catch (error) {
+			if (error instanceof AnilistAPIError && error.errors[0]?.status === 404) {
 				this.mediaActivity = {
 					status: MediaStatus.Planning,
 					progress: 0,
 					maxProgress: this.selectedSearchResult.episodes ?? this.selectedSearchResult.chapters,
 					mediaListId: undefined
 				}
-			}
 
-			this.#createStatusAndProgressControl();
-		} catch (error) {
-			Toaster.error("Failed to query media progress", error);
+				this.#createStatusAndProgressControl();
+			} else {
+				Toaster.error("Failed to query media progress", error);
+			}
 		}
 	}
 }
