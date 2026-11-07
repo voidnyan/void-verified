@@ -179,7 +179,6 @@ export class GifKeyboardHandler {
 
 			const editor = new NativeMarkdownEditor(markdownEditor);
 			editor.injectToDom();
-
 		}
 	}
 

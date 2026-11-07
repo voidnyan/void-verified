@@ -6,7 +6,7 @@ import {DOM} from "../../utils/DOM";
 
 export class NativeMarkdownEditor {
 	markdownEditor: HTMLDivElement;
-	panel = DOM.createDiv("hidden");
+	panel = DOM.createDiv("hidden markdown-editor-panel");
 	private controls: HTMLDivElement[] = [];
 	constructor(markdownEditor: HTMLDivElement) {
 		this.markdownEditor = markdownEditor;
